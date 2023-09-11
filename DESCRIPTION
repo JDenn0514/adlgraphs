@@ -16,3 +16,5 @@ Imports:
   tidyverse,
   rlang
 RoxygenNote: 7.2.3
+URL: https://github.com/JDenn0514/adlgraphs
+BugReports: https://github.com/JDenn0514/adlgraphs/issues
