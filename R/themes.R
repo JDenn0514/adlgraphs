@@ -101,7 +101,7 @@ theme_h_bar <- function() {
 #' This function creates the theme for simple vertical bar plots
 #'
 #' @export
-v_bar_theme <- function() {
+theme_v_bar <- function() {
   theme_minimal() +
     theme(
       text = element_text(family = "L", size = 12, lineheight = 1.1),
