@@ -2,16 +2,17 @@ Package: adlgraphs
 Type: Package
 Title: Create Graphs with ADL Style and Branding
 Version: 0.1.0
-Author: Jacob Dennen
-Maintainer: Jacob Dennen <jdennen@adl.org>,
-    Sarah Cueva Egan <scuevaegan@adl.org>,
-    James Packman <jpackman@adl.org>
+Authors@R: c(
+  person("Jacob", "Dennen", "jdennen@adl.org", role = c("aut", "cre")),
+  person("Sarah", "Cueva Egan","scuevaegan@adl.org",role = c("cre")),
+  person("James", "Packman","jpackman@adl.org",role = c("cre")))
 Description: This package is designed to make it easier for folks at CAR at ADL 
     to make graphs. The package contains all of the different themes related to various graph
     styles, a guide to which colors to use and when, and various functions created
     related to various graphs (mainly for coefficient plots).
-License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-
-
+Imports: 
+  tidyverse,
+  rlang
+RoxygenNote: 7.2.3
