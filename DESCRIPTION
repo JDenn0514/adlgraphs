@@ -4,8 +4,8 @@ Title: Create Graphs with ADL Style and Branding
 Version: 0.1.0
 Authors@R: c(
   person(given = "Jacob", family = "Dennen", "jdennen@adl.org", role = c("aut", "cre")),
-  person(given = "Sarah", family = "Cueva Egan", email = "scuevaegan@adl.org",role = c("cre")),
-  person(given = "James", family = "Packman", email = "jpackman@adl.org",role = c("cre")))
+  person(given = "Sarah", family = "Cueva Egan", email = "scuevaegan@adl.org",role = c("aut", "ctb")),
+  person(given = "James", family = "Packman", email = "jpackman@adl.org",role = c("aut", "ctb")))
 Description: This package is designed to make it easier for folks at CAR at ADL 
     to make graphs. The package contains all of the different themes related to various graph
     styles, a guide to which colors to use and when, and various functions created
