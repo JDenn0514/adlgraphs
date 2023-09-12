@@ -101,6 +101,7 @@ theme_h_bar <- function() {
 #' This function creates the theme for simple vertical bar plots
 #'
 #' @export
+
 theme_v_bar <- function() {
   theme_minimal() +
     theme(
