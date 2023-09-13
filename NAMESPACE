@@ -3,4 +3,4 @@
 export(theme_coef)
 export(theme_h_bar)
 export(theme_h_stack)
-export(v_bar_theme)
+export(theme_v_bar)
