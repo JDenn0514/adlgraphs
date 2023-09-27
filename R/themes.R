@@ -89,6 +89,9 @@ theme_h_bar <- function() {
       plot.title.position = "plot",
       plot.subtitle = element_text(family = "TW", hjust = 0,
                                    margin = margin(b = 15)),
+      plot.caption = element_text(hjust = 1, size = 8, lineheight = 1.05,
+                                  # add space above caption
+                                  margin = margin(10)),
       panel.grid = element_blank(),
       legend.position = "none",
       axis.text.x = element_blank(),
