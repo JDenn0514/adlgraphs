@@ -118,7 +118,7 @@ theme_v_bar <- function() {
                                    margin = margin(b = 15)),
       plot.caption = element_text(hjust = 1, size = 8, margin = margin(5), lineheight = 1.05),
       # make sure there is space around the graph
-      plot.margin = margin(15, 15, 50, 15),
+      plot.margin = margin(15, 15, 15, 15),
       # make the background white
       #plot.background = element_rect(fill = "white"),
       axis.text.x = element_text(margin = margin(b = 10), lineheight = 1.1),
