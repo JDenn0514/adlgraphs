@@ -56,14 +56,14 @@ scale_adl <- function(type = "categorical",
     # create the discrete palettes
   } else if (type == "categorical") {
 
-    if (palette == "base") {
-      pal <- adl_palettes["categorical"]
-    } else {
-      pal <- adl_palettes[[palette]]
-    }
-
     if (missing(n)) {
       n <- length(pal)
+    }
+
+    if (palette == "base") {
+      pal <- adl_palettes[["categorical"]][1:n]
+    } else {
+      pal <- adl_palettes[[palette]][1:n]
     }
 
   }
