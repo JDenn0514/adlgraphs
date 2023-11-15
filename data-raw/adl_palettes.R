@@ -13,6 +13,7 @@ pid3 <- color(c("#00a0e0",
                 "#60269e",
                 "#db0632"))
 
+
 categorical <- color(c("#00a0e0",
                        "#b0b1b3",
                        "#093c71",
