@@ -34,10 +34,12 @@ scale_adl <- function(type = "categorical",
     # interpolate the palettes using colorRampPalette()
     # get the bluescale colors
     if (palette == "base") {
+      bluescale <- adl_palettes[["bluescale"]]
       pal <- colorRampPalette(bluescale)(n)
     }
     # get the grayscale colors
     else if(palette == "gray") {
+      grayscale <- adl_palettes[["grayscale"]]
       pal <- colorRampPalette(grayscale)(n)
     }
 
