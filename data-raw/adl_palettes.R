@@ -26,22 +26,55 @@ categorical <- color(c("#00a0e0",
 
 
 # diverging
-diverge_4 = color(c("#093c71",
+likert_4 = color(c("#093c71",
                     "#97d0dc",
                     "#d8d9da",
                     "#595b60"))
 
-diverge_6 = color(c("#093c71",
+likert_6 = color(c("#093c71",
                     "#00a0e0",
                     "#97d0dc",
                     "#d8d9da",
                     "#b0b1b3",
                     "#595b60"))
 
+# sequential
+bluescale <- color(c("#093c71",
+                     "#97d0dc"))
+
+grayscale <- color(c("#2c2e35",
+                     "#d8d9da"))
 
 
-adl_palettes <- list(primary, secondary, pid3, categorical, diverge_6, diverge_4) %>%
-  rlang::set_names("primary", "secondary", "pid3", "categorical", "diverge_6", "diverge_4")
+
+
+
+adl_palettes <-
+  list(
+    # categorical
+    primary,
+    secondary,
+    tertiary,
+    pid3,
+    categorical,
+    # divergent
+    likert_6,
+    likert_4,
+    # sequential
+    bluescale,
+    grayscale
+  ) %>%
+  rlang::set_names(
+    "primary",
+    "secondary",
+    "tertiary",
+    "pid3",
+    "categorical",
+    "likert_6",
+    "likert_4",
+    "bluescale",
+    "grayscale"
+  )
 
 
 

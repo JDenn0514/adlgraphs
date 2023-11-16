@@ -18,7 +18,6 @@ scale_adl <- function(type = "categorical",
     stop('ggplot2 is required for this functionality', call. = FALSE)
   }
 
-
   if (!direction %in% c("original", "reverse")) {
     stop('direction must be "original" or "reverse"')
   }
@@ -27,42 +26,41 @@ scale_adl <- function(type = "categorical",
   # create the "sequential" palettes
   if (type == "sequential") {
 
-    ### get the palettes
-    # get the grayscale colors
-    if (palette == "base") {
-      pal <- monochromeR::generate_palette(
-        # set the original color
-        colour = "#093c71",
-        # set the color to blend to
-        blend_colour = "#97d0dc",
-        # set the number of colors
-        n_colours = n,
-        # blend the colors together
-        modification = "blend"
-      )
-      # get the blue color
-    } else if(palette == "gray") {
-      pal <- monochromeR::generate_palette(
-        # set the original color
-        colour = "#2c2e35",
-        # set the color to blend to
-        blend_colour = "#d8d9da",
-        # set the number of colors
-        n_colours = n,
-        # blend the colors together
-        modification = "blend"
-      )
-    }
-    # create the discrete palettes
-  } else if (type == "categorical") {
-
     if (missing(n)) {
-      n <- length(pal)
+      stop("n must be supplied when calculating a sequential color palette")
     }
 
+    ### get the palettes
+    # interpolate the palettes using colorRampPalette()
+    # get the bluescale colors
+    if (palette == "base") {
+      pal <- colorRampPalette(bluescale)(n)
+    }
+    # get the grayscale colors
+    else if(palette == "gray") {
+      pal <- colorRampPalette(grayscale)(n)
+    }
+
+  }
+
+  # create the discrete palettes
+  else if (type == "categorical") {
+    # calculate the n if it is not supplied
+    if (missing(n)) {
+      n <- length(adl_palettes[[palette]])
+    } else {
+      n <- n
+    }
+
+    # get the palettes
     if (palette == "base") {
       pal <- adl_palettes[["categorical"]][1:n]
+    } else if (palette == "pid3") {
+      # this should give us three colors if n is provided, if it is provided
+      # it will interpolate the other colors
+      pal <- colorRampPalette(pid3)(n)
     } else {
+      # need the
       pal <- adl_palettes[[palette]][1:n]
     }
 
