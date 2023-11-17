@@ -46,7 +46,7 @@ grayscale <- color(c("#2c2e35",
                      "#d8d9da"))
 
 
-
+adl_palettes[["bluescale"]]
 
 
 adl_palettes <-

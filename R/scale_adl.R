@@ -3,7 +3,23 @@ library(tidyverse)
 
 
 
-
+#' ADL color scale
+#'
+#' Create sequential, diverging, and categorical color scales using official ADL
+#' colors.
+#'
+#' The function `scale_adl()` was created for survey data.
+#'
+#'
+#' @param type
+#'
+#' @param palette
+#' @param aesthetic
+#' @param n
+#' @param direction
+#' @param legend_title
+#' @param legend_order
+#'
 #' @export
 
 scale_adl <- function(type = "categorical",
@@ -12,7 +28,8 @@ scale_adl <- function(type = "categorical",
                       n,
                       direction = "original",
                       legend_title = NULL,
-                      legend_order = "original") {
+                      legend_order = "original",
+                      ...) {
 
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
     stop('ggplot2 is required for this functionality', call. = FALSE)
@@ -76,7 +93,12 @@ scale_adl <- function(type = "categorical",
   # set the legend_title to waiver() if legend_title is missing
   if (is.null(legend_title)) {
     legend_title <- waiver()
+  } else if (legend_title == "none") {
+    legend_title <- NULL
+  } else {
+    legend_title
   }
+
 
 
   # reverse the legend o
@@ -86,7 +108,8 @@ scale_adl <- function(type = "categorical",
         values = pal,
         aesthetics = aesthetic,
         name = legend_title,
-        guide = guide_legend(reverse = TRUE)
+        guide = guide_legend(reverse = TRUE),
+        ...
       )
     )
   } else {
@@ -94,7 +117,8 @@ scale_adl <- function(type = "categorical",
       ggplot2::scale_fill_manual(
         values = pal,
         aesthetics = aesthetic,
-        name = legend_title
+        name = legend_title,
+        ...
       )
     )
   }
@@ -103,6 +127,13 @@ scale_adl <- function(type = "categorical",
 }
 
 
+asi_oct23 %>%
+  count(stick_together_f) %>%
+  ggplot(aes(x = stick_together_f, y = n, color = stick_together_f, shape = stick_together_f)) +
+  geom_point() +
+  scale_adl(palette = "likert_4",
+            legend_title = "Response Options",
+            aesthetic = "color")
 
 
 
