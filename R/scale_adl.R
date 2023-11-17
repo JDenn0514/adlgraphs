@@ -127,13 +127,6 @@ scale_adl <- function(type = "categorical",
 }
 
 
-asi_oct23 %>%
-  count(stick_together_f) %>%
-  ggplot(aes(x = stick_together_f, y = n, color = stick_together_f, shape = stick_together_f)) +
-  geom_point() +
-  scale_adl(palette = "likert_4",
-            legend_title = "Response Options",
-            aesthetic = "color")
 
 
 
