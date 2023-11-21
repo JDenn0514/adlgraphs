@@ -1,6 +1,5 @@
 ## code to prepare `DATASET` dataset goes here
-library(rlang)
-library(prismatic)
+
 
 # categorical colors
 primary <-  color("#00a0e0")
@@ -16,10 +15,10 @@ pid3 <- color(c("#00a0e0",
 
 categorical <- color(c("#00a0e0",
                        "#b0b1b3",
-                       "#093c71",
                        "#a1d55d",
-                       "#60269e",
+                       "#093c71",
                        "#db0632",
+                       "#60269e",
                        "#eed282",
                        "#2c2e35"))
 
@@ -45,8 +44,6 @@ bluescale <- color(c("#093c71",
 grayscale <- color(c("#2c2e35",
                      "#d8d9da"))
 
-
-adl_palettes[["bluescale"]]
 
 
 adl_palettes <-
@@ -76,7 +73,6 @@ adl_palettes <-
     "grayscale"
   )
 
-
-
+rm(primary, secondary, tertiary, pid3, categorical, likert_4, likert_6, bluescale, grayscale)
 
 usethis::use_data(adl_palettes, overwrite = TRUE)

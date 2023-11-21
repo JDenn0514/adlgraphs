@@ -14,7 +14,11 @@ License: Public Domain
 Encoding: UTF-8
 LazyData: true
 Imports: 
-  tidyverse,
+  ggplot2,
+  showtext,
+  sysfonts,
+  grDevices,
+  prismatic,
   rlang
 RoxygenNote: 7.2.3
 URL: https://github.com/JDenn0514/adlgraphs

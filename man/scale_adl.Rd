@@ -16,9 +16,43 @@ scale_adl(
 )
 }
 \arguments{
-\item{type}{}
+\item{type}{A character string indicating the type of color palette.
+There are two options:
+  - Categorical is used for both diverging and discrete palettes.
+  - Sequential is used for sequential
+palettes.}
 
-\item{legend_order}{}
+\item{palette}{A character string indicating the name of the palette
+(e.g., "likert_6"). For more info and to see all the different color
+palettes available, check out `adl_palettes`.}
+
+\item{aesthetic}{Character string or vector of character strings listing the
+name(s) of the aesthetic(s) that this scale works with. This can be useful,
+for example, to apply colour settings to the `colour` and `fill` aesthetics
+at the same time, via `aesthetic = c("colour", "fill")`}
+
+\item{n}{The number of colors.}
+
+\item{direction}{A character string indicating if the order of the colors
+should be reversed. There are two values:
+  - "original" keep the original order of colors
+  - "reverse" flips the order of colors}
+
+\item{legend_title}{A character string indicating what the title of the
+legend should be. Generally there are three options for this:
+  - legend_title is left blank. If this happens the title of the scale is
+  taken from the first mapping used for that aesthetic
+  - `legend_title = "none"` If this happens then the title is removed from
+  the legend
+  - `legend_title = "some string"` If this happens the legend title becomes
+  whatever is in the string (in this case the title would be "some string")}
+
+\item{legend_order}{A character string indicating if the order of the colors
+and labels in the legend should be reversed. Currently there are two options:
+  - "original" keeps the original order of the legend
+  - "reverse" flips the order of the legend}
+
+\item{...}{additional arguments to pass to \code{\link[ggplot2]{scale_fill_manual}}}
 }
 \description{
 Create sequential, diverging, and categorical color scales using official ADL

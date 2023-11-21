@@ -4,10 +4,11 @@
 #' This function creates a theme for coefficient plots.
 #'
 #'@export
+#'
 
 theme_coef <- function() {
-  theme_minimal() +
-    theme(
+  ggplot2:theme_minimal() +
+    ggplot2:theme(
       # adjust the overall text font family, size and lineheight
       text = element_text(family = "L", size = 12, lineheight = 1.1),
       # make the plot title TW font, bold, centered horizontally, and add bottom margin
@@ -23,8 +24,8 @@ theme_coef <- function() {
       panel.spacing.x = unit(2, "lines"),
       legend.position = "right",
       legend.text = element_text(lineheight = 1.1,
-                                 margin = ggplot2::margin(b = 10, t = 10)),
-      axis.title.x = element_text(margin = ggplot2::margin(t = 10)),
+                                 margin = margin(b = 10, t = 10)),
+      axis.title.x = element_text(margin = margin(t = 10)),
       panel.grid = element_blank(),
       panel.grid.major.x = element_line(linewidth = 0.5, color = "gray75"),
       panel.grid.minor.x = element_line(linewidth = 0.25, color = "gray90")
@@ -37,8 +38,8 @@ theme_coef <- function() {
 #'
 #' @export
 theme_h_stack <- function() {
-  theme_minimal() +
-    theme(
+  ggplot2:theme_minimal() +
+    ggplot2:theme(
       # adjust formatting for all text
       text = element_text(family = "L", size = 12, lineheight = 1.1),
       # adjust plot title formatting
@@ -78,10 +79,10 @@ theme_h_stack <- function() {
 #'
 #' @export
 
-# Theme for horizontal bar plots
+# ggplot2:theme for horizontal bar plots
 theme_h_bar <- function() {
-  theme_minimal() +
-    theme(
+  ggplot2:theme_minimal() +
+    ggplot2:theme(
       text = element_text(family = "L", size = 12, lineheight = 1.1),
       plot.title = element_text(family = "TW", face = "bold", hjust = 0.5,
                                 margin = margin(b = 10)),
@@ -105,10 +106,10 @@ theme_h_bar <- function() {
 #'
 #' @export
 
-# theme for vertical bar charts
+# ggplot2:theme for vertical bar charts
 theme_v_bar <- function() {
-  theme_minimal() +
-    theme(
+  ggplot2:theme_minimal() +
+    ggplot2:theme(
       text = element_text(family = "L", size = 12, lineheight = 1.1),
       plot.title = element_text(family = "TW", face = "bold", hjust = 0.5,
                                 margin = margin(b = 10)),
