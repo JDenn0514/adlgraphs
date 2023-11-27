@@ -1,15 +1,9 @@
-library(rlang)
-library(tidyverse)
-
-
-
 #' ADL color scale
 #'
 #' Create sequential, diverging, and categorical color scales using official ADL
 #' colors.
 #'
 #' The function `scale_adl()` was created for survey data.
-#'
 #'
 #' @param type A character string indicating the type of color palette.
 #'   There are two options:
@@ -26,8 +20,8 @@ library(tidyverse)
 #' @param n The number of colors.
 #' @param direction A character string indicating if the order of the colors
 #'   should be reversed. There are two values:
-#'      - "original" keep the original order of colors
-#'      - "reverse" flips the order of colors
+#'     - "original" keep the original order of colors
+#'     - "reverse" flips the order of colors
 #' @param legend_title A character string indicating what the title of the
 #'   legend should be. Generally there are three options for this:
 #'     - legend_title is left blank. If this happens the title of the scale is
