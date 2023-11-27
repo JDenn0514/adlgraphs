@@ -21,7 +21,8 @@ Imports:
   prismatic,
   rlang
 RoxygenNote: 7.2.3
-URL: https://github.com/JDenn0514/adlgraphs
+URL: https://github.com/JDenn0514/adlgraphs,
+    https://jdenn0514.github.io/adlgraphs/
 BugReports: https://github.com/JDenn0514/adlgraphs/issues
 Depends: 
     R (>= 2.10)
