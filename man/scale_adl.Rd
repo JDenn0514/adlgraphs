@@ -18,8 +18,8 @@ scale_adl(
 \arguments{
 \item{type}{A character string indicating the type of color palette.
 There are two options:
-- Categorical is used for both diverging and discrete palettes.
-- Sequential is used for sequential
+* Categorical is used for both diverging and discrete palettes.
+* Sequential is used for sequential
 palettes.}
 
 \item{palette}{A character string indicating the name of the palette

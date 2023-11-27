@@ -7,8 +7,8 @@
 #'
 #' @param type A character string indicating the type of color palette.
 #'   There are two options:
-#'     - Categorical is used for both diverging and discrete palettes.
-#'     - Sequential is used for sequential
+#'     * Categorical is used for both diverging and discrete palettes.
+#'     * Sequential is used for sequential
 #'      palettes.
 #' @param palette A character string indicating the name of the palette
 #'   (e.g., "likert_6"). For more info and to see all the different color

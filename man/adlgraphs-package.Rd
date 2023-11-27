@@ -12,18 +12,13 @@ This package is designed to make it easier for folks at CAR at ADL to make graph
 Useful links:
 \itemize{
   \item \url{https://github.com/JDenn0514/adlgraphs}
+  \item \url{https://jdenn0514.github.io/adlgraphs/}
   \item Report bugs at \url{https://github.com/JDenn0514/adlgraphs/issues}
 }
 
 }
 \author{
 \strong{Maintainer}: Jacob Dennen \email{jdennen@adl.org}
-
-Authors:
-\itemize{
-  \item Sarah Cueva Egan \email{scuevaegan@adl.org}
-  \item James Packman \email{jpackman@adl.org}
-}
 
 }
 \keyword{internal}
