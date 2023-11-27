@@ -27,7 +27,17 @@ A list of all color palettes to choose from, and preview directly in the console
 \details{
 Pretty print and plot methods are powered by the \href{https://CRAN.R-project.org/package=prismatic}{prismatic}
 package. Each palette is stored as a \code{color} object to enact this behaviour.
+}
+\examples{
+adl_palettes$primary
+adl_palettes$secondary
+adl_palettes$tertiary
+adl_palettes$pid3
+adl_palettes$categorical
+adl_palettes$likert_6
+adl_palettes$likert_4
+adl_palettes$bluescale
+adl_palettes$grayscale
 
-To view the data
 }
 \keyword{datasets}

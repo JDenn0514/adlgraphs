@@ -5,7 +5,6 @@
 #' Pretty print and plot methods are powered by the \href{https://CRAN.R-project.org/package=prismatic}{prismatic}
 #' package. Each palette is stored as a \code{color} object to enact this behaviour.
 #'
-#' To view the data
 #'
 #' @format A list of 9 \code{color} objects elements.
 #' \describe{
@@ -19,6 +18,18 @@
 #'   \item{bluescale}{Blue scale color palette (sequential)}
 #'   \item{grayscale}{Grayscale color palette (sequential)}
 #' }
+#'
+#' @examples
+#' adl_palettes$primary
+#' adl_palettes$secondary
+#' adl_palettes$tertiary
+#' adl_palettes$pid3
+#' adl_palettes$categorical
+#' adl_palettes$likert_6
+#' adl_palettes$likert_4
+#' adl_palettes$bluescale
+#' adl_palettes$grayscale
+#'
 "adl_palettes"
 
 
