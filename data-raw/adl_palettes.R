@@ -4,9 +4,9 @@
 # categorical colors
 primary <-  color("#00a0e0")
 
-secondary <- color("#a1d55d")
+secondary <- color("#b0b1b3")
 
-tertiary <- color("#093c71")
+tertiary <- color("#a1d55d")
 
 pid3 <- color(c("#00a0e0",
                 "#60269e",
