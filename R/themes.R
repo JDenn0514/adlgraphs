@@ -7,8 +7,8 @@
 #'
 
 theme_coef <- function() {
-  ggplot2:theme_minimal() +
-    ggplot2:theme(
+  ggplot::theme_minimal() +
+    ggplot::theme(
       # adjust the overall text font family, size and lineheight
       text = element_text(family = "L", size = 12, lineheight = 1.1),
       # make the plot title TW font, bold, centered horizontally, and add bottom margin
@@ -38,8 +38,8 @@ theme_coef <- function() {
 #'
 #' @export
 theme_h_stack <- function() {
-  ggplot2:theme_minimal() +
-    ggplot2:theme(
+  ggplot2::theme_minimal() +
+    ggplot2::theme(
       # adjust formatting for all text
       text = element_text(family = "L", size = 12, lineheight = 1.1),
       # adjust plot title formatting
@@ -79,10 +79,10 @@ theme_h_stack <- function() {
 #'
 #' @export
 
-# ggplot2:theme for horizontal bar plots
+# ggplot::theme for horizontal bar plots
 theme_h_bar <- function() {
-  ggplot2:theme_minimal() +
-    ggplot2:theme(
+  ggplot::theme_minimal() +
+    ggplot::theme(
       text = element_text(family = "L", size = 12, lineheight = 1.1),
       plot.title = element_text(family = "TW", face = "bold", hjust = 0.5,
                                 margin = margin(b = 10)),
@@ -106,10 +106,10 @@ theme_h_bar <- function() {
 #'
 #' @export
 
-# ggplot2:theme for vertical bar charts
+# ggplot::theme for vertical bar charts
 theme_v_bar <- function() {
-  ggplot2:theme_minimal() +
-    ggplot2:theme(
+  ggplot::theme_minimal() +
+    ggplot::theme(
       text = element_text(family = "L", size = 12, lineheight = 1.1),
       plot.title = element_text(family = "TW", face = "bold", hjust = 0.5,
                                 margin = margin(b = 10)),
