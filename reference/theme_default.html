@@ -171,6 +171,36 @@ If <code>FALSE</code>, the minor t-axis grid lines will disappear.</p></dd>
 
 </dl></div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># This is designed to make it easy to control various aspects of the graph.</span></span></span>
+<span class="r-in"><span><span class="co"># I will demonstrate a variety of different things that this is capable of.</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># First let's create the plot object. We are going to use code from Alison</span></span></span>
+<span class="r-in"><span><span class="co"># Horst's palmerpenguins package:</span></span></span>
+<span class="r-in"><span><span class="va">mass_flipper</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">penguins</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">flipper_length_mm</span>,</span></span>
+<span class="r-in"><span>      y <span class="op">=</span> <span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>color <span class="op">=</span> <span class="va">species</span>,</span></span>
+<span class="r-in"><span>                 shape <span class="op">=</span> <span class="va">species</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>             size <span class="op">=</span> <span class="fl">3</span>,</span></span>
+<span class="r-in"><span>             alpha <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"darkorange"</span>, <span class="st">"purple"</span>, <span class="st">"cyan4"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Penguin size, Palmer Station LTER"</span>,</span></span>
+<span class="r-in"><span>       subtitle <span class="op">=</span> <span class="st">"Flipper length and body mass for Adelie, Chinstrap and Gentoo Penguins"</span>,</span></span>
+<span class="r-in"><span>       x <span class="op">=</span> <span class="st">"Flipper length (mm)"</span>,</span></span>
+<span class="r-in"><span>       y <span class="op">=</span> <span class="st">"Body mass (g)"</span>,</span></span>
+<span class="r-in"><span>       color <span class="op">=</span> <span class="st">"Penguin species"</span>,</span></span>
+<span class="r-in"><span>       shape <span class="op">=</span> <span class="st">"Penguin species"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in ggplot(data = penguins, aes(x = flipper_length_mm, y = body_mass_g)):</span> could not find function "ggplot"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># The basic graph with no customizations:</span></span></span>
+<span class="r-in"><span><span class="va">mass_flipper</span> <span class="op">+</span> <span class="fu">theme_default</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'mass_flipper' not found</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
