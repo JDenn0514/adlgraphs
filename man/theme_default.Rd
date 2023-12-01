@@ -95,6 +95,9 @@ in that all of the default ggplot2 themes are built off
 
 # First let's create the plot object. We are going to use code from Alison
 # Horst's palmerpenguins package:
+library(palmerpenguins)
+library(ggplot2)
+library(adlgraphs)
 mass_flipper <- ggplot(data = penguins,
   aes(x = flipper_length_mm,
       y = body_mass_g)) +
