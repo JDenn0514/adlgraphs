@@ -48,11 +48,31 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">theme_h_stack</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">theme_h_stack</span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">12</span>, axis_text <span class="op">=</span> <span class="cn">FALSE</span>, grid <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
+    <dl><dt>base_size</dt>
+<dd><p>Base font size, given in pts. Also controls
+the spacing in the graph.</p></dd>
 
-  </main></div>
+
+<dt>axis_text</dt>
+<dd><p>Logical. Determines if BOTH axes have labels. If <code>TRUE</code>, the
+default, both axes are labelled. If <code>FALSE</code>, neither axis is labelled.
+Note, this controls both axes. If you want to remove only one axis, use the
+<code>axis_text_x</code> or <code>axis_text_y</code>.</p></dd>
+
+
+<dt>grid</dt>
+<dd><p>Logical. Determines if ALL grid lines should appear. If <code>TRUE</code>,
+the default, all grid lines appear. If <code>FALSE</code>, all grid lines disappear.</p></dd>
+
+</dl></div>
+
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
