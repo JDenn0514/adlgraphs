@@ -49,6 +49,30 @@
 #'   appear. If `TRUE`, the default, the minor y-axis grid lines will appear.
 #'   If `FALSE`, the minor t-axis grid lines will disappear.
 #'
+#' @examples
+#' # This is designed to make it easy to control various aspects of the graph.
+#' # I will demonstrate a variety of different things that this is capable of.
+#'
+#' # First let's create the plot object. We are going to use code from Alison
+#' # Horst's palmerpenguins package:
+#' mass_flipper <- ggplot(data = penguins,
+#'   aes(x = flipper_length_mm,
+#'       y = body_mass_g)) +
+#'   geom_point(aes(color = species,
+#'                  shape = species),
+#'              size = 3,
+#'              alpha = 0.8) +
+#'   scale_color_manual(values = c("darkorange", "purple", "cyan4")) +
+#'   labs(title = "Penguin size, Palmer Station LTER",
+#'        subtitle = "Flipper length and body mass for Adelie, Chinstrap and Gentoo Penguins",
+#'        x = "Flipper length (mm)",
+#'        y = "Body mass (g)",
+#'        color = "Penguin species",
+#'        shape = "Penguin species")
+#'
+#' # The basic graph with no customizations:
+#' mass_flipper + theme_default()
+#'
 #'
 #' @export
 #'
