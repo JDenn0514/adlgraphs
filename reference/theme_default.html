@@ -178,10 +178,14 @@ If <code>FALSE</code>, the minor t-axis grid lines will disappear.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># First let's create the plot object. We are going to use code from Alison</span></span></span>
 <span class="r-in"><span><span class="co"># Horst's palmerpenguins package:</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"palmerpenguins"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Installing package into ‘/home/runner/work/_temp/Library’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> (as ‘lib’ is unspecified)</span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/" class="external-link">palmerpenguins</a></span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in library(palmerpenguins):</span> there is no package called ‘palmerpenguins’</span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JDenn0514/adlgraphs" class="external-link">adlgraphs</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mass_flipper</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">penguins</span>,</span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">flipper_length_mm</span>,</span></span>
 <span class="r-in"><span>      y <span class="op">=</span> <span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
@@ -196,11 +200,11 @@ If <code>FALSE</code>, the minor t-axis grid lines will disappear.</p></dd>
 <span class="r-in"><span>       y <span class="op">=</span> <span class="st">"Body mass (g)"</span>,</span></span>
 <span class="r-in"><span>       color <span class="op">=</span> <span class="st">"Penguin species"</span>,</span></span>
 <span class="r-in"><span>       shape <span class="op">=</span> <span class="st">"Penguin species"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'penguins' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># The basic graph with no customizations:</span></span></span>
 <span class="r-in"><span><span class="va">mass_flipper</span> <span class="op">+</span> <span class="fu">theme_default</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'mass_flipper' not found</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 2 rows containing missing values (`geom_point()`).</span>
+<span class="r-plt img"><img src="theme_default-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
