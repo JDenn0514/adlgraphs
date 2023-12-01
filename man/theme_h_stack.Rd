@@ -4,7 +4,19 @@
 \alias{theme_h_stack}
 \title{A function for horizontal stacked bar plots}
 \usage{
-theme_h_stack()
+theme_h_stack(base_size = 12, axis_text = FALSE, grid = FALSE, ...)
+}
+\arguments{
+\item{base_size}{Base font size, given in pts. Also controls
+the spacing in the graph.}
+
+\item{axis_text}{Logical. Determines if BOTH axes have labels. If \code{TRUE}, the
+default, both axes are labelled. If \code{FALSE}, neither axis is labelled.
+Note, this controls both axes. If you want to remove only one axis, use the
+\code{axis_text_x} or \code{axis_text_y}.}
+
+\item{grid}{Logical. Determines if ALL grid lines should appear. If \code{TRUE},
+the default, all grid lines appear. If \code{FALSE}, all grid lines disappear.}
 }
 \description{
 This function creates the theme for horizontal stacked bar plots
