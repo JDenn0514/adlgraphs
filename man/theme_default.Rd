@@ -89,35 +89,3 @@ built off of. It functions similarly to \code{\link[ggplot2]{theme_gray}},
 in that all of the default ggplot2 themes are built off
 \code{\link[ggplot2]{theme_gray}}.
 }
-\examples{
-# This is designed to make it easy to control various aspects of the graph.
-# I will demonstrate a variety of different things that this is capable of.
-
-# First let's create the plot object. We are going to use code from Alison
-# Horst's palmerpenguins package:
-
-install.packages("palmerpenguins")
-library(palmerpenguins)
-library(ggplot2)
-library(adlgraphs)
-
-mass_flipper <- ggplot(data = penguins,
-  aes(x = flipper_length_mm,
-      y = body_mass_g)) +
-  geom_point(aes(color = species,
-                 shape = species),
-             size = 3,
-             alpha = 0.8) +
-  scale_color_manual(values = c("darkorange", "purple", "cyan4")) +
-  labs(title = "Penguin size, Palmer Station LTER",
-       subtitle = "Flipper length and body mass for Adelie, Chinstrap and Gentoo Penguins",
-       x = "Flipper length (mm)",
-       y = "Body mass (g)",
-       color = "Penguin species",
-       shape = "Penguin species")
-
-# The basic graph with no customizations:
-mass_flipper + theme_default()
-
-
-}
