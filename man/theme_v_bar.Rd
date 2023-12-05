@@ -2,10 +2,34 @@
 % Please edit documentation in R/themes.R
 \name{theme_v_bar}
 \alias{theme_v_bar}
-\title{A function for simple vertical bar plots}
+\title{Theme for vertical non-stacked bar plots}
 \usage{
-theme_v_bar()
+theme_v_bar(
+  base_size = 12,
+  legend_position = "none",
+  axis_text_y = FALSE,
+  grid = FALSE,
+  ...
+)
+}
+\arguments{
+\item{legend_position}{The position of the legend. Options are: "left",
+"right", "top", "bottom", or "none". "none" removes the legend. "right"
+is the default.}
+
+\item{axis_text_y}{Logical. Determines if the y-axis has labels. If \code{FALSE},
+the default, the y-axis labels are removed. If \code{TRUE}, the y-axis labels
+are shown.}
+
+\item{grid}{Logical. Determines if ALL grid lines should appear. If \code{FALSE},
+the default, all grid lines disappear. If \code{TRUE}, all grid lines appear.}
+
+\item{...}{Other arguments passed onto \code{theme_default()}.}
 }
 \description{
-This function creates the theme for simple vertical bar plots
+This function creates the theme for non-stacked vertical bar plots
+}
+\details{
+#' @param base_size Base font size, given in pts. Also controls the spacing in
+the graph.
 }

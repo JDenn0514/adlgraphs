@@ -143,4 +143,3 @@ scale_adl <- function(type = "categorical",
 }
 
 
-

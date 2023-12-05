@@ -9,6 +9,7 @@ theme_default(
   base_family = "L",
   base_line_size = base_size/24,
   base_rect_size = base_size/24,
+  legend_position = "right",
   axis_text = TRUE,
   axis_text_x = TRUE,
   axis_text_y = TRUE,
@@ -32,6 +33,10 @@ the spacing in the graph.}
 \item{base_line_size}{Base size for line elements.}
 
 \item{base_rect_size}{Base size for rect elements.}
+
+\item{legend_position}{The position of the legend. Options are: "left",
+"right", "top", "bottom", or "none". "none" removes the legend. "right"
+is the default.}
 
 \item{axis_text}{Logical. Determines if BOTH axes have labels. If \code{TRUE}, the
 default, both axes are labelled. If \code{FALSE}, neither axis is labelled.

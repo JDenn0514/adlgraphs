@@ -2,22 +2,32 @@
 % Please edit documentation in R/themes.R
 \name{theme_h_stack}
 \alias{theme_h_stack}
-\title{A function for horizontal stacked bar plots}
+\title{Theme for horizontal stacked bar plots}
 \usage{
-theme_h_stack(base_size = 12, axis_text = FALSE, grid = FALSE, ...)
+theme_h_stack(
+  base_size = 12,
+  legend_position = "top",
+  axis_text = FALSE,
+  grid = FALSE,
+  ...
+)
 }
 \arguments{
-\item{base_size}{Base font size, given in pts. Also controls
-the spacing in the graph.}
+\item{base_size}{Base font size, given in pts. Also controls the spacing in
+the graph.}
 
-\item{axis_text}{Logical. Determines if BOTH axes have labels. If \code{TRUE}, the
-default, both axes are labelled. If \code{FALSE}, neither axis is labelled.
-Note, this controls both axes. If you want to remove only one axis, use the
-\code{axis_text_x} or \code{axis_text_y}.}
+\item{legend_position}{The position of the legend. Options are: "left",
+"right", "top", "bottom", or "none". "none" removes the legend. "top"
+is the default.}
 
-\item{grid}{Logical. Determines if ALL grid lines should appear. If \code{TRUE},
-the default, all grid lines appear. If \code{FALSE}, all grid lines disappear.}
+\item{axis_text}{Logical. Determines if BOTH axes have labels. If \code{FALSE},
+the  default, neither axis are labelled. If \code{TRUE}, both axes is labelled.}
+
+\item{grid}{Logical. Determines if any grid lines appear. If \code{FALSE}, the
+default, all grid lines disappear. If \code{TRUE}, all grid lines appear.}
+
+\item{...}{Other arguments passed onto \code{theme_default()}.}
 }
 \description{
-This function creates the theme for horizontal stacked bar plots
+This function creates the theme for horizontally stacked bar plots.
 }

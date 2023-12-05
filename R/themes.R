@@ -1,3 +1,4 @@
+
 #' Default theme
 #'
 #' This function creates the default theme that all ADL theme functions are
@@ -10,6 +11,9 @@
 #' @param base_family Base font family. Default is Lato.
 #' @param base_line_size Base size for line elements.
 #' @param base_rect_size Base size for rect elements.
+#' @param legend_position The position of the legend. Options are: "left",
+#'   "right", "top", "bottom", or "none". "none" removes the legend. "right"
+#'   is the default.
 #' @param axis_text Logical. Determines if BOTH axes have labels. If `TRUE`, the
 #'   default, both axes are labelled. If `FALSE`, neither axis is labelled.
 #'   Note, this controls both axes. If you want to remove only one axis, use the
@@ -56,6 +60,8 @@
 #'
 
 
+
+
 theme_default <- function(
   # control the base font size, this also determines spacing
   base_size = 12,
@@ -65,6 +71,8 @@ theme_default <- function(
   base_line_size = base_size / 24,
   # control the base rect_width
   base_rect_size = base_size / 24,
+  # determine where the legend is located
+  legend_position = "right",
   # determine if the axis labels are shown (controls both axes)
   axis_text = TRUE,
   # determine if the x-axis labels are shown, only controls x-axis
@@ -100,6 +108,7 @@ theme_default <- function(
     axis_text_labels <- element_text(
       size = rel(0.8),
       colour = "#595b60",
+      inherit.blank = TRUE
     )
   }
 
@@ -111,7 +120,8 @@ theme_default <- function(
       size = rel(0.8),
       colour = "#595b60",
       margin = margin(t = 0.8 * half_line / 2),
-      vjust = 1
+      vjust = 1,
+      inherit.blank = TRUE
     )
   }
 
@@ -123,7 +133,8 @@ theme_default <- function(
       size = rel(0.8),
       colour = "#595b60",
       margin = margin(r = 0.8 * half_line / 2),
-      vjust = 1
+      vjust = 1,
+      inherit.blank = TRUE
     )
   }
 
@@ -134,7 +145,8 @@ theme_default <- function(
     grid_major_line <- element_line(
       color = "gray75",
       linetype = "dashed",
-      linewidth = base_line_size
+      linewidth = base_line_size,
+      inherit.blank = TRUE
     )
   }
 
@@ -145,7 +157,8 @@ theme_default <- function(
     grid_minor_line <- element_line(
       color = "gray90",
       linetype = "dashed",
-      linewidth = base_line_size / 2
+      linewidth = base_line_size / 2,
+      inherit.blank = TRUE
     )
   }
 
@@ -157,7 +170,8 @@ theme_default <- function(
     grid_major_x_line <- element_line(
       color = "gray75",
       linetype = "dashed",
-      linewidth = base_line_size
+      linewidth = base_line_size,
+      inherit.blank = TRUE
     )
   }
 
@@ -168,7 +182,8 @@ theme_default <- function(
     grid_major_y_line <- element_line(
       color = "gray75",
       linetype = "dashed",
-      linewidth = base_line_size
+      linewidth = base_line_size,
+      inherit.blank = TRUE
     )
   }
 
@@ -179,7 +194,8 @@ theme_default <- function(
     grid_minor_x_line <- element_line(
       color = "gray90",
       linetype = "dashed",
-      linewidth = base_line_size / 2
+      linewidth = base_line_size / 2,
+      inherit.blank = TRUE
     )
   }
 
@@ -190,7 +206,8 @@ theme_default <- function(
     grid_minor_y_line <- element_line(
       color = "gray90",
       linetype = "dashed",
-      linewidth = base_line_size / 2
+      linewidth = base_line_size / 2,
+      inherit.blank = TRUE
     )
   }
 
@@ -225,13 +242,15 @@ theme_default <- function(
     axis.title                       = NULL,
     axis.title.x                     = element_text(
       margin = margin(t = half_line),
-      vjust = 1
+      vjust = 1,
+      inherit.blank = TRUE
     ),
     axis.title.x.top                 = NULL,
     axis.title.x.bottom              = NULL,
     axis.title.y                     = element_text(
       margin = margin(r = half_line),
-      vjust = 1
+      vjust = 1,
+      inherit.blank = TRUE
     ),
     axis.title.y.left                = NULL,
     axis.title.y.right               = NULL,
@@ -283,11 +302,17 @@ theme_default <- function(
     legend.key.size                  = unit(1.2, "lines"),
     legend.key.height                = NULL,
     legend.key.width                 = NULL,
-    legend.text                      = element_text(size = ggplot2::rel(0.8)),
+    legend.text                      = element_text(
+      size = ggplot2::rel(0.8),
+      inherit.blank = TRUE
+    ),
     legend.text.align                = NULL,
-    legend.title                     = element_text(hjust = 0),
+    legend.title                     = element_text(
+      hjust = 0,
+      inherit.blank = TRUE
+    ),
     legend.title.align                = NULL,
-    legend.position                  = "right",
+    legend.position                  = legend_position,
     legend.direction                 = NULL,
     legend.justification             = "center",
     legend.box                       = NULL,
@@ -315,26 +340,30 @@ theme_default <- function(
       face = "bold",
       hjust = 0.5,
       vjust = 1,
-      margin = margin(b = 10)
+      margin = margin(b = 10),
+      inherit.blank = TRUE
     ),
     plot.title.position              = "plot",
     plot.subtitle                    = element_text(
       family = "TW",
       hjust = 0,
       vjust = 1,
-      margin = margin(b = 15)
+      margin = margin(b = 15),
+      inherit.blank = TRUE
     ),
     plot.caption                     = element_text(
       size = rel(0.66),
       hjust = 1,
       vjust = 1,
-      margin = margin(t = base_size * 0.8)
+      margin = margin(t = base_size * 0.8),
+      inherit.blank = TRUE
     ),
     plot.caption.position            = "panel",
     plot.tag                         = element_text(
       size = rel(1.2),
       hjust = 0.5,
-      vjust = 0.5
+      vjust = 0.5,
+      inherit.blank = TRUE
     ),
     plot.tag.position                = "topleft",
     plot.tag.location                = NULL,
@@ -347,13 +376,20 @@ theme_default <- function(
     strip.text                       = element_text(
       colour = "grey10",
       size = rel(0.8),
-      margin = margin(0.8 * half_line, 0.8 * half_line, 0.8 * half_line, 0.8 * half_line)
+      margin = margin(0.8 * half_line, 0.8 * half_line, 0.8 * half_line, 0.8 * half_line),
+      inherit.blank = TRUE
     ),
     strip.text.x                     = NULL,
     strip.text.x.bottom              = NULL,
     strip.text.x.top                 = NULL,
-    strip.text.y                     = element_text(angle = -90),
-    strip.text.y.left                = element_text(angle = -90),
+    strip.text.y                     = element_text(
+      angle = -90,
+      inherit.blank = TRUE
+    ),
+    strip.text.y.left                = element_text(
+      angle = -90,
+      inherit.blank = TRUE
+    ),
     strip.text.y.right               = NULL,
     strip.switch.pad.grid            = unit(half_line / 2, "pt"),
     strip.switch.pad.wrap            = unit(half_line / 2, "pt"),
@@ -363,55 +399,68 @@ theme_default <- function(
 }
 
 
-
-
-
-
-
-
-
-#' A function for coefficient plots
+#' Theme for coefficient plots
 #'
 #' This function creates a theme for coefficient plots.
-#' @importFrom ggplot2 rel
-#'@export
 #'
+#' @param base_size Base font size, given in pts. Also controls the spacing in
+#'   the graph.
+#' @param grid_x_only Logical. Determines if only x-axis grid lines (vertical
+#'   lines) should appear. If `FALSE`, the default, all grid lines appear. If
+#'   `TRUE`, only the x-axis grid lines appear and the y-axis grid lines will
+#'   disappear.
+#' @param ... Other arguments passed onto `theme_default()`.
+#'
+#' @export
+theme_coef <- function(
+    # set the base font size
+  base_size = 12,
+  # determine if grid lines should be shown (controls major and minor, x and y grid lines)
+  grid_x_only = TRUE,
+  ...
+) {
 
-theme_coef <- function() {
-  ggplot::theme_minimal() +
-    ggplot::theme(
-      # adjust the overall text font family, size and lineheight
-      text = element_text(family = "L", size = 12, lineheight = 1.1),
-      # make the plot title TW font, bold, centered horizontally, and add bottom margin
-      plot.title = element_text(family = "TW", face = "bold", hjust = 0.5,
-                                margin = margin(b = 15)),
-      # make plot subtitle TW font, left adjusted, add bottom margin
-      plot.subtitle = element_text(family = "TW", hjust = 0,
-                                   margin = margin(b = 15)),
-      # add
-      strip.text = element_text(face = "bold", size = 12, hjust = 0.5,
-                                margin = margin(t = 10, b = 5)),
-      plot.margin = margin(15, 15, 15, 15),
+  half_line <- base_size / 2
+
+  theme_default(
+    base_size = base_size,
+    grid_x_only = grid_x_only,
+    ...
+  ) +
+    ggplot2::theme(
+      strip.text = element_text(
+        face = "bold",
+        size = 12,
+        hjust = 0.5,
+        margin = margin(t = 10, b = 5)
+      ),
       panel.spacing.x = unit(2, "lines"),
-      legend.position = "right",
-      legend.text = element_text(lineheight = 1.1,
-                                 margin = margin(b = 10, t = 10)),
-      axis.title.x = element_text(margin = margin(t = 10)),
-      panel.grid = element_blank(),
-      panel.grid.major.x = element_line(linewidth = 0.5, color = "gray75"),
-      panel.grid.minor.x = element_line(linewidth = 0.25, color = "gray90")
+      axis.title.x = element_text(margin = margin(t = base_size)),
     )
 }
 
 
-#' A function for horizontal stacked bar plots
+#' Theme for horizontal stacked bar plots
 #'
-#' This function creates the theme for horizontal stacked bar plots
-#' @inheritParams theme_default
+#' This function creates the theme for horizontally stacked bar plots.
+#'
+#' @param base_size Base font size, given in pts. Also controls the spacing in
+#'   the graph.
+#' @param legend_position The position of the legend. Options are: "left",
+#'   "right", "top", "bottom", or "none". "none" removes the legend. "top"
+#'   is the default.
+#' @param axis_text Logical. Determines if BOTH axes have labels. If `FALSE`,
+#'   the  default, neither axis are labelled. If `TRUE`, both axes is labelled.
+#' @param grid Logical. Determines if any grid lines appear. If `FALSE`, the
+#'   default, all grid lines disappear. If `TRUE`, all grid lines appear.
+#' @param ... Other arguments passed onto `theme_default()`.
+#'
 #' @export
 theme_h_stack <- function(
-
+  # set the base font size
   base_size = 12,
+  # put the legend at the top of the graph
+  legend_position = "top",
   # determine if the axis labels are shown (controls both axes)
   axis_text = FALSE,
   # determine if grid lines should be shown (controls major and minor, x and y grid lines)
@@ -430,75 +479,97 @@ theme_h_stack <- function(
       # adjust space margin around legend labels
       legend.text = element_text(margin = margin(r = 0, l = - half_line)),
       # adjust space around entire legend
-      legend.margin = margin(b = 0),
-      # legend position at the top
-      legend.position = "top"
+      legend.margin = margin(b = 0)
     )
 }
 
 
 
-#' A function for simple horizontal bar plots
+
+
+#' Theme for non-stacked horizontal bar plots
 #'
-#' This function creates the theme for simple horizontal bar plots
+#' This function creates a theme for non-stacked horizontal bar plots.
+#'
+#' @param base_size Base font size, given in pts. Also controls the spacing in
+#'   the graph.
+#' @param legend_position The position of the legend. Options are: "left",
+#'   "right", "top", "bottom", or "none". "none" removes the legend. "right"
+#'   is the default.
+#' @param axis_text_x Logical. Determines if the x-axis has labels. If `FALSE`,
+#'   the default, the x-axis labels are removed. If `TRUE`, the x-axis labels
+#'   are shown.
+#' @param grid Logical. Determines if ALL grid lines should appear. If `FALSE`,
+#'   the default, all grid lines disappear. If `TRUE`, all grid lines appear.
+#' @param ... Other arguments passed onto `theme_default()`.
 #'
 #' @export
+#'
+theme_h_bar <- function(
+  # set the base font size
+  base_size = 12,
+  # adjust the position of the legend
+  legend_position = "none",
+  # turn off the x-axis labels so only y-axis are shown
+  axis_text_x = FALSE,
+  # determine if grid lines should be shown (controls major and minor, x and y grid lines)
+  grid = FALSE,
+  ...
+) {
 
-# ggplot::theme for horizontal bar plots
-theme_h_bar <- function() {
-  ggplot::theme_minimal() +
-    ggplot::theme(
-      text = element_text(family = "L", size = 12, lineheight = 1.1),
-      plot.title = element_text(family = "TW", face = "bold", hjust = 0.5,
-                                margin = margin(b = 10)),
-      # center title over entire plot
-      plot.title.position = "plot",
-      plot.subtitle = element_text(family = "TW", hjust = 0,
-                                   margin = margin(b = 15)),
-      plot.caption = element_text(hjust = 1, size = 8, lineheight = 1.05,
-                                  # add space above caption
-                                  margin = margin(10)),
-      panel.grid = element_blank(),
-      legend.position = "none",
-      axis.text.x = element_blank(),
-      plot.margin = margin(15, 15, 15, 15)
-    )
+  half_line <- base_size / 2
+
+  theme_default(
+    base_size = base_size,
+    legend_position = legend_position,
+    axis_text_x = axis_text_x,
+    grid = grid,
+    ...
+  )
 }
 
-#' A function for simple vertical bar plots
+
+#' Theme for vertical non-stacked bar plots
 #'
-#' This function creates the theme for simple vertical bar plots
+#' This function creates the theme for non-stacked vertical bar plots
 #'
+#' #' @param base_size Base font size, given in pts. Also controls the spacing in
+#'   the graph.
+#' @param legend_position The position of the legend. Options are: "left",
+#'   "right", "top", "bottom", or "none". "none" removes the legend. "right"
+#'   is the default.
+#' @param axis_text_y Logical. Determines if the y-axis has labels. If `FALSE`,
+#'   the default, the y-axis labels are removed. If `TRUE`, the y-axis labels
+#'   are shown.
+#' @param grid Logical. Determines if ALL grid lines should appear. If `FALSE`,
+#'   the default, all grid lines disappear. If `TRUE`, all grid lines appear.
+#' @param ... Other arguments passed onto `theme_default()`.
+
 #' @export
 
-# ggplot::theme for vertical bar charts
-theme_v_bar <- function() {
-  ggplot::theme_minimal() +
-    ggplot::theme(
-      text = element_text(family = "L", size = 12, lineheight = 1.1),
-      plot.title = element_text(family = "TW", face = "bold", hjust = 0.5,
-                                margin = margin(b = 10)),
-      # center title over entire plot
-      plot.title.position = "plot",
-      plot.subtitle = element_text(family = "TW", hjust = 0,
-                                   margin = margin(b = 15)),
-      plot.caption = element_text(hjust = 1, size = 8, margin = margin(5), lineheight = 1.05),
-      # make sure there is space around the graph
-      plot.margin = margin(15, 15, 15, 15),
-      # make the background white
-      #plot.background = element_rect(fill = "white"),
-      axis.text.x = element_text(margin = margin(b = 10), lineheight = 1.1),
-      axis.text.y = element_blank(),
-      axis.title.x = element_text(margin = margin(b = 10),
-                                  lineheight = 1.1),
-      #axis.title.y = element_text(margin = margin(r = 10)),
-      legend.text = element_text(margin = margin(r = 10, l = -3)),
-      # legend position
-      legend.position = "top",
-      panel.grid = element_blank(),
+theme_v_bar <- function(
+    # set the base font size
+  base_size = 12,
+  # adjust the position of the legend
+  legend_position = "none",
+  # turn off the y-axis labels so only x-axis are shown
+  axis_text_y = FALSE,
+  # determine if grid lines should be shown (controls major and minor, x and y grid lines)
+  grid = FALSE,
+  ...
+) {
 
-    )
+  half_line <- base_size / 2
+
+  theme_default(
+    base_size = base_size,
+    legend_position = legend_position,
+    axis_text_y = axis_text_y,
+    grid = grid,
+    ...
+  )
 }
+
 
 
 

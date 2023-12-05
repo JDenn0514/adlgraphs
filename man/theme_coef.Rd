@@ -2,9 +2,20 @@
 % Please edit documentation in R/themes.R
 \name{theme_coef}
 \alias{theme_coef}
-\title{A function for coefficient plots}
+\title{Theme for coefficient plots}
 \usage{
-theme_coef()
+theme_coef(base_size = 12, grid_x_only = TRUE, ...)
+}
+\arguments{
+\item{base_size}{Base font size, given in pts. Also controls the spacing in
+the graph.}
+
+\item{grid_x_only}{Logical. Determines if only x-axis grid lines (vertical
+lines) should appear. If \code{FALSE}, the default, all grid lines appear. If
+\code{TRUE}, only the x-axis grid lines appear and the y-axis grid lines will
+disappear.}
+
+\item{...}{Other arguments passed onto \code{theme_default()}.}
 }
 \description{
 This function creates a theme for coefficient plots.
