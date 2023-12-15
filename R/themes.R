@@ -325,7 +325,7 @@ theme_default <- function(
     panel.spacing                    = unit(half_line, "pt"),
     panel.spacing.x                  = NULL,
     panel.spacing.y                  = NULL,
-    panel.grid                       = element_blank(),
+    panel.grid                       = NULL,
     panel.grid.major                 = grid_major_line,
     panel.grid.minor                 = grid_minor_line,
     panel.grid.major.x               = grid_major_x_line,
