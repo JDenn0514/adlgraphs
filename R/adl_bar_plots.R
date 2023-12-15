@@ -7,6 +7,8 @@
 #' the Center for Antisemitism Research's team time when making graphs.
 #'
 #' @param df A dataframe or tibble.
+#'
+#' @export
 
 adl_bar_plots <- function(
     df,
