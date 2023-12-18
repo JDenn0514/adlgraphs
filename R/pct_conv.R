@@ -6,6 +6,8 @@
 #' @param data A data frame or vector. Can be left blank if used during piping
 #' @param var a variable we want to convert to a percentage. The value is `pct`
 #' by default and should always be pct.
+#'
+#' @export
 
 pct_conv <- function(data, var = pct) {
   data %>%
