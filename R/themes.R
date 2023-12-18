@@ -121,6 +121,7 @@ theme_default <- function(
       colour = "#595b60",
       margin = margin(t = 0.8 * half_line / 2),
       vjust = 1,
+      hjust = 0.5,
       inherit.blank = TRUE
     )
   }
@@ -133,7 +134,8 @@ theme_default <- function(
       size = rel(0.8),
       colour = "#595b60",
       margin = margin(r = 0.8 * half_line / 2),
-      vjust = 1,
+      vjust = 0.5,
+      hjust = 1,
       inherit.blank = TRUE
     )
   }
