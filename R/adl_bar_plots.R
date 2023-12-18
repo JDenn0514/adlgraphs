@@ -293,5 +293,5 @@ adl_bar_plots <- function(
     }
 
   }
-
+  return(plot)
 }
