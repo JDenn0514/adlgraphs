@@ -6,8 +6,6 @@
 #' new variable created in the `names_to` variable.
 #'
 #' @inheritParams tidyr::pivot_longer
-#' @param add_value_labes Logical. If `TRUE`, the default, it will add
-#'   value labels to the variable specified in `names_to`. If `FALSE`
 #'
 #' @export
 

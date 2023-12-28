@@ -2,9 +2,7 @@
 % Please edit documentation in R/pct_conv.R
 \name{pct_conv}
 \alias{pct_conv}
-\title{Make proper percent labels
-This function is a wrapper around a very common data transformation that is
-done every time we make a frequency plot}
+\title{Make proper percent labels}
 \usage{
 pct_conv(data, var = pct)
 }
@@ -15,7 +13,6 @@ pct_conv(data, var = pct)
 by default and should always be pct.}
 }
 \description{
-Make proper percent labels
 This function is a wrapper around a very common data transformation that is
 done every time we make a frequency plot
 }

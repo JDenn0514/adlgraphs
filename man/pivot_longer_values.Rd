@@ -36,9 +36,6 @@ from the data stored in cell values. If \code{names_to} is a character
 containing the special \code{.value} sentinel, this value will be ignored,
 and the name of the value column will be derived from part of the
 existing column names.}
-
-\item{add_value_labes}{Logical. If \code{TRUE}, the default, it will add
-value labels to the variable specified in \code{names_to}. If \code{FALSE}}
 }
 \description{
 This function is a wrapper around \code{\link[tidyr]{pivot_longer}}. This
