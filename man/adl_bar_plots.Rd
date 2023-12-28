@@ -8,27 +8,89 @@ adl_bar_plots(
   df,
   x,
   y,
+  col_label,
   group = NULL,
   fill = NULL,
-  color = NULL,
-  orientation = "vertical",
+  direction = "vertical",
   col_text_size = 3.25,
+  distance_from_col = 0.25,
   freq_plot = TRUE,
-  tropes = FALSE,
-  position = "stack",
+  position = NULL,
   dodge_width = 0.8,
   dodge_reverse = TRUE,
-  distance_from_bar = 0.25,
   ...
 )
 }
 \arguments{
-\item{df}{A dataframe or tibble.}
+\item{df}{A dataframe or tibble. This can be piped in like with a normal
+\code{\link[ggplot2]{ggplot}} function.}
+
+\item{x}{Variable that goes in the x-axis. This is required.}
+
+\item{y}{Variable that goes in the y-axis. This is required.}
+
+\item{col_label}{Variable that provides the values to be used as the labels
+in the plot. This is what is used in \code{geom_text} and \code{geom_label}}
+
+\item{group}{Explicitly set the overall grouping variable. This is used in
+stacked graphs and dodged graphs. If NULL, the default, no grouping
+variable is used. Note: No need to set this if the  data is not grouped
+at all.}
+
+\item{fill}{Set the grouping variable for which the inside of the bars are
+colored. This is used in stacked graphs and dodged graphs. If NULL, the
+default, no grouping variable is used. Note: No need to set this if the
+data is not grouped at all.}
+
+\item{direction}{A character string indicating the direction of the bars.
+There are two options:
+\enumerate{
+\item "vertical", the default, the bars are vertical
+\item "horizontal" the bars are horizontal
+This must be set explicitly as it affects the location of the text, labels,
+and error bars.
+}}
+
+\item{col_text_size}{The size of the text inside/on top of the columns.
+Default is 3.25.}
+
+\item{distance_from_col}{How far the labels are from the bars in freq plots
+and how far they are from the bottom of the bar in the mean plots.}
+
+\item{freq_plot}{Logical. Determines if this is a frequency plot. If \code{TRUE},
+default, then the graph will be styled as a frequency plot with the bar
+labels appearing outside the bars. \code{FALSE}, the graph will be styled as a
+mean plot with the labels appearing.}
+
+\item{position}{A character string determining how the plot handles a grouped
+graph. By default it is \code{NULL} which assumes there is no grouping variable.
+If you set to "dodge" then you will get a dodged plot. This is best used
+when comparing two groups, especially when they do not add up to 100. If
+you set it to "stacked" then you get a stacked plot. This should be used
+when comparing multiple statements with likert scales and other things that
+add up to 100.}
+
+\item{dodge_width}{This adjusts the width in the dodge plot. For more info
+check out \code{\link[ggplot2]{position_dodge}}.}
+
+\item{...}{Additional arguments passed on to \code{theme_default}}
 }
 \description{
 This function allows users to create different types of bar plots with
 ADL's style. This a wrapper around \code{\link[ggplot2]{geom_col}},
 \code{\link[ggplot2]{geom_text}}/\code{\link[ggplot2]{geom_label}}, and
-\code{\link[ggplot2]{geom_errorbar}}. The purpose of this function is to save
-the Center for Antisemitism Research's team time when making graphs.
+\code{\link[ggplot2]{geom_errorbar}}. This function was created to
+standardize the graphs produced by CAR's team and to cut down on the amount
+of time it takes to make these graphs.
+}
+\details{
+As mentioned previously, this function is a wrapper around various \code{ggplot2}
+functions in order to save time when making simple bar plots, dodged bar
+plots, and stacked bar plots. As a result, it is not possible to combine
+every element of the graph. If you would like to do so, we recommend using the
+actual geoms from \code{ggplot2}.
+
+Each of the elements included serve a purpose to allow you to customize the
+graphs so that they look nice. Moreover, the arguments were created for the
+types of graphs that CAR produces, namely mean plots and frequency plots.
 }

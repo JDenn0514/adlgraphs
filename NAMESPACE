@@ -2,6 +2,7 @@
 
 export(adl_bar_plots)
 export(pct_conv)
+export(pivot_longer_values)
 export(scale_adl)
 export(theme_coef)
 export(theme_default)

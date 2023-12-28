@@ -1,4 +1,4 @@
-## code to prepare `DATASET` dataset goes here
+## code to prepare `adl_palettes` dataset goes here
 
 
 # categorical colors
