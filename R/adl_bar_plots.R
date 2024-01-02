@@ -128,7 +128,7 @@ adl_bar_plots <- function(
             width = 0.8
           ) +
           geom_text(
-            aes(label = {{ col_label }}, x = ({{ x }} + distance_from_bar)),
+            aes(label = {{ col_label }}, x = ({{ x }} + distance_from_col)),
             family = "L",
             size = col_text_size,
             color = "#2c2e35",
@@ -143,7 +143,7 @@ adl_bar_plots <- function(
             width = 0.8
           ) +
           geom_text(
-            aes(label = {{ col_label }}, y = ({{ y }} + distance_from_bar)),
+            aes(label = {{ col_label }}, y = ({{ y }} + distance_from_col)),
             family = "L",
             size = col_text_size,
             color = "#2c2e35",
@@ -165,7 +165,7 @@ adl_bar_plots <- function(
             color = "#2c2e35"
           ) +
           geom_label(
-            aes(label = mean, x = distance_from_bar),
+            aes(label = mean, x = distance_from_col),
             family = "L",
             size = col_text_size,
             hjust = 0,
@@ -186,7 +186,7 @@ adl_bar_plots <- function(
             color = "#2c2e35"
           ) +
           geom_label(
-            aes(label = mean, y = distance_from_bar),
+            aes(label = mean, y = distance_from_col),
             family = "L",
             size = col_text_size,
             vjust = 0,
@@ -208,7 +208,7 @@ adl_bar_plots <- function(
             width = 0.8
           ) +
           geom_text(
-            aes(label = {{ col_label }}, x = ({{ x }} + distance_from_bar)),
+            aes(label = {{ col_label }}, x = ({{ x }} + distance_from_col)),
             position = position_dodge2(width = dodge_width, reverse = dodge_reverse),
             family = "L",
             size = col_text_size,
@@ -226,7 +226,7 @@ adl_bar_plots <- function(
             width = 0.8
           ) +
           geom_text(
-            aes(label = {{ col_label }}, y = ({{ y }} + distance_from_bar)),
+            aes(label = {{ col_label }}, y = ({{ y }} + distance_from_col)),
             position = position_dodge2(width = dodge_width, reverse = dodge_reverse),
             family = "L",
             size = col_text_size,
@@ -252,7 +252,7 @@ adl_bar_plots <- function(
             color = "#2c2e35"
           ) +
           geom_label(
-            aes(label = {{ col_label }}, x = distance_from_bar),
+            aes(label = {{ col_label }}, x = distance_from_col),
             position = position_dodge(width = dodge_width),
             hjust = 0,
             family = "L",
@@ -278,7 +278,7 @@ adl_bar_plots <- function(
             color = "#2c2e35"
           ) +
           geom_label(
-            aes(label = {{ col_label }}, y = distance_from_bar),
+            aes(label = {{ col_label }}, y = distance_from_col),
             position = position_dodge(width = dodge_width),
             vjust = 0,
             family = "L",
