@@ -28,5 +28,6 @@ pivot_longer_values <- function(data, cols, names_to, values_to) {
   # add the vector of labels as value labels to the new column of names
   labelled::val_labels(long[{{names_to}}]) <- var_labs
 
+  return(long)
 
 }
