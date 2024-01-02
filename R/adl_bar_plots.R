@@ -58,6 +58,11 @@
 #' @param dodge_width This adjusts the width in the dodge plot. For more info
 #'   check out \code{\link[ggplot2]{position_dodge}}.
 #' @export
+#'
+#'
+
+
+# Add the ability to add groups to a non-dodged or stacked bar
 
 adl_bar_plots <- function(
     df,
@@ -122,35 +127,66 @@ adl_bar_plots <- function(
   if (is.null(position)) {
     if (freq_plot == TRUE) {
       if (direction == "horizontal") {
-        plot <- plot +
-          geom_col(
-            fill = adl_palettes$primary,
-            width = 0.8
-          ) +
-          geom_text(
-            aes(label = {{ col_label }}, x = ({{ x }} + distance_from_col)),
-            family = "L",
-            size = col_text_size,
-            color = "#2c2e35",
-            hjust = 0
-          ) +
-          theme_h_bar(...)
+        if (is.null(group) && is.null(fill)) {
+          plot <- plot +
+            geom_col(
+              fill = adl_palettes$primary,
+              width = 0.8
+            ) +
+            geom_text(
+              aes(label = {{ col_label }}, x = ({{ x }} + distance_from_col)),
+              family = "L",
+              size = col_text_size,
+              color = "#2c2e35",
+              hjust = 0
+            ) +
+            theme_h_bar(...)
+        } else {
+          plot <- plot +
+            geom_col(
+              width = 0.8
+            ) +
+            geom_text(
+              aes(label = {{ col_label }}, x = ({{ x }} + distance_from_col)),
+              family = "L",
+              size = col_text_size,
+              color = "#2c2e35",
+              hjust = 0
+            ) +
+            theme_h_bar(...)
+        }
       }
       else if (direction == "vertical") {
-        plot <- plot +
-          geom_col(
-            fill = adl_palettes$primary,
-            width = 0.8
-          ) +
-          geom_text(
-            aes(label = {{ col_label }}, y = ({{ y }} + distance_from_col)),
-            family = "L",
-            size = col_text_size,
-            color = "#2c2e35",
-            vjust = 0
-          ) +
-          theme_v_bar(...)
+        if (is.null(group) && is.null(fill)) {
+          plot <- plot +
+            geom_col(
+              fill = adl_palettes$primary,
+              width = 0.8,
+            ) +
+            geom_text(
+              aes(label = {{ col_label }}, y = ({{ y }} + distance_from_col)),
+              family = "L",
+              size = col_text_size,
+              color = "#2c2e35",
+              vjust = 0
+            ) +
+            theme_v_bar(...)
 
+        } else {
+          plot <- plot +
+            geom_col(
+              width = 0.8
+            ) +
+            geom_text(
+              aes(label = {{ col_label }}, y = ({{ y }} + distance_from_col)),
+              family = "L",
+              size = col_text_size,
+              color = "#2c2e35",
+              vjust = 0
+            ) +
+            theme_v_bar(...)
+
+        }
       }
     } else if (freq_plot == FALSE) {
       if (direction == "horizontal") {
