@@ -344,7 +344,7 @@ theme_default <- function(
       face = "bold",
       hjust = 0.5,
       vjust = 1,
-      margin = margin(b = 10),
+      margin = margin(b = base_size),
       inherit.blank = TRUE
     ),
     plot.title.position              = "plot",
@@ -352,7 +352,7 @@ theme_default <- function(
       family = "TW",
       hjust = 0,
       vjust = 1,
-      margin = margin(b = 15),
+      margin = margin(b = base_size * 1.2),
       inherit.blank = TRUE
     ),
     plot.caption                     = element_text(
