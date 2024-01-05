@@ -233,7 +233,7 @@ theme_default <- function(
       family = base_family,
       face = "plain",
       colour = "black",
-      size = 12,
+      size = base_size,
       lineheight = 1.1,
       hjust = 0.5,
       vjust = 0.5,
