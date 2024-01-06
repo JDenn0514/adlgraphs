@@ -339,7 +339,7 @@ theme_default <- function(
     panel.ontop                      = FALSE,
     plot.background                  = element_rect(colour = "white"),
     plot.title                       = element_text(
-      size = rel(1.2),
+      size = base_size * 1.2,
       family = "TW",
       face = "bold",
       hjust = 0.5,
@@ -356,7 +356,7 @@ theme_default <- function(
       inherit.blank = TRUE
     ),
     plot.caption                     = element_text(
-      size = rel(0.66),
+      size = base_size * 0.66,
       hjust = 1,
       vjust = 1,
       margin = margin(t = base_size * 0.8),
@@ -364,7 +364,7 @@ theme_default <- function(
     ),
     plot.caption.position            = "panel",
     plot.tag                         = element_text(
-      size = rel(1.2),
+      size = base_size * 1.2,
       hjust = 0.5,
       vjust = 0.5,
       inherit.blank = TRUE
@@ -379,7 +379,7 @@ theme_default <- function(
     strip.placement                  = "inside",
     strip.text                       = element_text(
       colour = "grey10",
-      size = rel(0.8),
+      size = base_size * 0.8,
       margin = margin(0.8 * half_line, 0.8 * half_line, 0.8 * half_line, 0.8 * half_line),
       inherit.blank = TRUE
     ),
