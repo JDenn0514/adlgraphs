@@ -23,4 +23,36 @@ template:
 development:
   mode: auto
 reference:
+- Title: Graph Wrappers
+  desc: These are wrapper functions around common `{ggplot2}` functions.
+  contents:
+    - adl_bar_plots
+- Title: Themes
+  desc: Full blown `{ggplot2}` themes that affect almost all visual aspects of a
+    graph. These are similar to {ggplot2}` themes like `ggplot2::theme_minimal()`
+    or `{ggthemes}` like `ggthemes::theme_fivethirtyeight()`.
+  contents:
+    - theme_default
+    - theme_v_bar
+    - theme_h_bar
+    - theme_h_stack
+    - theme_coef
+- Title: Other graph functions
+  desc: Other functions that are used in the graph production process
+  contents:
+    - scale_adl
+    - adl_palettes
+- Title: Analysis functions
+  desc: These are miscellaneous functions created to help with data analysis.
+  contents:
+    - pct_conv
+    - freq_fun
+    - get_all_freqs
+    - pivot_longer_values
+
+
+
+
+
+
 
