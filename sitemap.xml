@@ -19,6 +19,12 @@
     <loc>https://jdenn0514.github.io/adlgraphs/reference/adlgraphs-package.html</loc>
   </url>
   <url>
+    <loc>https://jdenn0514.github.io/adlgraphs/reference/freq_fun.html</loc>
+  </url>
+  <url>
+    <loc>https://jdenn0514.github.io/adlgraphs/reference/get_all_freqs.html</loc>
+  </url>
+  <url>
     <loc>https://jdenn0514.github.io/adlgraphs/reference/index.html</loc>
   </url>
   <url>
@@ -44,5 +50,8 @@
   </url>
   <url>
     <loc>https://jdenn0514.github.io/adlgraphs/reference/theme_v_bar.html</loc>
+  </url>
+  <url>
+    <loc>https://jdenn0514.github.io/adlgraphs/reference/write_word_table.html</loc>
   </url>
 </urlset>
