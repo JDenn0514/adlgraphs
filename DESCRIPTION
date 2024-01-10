@@ -26,7 +26,6 @@ Imports:
   labelled,
   purrr,
   scales,
-  socsci,
   stringr,
   tidyr
 RoxygenNote: 7.2.3.9000
