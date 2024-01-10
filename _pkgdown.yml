@@ -11,7 +11,7 @@ template:
       google: "Titillium Web"
     bg: "#fcfbf9"         # lighten springwood background
     fg: "#2c2e35"         # contrast ratio: 15.76 for text
-    primary: "#093c71"    # navy blue link text
+    primary: "#CA225E"    # navy blue link text
     secondary: "#97d0dc"  # blue active pill background
     link-color: "#437597" # brighter link color, contrast 4.52
     info: "#BED4E2"       # version badge bg
