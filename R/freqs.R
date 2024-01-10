@@ -17,10 +17,10 @@ write_word_table <- function(var, doc) {
 #'
 #' @param df An object of type data.frame or tibble. If piping the df into the
 #'   function, this is not required.
-#' @param var A character vector. The variable with which want to get the
+#' @param var A character string. The variable with which want to get the
 #'   frequencies.
-#' @param group1 A character string The first grouping variable.
-#' @param group2 A character string The second grouping variable.
+#' @param group1 A character string. The first grouping variable.
+#' @param group2 A character string. The second grouping variable.
 #' @param wt Weights. Add if you have a weighting variable and want to get
 #'   weighted frequencies
 #'
@@ -33,9 +33,10 @@ freq_fun <- function(df, var, group1, group2, wt) {
       df %>%
         tidyr::drop_na({{ var }}) %>%
         dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        socsci::ct(var_f) %>%
+        dplyr::count(var_f) %>%
         dplyr::mutate(
-          n = round(n),
+          pct = prop.table(n),
+          pct = round(pct, 3),
           pct = scales::percent(pct, accuracy = 0.1)
         ) %>%
         gt::gt()
@@ -49,9 +50,10 @@ freq_fun <- function(df, var, group1, group2, wt) {
       genpop <- df %>%
         tidyr::drop_na({{ var }}) %>%
         dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        socsci::ct(var_f) %>%
+        dplyr::count(var_f) %>%
         dplyr::mutate(
-          n = round(n),
+          pct = prop.table(n),
+          pct = round(pct, 3),
           pct = scales::percent(pct, accuracy = 0.1),
           `General Population` = glue("{pct} (n = {n})") %>%
             stringr::str_replace(" ", "<br>")
@@ -64,11 +66,12 @@ freq_fun <- function(df, var, group1, group2, wt) {
         tidyr::drop_na({{ var }}, {{ group1 }}) %>%
         dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
         group_by(!!sym({{ group1 }})) %>%
-        socsci::ct(var_f) %>%
+        dplyr::count(var_f) %>%
         dplyr::mutate(
-          n = round(n),
+          pct = prop.table(n),
+          pct = round(pct, 3),
           pct = scales::percent(pct, accuracy = 0.1),
-          pct = glue("{pct} (n = {n})") %>%
+          pct = glue("{pct} ({n})") %>%
             stringr::str_replace(" ", "<br>")
         ) %>%
         dplyr::select(-n) %>%
@@ -106,11 +109,12 @@ freq_fun <- function(df, var, group1, group2, wt) {
       genpop <- df  %>%
         tidyr::drop_na({{ var }}) %>%
         dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        socsci::ct(var_f) %>%
+        dplyr::count(var_f) %>%
         dplyr::mutate(
-          n = round(n),
+          pct = prop.table(n),
+          pct = round(pct, 3),
           pct = scales::percent(pct, accuracy = 0.1),
-          `General Population` = glue("{pct} (n = {n})") %>%
+          `General Population` = glue("{pct} ({n})") %>%
             stringr::str_replace(" ", "<br>")
         ) %>%
         dplyr::select(-c(n, pct))
@@ -120,12 +124,13 @@ freq_fun <- function(df, var, group1, group2, wt) {
       group1 <- df  %>%
         tidyr::drop_na({{ var }}, {{ group1 }}) %>%
         dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        group_by(!!sym({{ group1 }})) %>%
-        socsci::ct(var_f) %>%
+        dplyr::group_by(!!sym({{ group1 }})) %>%
+        dplyr::count(var_f) %>%
         dplyr::mutate(
-          n = round(n),
+          pct = prop.table(n),
+          pct = round(pct, 3),
           pct = scales::percent(pct, accuracy = 0.1),
-          pct = glue("{pct} (n = {n})") %>%
+          pct = glue("{pct} ({n})") %>%
             stringr::str_replace(" ", "<br>")
         ) %>%
         dplyr::select(-n) %>%
@@ -139,12 +144,13 @@ freq_fun <- function(df, var, group1, group2, wt) {
       group2 <- df  %>%
         tidyr::drop_na({{ var }}, {{ group2 }}) %>%
         dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        group_by(!!sym({{ group2 }})) %>%
-        socsci::ct(var_f) %>%
+        dplyr::group_by(!!sym({{ group2 }})) %>%
+        dplyr::count(var_f) %>%
         dplyr::mutate(
-          n = round(n),
+          pct = prop.table(n),
+          pct = round(pct, 3),
           pct = scales::percent(pct, accuracy = 0.1),
-          pct = glue("{pct} (n = {n})") %>%
+          pct = glue("{pct} ({n})") %>%
             stringr::str_replace(" ", "<br>")
         ) %>%
         dplyr::select(-n) %>%
@@ -184,8 +190,9 @@ freq_fun <- function(df, var, group1, group2, wt) {
       df %>%
         tidyr::drop_na({{ var }}) %>%
         dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        socsci::ct(var_f, wt = !!sym({{ wt }} )) %>%
+        dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
         dplyr::mutate(
+          pct = prop.table(n),
           n = round(n),
           pct = scales::percent(pct, accuracy = 0.1)
         ) %>%
@@ -200,11 +207,12 @@ freq_fun <- function(df, var, group1, group2, wt) {
       genpop <- df %>%
         tidyr::drop_na({{ var }}) %>%
         dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        socsci::ct(var_f, wt = !!sym({{ wt }} )) %>%
+        dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
         dplyr::mutate(
+          pct = prop.table(n),
           n = round(n),
           pct = scales::percent(pct, accuracy = 0.1),
-          `General Population` = glue("{pct} (n = {n})") %>%
+          `General Population` = glue("{pct} ({n})") %>%
             stringr::str_replace(" ", "<br>")
         ) %>%
         dplyr::select(-c(n, pct))
@@ -214,12 +222,13 @@ freq_fun <- function(df, var, group1, group2, wt) {
       group1 <- df  %>%
         tidyr::drop_na({{ var }}, {{ group1 }}) %>%
         dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        group_by(!!sym({{ group1 }})) %>%
-        socsci::ct(var_f, wt = !!sym({{ wt }} )) %>%
+        dplyr::group_by(!!sym({{ group1 }})) %>%
+        dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
         dplyr::mutate(
+          pct = prop.table(n),
           n = round(n),
           pct = scales::percent(pct, accuracy = 0.1),
-          pct = glue("{pct} (n = {n})") %>%
+          pct = glue("{pct} ({n})") %>%
             stringr::str_replace(" ", "<br>")
         ) %>%
         dplyr::select(-n) %>%
@@ -257,11 +266,12 @@ freq_fun <- function(df, var, group1, group2, wt) {
       genpop <- df  %>%
         tidyr::drop_na({{ var }}) %>%
         dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        socsci::ct(var_f) %>%
+        dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
         dplyr::mutate(
+          pct = prop.table(n),
           n = round(n),
           pct = scales::percent(pct, accuracy = 0.1),
-          `General Population` = glue("{pct} (n = {n})") %>%
+          `General Population` = glue("{pct} ({n})") %>%
             stringr::str_replace(" ", "<br>")
         ) %>%
         dplyr::select(-c(n, pct))
@@ -271,12 +281,13 @@ freq_fun <- function(df, var, group1, group2, wt) {
       group1 <- df  %>%
         tidyr::drop_na({{ var }}, {{ group1 }}) %>%
         dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        group_by(!!sym({{ group1 }})) %>%
-        socsci::ct(var_f, wt = !!sym({{ wt }} )) %>%
+        dplyr::group_by(!!sym({{ group1 }})) %>%
+        dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
         dplyr::mutate(
+          pct = prop.table(n),
           n = round(n),
           pct = scales::percent(pct, accuracy = 0.1),
-          pct = glue("{pct} (n = {n})") %>%
+          pct = glue("{pct} ({n})") %>%
             stringr::str_replace(" ", "<br>")
         ) %>%
         dplyr::select(-n) %>%
@@ -290,12 +301,13 @@ freq_fun <- function(df, var, group1, group2, wt) {
       group2 <- df  %>%
         tidyr::drop_na({{ var }}, {{ group2 }}) %>%
         dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        group_by(!!sym({{ group2 }})) %>%
-        socsci::ct(var_f, wt = !!sym({{ wt }} )) %>%
+        dplyr::group_by(!!sym({{ group2 }})) %>%
+        dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
         dplyr::mutate(
+          pct = prop.table(n),
           n = round(n),
           pct = scales::percent(pct, accuracy = 0.1),
-          pct = glue("{pct} (n = {n})") %>%
+          pct = glue("{pct} ({n})") %>%
             stringr::str_replace(" ", "<br>")
         ) %>%
         dplyr::select(-n) %>%
@@ -334,6 +346,7 @@ freq_fun <- function(df, var, group1, group2, wt) {
 
 
 }
+
 
 
 #' Export frequencies for a set of variables to a word doc.

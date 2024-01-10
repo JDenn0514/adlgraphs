@@ -10,12 +10,12 @@ freq_fun(df, var, group1, group2, wt)
 \item{df}{An object of type data.frame or tibble. If piping the df into the
 function, this is not required.}
 
-\item{var}{A character vector. The variable with which want to get the
+\item{var}{A character string. The variable with which want to get the
 frequencies.}
 
-\item{group1}{A character string The first grouping variable.}
+\item{group1}{A character string. The first grouping variable.}
 
-\item{group2}{A character string The second grouping variable.}
+\item{group2}{A character string. The second grouping variable.}
 
 \item{wt}{Weights. Add if you have a weighting variable and want to get
 weighted frequencies}

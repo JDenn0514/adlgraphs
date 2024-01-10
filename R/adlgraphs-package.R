@@ -7,11 +7,10 @@
 #' @importFrom sysfonts font_add_google
 #' @importFrom gt gt tab_spanner fmt_markdown
 #' @importFrom gtExtras gt_add_divider
-#' @importFrom socsci ct
 #' @importFrom cli cli_abort
 #' @importFrom labelled var_label
 #' @import glue
-#' @importFrom dplyr mutate select  bind_cols
+#' @importFrom dplyr mutate select bind_cols count
 #' @importFrom tidyr pivot_wider drop_na
 #' @importFrom purrr pmap walk
 #' @importFrom scales percent
