@@ -1,4 +1,4 @@
-#' Internal function to be used when we export to a word doc
+
 write_word_table <- function(var, doc) {
   doc %>%
     gto::body_add_gt(value = var) %>%
