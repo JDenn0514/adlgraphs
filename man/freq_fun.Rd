@@ -24,6 +24,6 @@ weighted frequencies}
 This function creates a GT table of the frequencies of a specified variable
 and has the ability to get the frequencies for up to two grouping variables.
 While this can be used on it's own, it was created more to be used in
-\code{get_all_freqs}, a function that outputs the frequencies of a set of
+\code{\link[=get_all_freqs]{get_all_freqs()}}`, a function that outputs the frequencies of a set of
 variables to a word doc.
 }

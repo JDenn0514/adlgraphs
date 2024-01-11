@@ -12,7 +12,7 @@ write_word_table <- function(var, doc) {
 #' This function creates a GT table of the frequencies of a specified variable
 #' and has the ability to get the frequencies for up to two grouping variables.
 #' While this can be used on it's own, it was created more to be used in
-#' `get_all_freqs`, a function that outputs the frequencies of a set of
+#' [get_all_freqs()]`, a function that outputs the frequencies of a set of
 #' variables to a word doc.
 #'
 #' @param df An object of type data.frame or tibble. If piping the df into the
@@ -351,7 +351,7 @@ freq_fun <- function(df, var, group1, group2, wt) {
 
 #' Export frequencies for a set of variables to a word doc.
 #'
-#' This function uses `freq_fun` to get the frequencies for a set of variables
+#' This function uses [freq_fun()] to get the frequencies for a set of variables
 #' suppplied by the user. It then outputs these frequencies to a word doc.
 #'
 #' @param df An object of type data.frame or tibble. If piping the df into the

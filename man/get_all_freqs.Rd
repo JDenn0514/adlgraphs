@@ -20,6 +20,6 @@ function, this is not required.}
 to get weighted frequencies}
 }
 \description{
-This function uses \code{freq_fun} to get the frequencies for a set of variables
+This function uses \code{\link[=freq_fun]{freq_fun()}} to get the frequencies for a set of variables
 suppplied by the user. It then outputs these frequencies to a word doc.
 }
