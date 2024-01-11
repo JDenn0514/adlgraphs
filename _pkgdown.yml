@@ -31,8 +31,7 @@ reference:
 - title: Themes
   desc: Full blown `{ggplot2}` themes that affect almost all visual aspects of a
     graph. These are similar to `{ggplot2}` themes like
-    \code{\link[ggplot2]{theme_minimal}} or `{ggthemes}` like
-    \code{\link[ggthmes]{theme_fivethirtyeight}}.
+    `ggplot2::theme_minimal()` or `{ggthemes}` like `ggthemes::theme_fivethirtyeight()`.
   contents:
     - theme_default
     - theme_v_bar
