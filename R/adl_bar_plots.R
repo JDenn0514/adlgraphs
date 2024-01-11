@@ -11,7 +11,7 @@
 #' functions in order to save time when making simple bar plots, dodged bar
 #' plots, and stacked bar plots. As a result, it is not possible to combine
 #' every element of the graph. If you would like to do so, we recommend using the
-#' actual geoms from `ggplot2`.
+#' actual geoms from `{ggplot2}`.
 #'
 #' Each of the elements included serve a purpose to allow you to customize the
 #' graphs so that they look nice. Moreover, the arguments were created for the

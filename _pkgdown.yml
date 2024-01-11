@@ -30,7 +30,7 @@ reference:
     - adl_bar_plots
 - title: Themes
   desc: Full blown `{ggplot2}` themes that affect almost all visual aspects of a
-    graph. These are similar to {ggplot2}` themes like `ggplot2::theme_minimal()`
+    graph. These are similar to `{ggplot2}` themes like `ggplot2::theme_minimal()`
     or `{ggthemes}` like `ggthemes::theme_fivethirtyeight()`.
   contents:
     - theme_default
