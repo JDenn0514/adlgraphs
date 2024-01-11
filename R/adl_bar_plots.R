@@ -2,12 +2,12 @@
 #'
 #' This function allows users to create different types of bar plots with
 #' ADL's style. This a wrapper around \code{\link[ggplot2]{geom_col}},
-#' \code{\link[ggplot2]{geom_text}}/\code{\link[ggplot2]{geom_label}}, and
+#' \code{\link[ggplot2]{geom_text}}/,\code{\link[ggplot2]{geom_label}}, and
 #' \code{\link[ggplot2]{geom_errorbar}}. This function was created to
 #' standardize the graphs produced by CAR's team and to cut down on the amount
 #' of time it takes to make these graphs.
 #'
-#' As mentioned previously, this function is a wrapper around various `ggplot2`
+#' As mentioned previously, this function is a wrapper around various `{ggplot2}`
 #' functions in order to save time when making simple bar plots, dodged bar
 #' plots, and stacked bar plots. As a result, it is not possible to combine
 #' every element of the graph. If you would like to do so, we recommend using the
