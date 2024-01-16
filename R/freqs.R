@@ -448,7 +448,7 @@ get_all_freqs <- function(df, var, group1, group2, wt, file_name) {
   }
 
 
-  my_doc <- offcer::read_docx()
+  my_doc <- officer::read_docx()
 
   # Print the tables
   purrr::walk(freqs, write_word_table, my_doc)
