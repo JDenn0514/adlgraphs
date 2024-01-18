@@ -33,7 +33,8 @@ freq_fun <- function(df, var, group1, group2, wt) {
       if (missing(group1) && missing(group2)) {
         df %>%
           tidyr::drop_na({{ var }}) %>%
-          dplyr::count(!!sym({{ var }})) %>%
+          mutate(var_f := !!sym({{ var }}))
+          dplyr::count(var_f) %>%
           dplyr::mutate(
             pct = prop.table(n),
             pct = round(pct, 3),
@@ -49,7 +50,8 @@ freq_fun <- function(df, var, group1, group2, wt) {
         # get genpop stats
         genpop <- df %>%
           tidyr::drop_na({{ var }}) %>%
-          dplyr::count(!!sym({{ var }})) %>%
+          mutate(var_f := !!sym({{ var }}))
+          dplyr::count(var_f) %>%
           dplyr::mutate(
             pct = prop.table(n),
             pct = round(pct, 3),
@@ -63,8 +65,9 @@ freq_fun <- function(df, var, group1, group2, wt) {
         # get stats by age group
         group1 <- df  %>%
           tidyr::drop_na({{ var }}, {{ group1 }}) %>%
+          mutate(var_f := !!sym({{ var_f }}))
           group_by(!!sym({{ group1 }})) %>%
-          dplyr::count(!!sym({{ var }})) %>%
+          dplyr::count(var_f) %>%
           dplyr::mutate(
             pct = prop.table(n),
             pct = round(pct, 3),
@@ -91,7 +94,7 @@ freq_fun <- function(df, var, group1, group2, wt) {
           ) %>%
           gtExtras::gt_add_divider(
             columns = c(
-              var_f,
+              var,
               `General Population`
             ),
             color = "gray80"
@@ -106,7 +109,8 @@ freq_fun <- function(df, var, group1, group2, wt) {
         # get genpop stats
         genpop <- df  %>%
           tidyr::drop_na({{ var }}) %>%
-          dplyr::count(!!sym({{ var }})) %>%
+          mutate(var_f := !!sym({{ var }}))
+          dplyr::count(var_f) %>%
           dplyr::mutate(
             pct = prop.table(n),
             pct = round(pct, 3),
@@ -120,8 +124,9 @@ freq_fun <- function(df, var, group1, group2, wt) {
         # get stats by age group
         group1 <- df  %>%
           tidyr::drop_na({{ var }}, {{ group1 }}) %>%
+          mutate(var_f := !!sym({{ var }}))
           dplyr::group_by(!!sym({{ group1 }})) %>%
-          dplyr::count(!!sym({{ var }})) %>%
+          dplyr::count(var_f) %>%
           dplyr::mutate(
             pct = prop.table(n),
             pct = round(pct, 3),
@@ -139,8 +144,9 @@ freq_fun <- function(df, var, group1, group2, wt) {
         # get stats by age group
         group2 <- df  %>%
           tidyr::drop_na({{ var }}, {{ group2 }}) %>%
+          mutate(var_f := !!sym({{ var }}))
           dplyr::group_by(!!sym({{ group2 }})) %>%
-          dplyr::count(!!sym({{ var}})) %>%
+          dplyr::count(var_f) %>%
           dplyr::mutate(
             pct = prop.table(n),
             pct = round(pct, 3),
@@ -184,8 +190,8 @@ freq_fun <- function(df, var, group1, group2, wt) {
       if (missing(group1) && missing(group2)) {
         df %>%
           tidyr::drop_na({{ var }}) %>%
-          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-          dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
+          dplyr::mutate(var_f := !!sym({{ var }})) %>%
+          dplyr::count(var_f, wt = !!sym({{ wt }})) %>%
           dplyr::mutate(
             pct = prop.table(n),
             n = round(n),
@@ -201,7 +207,7 @@ freq_fun <- function(df, var, group1, group2, wt) {
         # get genpop stats
         genpop <- df %>%
           tidyr::drop_na({{ var }}) %>%
-          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::mutate(var_f := !!sym({{ var }})) %>%
           dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
           dplyr::mutate(
             pct = prop.table(n),
@@ -216,7 +222,7 @@ freq_fun <- function(df, var, group1, group2, wt) {
         # get stats by age group
         group1 <- df  %>%
           tidyr::drop_na({{ var }}, {{ group1 }}) %>%
-          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::mutate(var_f := !!sym({{ var }})) %>%
           dplyr::group_by(!!sym({{ group1 }})) %>%
           dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
           dplyr::mutate(
@@ -260,7 +266,7 @@ freq_fun <- function(df, var, group1, group2, wt) {
         # get genpop stats
         genpop <- df  %>%
           tidyr::drop_na({{ var }}) %>%
-          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::mutate(var_f := !!sym({{ var }})) %>%
           dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
           dplyr::mutate(
             pct = prop.table(n),
@@ -275,7 +281,7 @@ freq_fun <- function(df, var, group1, group2, wt) {
         # get stats by age group
         group1 <- df  %>%
           tidyr::drop_na({{ var }}, {{ group1 }}) %>%
-          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::mutate(var_f := !!sym({{ var }})) %>%
           dplyr::group_by(!!sym({{ group1 }})) %>%
           dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
           dplyr::mutate(
@@ -295,7 +301,7 @@ freq_fun <- function(df, var, group1, group2, wt) {
         # get stats by age group
         group2 <- df  %>%
           tidyr::drop_na({{ var }}, {{ group2 }}) %>%
-          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::mutate(var_f := !!sym({{ var }})) %>%
           dplyr::group_by(!!sym({{ group2 }})) %>%
           dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
           dplyr::mutate(
