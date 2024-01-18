@@ -27,7 +27,7 @@ write_word_table <- function(var, doc) {
 #' @export
 freq_fun <- function(df, var, group1, group2, wt) {
 
-  if (is.labelled(df[[var]])) {
+  if (!is.labelled(df[[var]])) {
     if (missing(wt)) {
 
       if (missing(group1) && missing(group2)) {
