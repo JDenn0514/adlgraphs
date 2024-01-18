@@ -33,7 +33,7 @@ freq_fun <- function(df, var, group1, group2, wt) {
       if (missing(group1) && missing(group2)) {
         df %>%
           tidyr::drop_na({{ var }}) %>%
-          mutate(var_f := !!sym({{ var }}))
+          mutate(var_f := !!sym({{ var }})) %>%
           dplyr::count(var_f) %>%
           dplyr::mutate(
             pct = prop.table(n),
@@ -50,7 +50,7 @@ freq_fun <- function(df, var, group1, group2, wt) {
         # get genpop stats
         genpop <- df %>%
           tidyr::drop_na({{ var }}) %>%
-          mutate(var_f := !!sym({{ var }}))
+          mutate(var_f := !!sym({{ var }})) %>%
           dplyr::count(var_f) %>%
           dplyr::mutate(
             pct = prop.table(n),
@@ -65,7 +65,7 @@ freq_fun <- function(df, var, group1, group2, wt) {
         # get stats by age group
         group1 <- df  %>%
           tidyr::drop_na({{ var }}, {{ group1 }}) %>%
-          mutate(var_f := !!sym({{ var_f }}))
+          mutate(var_f := !!sym({{ var_f }})) %>%
           group_by(!!sym({{ group1 }})) %>%
           dplyr::count(var_f) %>%
           dplyr::mutate(
@@ -109,7 +109,7 @@ freq_fun <- function(df, var, group1, group2, wt) {
         # get genpop stats
         genpop <- df  %>%
           tidyr::drop_na({{ var }}) %>%
-          mutate(var_f := !!sym({{ var }}))
+          mutate(var_f := !!sym({{ var }})) %>%
           dplyr::count(var_f) %>%
           dplyr::mutate(
             pct = prop.table(n),
@@ -124,7 +124,7 @@ freq_fun <- function(df, var, group1, group2, wt) {
         # get stats by age group
         group1 <- df  %>%
           tidyr::drop_na({{ var }}, {{ group1 }}) %>%
-          mutate(var_f := !!sym({{ var }}))
+          mutate(var_f := !!sym({{ var }})) %>%
           dplyr::group_by(!!sym({{ group1 }})) %>%
           dplyr::count(var_f) %>%
           dplyr::mutate(
@@ -144,7 +144,7 @@ freq_fun <- function(df, var, group1, group2, wt) {
         # get stats by age group
         group2 <- df  %>%
           tidyr::drop_na({{ var }}, {{ group2 }}) %>%
-          mutate(var_f := !!sym({{ var }}))
+          mutate(var_f := !!sym({{ var }})) %>%
           dplyr::group_by(!!sym({{ group2 }})) %>%
           dplyr::count(var_f) %>%
           dplyr::mutate(
