@@ -1,4 +1,4 @@
-
+#' @export
 write_word_table <- function(var, doc) {
   doc %>%
     gto::body_add_gt(value = var) %>%
@@ -27,319 +27,633 @@ write_word_table <- function(var, doc) {
 #' @export
 freq_fun <- function(df, var, group1, group2, wt) {
 
-  if (missing(wt)) {
+  if (is.labelled(df[[var]])) {
+    if (missing(wt)) {
 
-    if (missing(group1) && missing(group2)) {
-      df %>%
-        tidyr::drop_na({{ var }}) %>%
-        dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        dplyr::count(var_f) %>%
-        dplyr::mutate(
-          pct = prop.table(n),
-          pct = round(pct, 3),
-          pct = scales::percent(pct, accuracy = 0.1)
-        ) %>%
-        gt::gt()
+      if (missing(group1) && missing(group2)) {
+        df %>%
+          tidyr::drop_na({{ var }}) %>%
+          dplyr::count(!!sym({{ var }})) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            pct = round(pct, 3),
+            pct = scales::percent(pct, accuracy = 0.1)
+          ) %>%
+          gt::gt()
 
-    } else if (missing(group2)) {
+      } else if (missing(group2)) {
 
-      group1_label <-  labelled::var_label(df[[group1]])
-      group1_cols <-  c(forcats::fct_unique(df[[group1]]))
+        group1_label <-  labelled::var_label(df[[group1]])
+        group1_cols <-  c(forcats::fct_unique(df[[group1]]))
 
-      # get genpop stats
-      genpop <- df %>%
-        tidyr::drop_na({{ var }}) %>%
-        dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        dplyr::count(var_f) %>%
-        dplyr::mutate(
-          pct = prop.table(n),
-          pct = round(pct, 3),
-          pct = scales::percent(pct, accuracy = 0.1),
-          `General Population` = glue("{pct} (n = {n})") %>%
-            stringr::str_replace(" ", "<br>")
-        ) %>%
-        dplyr::select(-c(n, pct))
-
-
-      # get stats by age group
-      group1 <- df  %>%
-        tidyr::drop_na({{ var }}, {{ group1 }}) %>%
-        dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        group_by(!!sym({{ group1 }})) %>%
-        dplyr::count(var_f) %>%
-        dplyr::mutate(
-          pct = prop.table(n),
-          pct = round(pct, 3),
-          pct = scales::percent(pct, accuracy = 0.1),
-          pct = glue("{pct} ({n})") %>%
-            stringr::str_replace(" ", "<br>")
-        ) %>%
-        dplyr::select(-n) %>%
-        tidyr::pivot_wider(
-          names_from = {{ group1 }},
-          values_from = pct
-        ) %>%
-        dplyr::select(-var_f)
+        # get genpop stats
+        genpop <- df %>%
+          tidyr::drop_na({{ var }}) %>%
+          dplyr::count(!!sym({{ var }})) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            pct = round(pct, 3),
+            pct = scales::percent(pct, accuracy = 0.1),
+            `General Population` = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-c(n, pct))
 
 
-      dplyr::bind_cols(genpop, group1) %>%
-        gt::gt() %>%
-        gt::tab_spanner(
-          label = group1_label,
-          columns = group1_cols
-        ) %>%
-        gt::fmt_markdown(
-          columns = everything()
-        ) %>%
-        gtExtras::gt_add_divider(
-          columns = c(
-            var_f,
-            `General Population`
-          ),
-          color = "gray80"
-        )
+        # get stats by age group
+        group1 <- df  %>%
+          tidyr::drop_na({{ var }}, {{ group1 }}) %>%
+          group_by(!!sym({{ group1 }})) %>%
+          dplyr::count(!!sym({{ var }})) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            pct = round(pct, 3),
+            pct = scales::percent(pct, accuracy = 0.1),
+            pct = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-n) %>%
+          tidyr::pivot_wider(
+            names_from = {{ group1 }},
+            values_from = pct
+          ) %>%
+          dplyr::select(-var_f)
+
+
+        dplyr::bind_cols(genpop, group1) %>%
+          gt::gt() %>%
+          gt::tab_spanner(
+            label = group1_label,
+            columns = group1_cols
+          ) %>%
+          gt::fmt_markdown(
+            columns = everything()
+          ) %>%
+          gtExtras::gt_add_divider(
+            columns = c(
+              var_f,
+              `General Population`
+            ),
+            color = "gray80"
+          )
+      } else {
+
+        group1_label <-  labelled::var_label(df[[group1]])
+        group1_cols <-  c(forcats::fct_unique(df[[group1]]))
+        group2_label <-  labelled::var_label(df[[group2]])
+        group2_cols <-  c(forcats::fct_unique(df[[group2]]))
+
+        # get genpop stats
+        genpop <- df  %>%
+          tidyr::drop_na({{ var }}) %>%
+          dplyr::count(!!sym({{ var }})) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            pct = round(pct, 3),
+            pct = scales::percent(pct, accuracy = 0.1),
+            `General Population` = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-c(n, pct))
+
+
+        # get stats by age group
+        group1 <- df  %>%
+          tidyr::drop_na({{ var }}, {{ group1 }}) %>%
+          dplyr::group_by(!!sym({{ group1 }})) %>%
+          dplyr::count(!!sym({{ var }})) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            pct = round(pct, 3),
+            pct = scales::percent(pct, accuracy = 0.1),
+            pct = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-n) %>%
+          tidyr::pivot_wider(
+            names_from = {{ group1 }},
+            values_from = pct
+          ) %>%
+          dplyr::select(-var_f)
+
+        # get stats by age group
+        group2 <- df  %>%
+          tidyr::drop_na({{ var }}, {{ group2 }}) %>%
+          dplyr::group_by(!!sym({{ group2 }})) %>%
+          dplyr::count(!!sym({{ var}})) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            pct = round(pct, 3),
+            pct = scales::percent(pct, accuracy = 0.1),
+            pct = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-n) %>%
+          tidyr::pivot_wider(
+            names_from = {{ group2 }},
+            values_from = pct
+          ) %>%
+          dplyr::select(-var_f)
+
+
+        dplyr::bind_cols(genpop, group1, group2) %>%
+          #relocate(`General Population`, .after = variable) %>%
+          gt::gt() %>%
+          gt::tab_spanner(
+            label = group1_label,
+            columns = group1_cols
+          ) %>%
+          gt::tab_spanner(
+            label = group2_label,
+            columns = group2_cols
+          ) %>%
+          gt::fmt_markdown(
+            columns = everything()
+          ) %>%
+          gtExtras::gt_add_divider(
+            columns = c(
+              var_f,
+              `General Population`,
+              tail(group1_cols, n = 1),
+            ),
+            color = "gray80"
+          )
+      }
+
     } else {
+      if (missing(group1) && missing(group2)) {
+        df %>%
+          tidyr::drop_na({{ var }}) %>%
+          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            n = round(n),
+            pct = scales::percent(pct, accuracy = 0.1)
+          ) %>%
+          gt::gt()
 
-      group1_label <-  labelled::var_label(df[[group1]])
-      group1_cols <-  c(forcats::fct_unique(df[[group1]]))
-      group2_label <-  labelled::var_label(df[[group2]])
-      group2_cols <-  c(forcats::fct_unique(df[[group2]]))
+      } else if (missing(group2)) {
 
-      # get genpop stats
-      genpop <- df  %>%
-        tidyr::drop_na({{ var }}) %>%
-        dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        dplyr::count(var_f) %>%
-        dplyr::mutate(
-          pct = prop.table(n),
-          pct = round(pct, 3),
-          pct = scales::percent(pct, accuracy = 0.1),
-          `General Population` = glue("{pct} ({n})") %>%
-            stringr::str_replace(" ", "<br>")
-        ) %>%
-        dplyr::select(-c(n, pct))
+        group1_label <-  labelled::var_label(df[[group1]])
+        group1_cols <-  c(forcats::fct_unique(df[[group1]]))
 
-
-      # get stats by age group
-      group1 <- df  %>%
-        tidyr::drop_na({{ var }}, {{ group1 }}) %>%
-        dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        dplyr::group_by(!!sym({{ group1 }})) %>%
-        dplyr::count(var_f) %>%
-        dplyr::mutate(
-          pct = prop.table(n),
-          pct = round(pct, 3),
-          pct = scales::percent(pct, accuracy = 0.1),
-          pct = glue("{pct} ({n})") %>%
-            stringr::str_replace(" ", "<br>")
-        ) %>%
-        dplyr::select(-n) %>%
-        tidyr::pivot_wider(
-          names_from = {{ group1 }},
-          values_from = pct
-        ) %>%
-        dplyr::select(-var_f)
-
-      # get stats by age group
-      group2 <- df  %>%
-        tidyr::drop_na({{ var }}, {{ group2 }}) %>%
-        dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        dplyr::group_by(!!sym({{ group2 }})) %>%
-        dplyr::count(var_f) %>%
-        dplyr::mutate(
-          pct = prop.table(n),
-          pct = round(pct, 3),
-          pct = scales::percent(pct, accuracy = 0.1),
-          pct = glue("{pct} ({n})") %>%
-            stringr::str_replace(" ", "<br>")
-        ) %>%
-        dplyr::select(-n) %>%
-        tidyr::pivot_wider(
-          names_from = {{ group2 }},
-          values_from = pct
-        ) %>%
-        dplyr::select(-var_f)
+        # get genpop stats
+        genpop <- df %>%
+          tidyr::drop_na({{ var }}) %>%
+          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            n = round(n),
+            pct = scales::percent(pct, accuracy = 0.1),
+            `General Population` = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-c(n, pct))
 
 
-      dplyr::bind_cols(genpop, group1, group2) %>%
-        #relocate(`General Population`, .after = variable) %>%
-        gt::gt() %>%
-        gt::tab_spanner(
-          label = group1_label,
-          columns = group1_cols
-        ) %>%
-        gt::tab_spanner(
-          label = group2_label,
-          columns = group2_cols
-        ) %>%
-        gt::fmt_markdown(
-          columns = everything()
-        ) %>%
-        gtExtras::gt_add_divider(
-          columns = c(
-            var_f,
-            `General Population`,
-            tail(group1_cols, n = 1),
-          ),
-          color = "gray80"
-        )
+        # get stats by age group
+        group1 <- df  %>%
+          tidyr::drop_na({{ var }}, {{ group1 }}) %>%
+          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::group_by(!!sym({{ group1 }})) %>%
+          dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            n = round(n),
+            pct = scales::percent(pct, accuracy = 0.1),
+            pct = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-n) %>%
+          tidyr::pivot_wider(
+            names_from = {{ group1 }},
+            values_from = pct
+          ) %>%
+          dplyr::select(-var_f)
+
+
+        dplyr::bind_cols(genpop, group1) %>%
+          gt::gt() %>%
+          gt::tab_spanner(
+            label = group1_label,
+            columns = group1_cols
+          ) %>%
+          gt::fmt_markdown(
+            columns = everything()
+          ) %>%
+          gtExtras::gt_add_divider(
+            columns = c(
+              var_f,
+              `General Population`
+            ),
+            color = "gray80"
+          )
+      } else {
+
+        group1_label <-  labelled::var_label(df[[group1]])
+        group1_cols <-  c(forcats::fct_unique(df[[group1]]))
+        group2_label <-  labelled::var_label(df[[group2]])
+        group2_cols <-  c(forcats::fct_unique(df[[group2]]))
+
+        # get genpop stats
+        genpop <- df  %>%
+          tidyr::drop_na({{ var }}) %>%
+          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            n = round(n),
+            pct = scales::percent(pct, accuracy = 0.1),
+            `General Population` = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-c(n, pct))
+
+
+        # get stats by age group
+        group1 <- df  %>%
+          tidyr::drop_na({{ var }}, {{ group1 }}) %>%
+          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::group_by(!!sym({{ group1 }})) %>%
+          dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            n = round(n),
+            pct = scales::percent(pct, accuracy = 0.1),
+            pct = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-n) %>%
+          tidyr::pivot_wider(
+            names_from = {{ group1 }},
+            values_from = pct
+          ) %>%
+          dplyr::select(-var_f)
+
+        # get stats by age group
+        group2 <- df  %>%
+          tidyr::drop_na({{ var }}, {{ group2 }}) %>%
+          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::group_by(!!sym({{ group2 }})) %>%
+          dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            n = round(n),
+            pct = scales::percent(pct, accuracy = 0.1),
+            pct = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-n) %>%
+          tidyr::pivot_wider(
+            names_from = {{ group2 }},
+            values_from = pct
+          ) %>%
+          dplyr::select(-var_f)
+
+
+        dplyr::bind_cols(genpop, group1, group2) %>%
+          #relocate(`General Population`, .after = variable) %>%
+          gt::gt() %>%
+          gt::tab_spanner(
+            label = group1_label,
+            columns = group1_cols
+          ) %>%
+          gt::tab_spanner(
+            label = group2_label,
+            columns = group2_cols
+          ) %>%
+          gt::fmt_markdown(
+            columns = everything()
+          ) %>%
+          gtExtras::gt_add_divider(
+            columns = c(
+              var_f,
+              `General Population`,
+              tail(group1_cols, n = 1),
+            ),
+            color = "gray80"
+          )
+      }
+
     }
-
   } else {
-    if (missing(group1) && missing(group2)) {
-      df %>%
-        tidyr::drop_na({{ var }}) %>%
-        dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
-        dplyr::mutate(
-          pct = prop.table(n),
-          n = round(n),
-          pct = scales::percent(pct, accuracy = 0.1)
-        ) %>%
-        gt::gt()
+    if (missing(wt)) {
 
-    } else if (missing(group2)) {
+      if (missing(group1) && missing(group2)) {
+        df %>%
+          tidyr::drop_na({{ var }}) %>%
+          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::count(var_f) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            pct = round(pct, 3),
+            pct = scales::percent(pct, accuracy = 0.1)
+          ) %>%
+          gt::gt()
 
-      group1_label <-  labelled::var_label(df[[group1]])
-      group1_cols <-  c(forcats::fct_unique(df[[group1]]))
+      } else if (missing(group2)) {
 
-      # get genpop stats
-      genpop <- df %>%
-        tidyr::drop_na({{ var }}) %>%
-        dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
-        dplyr::mutate(
-          pct = prop.table(n),
-          n = round(n),
-          pct = scales::percent(pct, accuracy = 0.1),
-          `General Population` = glue("{pct} ({n})") %>%
-            stringr::str_replace(" ", "<br>")
-        ) %>%
-        dplyr::select(-c(n, pct))
+        group1_label <-  labelled::var_label(df[[group1]])
+        group1_cols <-  c(forcats::fct_unique(df[[group1]]))
 
-
-      # get stats by age group
-      group1 <- df  %>%
-        tidyr::drop_na({{ var }}, {{ group1 }}) %>%
-        dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        dplyr::group_by(!!sym({{ group1 }})) %>%
-        dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
-        dplyr::mutate(
-          pct = prop.table(n),
-          n = round(n),
-          pct = scales::percent(pct, accuracy = 0.1),
-          pct = glue("{pct} ({n})") %>%
-            stringr::str_replace(" ", "<br>")
-        ) %>%
-        dplyr::select(-n) %>%
-        tidyr::pivot_wider(
-          names_from = {{ group1 }},
-          values_from = pct
-        ) %>%
-        dplyr::select(-var_f)
+        # get genpop stats
+        genpop <- df %>%
+          tidyr::drop_na({{ var }}) %>%
+          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::count(var_f) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            pct = round(pct, 3),
+            pct = scales::percent(pct, accuracy = 0.1),
+            `General Population` = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-c(n, pct))
 
 
-      dplyr::bind_cols(genpop, group1) %>%
-        gt::gt() %>%
-        gt::tab_spanner(
-          label = group1_label,
-          columns = group1_cols
-        ) %>%
-        gt::fmt_markdown(
-          columns = everything()
-        ) %>%
-        gtExtras::gt_add_divider(
-          columns = c(
-            var_f,
-            `General Population`
-          ),
-          color = "gray80"
-        )
+        # get stats by age group
+        group1 <- df  %>%
+          tidyr::drop_na({{ var }}, {{ group1 }}) %>%
+          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          group_by(!!sym({{ group1 }})) %>%
+          dplyr::count(var_f) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            pct = round(pct, 3),
+            pct = scales::percent(pct, accuracy = 0.1),
+            pct = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-n) %>%
+          tidyr::pivot_wider(
+            names_from = {{ group1 }},
+            values_from = pct
+          ) %>%
+          dplyr::select(-var_f)
+
+
+        dplyr::bind_cols(genpop, group1) %>%
+          gt::gt() %>%
+          gt::tab_spanner(
+            label = group1_label,
+            columns = group1_cols
+          ) %>%
+          gt::fmt_markdown(
+            columns = everything()
+          ) %>%
+          gtExtras::gt_add_divider(
+            columns = c(
+              var_f,
+              `General Population`
+            ),
+            color = "gray80"
+          )
+      } else {
+
+        group1_label <-  labelled::var_label(df[[group1]])
+        group1_cols <-  c(forcats::fct_unique(df[[group1]]))
+        group2_label <-  labelled::var_label(df[[group2]])
+        group2_cols <-  c(forcats::fct_unique(df[[group2]]))
+
+        # get genpop stats
+        genpop <- df  %>%
+          tidyr::drop_na({{ var }}) %>%
+          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::count(var_f) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            pct = round(pct, 3),
+            pct = scales::percent(pct, accuracy = 0.1),
+            `General Population` = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-c(n, pct))
+
+
+        # get stats by age group
+        group1 <- df  %>%
+          tidyr::drop_na({{ var }}, {{ group1 }}) %>%
+          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::group_by(!!sym({{ group1 }})) %>%
+          dplyr::count(var_f) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            pct = round(pct, 3),
+            pct = scales::percent(pct, accuracy = 0.1),
+            pct = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-n) %>%
+          tidyr::pivot_wider(
+            names_from = {{ group1 }},
+            values_from = pct
+          ) %>%
+          dplyr::select(-var_f)
+
+        # get stats by age group
+        group2 <- df  %>%
+          tidyr::drop_na({{ var }}, {{ group2 }}) %>%
+          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::group_by(!!sym({{ group2 }})) %>%
+          dplyr::count(var_f) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            pct = round(pct, 3),
+            pct = scales::percent(pct, accuracy = 0.1),
+            pct = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-n) %>%
+          tidyr::pivot_wider(
+            names_from = {{ group2 }},
+            values_from = pct
+          ) %>%
+          dplyr::select(-var_f)
+
+
+        dplyr::bind_cols(genpop, group1, group2) %>%
+          #relocate(`General Population`, .after = variable) %>%
+          gt::gt() %>%
+          gt::tab_spanner(
+            label = group1_label,
+            columns = group1_cols
+          ) %>%
+          gt::tab_spanner(
+            label = group2_label,
+            columns = group2_cols
+          ) %>%
+          gt::fmt_markdown(
+            columns = everything()
+          ) %>%
+          gtExtras::gt_add_divider(
+            columns = c(
+              var_f,
+              `General Population`,
+              tail(group1_cols, n = 1),
+            ),
+            color = "gray80"
+          )
+      }
+
     } else {
+      if (missing(group1) && missing(group2)) {
+        df %>%
+          tidyr::drop_na({{ var }}) %>%
+          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            n = round(n),
+            pct = scales::percent(pct, accuracy = 0.1)
+          ) %>%
+          gt::gt()
 
-      group1_label <-  labelled::var_label(df[[group1]])
-      group1_cols <-  c(forcats::fct_unique(df[[group1]]))
-      group2_label <-  labelled::var_label(df[[group2]])
-      group2_cols <-  c(forcats::fct_unique(df[[group2]]))
+      } else if (missing(group2)) {
 
-      # get genpop stats
-      genpop <- df  %>%
-        tidyr::drop_na({{ var }}) %>%
-        dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
-        dplyr::mutate(
-          pct = prop.table(n),
-          n = round(n),
-          pct = scales::percent(pct, accuracy = 0.1),
-          `General Population` = glue("{pct} ({n})") %>%
-            stringr::str_replace(" ", "<br>")
-        ) %>%
-        dplyr::select(-c(n, pct))
+        group1_label <-  labelled::var_label(df[[group1]])
+        group1_cols <-  c(forcats::fct_unique(df[[group1]]))
 
-
-      # get stats by age group
-      group1 <- df  %>%
-        tidyr::drop_na({{ var }}, {{ group1 }}) %>%
-        dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        dplyr::group_by(!!sym({{ group1 }})) %>%
-        dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
-        dplyr::mutate(
-          pct = prop.table(n),
-          n = round(n),
-          pct = scales::percent(pct, accuracy = 0.1),
-          pct = glue("{pct} ({n})") %>%
-            stringr::str_replace(" ", "<br>")
-        ) %>%
-        dplyr::select(-n) %>%
-        tidyr::pivot_wider(
-          names_from = {{ group1 }},
-          values_from = pct
-        ) %>%
-        dplyr::select(-var_f)
-
-      # get stats by age group
-      group2 <- df  %>%
-        tidyr::drop_na({{ var }}, {{ group2 }}) %>%
-        dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        dplyr::group_by(!!sym({{ group2 }})) %>%
-        dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
-        dplyr::mutate(
-          pct = prop.table(n),
-          n = round(n),
-          pct = scales::percent(pct, accuracy = 0.1),
-          pct = glue("{pct} ({n})") %>%
-            stringr::str_replace(" ", "<br>")
-        ) %>%
-        dplyr::select(-n) %>%
-        tidyr::pivot_wider(
-          names_from = {{ group2 }},
-          values_from = pct
-        ) %>%
-        dplyr::select(-var_f)
+        # get genpop stats
+        genpop <- df %>%
+          tidyr::drop_na({{ var }}) %>%
+          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            n = round(n),
+            pct = scales::percent(pct, accuracy = 0.1),
+            `General Population` = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-c(n, pct))
 
 
-      dplyr::bind_cols(genpop, group1, group2) %>%
-        #relocate(`General Population`, .after = variable) %>%
-        gt::gt() %>%
-        gt::tab_spanner(
-          label = group1_label,
-          columns = group1_cols
-        ) %>%
-        gt::tab_spanner(
-          label = group2_label,
-          columns = group2_cols
-        ) %>%
-        gt::fmt_markdown(
-          columns = everything()
-        ) %>%
-        gtExtras::gt_add_divider(
-          columns = c(
-            var_f,
-            `General Population`,
-            tail(group1_cols, n = 1),
-          ),
-          color = "gray80"
-        )
+        # get stats by age group
+        group1 <- df  %>%
+          tidyr::drop_na({{ var }}, {{ group1 }}) %>%
+          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::group_by(!!sym({{ group1 }})) %>%
+          dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            n = round(n),
+            pct = scales::percent(pct, accuracy = 0.1),
+            pct = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-n) %>%
+          tidyr::pivot_wider(
+            names_from = {{ group1 }},
+            values_from = pct
+          ) %>%
+          dplyr::select(-var_f)
+
+
+        dplyr::bind_cols(genpop, group1) %>%
+          gt::gt() %>%
+          gt::tab_spanner(
+            label = group1_label,
+            columns = group1_cols
+          ) %>%
+          gt::fmt_markdown(
+            columns = everything()
+          ) %>%
+          gtExtras::gt_add_divider(
+            columns = c(
+              var_f,
+              `General Population`
+            ),
+            color = "gray80"
+          )
+      } else {
+
+        group1_label <-  labelled::var_label(df[[group1]])
+        group1_cols <-  c(forcats::fct_unique(df[[group1]]))
+        group2_label <-  labelled::var_label(df[[group2]])
+        group2_cols <-  c(forcats::fct_unique(df[[group2]]))
+
+        # get genpop stats
+        genpop <- df  %>%
+          tidyr::drop_na({{ var }}) %>%
+          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            n = round(n),
+            pct = scales::percent(pct, accuracy = 0.1),
+            `General Population` = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-c(n, pct))
+
+
+        # get stats by age group
+        group1 <- df  %>%
+          tidyr::drop_na({{ var }}, {{ group1 }}) %>%
+          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::group_by(!!sym({{ group1 }})) %>%
+          dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            n = round(n),
+            pct = scales::percent(pct, accuracy = 0.1),
+            pct = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-n) %>%
+          tidyr::pivot_wider(
+            names_from = {{ group1 }},
+            values_from = pct
+          ) %>%
+          dplyr::select(-var_f)
+
+        # get stats by age group
+        group2 <- df  %>%
+          tidyr::drop_na({{ var }}, {{ group2 }}) %>%
+          dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+          dplyr::group_by(!!sym({{ group2 }})) %>%
+          dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
+          dplyr::mutate(
+            pct = prop.table(n),
+            n = round(n),
+            pct = scales::percent(pct, accuracy = 0.1),
+            pct = glue("{pct} ({n})") %>%
+              stringr::str_replace(" ", "<br>")
+          ) %>%
+          dplyr::select(-n) %>%
+          tidyr::pivot_wider(
+            names_from = {{ group2 }},
+            values_from = pct
+          ) %>%
+          dplyr::select(-var_f)
+
+
+        dplyr::bind_cols(genpop, group1, group2) %>%
+          #relocate(`General Population`, .after = variable) %>%
+          gt::gt() %>%
+          gt::tab_spanner(
+            label = group1_label,
+            columns = group1_cols
+          ) %>%
+          gt::tab_spanner(
+            label = group2_label,
+            columns = group2_cols
+          ) %>%
+          gt::fmt_markdown(
+            columns = everything()
+          ) %>%
+          gtExtras::gt_add_divider(
+            columns = c(
+              var_f,
+              `General Population`,
+              tail(group1_cols, n = 1),
+            ),
+            color = "gray80"
+          )
+      }
+
     }
 
   }
