@@ -4,7 +4,7 @@
 \alias{freq_fun}
 \title{Get the frequencies as a GT table}
 \usage{
-freq_fun(df, var, group1, group2, wt)
+freq_fun(df, var, group1, wt)
 }
 \arguments{
 \item{df}{An object of type data.frame or tibble. If piping the df into the
@@ -15,14 +15,12 @@ frequencies.}
 
 \item{group1}{A character string. The first grouping variable.}
 
-\item{group2}{A character string. The second grouping variable.}
-
 \item{wt}{Weights. Add if you have a weighting variable and want to get
 weighted frequencies}
 }
 \description{
 This function creates a GT table of the frequencies of a specified variable
-and has the ability to get the frequencies for up to two grouping variables.
+and has the ability to get the frequencies for one grouping variable.
 While this can be used on it's own, it was created more to be used in
 \code{\link[=get_all_freqs]{get_all_freqs()}}`, a function that outputs the frequencies of a set of
 variables to a word doc.

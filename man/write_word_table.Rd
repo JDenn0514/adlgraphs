@@ -9,3 +9,4 @@ write_word_table(var, doc)
 \description{
 This mainly an internal package but can be used externally
 }
+\keyword{internal}
