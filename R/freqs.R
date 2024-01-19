@@ -1,4 +1,6 @@
-
+#' This mainly an internal package but can be used externally
+#'
+#' @export
 write_word_table <- function(var, doc) {
   doc %>%
     gto::body_add_gt(value = var) %>%
@@ -96,16 +98,18 @@ freq_fun <- function(df, var, group1, group2, wt) {
         gt::fmt_markdown(
           columns = everything()
         ) %>%
-        gt::cols_label(
-          var_f = var_label(df[[var]])
-        ) %>%
         gtExtras::gt_add_divider(
           columns = c(
             var_f,
-            `General Population`
+            `General Population`,
+            tail(group1_cols, n = 1),
           ),
           color = "gray80"
+        ) %>%
+        gt::cols_label(
+          var_f = var_label(df[[var]])
         )
+
     } else {
 
       group1_label <-  labelled::var_label(df[[group1]])
@@ -183,9 +187,6 @@ freq_fun <- function(df, var, group1, group2, wt) {
         gt::fmt_markdown(
           columns = everything()
         ) %>%
-        gt::cols_label(
-          var_f = var_label(df[[var]])
-        ) %>%
         gtExtras::gt_add_divider(
           columns = c(
             var_f,
@@ -193,7 +194,11 @@ freq_fun <- function(df, var, group1, group2, wt) {
             tail(group1_cols, n = 1),
           ),
           color = "gray80"
+        ) %>%
+        gt::cols_label(
+          var_f = var_label(df[[var]])
         )
+
     }
 
   } else {
@@ -207,7 +212,13 @@ freq_fun <- function(df, var, group1, group2, wt) {
           n = round(n),
           pct = scales::percent(pct, accuracy = 0.1)
         ) %>%
-        gt::gt()
+        gt::gt() %>%
+        gt::cols_label(
+          var_f = var_label(df[[var]]),
+          n = "N",
+          pct = "Percent"
+        )
+
 
     } else if (missing(group2)) {
 
@@ -262,10 +273,15 @@ freq_fun <- function(df, var, group1, group2, wt) {
         gtExtras::gt_add_divider(
           columns = c(
             var_f,
-            `General Population`
+            `General Population`,
+            tail(group1_cols, n = 1),
           ),
           color = "gray80"
+        ) %>%
+        gt::cols_label(
+          var_f = var_label(df[[var]])
         )
+
     } else {
 
       group1_label <-  labelled::var_label(df[[group1]])
@@ -336,10 +352,6 @@ freq_fun <- function(df, var, group1, group2, wt) {
           label = group1_label,
           columns = group1_cols
         ) %>%
-        gt::tab_spanner(
-          label = group2_label,
-          columns = group2_cols
-        ) %>%
         gt::fmt_markdown(
           columns = everything()
         ) %>%
@@ -350,7 +362,11 @@ freq_fun <- function(df, var, group1, group2, wt) {
             tail(group1_cols, n = 1),
           ),
           color = "gray80"
+        ) %>%
+        gt::cols_label(
+          var_f = var_label(df[[var]])
         )
+
     }
 
   }
