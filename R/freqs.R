@@ -278,3 +278,5 @@ get_all_freqs <- function(df, var, group1, wt, file_name) {
   print(my_doc, target = file_name) %>% invisible()
 
 }
+
+
