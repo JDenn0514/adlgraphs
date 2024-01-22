@@ -66,12 +66,12 @@ scale_adl <- function(type = "categorical",
     ### get the palettes
     # interpolate the palettes using colorRampPalette()
     # get the bluescale colors
-    if (palette == "base") {
+    if (palette == "base" || palette == "bluescale") {
       bluescale <- adl_palettes[["bluescale"]]
       pal <- colorRampPalette(bluescale)(n)
     }
     # get the grayscale colors
-    else if(palette == "gray") {
+    else if(palette == "grayscale") {
       grayscale <- adl_palettes[["grayscale"]]
       pal <- colorRampPalette(grayscale)(n)
     }
@@ -93,6 +93,7 @@ scale_adl <- function(type = "categorical",
     } else if (palette == "pid3") {
       # this should give us three colors if n is provided, if it is provided
       # it will interpolate the other colors
+      pid3 <- adl_palettes[["pid3"]]
       pal <- colorRampPalette(pid3)(n)
     } else {
       # need the
