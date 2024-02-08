@@ -28,6 +28,7 @@ reference:
     designed to make it easier to make graphs.
   contents:
     - adl_bar_plots
+    - adl_corr_plot
 - title: Themes
   desc: Full blown `{ggplot2}` themes that affect almost all visual aspects of a
     graph. These are similar to `{ggplot2}` themes like
@@ -46,7 +47,9 @@ reference:
   desc: These are miscellaneous functions created to help with data analysis.
   contents:
     - pct_conv
-    - freq_fun
+    - make_dicho
+    - get_coefficients
+    - get_freq_table
     - get_all_freqs
     - pivot_longer_values
 
