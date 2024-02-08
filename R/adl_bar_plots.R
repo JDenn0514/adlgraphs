@@ -43,7 +43,6 @@
 #'   Default is 3.25.
 #' @param distance_from_col How far the labels are from the bars in freq plots
 #'   and how far they are from the bottom of the bar in the mean plots.
-#' @param ... Additional arguments passed on to `theme_default`
 #' @param freq_plot Logical. Determines if this is a frequency plot. If `TRUE`,
 #'   default, then the graph will be styled as a frequency plot with the bar
 #'   labels appearing outside the bars. `FALSE`, the graph will be styled as a
@@ -57,6 +56,9 @@
 #'   add up to 100.
 #' @param dodge_width This adjusts the width in the dodge plot. For more info
 #'   check out \code{\link[ggplot2]{position_dodge}}.
+#' @param dodge_reverse Reverses the order of the bars and text in a dodge plot.
+#'   For more info check out \code{\link[ggplot2]{position_dodge}}.
+#' @param ... Additional arguments passed on to `theme_default`
 #' @export
 #'
 #'

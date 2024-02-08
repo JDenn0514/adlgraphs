@@ -31,6 +31,7 @@
 #' @param add_labels Logical. If TRUE adds variable and value labels
 #' @param add_n Logical. If true adds the number of observations per variable
 #'
+#' @export
 
 
 

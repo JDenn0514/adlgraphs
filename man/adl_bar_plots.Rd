@@ -73,6 +73,9 @@ add up to 100.}
 \item{dodge_width}{This adjusts the width in the dodge plot. For more info
 check out \code{\link[ggplot2]{position_dodge}}.}
 
+\item{dodge_reverse}{Reverses the order of the bars and text in a dodge plot.
+For more info check out \code{\link[ggplot2]{position_dodge}}.}
+
 \item{...}{Additional arguments passed on to \code{theme_default}}
 }
 \description{

@@ -20,21 +20,33 @@ write_word_table <- function(var, doc) {
 #'
 #' @param df An object of type data.frame or tibble. If piping the df into the
 #'   function, this is not required.
-#' @param var A character string. The variable with which want to get the
-#'   frequencies.
-#' @param group1 A character string. The first grouping variable.
+#' @param var Either a character string or symbol. The variable with which want
+#'   to get the frequencies.
+#' @param group Either a character string or a symbol. The grouping variable.
 #' @param wt Weights. Add if you have a weighting variable and want to get
 #'   weighted frequencies
 #'
 #' @export
-freq_fun <- function(df, var, group1, wt) {
+get_freq_table <- function(df, var, group, wt) {
+
+  var <- rlang::enexpr(var)
+  group <- rlang::enexpr(group)
+
+  if (!is.character(var)) {
+    var <- rlang::as_name(rlang::ensym(var))
+  }
+
+  if (!is.character(group)) {
+    group <- rlang::as_name(rlang::ensym(group))
+  }
+
 
   if (missing(wt)) {
 
-    if (missing(group1)) {
+    if (missing(group)) {
       df %>%
         tidyr::drop_na({{ var }}) %>%
-        dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+        dplyr::mutate(var_f := haven::as_factor(.data[[var]])) %>%
         dplyr::count(var_f) %>%
         dplyr::mutate(
           pct = prop.table(n),
@@ -50,13 +62,13 @@ freq_fun <- function(df, var, group1, wt) {
 
     } else  {
 
-      group1_label <-  labelled::var_label(df[[group1]])
-      group1_cols <-  c(forcats::fct_unique(df[[group1]]))
+      group_label <-  labelled::var_label(df[[group]])
+      group_cols <-  c(forcats::fct_unique(df[[group]]))
 
       # get genpop stats
       genpop <- df %>%
         tidyr::drop_na({{ var }}) %>%
-        dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+        dplyr::mutate(var_f := haven::as_factor(.data[[var]])) %>%
         dplyr::count(var_f) %>%
         dplyr::mutate(
           pct = prop.table(n),
@@ -69,10 +81,10 @@ freq_fun <- function(df, var, group1, wt) {
 
 
       # get stats by age group
-      group1 <- df  %>%
-        tidyr::drop_na({{ var }}, {{ group1 }}) %>%
-        dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        group_by(!!sym({{ group1 }})) %>%
+      group <- df  %>%
+        tidyr::drop_na({{ var }}, {{ group }}) %>%
+        dplyr::mutate(var_f := haven::as_factor(.data[[var]])) %>%
+        group_by(!!sym({{ group }})) %>%
         dplyr::count(var_f) %>%
         dplyr::mutate(
           pct = prop.table(n),
@@ -83,17 +95,17 @@ freq_fun <- function(df, var, group1, wt) {
         ) %>%
         dplyr::select(-n) %>%
         tidyr::pivot_wider(
-          names_from = {{ group1 }},
+          names_from = {{ group }},
           values_from = pct
         ) %>%
         dplyr::select(-var_f)
 
 
-      dplyr::bind_cols(genpop, group1) %>%
+      dplyr::bind_cols(genpop, group) %>%
         gt::gt() %>%
         gt::tab_spanner(
-          label = group1_label,
-          columns = group1_cols
+          label = group_label,
+          columns = group_cols
         ) %>%
         gt::fmt_markdown(
           columns = everything()
@@ -102,7 +114,7 @@ freq_fun <- function(df, var, group1, wt) {
           columns = c(
             var_f,
             `General Population`,
-            tail(group1_cols, n = 1),
+            tail(group_cols, n = 1),
           ),
           color = "gray80"
         ) %>%
@@ -113,10 +125,10 @@ freq_fun <- function(df, var, group1, wt) {
     }
 
   } else {
-    if (missing(group1)) {
+    if (missing(group)) {
       df %>%
         tidyr::drop_na({{ var }}) %>%
-        dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+        dplyr::mutate(var_f := haven::as_factor(.data[[var]])) %>%
         dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
         dplyr::mutate(
           pct = prop.table(n),
@@ -133,13 +145,13 @@ freq_fun <- function(df, var, group1, wt) {
 
     } else {
 
-      group1_label <-  labelled::var_label(df[[group1]])
-      group1_cols <-  c(forcats::fct_unique(df[[group1]]))
+      group_label <-  labelled::var_label(df[[group]])
+      group_cols <-  c(forcats::fct_unique(df[[group]]))
 
       # get genpop stats
       genpop <- df %>%
         tidyr::drop_na({{ var }}) %>%
-        dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
+        dplyr::mutate(var_f := haven::as_factor(.data[[var]])) %>%
         dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
         dplyr::mutate(
           pct = prop.table(n),
@@ -152,10 +164,10 @@ freq_fun <- function(df, var, group1, wt) {
 
 
       # get stats by age group
-      group1 <- df  %>%
-        tidyr::drop_na({{ var }}, {{ group1 }}) %>%
-        dplyr::mutate(var_f := haven::as_factor(!!sym({{ var }}))) %>%
-        dplyr::group_by(!!sym({{ group1 }})) %>%
+      group <- df  %>%
+        tidyr::drop_na({{ var }}, {{ group }}) %>%
+        dplyr::mutate(var_f := haven::as_factor(.data[[var]])) %>%
+        dplyr::group_by(!!sym({{ group }})) %>%
         dplyr::count(var_f, wt = !!sym({{ wt }} )) %>%
         dplyr::mutate(
           pct = prop.table(n),
@@ -166,17 +178,17 @@ freq_fun <- function(df, var, group1, wt) {
         ) %>%
         dplyr::select(-n) %>%
         tidyr::pivot_wider(
-          names_from = {{ group1 }},
+          names_from = {{ group }},
           values_from = pct
         ) %>%
         dplyr::select(-var_f)
 
 
-      dplyr::bind_cols(genpop, group1) %>%
+      dplyr::bind_cols(genpop, group) %>%
         gt::gt() %>%
         gt::tab_spanner(
-          label = group1_label,
-          columns = group1_cols
+          label = group_label,
+          columns = group_cols
         ) %>%
         gt::fmt_markdown(
           columns = everything()
@@ -185,7 +197,7 @@ freq_fun <- function(df, var, group1, wt) {
           columns = c(
             var_f,
             `General Population`,
-            tail(group1_cols, n = 1),
+            tail(group_cols, n = 1),
           ),
           color = "gray80"
         ) %>%
@@ -203,29 +215,29 @@ freq_fun <- function(df, var, group1, wt) {
 
 #' Export frequencies for a set of variables to a word doc.
 #'
-#' This function uses [freq_fun()] to get the frequencies for a set of variables
+#' This function uses [get_freq_table()] to get the frequencies for a set of variables
 #' suppplied by the user. It then outputs these frequencies to a word doc.
 #'
 #' @param df An object of type data.frame or tibble. If piping the df into the
 #'   function, this is not required.
 #' @param var A vector of variables you want to get the frequencies for.
-#' @param group1 A character string. The first grouping variable.
+#' @param group A character string. The first grouping variable.
 #' @param wt A character string. Add if you have a weighting variable and want
 #'   to get weighted frequencies
 #'
 #' @export
-get_all_freqs <- function(df, var, group1, wt, file_name) {
+get_all_freqs <- function(df, var, group, wt, file_name) {
 
   if (missing(wt)) {
 
-    if (missing(group1)) {
+    if (missing(group)) {
 
       # get the number of variables in the var vector
       leng <- length(var)
       # create a list of the dataframes
       df_list <- rep(list(df), leng)
       # get the frequencies
-      freqs <- purrr::pmap(list(df = df_list, var = var), freq_fun)
+      freqs <- purrr::pmap(list(df = df_list, var = var), get_freq_table)
 
     } else {
 
@@ -233,16 +245,16 @@ get_all_freqs <- function(df, var, group1, wt, file_name) {
       leng <- length(var)
       # create a list of the dataframes
       df_list <- rep(list(df), leng)
-      # create a vector of group1
-      group1_list <- replicate(leng, group1)
+      # create a vector of group
+      group_list <- replicate(leng, group)
       # get the frequencies
-      freqs <- purrr::pmap(list(df = df_list, var = var, group1 = group1_list), freq_fun)
+      freqs <- purrr::pmap(list(df = df_list, var = var, group = group_list), get_freq_table)
 
     }
 
   } else {
 
-    if (missing(group1)) {
+    if (missing(group)) {
 
       # get the number of variables in the var vector
       leng <- length(var)
@@ -251,7 +263,7 @@ get_all_freqs <- function(df, var, group1, wt, file_name) {
       # create a vector of the weights
       wt_list <- replicate(leng, wt)
       # get the frequencies
-      freqs <- purrr::pmap(list(df = df_list, var = var, wt = wt_list), freq_fun)
+      freqs <- purrr::pmap(list(df = df_list, var = var, wt = wt_list), get_freq_table)
 
     } else {
 
@@ -259,12 +271,12 @@ get_all_freqs <- function(df, var, group1, wt, file_name) {
       leng <- length(var)
       # create a list of the dataframes
       df_list <- rep(list(df), leng)
-      # create a vector of group1
-      group1_list <- replicate(leng, group1)
+      # create a vector of group
+      group_list <- replicate(leng, group)
       # create a vector of the list
       wt_list <- replicate(leng, wt)
       # get the frequencies
-      freqs <- purrr::pmap(list(df = df_list, var = var, group1 = group1_list, wt = wt_list), freq_fun)
+      freqs <- purrr::pmap(list(df = df_list, var = var, group = group_list, wt = wt_list), get_freq_table)
 
     }
 
