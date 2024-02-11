@@ -537,7 +537,7 @@ theme_h_bar <- function(
 #'
 #' This function creates the theme for non-stacked vertical bar plots
 #'
-#' #' @param base_size Base font size, given in pts. Also controls the spacing in
+#' @param base_size Base font size, given in pts. Also controls the spacing in
 #'   the graph.
 #' @param legend_position The position of the legend. Options are: "left",
 #'   "right", "top", "bottom", or "none". "none" removes the legend. "right"

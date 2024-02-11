@@ -4,18 +4,22 @@
 \alias{get_all_freqs}
 \title{Export frequencies for a set of variables to a word doc.}
 \usage{
-get_all_freqs(df, var, group, wt, file_name)
+get_all_freqs(df, x, group, wt, file_name)
 }
 \arguments{
 \item{df}{An object of type data.frame or tibble. If piping the df into the
 function, this is not required.}
 
-\item{var}{A vector of variables you want to get the frequencies for.}
+\item{x}{A vector of variables you want to get the frequencies for.}
 
 \item{group}{A character string. The first grouping variable.}
 
 \item{wt}{A character string. Add if you have a weighting variable and want
 to get weighted frequencies}
+
+\item{file_name}{A character string specifying the name of the file to be
+created with the frequencies and where the file will be located. File must
+end in .docx}
 }
 \description{
 This function uses \code{\link[=get_freq_table]{get_freq_table()}} to get the frequencies for a set of variables

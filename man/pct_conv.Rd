@@ -4,12 +4,12 @@
 \alias{pct_conv}
 \title{Make proper percent labels}
 \usage{
-pct_conv(data, var = pct)
+pct_conv(data, x = pct)
 }
 \arguments{
 \item{data}{A data frame or vector. Can be left blank if used during piping}
 
-\item{var}{a variable we want to convert to a percentage. The value is \code{pct}
+\item{x}{a variable we want to convert to a percentage. The value is \code{pct}
 by default and should always be pct.}
 }
 \description{

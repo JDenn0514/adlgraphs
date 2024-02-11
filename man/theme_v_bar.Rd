@@ -13,6 +13,9 @@ theme_v_bar(
 )
 }
 \arguments{
+\item{base_size}{Base font size, given in pts. Also controls the spacing in
+the graph.}
+
 \item{legend_position}{The position of the legend. Options are: "left",
 "right", "top", "bottom", or "none". "none" removes the legend. "right"
 is the default.}
@@ -28,8 +31,4 @@ the default, all grid lines disappear. If \code{TRUE}, all grid lines appear.}
 }
 \description{
 This function creates the theme for non-stacked vertical bar plots
-}
-\details{
-#' @param base_size Base font size, given in pts. Also controls the spacing in
-the graph.
 }

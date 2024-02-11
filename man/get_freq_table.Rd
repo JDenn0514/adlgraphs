@@ -4,13 +4,13 @@
 \alias{get_freq_table}
 \title{Get the frequencies as a GT table}
 \usage{
-get_freq_table(df, var, group, wt)
+get_freq_table(df, x, group, wt)
 }
 \arguments{
 \item{df}{An object of type data.frame or tibble. If piping the df into the
 function, this is not required.}
 
-\item{var}{Either a character string or symbol. The variable with which want
+\item{x}{Either a character string or symbol. The variable with which want
 to get the frequencies.}
 
 \item{group}{Either a character string or a symbol. The grouping variable.}

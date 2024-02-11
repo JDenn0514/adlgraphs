@@ -3,7 +3,7 @@
 #' A list of all color palettes to choose from, and preview directly in the console.
 #'
 #' Pretty print and plot methods are powered by the \href{https://CRAN.R-project.org/package=prismatic}{prismatic}
-#' package. Each palette is stored as a \code{color} object to enact this behaviour.
+#' package. Each palette is stored as a `color` object to enact this behaviour.
 #'
 #'
 #' @format A list of 9 \code{color} objects elements.

@@ -4,21 +4,30 @@
 \alias{make_dicho}
 \title{Make dichotomous factors}
 \usage{
-make_dicho(x)
+make_dicho(x, flip_levels = FALSE)
 }
 \arguments{
-\item{x}{A vector of type "haven_labelled" or "factor"}
+\item{x}{A vector of type \code{haven_labelled} or \code{factor}.}
+
+\item{flip_levels}{Logical. If \code{FALSE}, the default, the factor levels are
+kept the same. If \code{TRUE}, the factor levels are flipped. Only specify this
+if you want to change the order of the factor level.}
 }
 \description{
-Create a vector of a dichotomous factor. Was designed to work on any vector
-that is of class "factor" or "haven_labelled". However, if the vector is
-numeric with no value labels, the function will return an error. In addition,
-this function works by removing the first from the factors, unless it is only
-one word. To illustrate what I mean, if a factor vector contains "Strongly
-agree", the "Strongly" gets removed so it is just "Agree". If your vector is
-not set up this way, then this function will not work properly.
+Convert a \code{factor} or \code{haven_labelled} vector to a dichotomous factor vector.
+When I refer to a dichotomous factor vector, I am eferring to a vector of
+class \code{factor} with only two levels.
 }
 \details{
+\code{make_dicho} was designed to work on any vector that is of class \code{factor} or
+\code{haven_labelled}. If the vector is  numeric with no value labels, the
+function will return an error. This is because the function first converts
+the vector to a factor using \code{\link[=as_factor]{as_factor()}} \code{\link[haven:as_factor]{haven::as_factor()}} from the
+\code{haven} package. Then, it removes the first word if there are multiple
+words in the factor level.
+
+This function also
+
 In addition, this function adds two new attributes. The first attribute,
 \code{transformation}, indicates the data transformation that the original vector
 underwent to create this new vector. The second attribute, \code{label}, contains
@@ -33,7 +42,7 @@ library(labelled)
 library(haven)
 
 # create fake data
-data <- tibble::tribble(
+df <- tibble::tribble(
   ~x, ~y, ~z,
   3, 2, 3,
   4, 4, 2,
@@ -41,72 +50,89 @@ data <- tibble::tribble(
   1, 1, 4,
   5, 4, 3,
   6, 5, 6
-  ) \%>\%
-  # add value labels
-  labelled::set_value_labels(
-    x = c(`Strongly agree` = 1,
-          `Agree` = 2,
-          `Somewhat agree` = 3,
-          `Somewhat disagree` = 4,
-          `Disagree` = 5,
-          `Strongly disagree` = 6),
-    y = c(`Strongly agree` = 1,
-          `Agree` = 2,
-          `Somewhat agree` = 3,
-          `Somewhat disagree` = 4,
-          `Disagree` = 5,
-          `Strongly disagree` = 6),
-    z = c(`Strongly agree` = 1,
-          `Agree` = 2,
-          `Somewhat agree` = 3,
-          `Somewhat disagree` = 4,
-          `Disagree` = 5,
-          `Strongly disagree` = 6)
-  )
+) \%>\%
+# add value labels
+labelled::set_value_labels(
+  x = c(`Strongly agree` = 1,
+        `Agree` = 2,
+        `Somewhat agree` = 3,
+        `Somewhat disagree` = 4,
+        `Disagree` = 5,
+        `Strongly disagree` = 6),
+  y = c(`Strongly agree` = 1,
+        `Agree` = 2,
+        `Somewhat agree` = 3,
+        `Somewhat disagree` = 4,
+        `Disagree` = 5,
+        `Strongly disagree` = 6),
+  z = c(`Strongly agree` = 1,
+        `Agree` = 2,
+        `Somewhat agree` = 3,
+        `Somewhat disagree` = 4,
+        `Disagree` = 5,
+        `Strongly disagree` = 6)
+) \%>\%
+# add variable labels
+labelled::set_variable_labels(
+  x = "This is the variable label for x",
+  y = "This is the variable label for y",
+  z = "This is the variable label for z"
+)
 
- # show the data transformation with a haven_labelled vector
- new_data <- data \%>\% dplyr::mutate(new_x = make_dicho(x))
- # check the updated dataset
- new_data
+# show the data transformation with a haven_labelled vector
+dicho_df <- df \%>\% dplyr::mutate(dicho_x = make_dicho(x))
+# check the updated dataset
+dicho_df
 
- # Check the attributes
- attributes(new_data$new_x)
- # another way of checking the attributes
- str(new_data$new_x)
+# Check the attributes
+attributes(dicho_df$dicho_x)
+# another way of checking the attributes
+str(dicho_df$dicho_x)
 
- # check the factor levels
- unique(new_data$new_x)
-
- ---------------------------------------------------------------------------
- # when done on a factor vector, the function still works
- new_data <- data \%>\%
-   dplyr::mutate(
-     # convert x to a factor and name it "factor_x"
-     factor_x = haven::as_factor(x),
-     # convert the x_factor variable to a dichotomous factor
-     new_x = make_dicho(x_factor)
-   )
- # check the updated dataset
- new_data
-
- # Check the attributes
- attributes(new_data$new_x)
- # another way of checking the attributes
- str(new_data$new_x)
-
- # check the factor levels
- unique(new_data$new_x)
+# check the factor levels
+unique(dicho_df$dicho_x)
 
 ----------------------------------------------------------------------------
-# function also works inside dplyr::across()
- new_data <- data \%>\%
-   dplyr::mutate(
-     dplyr::across(x:z, make_dicho, .names = "new{col}")
-   )
- # check the updated dataset
- new_data
+\dontrun{
+# function also works with factors
+dicho_df <- df \%>\%
+  dplyr::mutate(
+    # convert variable to a factor
+    factor_x = haven::as_factor(x),
+    # convert the factor to a dichotomous factor
+    dicho_x = make_dicho(factor_x)
+  )
 
- # check the attributes for the new dataset
- str(new_data)
+# check the updated dataset
+dicho_df
+
+# Check the attributes
+attributes(dicho_df$dicho_x)
+# another way of checking the attributes
+str(dicho_df$dicho_x)
+
+# check the factor levels
+unique(dicho_df$dicho_x)
+}
+----------------------------------------------------------------------------
+# function also works inside dplyr::across()
+\dontrun{
+# Create new columns using `across()`
+dicho_df <- df \%>\%
+  dplyr::mutate(
+    # use this example if you don't want to flip the factor levels
+    dplyr::across(
+      x:z,
+      make_dicho,
+      .names = "dicho_{col}"
+    ),
+    # if you want to flip the factor levels, follow this example
+    dplyr::across(
+      x:z,
+      ~make_dicho(., flip_levels = TRUE),
+      .names = "dicho_flipped_{col}"
+    )
+  )
+}
 
 }

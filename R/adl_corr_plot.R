@@ -35,54 +35,54 @@
 #'
 
 
-adl_corr_plot <- function(
-    df,
-    x,
-    y,
-    color = NULL,
-    fill = NULL,
-    wt = NULL) {
-
-  # get
-  values <- val_labels(cpost[[var]])
-  value_labels <- setNames(names(values), values) %>% str_wrap(15)
-
-  # get correlation coefficient
-  if (is.null(wt)) {
-    cor <- wtd.cor(df[[x]], df[[y]], df[[wts]]) %>%
-      # convert to a tibble
-      as_tibble() %>%
-      mutate(cor = round(correlation, 3)) %>%
-      select(cor)
-
-  } else
-  cor <- wtd.cor(df[[x]], df[[y]], df[[wts]]) %>%
-    # convert to a tibble
-    as_tibble() %>%
-    mutate(cor = round(correlation, 3)) %>%
-    select(cor)
-
-  label <- textGrob(
-    label = paste("Correlation\nCoefficient = ", cor$cor),
-    x = .5, y = 0.1,
-    hjust = 0.5,
-    gp=gpar(col = "black",size = 3, family = "L")
-  )
-
-  # create the plot
-  df %>%
-    ggplot(., aes(x = !!sym({{ var }}), y = trad_avg_n)) +
-    # add the weights in the aes
-    geom_smooth(aes(weight = wts),
-                # adjust color and fill
-                method = "lm", color = "#9478d2", fill = "#9478d2") +
-    scale_x_continuous(labels = value_labels) +
-    # add titles
-    labs(x = str_wrap(x_title, 45),
-         y = "Antisemitism Score",
-         #title = glue("{group} ({var})"),
-         title = paste0("African Americans (", var, ")")) +
-    theme_default() +
-    #coord_cartesian(ylim = c(1.5, 4)) +
-    annotation_custom(label, xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf)
-}
+# adl_corr_plot <- function(
+#     df,
+#     x,
+#     y,
+#     color = NULL,
+#     fill = NULL,
+#     wt = NULL) {
+#
+#   # get
+#   values <- val_labels(df[[var]])
+#   value_labels <- setNames(names(values), values) %>% str_wrap(15)
+#
+#   # get correlation coefficient
+#   if (is.null(wt)) {
+#     cor <- wtd.cor(df[[x]], df[[y]], df[[wts]]) %>%
+#       # convert to a tibble
+#       as_tibble() %>%
+#       mutate(cor = round(correlation, 3)) %>%
+#       select(cor)
+#
+#   } else
+#   cor <- wtd.cor(df[[x]], df[[y]], df[[wts]]) %>%
+#     # convert to a tibble
+#     as_tibble() %>%
+#     mutate(cor = round(correlation, 3)) %>%
+#     select(cor)
+#
+#   label <- textGrob(
+#     label = paste("Correlation\nCoefficient = ", cor$cor),
+#     x = .5, y = 0.1,
+#     hjust = 0.5,
+#     gp=gpar(col = "black",size = 3, family = "L")
+#   )
+#
+#   # create the plot
+#   df %>%
+#     ggplot(., aes(x = !!sym({{ var }}), y = trad_avg_n)) +
+#     # add the weights in the aes
+#     geom_smooth(aes(weight = wts),
+#                 # adjust color and fill
+#                 method = "lm", color = "#9478d2", fill = "#9478d2") +
+#     scale_x_continuous(labels = value_labels) +
+#     # add titles
+#     labs(x = str_wrap(x_title, 45),
+#          y = "Antisemitism Score",
+#          #title = glue("{group} ({var})"),
+#          title = paste0("African Americans (", var, ")")) +
+#     theme_default() +
+#     #coord_cartesian(ylim = c(1.5, 4)) +
+#     annotation_custom(label, xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf)
+# }

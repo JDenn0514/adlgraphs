@@ -271,7 +271,9 @@ adl_bar_plots <- function(
             color = "#2c2e35",
             vjust = 0
           ) +
-          theme_v_bar(...)
+          theme_v_bar(
+            legend_position = "right"
+          )
 
       }
     } else if (freq_plot == FALSE) {

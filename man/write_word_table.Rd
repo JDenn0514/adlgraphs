@@ -4,7 +4,7 @@
 \alias{write_word_table}
 \title{This mainly an internal package but can be used externally}
 \usage{
-write_word_table(var, doc)
+write_word_table(x, doc)
 }
 \description{
 This mainly an internal package but can be used externally
