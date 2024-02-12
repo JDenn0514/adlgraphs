@@ -14,26 +14,30 @@ kept the same. If \code{TRUE}, the factor levels are flipped. Only specify this
 if you want to change the order of the factor level.}
 }
 \description{
-Convert a \code{factor} or \code{haven_labelled} vector to a dichotomous factor vector.
-When I refer to a dichotomous factor vector, I am eferring to a vector of
-class \code{factor} with only two levels.
+Convert a vector of class \code{factor} or
+\href{https://haven.tidyverse.org/reference/labelled.html}{\code{haven_labelled}}
+to a "dichotomous factor vector". When I refer to a "dichotomous factor
+vector", I am referring to a vector of class \code{factor} with only two levels
+that are opposites (e.g., "Agree" and "Disagree")
 }
 \details{
-\code{make_dicho} was designed to work on any vector that is of class \code{factor} or
-\code{haven_labelled}. If the vector is  numeric with no value labels, the
-function will return an error. This is because the function first converts
-the vector to a factor using \code{\link[=as_factor]{as_factor()}} \code{\link[haven:as_factor]{haven::as_factor()}} from the
-\code{haven} package. Then, it removes the first word if there are multiple
-words in the factor level.
+\code{make_dicho} was designed to work on any vector that is of class \code{factor},
+\href{https://haven.tidyverse.org/reference/labelled.html}{\code{haven_labelled}},
+or \code{numeric} with value labels. If the vector is  numeric with no value
+labels, the function will return an error. This is because the function first
+converts the vector to a factor using \code{\link[=as_factor]{as_factor()}} \code{\link[haven:as_factor]{haven::as_factor()}}
+from the \code{haven} package. Then, it removes the first word if there are
+multiple words in the factor level.
 
-This function also
+The resulting factor levels default to alphabetical but if you want to
+reverse them, just set \code{flip_levels = TRUE} in the function.
 
 In addition, this function adds two new attributes. The first attribute,
 \code{transformation}, indicates the data transformation that the original vector
 underwent to create this new vector. The second attribute, \code{label}, contains
 the variable label that was found in the original variable. However, if the
 original vector did not have a variable label, then this attribute will not
-show up.
+show up. This is only useful if you care about
 }
 \examples{
 library(tibble)
@@ -92,8 +96,8 @@ str(dicho_df$dicho_x)
 # check the factor levels
 unique(dicho_df$dicho_x)
 
-----------------------------------------------------------------------------
-\dontrun{
+# ----------------------------------------------------------------------------
+
 # function also works with factors
 dicho_df <- df \%>\%
   dplyr::mutate(
@@ -113,10 +117,10 @@ str(dicho_df$dicho_x)
 
 # check the factor levels
 unique(dicho_df$dicho_x)
-}
-----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
 # function also works inside dplyr::across()
-\dontrun{
+
 # Create new columns using `across()`
 dicho_df <- df \%>\%
   dplyr::mutate(
@@ -133,6 +137,6 @@ dicho_df <- df \%>\%
       .names = "dicho_flipped_{col}"
     )
   )
-}
+
 
 }

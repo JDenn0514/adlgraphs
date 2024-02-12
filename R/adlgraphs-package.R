@@ -20,7 +20,7 @@
 #' @importFrom tidyr pivot_wider drop_na
 #' @importFrom purrr pmap walk
 #' @importFrom scales percent
-#' @importFrom stringr str_replace
+#' @importFrom stringr str_replace str_detect
 #' @importFrom haven as_factor
 #' @importFrom broom.helpers tidy_attach_model tidy_add_reference_rows
 #' tidy_add_variable_labels tidy_add_term_labels tidy_add_n
@@ -29,5 +29,6 @@
 #' @importFrom jtools scale_mod
 #' @importFrom officer body_add_par
 #' @importFrom tibble as_tibble
+#' @importFrom sjlabelled as_label get_labels
 #' @keywords internal
 "_PACKAGE"

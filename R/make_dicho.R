@@ -1,24 +1,28 @@
 #' Make dichotomous factors
 #'
-#' Convert a `factor` or `haven_labelled` vector to a dichotomous factor vector.
-#' When I refer to a dichotomous factor vector, I am eferring to a vector of
-#' class `factor` with only two levels.
+#' Convert a vector of class `factor` or
+#' \href{https://haven.tidyverse.org/reference/labelled.html}{`haven_labelled`}
+#' to a "dichotomous factor vector". When I refer to a "dichotomous factor
+#' vector", I am referring to a vector of class `factor` with only two levels
+#' that are opposites (e.g., "Agree" and "Disagree")
 #'
-#' `make_dicho` was designed to work on any vector that is of class `factor` or
-#' `haven_labelled`. If the vector is  numeric with no value labels, the
-#' function will return an error. This is because the function first converts
-#' the vector to a factor using [as_factor()] [haven::as_factor()] from the
-#' `haven` package. Then, it removes the first word if there are multiple
-#' words in the factor level.
+#' `make_dicho` was designed to work on any vector that is of class `factor`,
+#' \href{https://haven.tidyverse.org/reference/labelled.html}{`haven_labelled`},
+#' or `numeric` with value labels. If the vector is  numeric with no value
+#' labels, the function will return an error. This is because the function first
+#' converts the vector to a factor using [as_factor()] [haven::as_factor()]
+#' from the `haven` package. Then, it removes the first word if there are
+#' multiple words in the factor level.
 #'
-#' This function also
+#' The resulting factor levels default to alphabetical but if you want to
+#' reverse them, just set `flip_levels = TRUE` in the function.
 #'
 #' In addition, this function adds two new attributes. The first attribute,
 #' `transformation`, indicates the data transformation that the original vector
 #' underwent to create this new vector. The second attribute, `label`, contains
 #' the variable label that was found in the original variable. However, if the
 #' original vector did not have a variable label, then this attribute will not
-#' show up.
+#' show up. This is only useful if you care about
 #'
 #' @param x A vector of type `haven_labelled` or `factor`.
 #'
@@ -85,8 +89,8 @@
 #' # check the factor levels
 #' unique(dicho_df$dicho_x)
 #'
-#' ----------------------------------------------------------------------------
-#' \dontrun{
+#' # ----------------------------------------------------------------------------
+#'
 #' # function also works with factors
 #' dicho_df <- df %>%
 #'   dplyr::mutate(
@@ -106,10 +110,10 @@
 #'
 #' # check the factor levels
 #' unique(dicho_df$dicho_x)
-#' }
-#' ----------------------------------------------------------------------------
+#'
+#' # ----------------------------------------------------------------------------
 #' # function also works inside dplyr::across()
-#' \dontrun{
+#'
 #' # Create new columns using `across()`
 #' dicho_df <- df %>%
 #'   dplyr::mutate(
@@ -126,7 +130,7 @@
 #'       .names = "dicho_flipped_{col}"
 #'     )
 #'   )
-#' }
+#'
 #'
 
 make_dicho <- function(x, flip_levels = FALSE) {
@@ -137,10 +141,38 @@ make_dicho <- function(x, flip_levels = FALSE) {
   # get the variable lable
   variable_label <- labelled::var_label(x)
 
+  if (haven::is.labelled(x)) {
+
+    # if x is class haven_labelled convert to a factor using haven::as_factor
+    x <- haven::as_factor(x)
+
+  } else if (is.numeric(x) && !is.null(sjlabelled::get_labels(x))) {
+
+    # if x is class numeric AND DOES contain value labels
+    # convert to a factor with sjlabelled
+    x <- sjlabelled::as_label(x)
+
+  } else if (is.character(x) || is.factor(x)) {
+
+    # if x is of class character or factor return x
+    x
+
+  } else {
+    # if x is any other class return this error
+    cli::cli_abort(
+      c(
+        "`{x_lab}` must be a vector of class {.cls factor}, {.cls character}, {.cls haven_labelled}, or {.cls numeric} with value labels",
+        x = "You've supplied a {.cls {class(x)}} vector without value labels."
+      )
+    )
+  }
+
+
+
   # convert the vector to a factor
   x <- haven::as_factor(x)
 
-  # remove the first word if there are multiple words
+  # remove the first word if there are multiple words (using base to )
   x <- dplyr::if_else(
     stringr::str_detect(x, "\\s"),
     stringr::str_replace(x, "\\w+\\s", ""),
@@ -178,7 +210,4 @@ make_dicho <- function(x, flip_levels = FALSE) {
 
   }
 }
-
-
-
 

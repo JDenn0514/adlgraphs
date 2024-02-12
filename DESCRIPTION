@@ -1,47 +1,50 @@
-Package: adlgraphs
 Type: Package
+Package: adlgraphs
 Title: Create Graphs with ADL Style and Branding
 Version: 0.1.0
-Authors@R: person("Jacob", "Dennen", email = "jdennen@adl.org", role = c("aut", "cre"))
-Description: This package is designed to make it easier for folks at CAR at ADL 
-    to make graphs. The package contains all of the different themes related to various graph
-    styles, a guide to which colors to use and when, and various functions created
-    related to various graphs (mainly for coefficient plots).
+Authors@R: 
+    person("Jacob", "Dennen", , "jdennen@adl.org", role = c("aut", "cre"))
+Description: This package is designed to make it easier for folks at CAR
+    at ADL to make graphs. The package contains all of the different
+    themes related to various graph styles, a guide to which colors to use
+    and when, and various functions created related to various graphs
+    (mainly for coefficient plots).
 License: MIT + file LICENSE
-Encoding: UTF-8
-LazyData: true
-Imports: 
-    ggplot2,
-    showtext,
-    sysfonts,
-    grDevices,
-    prismatic,
-    rlang,
-    cli,
-    dplyr,
-    glue,
-    gt,
-    gtExtras,
-    haven,
-    labelled,
-    purrr,
-    scales,
-    stringr,
-    tidyr,
-    stats,
-    forcats,
-    broom.helpers,
-    jtools,
-    gto,
-    officer,
-    tibble
-RoxygenNote: 7.3.1
 URL: https://github.com/JDenn0514/adlgraphs,
     https://jdenn0514.github.io/adlgraphs/
 BugReports: https://github.com/JDenn0514/adlgraphs/issues
 Depends: 
     R (>= 2.10)
+Imports: 
+    broom.helpers,
+    cli,
+    dplyr,
+    forcats,
+    ggplot2,
+    glue,
+    grDevices,
+    gt,
+    gtExtras,
+    gto,
+    haven,
+    jtools,
+    labelled,
+    officer,
+    prismatic,
+    purrr,
+    rlang,
+    scales,
+    showtext,
+    sjlabelled,
+    stats,
+    stringr,
+    sysfonts,
+    tibble,
+    tidyr
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Encoding: UTF-8
+LazyData: true
 Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
