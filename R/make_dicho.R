@@ -130,6 +130,15 @@
 #'       .names = "dicho_flipped_{col}"
 #'     )
 #'   )
+#' # show that the function worked properly by creating two new sets of variables
+#' dicho_df
+#'
+#' # show the underlying structure of the entire df
+#' str(dicho_df)
+#'
+#' # show how the levels are flipped when "flip_levels = TRUE"
+#' levels(dicho_df$dicho_x)
+#' levels(dicho_df$dicho_flipped_x)
 #'
 #'
 
