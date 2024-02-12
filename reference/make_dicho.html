@@ -253,6 +253,58 @@ show up. This is only useful if you care about</p>
 <span class="r-in"><span>      .names <span class="op">=</span> <span class="st">"dicho_flipped_{col}"</span></span></span>
 <span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># show that the function worked properly by creating two new sets of variables</span></span></span>
+<span class="r-in"><span><span class="va">dicho_df</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   x                     y        z       dicho_x dicho_y dicho_z dicho_flipped_x</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl+lb&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+l&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 3<span style="color: #949494;"> [Somewhat agree]</span>    2<span style="color: #949494;"> [Agre…</span> 3<span style="color: #949494;"> [Som…</span> Agree   Agree   Agree   Agree          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 4<span style="color: #949494;"> [Somewhat disagree]</span> 4<span style="color: #949494;"> [Some…</span> 2<span style="color: #949494;"> [Agr…</span> Disagr… Disagr… Agree   Disagree       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 2<span style="color: #949494;"> [Agree]</span>             6<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Str…</span> Agree   Disagr… Agree   Agree          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 1<span style="color: #949494;"> [Strongly agree]</span>    1<span style="color: #949494;"> [Stro…</span> 4<span style="color: #949494;"> [Som…</span> Agree   Agree   Disagr… Agree          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> 5<span style="color: #949494;"> [Disagree]</span>          4<span style="color: #949494;"> [Some…</span> 3<span style="color: #949494;"> [Som…</span> Disagr… Disagr… Agree   Disagree       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> 6<span style="color: #949494;"> [Strongly disagree]</span> 5<span style="color: #949494;"> [Disa…</span> 6<span style="color: #949494;"> [Str…</span> Disagr… Disagr… Disagr… Disagree       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: dicho_flipped_y &lt;fct&gt;, dicho_flipped_z &lt;fct&gt;</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># show the underlying structure of the entire df</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">dicho_df</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> tibble [6 × 9] (S3: tbl_df/tbl/data.frame)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ x              : dbl+lbl [1:6] 3, 4, 2, 1, 5, 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    ..@ labels: Named num [1:6] 1 2 3 4 5 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    .. ..- attr(*, "names")= chr [1:6] "Strongly agree" "Agree" "Somewhat agree" "Somewhat disagree" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    ..@ label : chr "This is the variable label for x"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ y              : dbl+lbl [1:6] 2, 4, 6, 1, 4, 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    ..@ labels: Named num [1:6] 1 2 3 4 5 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    .. ..- attr(*, "names")= chr [1:6] "Strongly agree" "Agree" "Somewhat agree" "Somewhat disagree" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    ..@ label : chr "This is the variable label for y"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ z              : dbl+lbl [1:6] 3, 2, 1, 4, 3, 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    ..@ labels: Named num [1:6] 1 2 3 4 5 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    .. ..- attr(*, "names")= chr [1:6] "Strongly agree" "Agree" "Somewhat agree" "Somewhat disagree" ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    ..@ label : chr "This is the variable label for z"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ dicho_x        : Factor w/ 2 levels "Agree","Disagree": 1 2 1 1 2 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "transformation")= 'glue' chr "Converting 'x' to a dichotomous factor with 'Agree' as the reference level"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "label")= chr "This is the variable label for x"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ dicho_y        : Factor w/ 2 levels "Agree","Disagree": 1 2 2 1 2 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "transformation")= 'glue' chr "Converting 'y' to a dichotomous factor with 'Agree' as the reference level"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "label")= chr "This is the variable label for y"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ dicho_z        : Factor w/ 2 levels "Agree","Disagree": 1 1 1 2 1 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "transformation")= 'glue' chr "Converting 'z' to a dichotomous factor with 'Agree' as the reference level"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "label")= chr "This is the variable label for z"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ dicho_flipped_x: Factor w/ 2 levels "Disagree","Agree": 2 1 2 2 1 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "transformation")= 'glue' chr "Converting 'x' to a dichotomous factor and reordering the factor levels so that 'Disagree' is the reference level"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "label")= chr "This is the variable label for x"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ dicho_flipped_y: Factor w/ 2 levels "Disagree","Agree": 2 1 1 2 1 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "transformation")= 'glue' chr "Converting 'y' to a dichotomous factor and reordering the factor levels so that 'Disagree' is the reference level"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "label")= chr "This is the variable label for y"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ dicho_flipped_z: Factor w/ 2 levels "Disagree","Agree": 2 2 2 1 2 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "transformation")= 'glue' chr "Converting 'z' to a dichotomous factor and reordering the factor levels so that 'Disagree' is the reference level"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "label")= chr "This is the variable label for z"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># show how the levels are flipped when "flip_levels = TRUE"</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">dicho_df</span><span class="op">$</span><span class="va">dicho_x</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Agree"    "Disagree"</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">dicho_df</span><span class="op">$</span><span class="va">dicho_flipped_x</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Disagree" "Agree"   </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
