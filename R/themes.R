@@ -417,7 +417,7 @@ theme_default <- function(
 #'
 #' @export
 theme_coef <- function(
-    # set the base font size
+  # set the base font size
   base_size = 12,
   # determine if grid lines should be shown (controls major and minor, x and y grid lines)
   grid_x_only = TRUE,
@@ -498,7 +498,7 @@ theme_h_stack <- function(
 #' @param base_size Base font size, given in pts. Also controls the spacing in
 #'   the graph.
 #' @param legend_position The position of the legend. Options are: "left",
-#'   "right", "top", "bottom", or "none". "none" removes the legend. "right"
+#'   "right", "top", "bottom", or "none". "none" removes the legend. "none"
 #'   is the default.
 #' @param axis_text_x Logical. Determines if the x-axis has labels. If `FALSE`,
 #'   the default, the x-axis labels are removed. If `TRUE`, the x-axis labels
@@ -540,7 +540,7 @@ theme_h_bar <- function(
 #' @param base_size Base font size, given in pts. Also controls the spacing in
 #'   the graph.
 #' @param legend_position The position of the legend. Options are: "left",
-#'   "right", "top", "bottom", or "none". "none" removes the legend. "right"
+#'   "right", "top", "bottom", or "none". "none" removes the legend. "none"
 #'   is the default.
 #' @param axis_text_y Logical. Determines if the y-axis has labels. If `FALSE`,
 #'   the default, the y-axis labels are removed. If `TRUE`, the y-axis labels

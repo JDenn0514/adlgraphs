@@ -33,6 +33,10 @@
 #'   and labels in the legend should be reversed. Currently there are two options:
 #'   1. "original" keeps the original order of the legend
 #'   2. "reverse" flips the order of the legend
+#' @param wrap_legend_labels Determine number of characters per line in the
+#'   labels. Uses [label_wrap()] [scales::label_wrap()] to wrap the text across
+#'   multiple lines. If left blank, defaults to `NULL` which does not wrap the
+#'   labels at all.
 #' @param ... additional arguments to pass to \code{\link[ggplot2]{scale_fill_manual}}
 #'
 #'
@@ -43,8 +47,9 @@ scale_adl <- function(type = "categorical",
                       aesthetic = c("fill", "color"),
                       n,
                       direction = "original",
-                      legend_title = NULL,
                       legend_order = "original",
+                      legend_title = NULL,
+                      wrap_legend_labels = NULL,
                       ...) {
 
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
@@ -116,13 +121,21 @@ scale_adl <- function(type = "categorical",
     legend_title
   }
 
-
+  # set the labels
+  if (is.null(wrap_legend_labels)) {
+    # if wrap_legend_labels = NULL then just leave as is
+    wrap_legend_labels <- waiver()
+  } else {
+    # wrap the legend labels
+    wrap_legend_labels <- scales::label_wrap(wrap_legend_labels)
+  }
 
   # reverse the legend o
   if (legend_order == "reverse") {
     return(
       ggplot2::scale_fill_manual(
         values = pal,
+        labels = wrap_legend_labels,
         aesthetics = aesthetic,
         name = legend_title,
         guide = guide_legend(reverse = TRUE),
@@ -133,6 +146,7 @@ scale_adl <- function(type = "categorical",
     return(
       ggplot2::scale_fill_manual(
         values = pal,
+        labels = wrap_legend_labels,
         aesthetics = aesthetic,
         name = legend_title,
         ...

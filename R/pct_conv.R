@@ -8,6 +8,31 @@
 #'   by default and should always be pct.
 #'
 #' @export
+#'
+#' @examples
+#'
+#' library(tibble)
+#' library(dplyr)
+#' library(labelled)
+#' library(haven)
+#'
+#' # create the fake data
+#' df <- tibble::tribble(
+#'   ~x, ~y, ~z,
+#'   3, 2, 3,
+#'   4, 4, 2,
+#'   2, 6, 1,
+#'   1, 1, 4,
+#'   5, 4, 3,
+#'   6, 5, 6
+#' )
+#'
+#' df %>%
+#'   count(x) %>%
+#'   mutate(pct = prop.table(n)) %>%
+#'   pct_conv()
+#'
+#'
 
 pct_conv <- function(data, x = pct) {
   data %>%
@@ -16,3 +41,20 @@ pct_conv <- function(data, x = pct) {
       pct_lab := scales::percent(pct, scale = 1)
     )
 }
+
+
+df <- tibble::tribble(
+  ~x, ~y, ~z,
+  3, 2, 3,
+  4, 4, 2,
+  2, 6, 1,
+  1, 1, 4,
+  5, 4, 3,
+  6, 5, 6
+)
+
+
+df %>%
+  count(x) %>%
+  mutate(pct = prop.table(n)) %>%
+  pct_conv()

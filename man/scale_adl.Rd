@@ -10,8 +10,9 @@ scale_adl(
   aesthetic = c("fill", "color"),
   n,
   direction = "original",
-  legend_title = NULL,
   legend_order = "original",
+  legend_title = NULL,
+  wrap_legend_labels = NULL,
   ...
 )
 }
@@ -41,6 +42,13 @@ should be reversed. There are two values:
 \item "reverse" flips the order of colors
 }}
 
+\item{legend_order}{A character string indicating if the order of the colors
+and labels in the legend should be reversed. Currently there are two options:
+\enumerate{
+\item "original" keeps the original order of the legend
+\item "reverse" flips the order of the legend
+}}
+
 \item{legend_title}{A character string indicating what the title of the
 legend should be. There are three options for this:
 \enumerate{
@@ -52,12 +60,10 @@ the legend
 whatever is in the string (in this case the title would be "some string")
 }}
 
-\item{legend_order}{A character string indicating if the order of the colors
-and labels in the legend should be reversed. Currently there are two options:
-\enumerate{
-\item "original" keeps the original order of the legend
-\item "reverse" flips the order of the legend
-}}
+\item{wrap_legend_labels}{Determine number of characters per line in the
+labels. Uses \code{\link[=label_wrap]{label_wrap()}} \code{\link[scales:label_wrap]{scales::label_wrap()}} to wrap the text across
+multiple lines. If left blank, defaults to \code{NULL} which does not wrap the
+labels at all.}
 
 \item{...}{additional arguments to pass to \code{\link[ggplot2]{scale_fill_manual}}}
 }

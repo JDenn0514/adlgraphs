@@ -16,3 +16,28 @@ by default and should always be pct.}
 This function is a wrapper around a very common data transformation that is
 done every time we make a frequency plot
 }
+\examples{
+
+library(tibble)
+library(dplyr)
+library(labelled)
+library(haven)
+
+# create the fake data
+df <- tibble::tribble(
+  ~x, ~y, ~z,
+  3, 2, 3,
+  4, 4, 2,
+  2, 6, 1,
+  1, 1, 4,
+  5, 4, 3,
+  6, 5, 6
+)
+
+df \%>\%
+  count(x) \%>\%
+  mutate(pct = prop.table(n)) \%>\%
+  pct_conv()
+
+
+}

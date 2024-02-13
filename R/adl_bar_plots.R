@@ -59,6 +59,7 @@
 #' @param dodge_reverse Reverses the order of the bars and text in a dodge plot.
 #'   For more info check out \code{\link[ggplot2]{position_dodge}}.
 #' @param ... Additional arguments passed on to `theme_default`
+#'
 #' @export
 #'
 #'
@@ -271,9 +272,7 @@ adl_bar_plots <- function(
             color = "#2c2e35",
             vjust = 0
           ) +
-          theme_v_bar(
-            legend_position = "right"
-          )
+          theme_v_bar(...)
 
       }
     } else if (freq_plot == FALSE) {

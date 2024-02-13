@@ -17,7 +17,7 @@ theme_v_bar(
 the graph.}
 
 \item{legend_position}{The position of the legend. Options are: "left",
-"right", "top", "bottom", or "none". "none" removes the legend. "right"
+"right", "top", "bottom", or "none". "none" removes the legend. "none"
 is the default.}
 
 \item{axis_text_y}{Logical. Determines if the y-axis has labels. If \code{FALSE},
