@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_binary.R
 \name{make_binary}
 \alias{make_binary}
-\title{Make dichotomous factors}
+\title{Make binary variables}
 \usage{
 make_binary(x, flip_values = FALSE)
 }

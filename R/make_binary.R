@@ -1,4 +1,4 @@
-#' Make dichotomous factors
+#' Make binary variables
 #'
 #' Convert a vector of class `factor` or
 #' \href{https://haven.tidyverse.org/reference/labelled.html}{`haven_labelled`}
