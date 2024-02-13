@@ -57,8 +57,9 @@ colors.</p>
 <span>  aesthetic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fill"</span>, <span class="st">"color"</span><span class="op">)</span>,</span>
 <span>  <span class="va">n</span>,</span>
 <span>  direction <span class="op">=</span> <span class="st">"original"</span>,</span>
-<span>  legend_title <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  legend_order <span class="op">=</span> <span class="st">"original"</span>,</span>
+<span>  legend_title <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  wrap_legend_labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -96,6 +97,13 @@ should be reversed. There are two values:</p><ol><li><p>"original" keep the orig
 </ol></dd>
 
 
+<dt>legend_order</dt>
+<dd><p>A character string indicating if the order of the colors
+and labels in the legend should be reversed. Currently there are two options:</p><ol><li><p>"original" keeps the original order of the legend</p></li>
+<li><p>"reverse" flips the order of the legend</p></li>
+</ol></dd>
+
+
 <dt>legend_title</dt>
 <dd><p>A character string indicating what the title of the
 legend should be. There are three options for this:</p><ol><li><p><code>legend_title</code> is left blank. If this happens the title of the scale is
@@ -107,11 +115,11 @@ whatever is in the string (in this case the title would be "some string")</p></l
 </ol></dd>
 
 
-<dt>legend_order</dt>
-<dd><p>A character string indicating if the order of the colors
-and labels in the legend should be reversed. Currently there are two options:</p><ol><li><p>"original" keeps the original order of the legend</p></li>
-<li><p>"reverse" flips the order of the legend</p></li>
-</ol></dd>
+<dt>wrap_legend_labels</dt>
+<dd><p>Determine number of characters per line in the
+labels. Uses <code>label_wrap()</code> <code><a href="https://scales.r-lib.org/reference/label_wrap.html" class="external-link">scales::label_wrap()</a></code> to wrap the text across
+multiple lines. If left blank, defaults to <code>NULL</code> which does not wrap the
+labels at all.</p></dd>
 
 
 <dt>...</dt>
