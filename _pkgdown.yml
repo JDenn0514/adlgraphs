@@ -47,6 +47,7 @@ reference:
   contents:
     - pct_conv
     - make_dicho
+    - make_binary
     - get_coefficients
     - get_freq_table
     - get_all_freqs
