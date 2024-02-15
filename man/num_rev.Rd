@@ -15,6 +15,10 @@ if available. Also adds an attribute describing the transformation the
 original variable underwent.
 }
 \examples{
+
+library(dplyr)
+library(labelled)
+library(adlgraphs)
 # create fake data
 df <- tibble::tibble(
   w = sample(1:4, 10, replace = TRUE),

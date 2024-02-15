@@ -9,6 +9,10 @@
 #' @param x A vector of class `haven_labelled` or `numeric`
 #'
 #' @examples
+#'
+#' library(dplyr)
+#' library(labelled)
+#' library(adlgraphs)
 #' # create fake data
 #' df <- tibble::tibble(
 #'   w = sample(1:4, 10, replace = TRUE),

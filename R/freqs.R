@@ -229,7 +229,6 @@ get_freq_table <- function(df, x, group, wt) {
 
 }
 
-pol_pos %>% get_freq_table(power)
 
 
 #' Export frequencies for a set of variables to a word doc.
