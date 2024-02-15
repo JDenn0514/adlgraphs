@@ -30,5 +30,6 @@
 #' @importFrom officer body_add_par
 #' @importFrom tibble as_tibble
 #' @importFrom sjlabelled as_label get_labels
+#' @importFrom waldo compare
 #' @keywords internal
 "_PACKAGE"
