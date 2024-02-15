@@ -44,7 +44,9 @@ get_freq_table <- function(df, x, group, wt) {
   if (missing(wt)) {
 
     if (missing(group)) {
+      # get the frequencies without weights and without a grouping variable
       df %>%
+        # drop NAs from x
         tidyr::drop_na({{ x }}) %>%
         dplyr::mutate(x_f := haven::as_factor(.data[[x]])) %>%
         dplyr::count(x_f) %>%
@@ -55,16 +57,20 @@ get_freq_table <- function(df, x, group, wt) {
         ) %>%
         gt::gt() %>%
         gt::cols_label(
-          x_f = x_label(df[[x]]),
+          x_f = labelled::var_label(df[[x]]),
           n = "N",
           pct = "Percent"
         )
 
     } else  {
 
-      # "Returns a naked expression of the variable"
+      # use enexpr() to capture the expressions supplied in "group"
+      # enexpr returns a naked expression of the argument supplied in "group"
+      # this is what allows the input to be either a string or a symbol
       group <- rlang::enexpr(group)
       if (!is.character(group)) {
+        # capture group and convert to a symbol object with ensym()
+        #then use as_name() to make it a string
         group <- rlang::as_name(rlang::ensym(group))
       }
 
@@ -72,7 +78,7 @@ get_freq_table <- function(df, x, group, wt) {
       if (is.null(labelled::var_label(df[[group]]))) {
         x_label <- x
       } else {
-
+        x_label <- labelled::var_label(df[[group]])
       }
       group_label <-  labelled::var_label(df[[group]])
       group_cols <-  c(forcats::fct_unique(df[[group]]))
@@ -96,7 +102,7 @@ get_freq_table <- function(df, x, group, wt) {
       group <- df  %>%
         tidyr::drop_na({{ x }}, {{ group }}) %>%
         dplyr::mutate(x_f := haven::as_factor(.data[[x]])) %>%
-        group_by(!!sym({{ group }})) %>%
+        group_by(.data[[group]]) %>%
         dplyr::count(x_f) %>%
         dplyr::mutate(
           pct = prop.table(n),
@@ -223,6 +229,7 @@ get_freq_table <- function(df, x, group, wt) {
 
 }
 
+pol_pos %>% get_freq_table(power)
 
 
 #' Export frequencies for a set of variables to a word doc.

@@ -42,6 +42,11 @@ reference:
   contents:
     - scale_adl
     - adl_palettes
+- title: Data transformation
+  contents:
+    - make_dicho
+    - make_binary
+    - num_rev
 - title: Analysis functions
   desc: These are miscellaneous functions created to help with data analysis.
   contents:

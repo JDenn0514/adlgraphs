@@ -43,18 +43,3 @@ pct_conv <- function(data, x = pct) {
 }
 
 
-df <- tibble::tribble(
-  ~x, ~y, ~z,
-  3, 2, 3,
-  4, 4, 2,
-  2, 6, 1,
-  1, 1, 4,
-  5, 4, 3,
-  6, 5, 6
-)
-
-
-df %>%
-  count(x) %>%
-  mutate(pct = prop.table(n)) %>%
-  pct_conv()
