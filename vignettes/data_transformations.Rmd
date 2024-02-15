@@ -46,10 +46,10 @@ Let's look at an example with a fake data set comprised of four variables. In th
 
 # create the new data
 df <- tibble::tibble(
-  w = sample(1:4, 10, replace = TRUE),
-  x = sample(1:4, 10, replace = TRUE),
-  y = sample(1:4, 10, replace = TRUE),
-  z = sample(1:4, 10, replace = TRUE)
+  w = sample(1:4, 20, replace = TRUE),
+  x = sample(1:4, 20, replace = TRUE),
+  y = sample(1:4, 20, replace = TRUE),
+  z = sample(1:4, 20, replace = TRUE)
 ) %>% 
   # add value labels to y and z but not x to see what happens with no labels
   labelled::set_value_labels(

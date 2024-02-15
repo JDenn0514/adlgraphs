@@ -40,7 +40,8 @@ Imports:
     stringr,
     sysfonts,
     tibble,
-    tidyr
+    tidyr,
+    waldo
 Suggests: 
     knitr,
     rmarkdown,
