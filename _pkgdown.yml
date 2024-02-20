@@ -47,6 +47,8 @@ reference:
     - make_dicho
     - make_binary
     - num_rev
+    - case_when_fct
+    - case_match_fct
 - title: Analysis functions
   desc: These are miscellaneous functions created to help with data analysis.
   contents:

@@ -50,10 +50,12 @@ num_rev <- function(x) {
   # get the object's name
   x_lab <- deparse(substitute(x))
 
+
   if (haven::is.labelled(x) || (is.numeric(x) && !is.null(sjlabelled::get_labels(x)))) {
+    # if x is haven_labelled or numeric with value labels
 
     ## reverse the values of x in a new vector "rev_x" ---------
-    # get the highest value in name_vec and add 1 to it
+    # get the highest value in x and add 1 to it
     max_x <- max(x) + 1
     # reverse the value of x by subtracting it from name_vec_max
     # now what was a 1 is equal to a 4 and what was a 2 is equal to 3, etc.
@@ -74,39 +76,56 @@ num_rev <- function(x) {
     # create the labelled vector by adding the reversed labels (rev_name_vec)
     # to the reversed vector ()
 
-    if (!is.null(labelled::var_label(x))) {
 
+    if (!is.null(labelled::var_label(x))) {
+      # if x has a variable label
+
+      # add variable and value labels
       haven::labelled(
         x = rev_x,
         labels = rev_name_vec,
         label = labelled::var_label(x)
       ) %>%
+        # add the transformation annotation
         structure(transformation = glue::glue("Reversing '{x_lab}' while maintaining correct value labels"))
 
     } else {
+      # if x does not have a variable label
+
+      # add value labels
       haven::labelled(
         x = rev_x,
         labels = rev_name_vec
       ) %>%
+        # add the transformation annotation
         structure(transformation = glue::glue("Reversing '{x_lab}' while maintaining correct value labels"))
     }
 
   } else if (is.numeric(x) && is.null(sjlabelled::get_labels(x))) {
+    # if x is numeric and does not have value labels
 
+    # find the max value in x and add 1
     max_x <- max(x) + 1
+    # reverse the value of x by subtracting it from name_vec_max
+    # now what was a 1 is equal to a 4 and what was a 2 is equal to 3, etc.
     rev_x <- max_x - x
 
     if (!is.null(labelled::var_label(x))) {
+      # if x has a variable label
 
+      # add variable label
       haven::labelled(
         x = rev_x,
         label = labelled::var_label(x)
       ) %>%
+        # add the transformation annotation
         structure(transformation = glue::glue("Reversing '{x_lab}'"))
 
     } else {
+      # if x does not have a variable label
 
       rev_x %>%
+        # add the transformation annotation
         structure(transformation = glue::glue("Reversing '{x_lab}'"))
 
     }

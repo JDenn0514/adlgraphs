@@ -43,6 +43,12 @@ Let's look at an example with a fake data set comprised of four variables. In th
 
 
 ```{r}
+library(adlgraphs)
+library(tibble)
+library(dplyr)
+library(labelled)
+library(haven)
+library(waldo)
 
 # create the new data
 df <- tibble::tibble(
@@ -67,13 +73,11 @@ df <- tibble::tibble(
     x = "This is the variable label for x",
     z = "This is the variable label for z"
   )
-
 ```
 
 Now let's show how this function works in practice as well as how you would do the same data transformation without this function. We will start by showing it `w` because it has no metadata which makes it relatively easy to replicate without the function. 
 
 ```{r}
-
 new_df <- df %>% 
   mutate(
     fun_w = num_rev(w),
@@ -86,7 +90,6 @@ new_df <- df %>%
 
 # see the results
 head(new_df)
-
 ```
 
 Now let's check to see if `fun_w` and `base_w` are identical using `waldo::compare()`. We can see that there are no differences between the two vectors. In addition, check the underlying structure of the data, specifically of the two variables. We can see that both variables have an attribute called "transformation" that contains information explaining what happened sort of data transformation the variables underwent. 
@@ -98,10 +101,19 @@ waldo::compare(new_df$fun_w, new_df$base_w)
 
 # check the structure of the data now
 str(new_df)
-
 ```
 
-Now let's check this with `x` from the new data. Since `x` has a variable label, it will be a bit more in-depth having to replicate the results we get from the `num_rev()` function. We can see that both variables are the same. Moreover, what was just one line of code ended up being ~5 lines of code. While this may not seem like much, it becomes a lot when you have a bunch of variables to do this over. Now to understand the output from `str(new_df)`, there are three things to note here:
+Now let's check this with `x` from the new data. Let's compare a new variable created using the `num_rev()` function called `num_rev_x` to a new variable created through a simple reversal by doing `5 - x` that we'll call . We can see that the values are the same, but hte 
+```{r}
+new_df <- df %>% 
+  mutate(
+    fun_x = num_rev(x),
+    sub_x = 5 - x
+  )
+```
+
+
+Since `x` has a variable label, it will be a bit more in-depth having to replicate the results we get from the `num_rev()` function. We can see that both variables are the same. Moreover, what was just one line of code ended up being ~5 lines of code. While this may not seem like much, it becomes a lot when you have a bunch of variables to do this over. Now to understand the output from `str(new_df)`, there are three things to note here:
 
  - The first is that the first line of each variable indicates the values in this variable and that there are 10 values.
 
@@ -131,13 +143,11 @@ waldo::compare(new_df$fun_x, new_df$base_x)
 
 # check the structure of the data now
 str(new_df)
-
 ```
 
 Now if we check `y` we will see something similar. First, since this variable has value labels, we need tomake sure that we add the value labels in when doing it in the base model and note that in the transformation. More importantly, we can see that while the values in `fun_y` and `base_y` changed, the value labels stayed the same as in `y`. This is important because the person's response didn't change, the only thing that did is the value we are associating with it. Moreover, we can that the "label" attribute is gone now and two "labels" attributes show up instead. This is because the original variable did not have a variabel label but did have value labels.
 
 ```{r}
-
 new_df <- df %>% 
   mutate(
     fun_y = num_rev(y),
@@ -164,14 +174,11 @@ waldo::compare(new_df$fun_y, new_df$base_y)
 
 # check the structure of the data now
 str(new_df)
-
-
 ```
 
-`z` is the most complex variable as it contains both variable and value labels. What was originally one line of code quickly became 9 lines of code. 
+`z` is the most complex variable as it contains both variable and value labels. What was originally one line of code quickly became 9 lines of code. To get the same result as `num_rev()`, we need to use `haven::labelled()` to add both the variable label and the value labels and we need to add `structure()` to add the transformation.
 
 ```{r}
-
 new_df <- df %>% 
   mutate(
     fun_z = num_rev(z),
@@ -199,7 +206,6 @@ waldo::compare(new_df$fun_z, new_df$base_z)
 
 # check the structure of the data now
 str(new_df)
-
 ```
 
 
