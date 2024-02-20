@@ -130,7 +130,13 @@ has only value labels, <code>z</code> has both variable and value
 labels. This allows us to see how the function provides different
 outputs depending on what kind of metadata the function has.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JDenn0514/adlgraphs" class="external-link">adlgraphs</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/" class="external-link">tibble</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://larmarange.github.io/labelled/" class="external-link">labelled</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://haven.tidyverse.org" class="external-link">haven</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://waldo.r-lib.org" class="external-link">waldo</a></span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># create the new data</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  w <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="fl">20</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
@@ -159,8 +165,7 @@ would do the same data transformation without this function. We will
 start by showing it <code>w</code> because it has no metadata which
 makes it relatively easy to replicate without the function.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<code class="sourceCode R"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    fun_w <span class="op">=</span> <span class="fu"><a href="../reference/num_rev.html">num_rev</a></span><span class="op">(</span><span class="va">w</span><span class="op">)</span>,</span>
 <span>    <span class="co"># first subtract w from 5 and then use structure to add the metadata</span></span>
@@ -175,12 +180,12 @@ makes it relatively easy to replicate without the function.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 3</span></span></span>
 <span><span class="co">#&gt;       w fun_w base_w</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     2     3      3</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     2     3      3</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     2     3      3</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     1     4      4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     3     2      2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     3     2      2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     1     4      4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     3     2      2</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     4     1      1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     3     2      2</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     2     3      3</span></span></code></pre></div>
 <p>Now let’s check to see if <code>fun_w</code> and <code>base_w</code>
 are identical using <code><a href="https://waldo.r-lib.org/reference/compare.html" class="external-link">waldo::compare()</a></code>. We can see that there
 are no differences between the two vectors. In addition, check the
@@ -196,19 +201,29 @@ transformation the variables underwent.</p>
 <span><span class="co"># check the structure of the data now</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">)</span></span>
 <span><span class="co">#&gt; tibble [20 × 3] (S3: tbl_df/tbl/data.frame)</span></span>
-<span><span class="co">#&gt;  $ w     : int [1:20] 2 2 2 1 4 3 3 3 3 2 ...</span></span>
-<span><span class="co">#&gt;  $ fun_w : num [1:20] 3 3 3 4 1 2 2 2 2 3 ...</span></span>
+<span><span class="co">#&gt;  $ w     : int [1:20] 3 3 1 3 4 2 3 1 1 3 ...</span></span>
+<span><span class="co">#&gt;  $ fun_w : num [1:20] 2 2 4 2 1 3 2 4 4 2 ...</span></span>
 <span><span class="co">#&gt;   ..- attr(*, "transformation")= 'glue' chr "Reversing 'w'"</span></span>
-<span><span class="co">#&gt;  $ base_w: num [1:20] 3 3 3 4 1 2 2 2 2 3 ...</span></span>
+<span><span class="co">#&gt;  $ base_w: num [1:20] 2 2 4 2 1 3 2 4 4 2 ...</span></span>
 <span><span class="co">#&gt;   ..- attr(*, "transformation")= chr "Reversing 'w'"</span></span></code></pre></div>
-<p>Now let’s check this with <code>x</code> from the new data. Since
-<code>x</code> has a variable label, it will be a bit more in-depth
-having to replicate the results we get from the <code><a href="../reference/num_rev.html">num_rev()</a></code>
-function. We can see that both variables are the same. Moreover, what
-was just one line of code ended up being ~5 lines of code. While this
-may not seem like much, it becomes a lot when you have a bunch of
-variables to do this over. Now to understand the output from
-<code>str(new_df)</code>, there are three things to note here:</p>
+<p>Now let’s check this with <code>x</code> from the new data. Let’s
+compare a new variable created using the <code><a href="../reference/num_rev.html">num_rev()</a></code> function
+called <code>num_rev_x</code> to a new variable created through a simple
+reversal by doing <code>5 - x</code> that we’ll call . We can see that
+the values are the same, but hte</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    fun_x <span class="op">=</span> <span class="fu"><a href="../reference/num_rev.html">num_rev</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
+<span>    sub_x <span class="op">=</span> <span class="fl">5</span> <span class="op">-</span> <span class="va">x</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p>Since <code>x</code> has a variable label, it will be a bit more
+in-depth having to replicate the results we get from the
+<code><a href="../reference/num_rev.html">num_rev()</a></code> function. We can see that both variables are the
+same. Moreover, what was just one line of code ended up being ~5 lines
+of code. While this may not seem like much, it becomes a lot when you
+have a bunch of variables to do this over. Now to understand the output
+from <code>str(new_df)</code>, there are three things to note here:</p>
 <ul>
 <li><p>The first is that the first line of each variable indicates the
 values in this variable and that there are 10 values.</p></li>
@@ -216,7 +231,7 @@ values in this variable and that there are 10 values.</p></li>
 attribute</p></li>
 <li><p>The third line shows you the transformation attribute</p></li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    fun_x <span class="op">=</span> <span class="fu"><a href="../reference/num_rev.html">num_rev</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
@@ -240,12 +255,12 @@ attribute</p></li>
 <span><span class="co"># check the structure of the data now</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">)</span></span>
 <span><span class="co">#&gt; tibble [20 × 3] (S3: tbl_df/tbl/data.frame)</span></span>
-<span><span class="co">#&gt;  $ x     : int [1:20] 4 3 4 4 4 3 3 2 4 4 ...</span></span>
+<span><span class="co">#&gt;  $ x     : int [1:20] 4 3 3 4 3 2 4 2 1 4 ...</span></span>
 <span><span class="co">#&gt;   ..- attr(*, "label")= chr "This is the variable label for x"</span></span>
-<span><span class="co">#&gt;  $ fun_x : dbl+lbl [1:20] 1, 2, 1, 1, 1, 2, 2, 3, 1, 1, 2, 3, 1, 4, 2, 2, 1, 1, 1, 3</span></span>
+<span><span class="co">#&gt;  $ fun_x : dbl+lbl [1:20] 1, 2, 2, 1, 2, 3, 1, 3, 4, 1, 3, 2, 1, 3, 2, 4, 1, 1, 2, 4</span></span>
 <span><span class="co">#&gt;    ..@ label         : chr "This is the variable label for x"</span></span>
 <span><span class="co">#&gt;    ..@ transformation: 'glue' chr "Reversing 'x'"</span></span>
-<span><span class="co">#&gt;  $ base_x: dbl+lbl [1:20] 1, 2, 1, 1, 1, 2, 2, 3, 1, 1, 2, 3, 1, 4, 2, 2, 1, 1, 1, 3</span></span>
+<span><span class="co">#&gt;  $ base_x: dbl+lbl [1:20] 1, 2, 2, 1, 2, 3, 1, 3, 4, 1, 3, 2, 1, 3, 2, 4, 1, 1, 2, 4</span></span>
 <span><span class="co">#&gt;    ..@ label         : chr "This is the variable label for x"</span></span>
 <span><span class="co">#&gt;    ..@ transformation: chr "Reversing 'x'"</span></span></code></pre></div>
 <p>Now if we check <code>y</code> we will see something similar. First,
@@ -259,9 +274,8 @@ are associating with it. Moreover, we can that the “label” attribute is
 gone now and two “labels” attributes show up instead. This is because
 the original variable did not have a variabel label but did have value
 labels.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    fun_y <span class="op">=</span> <span class="fu"><a href="../reference/num_rev.html">num_rev</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span>,</span>
 <span>    <span class="co"># use haven labelled to add the variable label</span></span>
@@ -285,11 +299,11 @@ labels.</p>
 <span><span class="co">#&gt;   y                     fun_y                 base_y               </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>            </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 4<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly disagree]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 3<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 1<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Strongly agree]</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 3<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 1<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Strongly agree]</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 1<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Strongly agree]</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 4<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly disagree]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 4<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly disagree]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 4<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly disagree]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 3<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span></span></span>
 <span></span>
 <span><span class="co"># check to see if the data is the same</span></span>
 <span><span class="fu">waldo</span><span class="fu">::</span><span class="fu"><a href="https://waldo.r-lib.org/reference/compare.html" class="external-link">compare</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">$</span><span class="va">fun_y</span>, <span class="va">new_df</span><span class="op">$</span><span class="va">base_y</span><span class="op">)</span></span>
@@ -298,23 +312,25 @@ labels.</p>
 <span><span class="co"># check the structure of the data now</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">)</span></span>
 <span><span class="co">#&gt; tibble [20 × 3] (S3: tbl_df/tbl/data.frame)</span></span>
-<span><span class="co">#&gt;  $ y     : int+lbl [1:20] 4, 3, 3, 1, 1, 4, 2, 1, 3, 3, 1, 2, 2, 2, 4, 2, 2, 3, 3, 2</span></span>
+<span><span class="co">#&gt;  $ y     : int+lbl [1:20] 4, 1, 3, 4, 4, 3, 1, 4, 3, 4, 3, 2, 3, 3, 3, 2, 4, 3, 1, 1</span></span>
 <span><span class="co">#&gt;    ..@ labels: Named int [1:4] 1 2 3 4</span></span>
 <span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly agree" "Somewhat agree" "Somewhat disagree" "Strongly disagree"</span></span>
-<span><span class="co">#&gt;  $ fun_y : dbl+lbl [1:20] 1, 2, 2, 4, 4, 1, 3, 4, 2, 2, 4, 3, 3, 3, 1, 3, 3, 2, 2, 3</span></span>
+<span><span class="co">#&gt;  $ fun_y : dbl+lbl [1:20] 1, 4, 2, 1, 1, 2, 4, 1, 2, 1, 2, 3, 2, 2, 2, 3, 1, 2, 4, 4</span></span>
 <span><span class="co">#&gt;    ..@ labels        : Named num [1:4] 1 2 3 4</span></span>
 <span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly disagree" "Somewhat disagree" "Somewhat agree" "Strongly agree"</span></span>
 <span><span class="co">#&gt;    ..@ transformation: 'glue' chr "Reversing 'y' while maintaining correct value labels"</span></span>
-<span><span class="co">#&gt;  $ base_y: dbl+lbl [1:20] 1, 2, 2, 4, 4, 1, 3, 4, 2, 2, 4, 3, 3, 3, 1, 3, 3, 2, 2, 3</span></span>
+<span><span class="co">#&gt;  $ base_y: dbl+lbl [1:20] 1, 4, 2, 1, 1, 2, 4, 1, 2, 1, 2, 3, 2, 2, 2, 3, 1, 2, 4, 4</span></span>
 <span><span class="co">#&gt;    ..@ labels        : Named num [1:4] 1 2 3 4</span></span>
 <span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly disagree" "Somewhat disagree" "Somewhat agree" "Strongly agree"</span></span>
 <span><span class="co">#&gt;    ..@ transformation: chr "Reversing 'y' while maintaining correct value labels"</span></span></code></pre></div>
 <p><code>z</code> is the most complex variable as it contains both
 variable and value labels. What was originally one line of code quickly
-became 9 lines of code.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+became 9 lines of code. To get the same result as
+<code><a href="../reference/num_rev.html">num_rev()</a></code>, we need to use <code><a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">haven::labelled()</a></code> to
+add both the variable label and the value labels and we need to add
+<code><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure()</a></code> to add the transformation.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    fun_z <span class="op">=</span> <span class="fu"><a href="../reference/num_rev.html">num_rev</a></span><span class="op">(</span><span class="va">z</span><span class="op">)</span>,</span>
 <span>    <span class="co"># use haven labelled to add the variable label</span></span>
@@ -340,10 +356,10 @@ became 9 lines of code.</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>            </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 2<span style="color: #949494;"> [Somewhat agree]</span>    3<span style="color: #949494;"> [Somewhat agree]</span>    3<span style="color: #949494;"> [Somewhat agree]</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 3<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 4<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly disagree]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 3<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 4<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly disagree]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 4<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly disagree]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 3<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 3<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 1<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Strongly agree]</span></span></span>
 <span></span>
 <span><span class="co"># check to see if the data is the same</span></span>
 <span><span class="fu">waldo</span><span class="fu">::</span><span class="fu"><a href="https://waldo.r-lib.org/reference/compare.html" class="external-link">compare</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">$</span><span class="va">fun_z</span>, <span class="va">new_df</span><span class="op">$</span><span class="va">base_z</span><span class="op">)</span></span>
@@ -352,16 +368,16 @@ became 9 lines of code.</p>
 <span><span class="co"># check the structure of the data now</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">)</span></span>
 <span><span class="co">#&gt; tibble [20 × 3] (S3: tbl_df/tbl/data.frame)</span></span>
-<span><span class="co">#&gt;  $ z     : int+lbl [1:20] 2, 3, 4, 4, 4, 3, 1, 2, 1, 2, 2, 4, 1, 1, 1, 2, 3, 4, 3, 3</span></span>
+<span><span class="co">#&gt;  $ z     : int+lbl [1:20] 2, 3, 3, 4, 3, 1, 1, 1, 1, 1, 1, 2, 3, 2, 1, 1, 4, 2, 4, 3</span></span>
 <span><span class="co">#&gt;    ..@ labels: Named int [1:4] 1 2 3 4</span></span>
 <span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly agree" "Somewhat agree" "Somewhat disagree" "Strongly disagree"</span></span>
 <span><span class="co">#&gt;    ..@ label : chr "This is the variable label for z"</span></span>
-<span><span class="co">#&gt;  $ fun_z : dbl+lbl [1:20] 3, 2, 1, 1, 1, 2, 4, 3, 4, 3, 3, 1, 4, 4, 4, 3, 2, 1, 2, 2</span></span>
+<span><span class="co">#&gt;  $ fun_z : dbl+lbl [1:20] 3, 2, 2, 1, 2, 4, 4, 4, 4, 4, 4, 3, 2, 3, 4, 4, 1, 3, 1, 2</span></span>
 <span><span class="co">#&gt;    ..@ labels        : Named num [1:4] 1 2 3 4</span></span>
 <span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly disagree" "Somewhat disagree" "Somewhat agree" "Strongly agree"</span></span>
 <span><span class="co">#&gt;    ..@ label         : chr "This is the variable label for z"</span></span>
 <span><span class="co">#&gt;    ..@ transformation: 'glue' chr "Reversing 'z' while maintaining correct value labels"</span></span>
-<span><span class="co">#&gt;  $ base_z: dbl+lbl [1:20] 3, 2, 1, 1, 1, 2, 4, 3, 4, 3, 3, 1, 4, 4, 4, 3, 2, 1, 2, 2</span></span>
+<span><span class="co">#&gt;  $ base_z: dbl+lbl [1:20] 3, 2, 2, 1, 2, 4, 4, 4, 4, 4, 4, 3, 2, 3, 4, 4, 1, 3, 1, 2</span></span>
 <span><span class="co">#&gt;    ..@ labels        : Named num [1:4] 1 2 3 4</span></span>
 <span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly disagree" "Somewhat disagree" "Somewhat agree" "Strongly agree"</span></span>
 <span><span class="co">#&gt;    ..@ label         : chr "This is the variable label for z"</span></span>
