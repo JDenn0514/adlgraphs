@@ -475,7 +475,9 @@ theme_h_stack <- function(
   half_line <- base_size / 2
 
   theme_default(
+    base_size = base_size,
     grid = grid,
+    legend_position = legend_position,
     axis_text = axis_text,
     ...
   ) +
