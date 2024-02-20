@@ -225,7 +225,7 @@ adl_bar_plots <- function(
             color = "#2c2e35"
           ) +
           geom_label(
-            aes(label = mean, y = distance_from_col),
+            aes(label = col_label, y = distance_from_col),
             family = "L",
             size = col_text_size,
             vjust = 0,
