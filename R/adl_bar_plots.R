@@ -107,20 +107,6 @@ adl_bar_plots <- function(
     ))
   }
 
-  # # this kind of quotes them but not really (I think it makes them strings)
-  # var_x <- rlang::enquo(x) %>% rlang::as_label()
-  # var_y <- rlang::enquo(y) %>% rlang::as_label()
-  # var_col_label <- rlang::enquo(col_label) %>% rlang::as_label()
-  #
-  # # check to see if the x, y, and col_label are found in the df
-  # if (!var_x %in% colnames(df)) {
-  #   cli::cli_abort("{var_x} not found in the object supplied in {.var df}")
-  # } else if (!var_y %in% colnames(df)) {
-  #   cli::cli_abort("{var_y} not found in the object supplied in {.var df}")
-  # } else if (!var_col_label %in% colnames(df)) {
-  #   cli::cli_abort("{var_col_label} not found in the object supplied in {.var df}")
-  # }
-
 
   # create the bar plot
   plot <- df %>%
@@ -225,7 +211,7 @@ adl_bar_plots <- function(
             color = "#2c2e35"
           ) +
           geom_label(
-            aes(label = col_label, y = distance_from_col),
+            aes(label = {{ col_label }}, y = distance_from_col),
             family = "L",
             size = col_text_size,
             vjust = 0,
