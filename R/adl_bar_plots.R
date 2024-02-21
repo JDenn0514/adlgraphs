@@ -317,9 +317,28 @@ adl_bar_plots <- function(
     }
 
   }
-  # else if (position == "stack") {
-  #   if (freq)
-  # }
+  else if (position == "stack") {
+    if (direction == "horizontal") {
+      plot <- plot +
+        geom_col(
+          position = position_stack(vjust = 0.5, reverse = TRUE)
+        ) +
+        geom_label(
+          aes(label = {{ col_label }}),
+          position = position_stack(vjust = 0.5, reverse = TRUE),
+          family = "L",
+          size = col_text_size,
+          vjust = 0,
+          fill = "white",
+          color = "#2c2e35",
+          label.padding = unit(2.5, "pt")
+        ) +
+        theme_h_stack(...) +
+        facet_wrap(~y, ncol = 1, scales = "free_y")
+
+    }
+
+  }
   return(plot)
 }
 

@@ -326,7 +326,7 @@ theme_default <- function(
     legend.box.spacing               = unit(base_size, "pt"),
     panel.background                 = element_rect(fill = "white", colour = NA),
     panel.border                     = element_blank(),
-    panel.spacing                    = unit(half_line, "pt"),
+    panel.spacing                    = unit(0, "pt"),
     panel.spacing.x                  = NULL,
     panel.spacing.y                  = NULL,
     panel.grid                       = NULL,
