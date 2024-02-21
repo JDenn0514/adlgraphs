@@ -107,7 +107,6 @@ adl_bar_plots <- function(
     ))
   }
 
-
   # create the bar plot
   plot <- df %>%
     ggplot(., aes(x = {{ x }}, y = {{ y }}, group = {{ group }}, fill = {{ fill }}))
@@ -328,19 +327,20 @@ adl_bar_plots <- function(
           position = position_stack(vjust = 0.5, reverse = TRUE),
           family = "L",
           size = col_text_size,
-          vjust = 0,
+          hjust = 0.5,
           fill = "white",
           color = "#2c2e35",
           label.padding = unit(2.5, "pt")
         ) +
-        theme_h_stack(...) +
-        facet_wrap(~y, ncol = 1, scales = "free_y")
-
+        facet_wrap(vars({{ y }}), ncol = 1, scales = "free_y") +
+        theme_h_stack(...)
     }
 
   }
   return(plot)
 }
+
+
 
 
 
