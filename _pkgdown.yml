@@ -63,7 +63,7 @@ reference:
 - title: Miscellaneous functions
   contents:
     - make_df_oxy
-    - get_all_var_labels
+    - write_word_table
 
 
 
