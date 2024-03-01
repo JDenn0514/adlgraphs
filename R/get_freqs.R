@@ -1,7 +1,8 @@
-#' Calculate means with confidence intervals
+#' Calculate weighted frequencies
 #'
-#' Use this function to calculate simple weighted means with 95% confidence
-#' intervals or weighted grouped means.
+#' Use this function to calculate simple weighted frequencies weighted grouped.
+#' You can also specify a grouping variable by which you want to calculate the
+#' frequencies
 #'
 #' The `x`, `group`, and `wt` arguments can either be strings or symbols
 #' (meaning they can have quotes or no quotes). The benefit of this is that it
@@ -23,7 +24,7 @@
 #' # load the package
 #' library(dplyr)
 #'
-#' # Let's calculate the overall average score for trad_n
+#' # Let's calculate the overall frequency for trad_n
 #' get_freqs(test_data, trad_n)
 #'
 #' # it also works if x is a string
@@ -47,7 +48,7 @@
 #' # the variable `prod_isr`:
 #' test_data %>%
 #'   mutate(prod_isr_f2 = make_dicho(prod_isr)) %>%
-#'   get_means(trad_n, prod_isr_f2, wts)
+#'   get_freqs(trad_n, prod_isr_f2, wts)
 #'
 #'
 #'

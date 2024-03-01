@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_freqs.R
 \name{get_freqs}
 \alias{get_freqs}
-\title{Calculate means with confidence intervals}
+\title{Calculate weighted frequencies}
 \usage{
 get_freqs(df, x, group, wt, cross_tab = FALSE)
 }
@@ -22,8 +22,9 @@ weighted frequencies}
 the table be pivoted to create make it like crosstabs}
 }
 \description{
-Use this function to calculate simple weighted means with 95\% confidence
-intervals or weighted grouped means.
+Use this function to calculate simple weighted frequencies weighted grouped.
+You can also specify a grouping variable by which you want to calculate the
+frequencies
 }
 \details{
 The \code{x}, \code{group}, and \code{wt} arguments can either be strings or symbols
@@ -36,7 +37,7 @@ variables with other functions like \code{\link[=map]{map()}} \code{\link[purrr:
 # load the package
 library(dplyr)
 
-# Let's calculate the overall average score for trad_n
+# Let's calculate the overall frequency for trad_n
 get_freqs(test_data, trad_n)
 
 # it also works if x is a string
@@ -60,7 +61,7 @@ get_means(test_data, "trad_n", "edu_f", "wts")
 # the variable `prod_isr`:
 test_data \%>\%
   mutate(prod_isr_f2 = make_dicho(prod_isr)) \%>\%
-  get_means(trad_n, prod_isr_f2, wts)
+  get_freqs(trad_n, prod_isr_f2, wts)
 
 
 
