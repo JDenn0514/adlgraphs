@@ -6,22 +6,21 @@
 #' @importFrom graphics rect par image text
 #' @importFrom ggplot2 theme element_line element_blank element_text theme_minimal
 #' margin guide_legend geom_errorbar ggplot aes geom_col geom_text geom_label
-#' position_dodge2 position_dodge rel unit waiver element_rect
+#' position_dodge2 position_dodge rel unit waiver element_rect position_stack
+#' facet_wrap vars
 #' @import showtext
 #' @importFrom rlang set_names sym := .data
 #' @importFrom sysfonts font_add_google
-#' @importFrom gt gt tab_spanner fmt_markdown
-#' @importFrom gtExtras gt_add_divider
+#' @importFrom gt gt tab_spanner fmt_markdown tab_style
 #' @importFrom cli cli_abort
 #' @importFrom labelled var_label
 #' @import glue
 #' @importFrom utils tail
-#' @importFrom stats qt df.residual setNames
+#' @importFrom stats qt df.residual setNames weighted.mean sd
 #' @importFrom tidyr pivot_wider drop_na
 #' @importFrom purrr pmap walk
-#' @importFrom scales percent
 #' @importFrom stringr str_replace str_detect
-#' @importFrom haven as_factor
+#' @importFrom haven as_factor is.labelled
 #' @importFrom broom.helpers tidy_attach_model tidy_add_reference_rows
 #' tidy_add_variable_labels tidy_add_term_labels tidy_add_n
 #' @importFrom forcats as_factor fct_relevel

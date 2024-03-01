@@ -34,7 +34,7 @@
 #'   1. "original" keeps the original order of the legend
 #'   2. "reverse" flips the order of the legend
 #' @param wrap_legend_labels Determine number of characters per line in the
-#'   labels. Uses [label_wrap()] [scales::label_wrap()] to wrap the text across
+#'   labels. Uses \link[scales]{label_wrap} to wrap the text across
 #'   multiple lines. If left blank, defaults to `NULL` which does not wrap the
 #'   labels at all.
 #' @param ... additional arguments to pass to \code{\link[ggplot2]{scale_fill_manual}}
@@ -127,7 +127,7 @@ scale_adl <- function(type = "categorical",
     wrap_legend_labels <- waiver()
   } else {
     # wrap the legend labels
-    wrap_legend_labels <- scales::label_wrap(wrap_legend_labels)
+    wrap_legend_labels <- label_wrap(wrap_legend_labels)
   }
 
   # reverse the legend o

@@ -6,6 +6,7 @@
 #' @param data A data frame or vector. Can be left blank if used during piping
 #' @param x a variable we want to convert to a percentage. The value is `pct`
 #'   by default and should always be pct.
+#' @param digits Number of decimal places the percent should be rounded to
 #'
 #' @export
 #'
@@ -34,12 +35,9 @@
 #'
 #'
 
-pct_conv <- function(data, x = pct) {
-  data %>%
-    dplyr::mutate(
-      pct := round({{ x }} * 100, 1),
-      pct_lab := scales::percent(pct, scale = 1)
-    )
+pct_conv <- function(data, x = pct, digits = 1) {
+  data %>% dplyr::mutate(pct_lab := make_percent(pct, 1))
 }
+
 
 

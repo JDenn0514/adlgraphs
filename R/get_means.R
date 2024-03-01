@@ -11,20 +11,19 @@
 #'
 #' @param df An object of type data.frame or tibble. If piping the df into the
 #'   function, this is not required.
-#' @param x Either a character string or symbol. The variable with which want
-#'   to get the frequencies.
-#' @param group Either a character string or a symbol. The grouping variable.
+#' @param x Either a character string or symbol. The variable with which you want
+#'   to get the mean.
+#' @param group Either a character string or a symbol. The variable you want the
+#'   means to be grouped by.
 #' @param wt Weights. Add if you have a weighting variable and want to get
-#'   weighted frequencies
-#' @param cross_tab Logical. If a `group` object has been supplied, should the
-#'   the table be pivoted to create make it like crosstabs
+#'   weighted means
 #'
 #' @examples
 #' # load the package
 #' library(dplyr)
 #'
 #' # Let's calculate the overall average score for trad_n
-#' get_freqs(test_data, trad_n)
+#' get_means(test_data, trad_n)
 #'
 #' # it also works if x is a string
 #' get_means(test_data, "trad_n")
@@ -56,7 +55,7 @@
 #'
 #'
 
-get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
+get_means <- function(df, x, group, wt) {
 
   # get the object's name
   x_lab <- deparse(substitute(x))
@@ -75,9 +74,20 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
 
   }
 
+  if (!is.numeric(df[[x]])) {
+    # if the variable x is not numeric return an error
+
+    cli::cli_abort(
+      c(
+        "`{x_lab}` must be a vector of class {.cls numeric}",
+        x = "You've supplied a {.cls {class(x)}} vector"
+      )
+    )
+  }
+
 
   if (!missing(group)) {
-    # if group is not missing group the data
+    # if group is not missing
 
     # use enexpr() to capture the expressions supplied in "group"
     # enexpr returns a naked expression of the argument supplied in "group"
@@ -138,47 +148,40 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
   if (missing(wt)) {
     # if missing wt
 
-    # calculate the frequencies
-    df_freq <- df %>%
-      tidyr::drop_na({{ x }}) %>%
-      dplyr::count(.data[[x]]) %>%
-      dplyr::mutate(pct = prop.table(n))
+    # calculate the mean with CIs, standard deviation, standard error and N
+    df_mean <- df %>%
+      dplyr::summarise(
+        # calculate the mean
+        mean = mean(.data[[x]],  na.rm = TRUE),
+        # calculate the standard deviation
+        sd = sd(.data[[x]], na.rm = TRUE),
+        # get the number of respondents
+        n = dplyr::n()
+      ) %>%
+      dplyr::mutate(
+        # calculate the standard error
+        std.error = sd/sqrt(n),
+        # calculate the lower CI
+        conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
+        # calculate the higher CI
+        conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
+        # round all of the numbers to the second decimal
+        dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
+      )
 
     if (!missing(group)) {
       # if not missing group
 
       # rename the group_f variable with the name supplied in "group"
-      df_freq <- df_freq %>% dplyr::rename({{ group }} := group_f)
-
-      if (isTRUE(cross_tab)) {
-        # cross_tab is TRUE then pivot the table
-
-        df_freq <- df_freq %>%
-          dplyr::mutate(
-            pct = make_percent(pct),
-            pct_lab = glue("{pct} (n = {n})"),
-          ) %>%
-          dplyr::select(-c(pct, n)) %>%
-          tidyr::pivot_wider(
-            names_from = {{ group }},
-            values_from = pct_lab
-          ) %>%
-          dplyr::arrange(.data[[x]])
-
-        return(df_freq)
-      } else{
-
-        # give df_freq as the output
-        return(df_freq)
-      }
-
-
+      df_mean <- df_mean %>% dplyr::rename({{ group }} := group_f)
+      # give df_mean as the output
+      return(df_mean)
 
     } else {
       # if group is missing
 
-      # return the original df_freq as the output
-      return(df_freq)
+      # return the original df_mean as the output
+      return(df_mean)
 
     }
 
@@ -199,53 +202,43 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
 
     }
 
-    # calculate the frequencies
-    df_freq <- df %>%
-      tidyr::drop_na({{ x }}) %>%
-      dplyr::count(.data[[x]], wt = .data[[wt]]) %>%
-      dplyr::mutate(pct = prop.table(n),
-                    n = round(n, 1))
 
+    df_mean <- df %>%
+      dplyr::summarise(
+        # calculate the mean
+        mean = weighted.mean(.data[[x]], .data[[wt]], na.rm = TRUE),
+        # calculate the standard deviation
+        sd = sd(.data[[x]], na.rm = TRUE),
+        # get the number of respondents
+        n = dplyr::n()
+      ) %>%
+      dplyr::mutate(
+        # calculate the standard error
+        std.error = sd/sqrt(n),
+        # calculate the lower CI
+        conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
+        # calculate the higher CI
+        conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
+        # round all of the numbers to the second decimal
+        dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
+      )
 
     if (!missing(group)) {
       # if not missing group
 
       # rename the group_f variable with the name supplied in "group"
-      df_freq <- df_freq %>% dplyr::rename({{ group }} := group_f)
-
-      if (isTRUE(cross_tab)) {
-        # cross_tab is TRUE then pivot the table
-
-        df_freq <- df_freq %>%
-          dplyr::mutate(
-            n = round(n, 1),
-            pct = make_percent(pct),
-            pct_lab = glue("{pct} (n = {n})"),
-          ) %>%
-          dplyr::select(-c(pct, n)) %>%
-          tidyr::pivot_wider(
-            names_from = {{ group }},
-            values_from = pct_lab
-          ) %>%
-          dplyr::arrange(.data[[x]])
-
-        return(df_freq)
-      } else {
-
-        return(df_freq)
-
-      }
+      df_mean <- df_mean %>% dplyr::rename({{ group }} := group_f)
+      # give df_mean as the output
+      return(df_mean)
 
     } else {
+      # if group is missing
 
-        # give df_freq as the output
-        return(df_freq)
+      # return the original df_mean as the output
+      return(df_mean)
 
     }
 
   }
 
 }
-
-
-

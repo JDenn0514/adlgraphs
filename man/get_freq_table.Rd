@@ -4,7 +4,7 @@
 \alias{get_freq_table}
 \title{Get the frequencies as a GT table}
 \usage{
-get_freq_table(df, x, group, wt)
+get_freq_table(df, x, group, wt, show_genpop = FALSE)
 }
 \arguments{
 \item{df}{An object of type data.frame or tibble. If piping the df into the
@@ -17,6 +17,9 @@ to get the frequencies.}
 
 \item{wt}{Weights. Add if you have a weighting variable and want to get
 weighted frequencies}
+
+\item{show_genpop}{Logical. Should there be a column showing the frequencies
+for the general population}
 }
 \description{
 This function creates a GT table of the frequencies of a specified variable

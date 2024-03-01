@@ -177,10 +177,6 @@ make_dicho <- function(x, flip_levels = FALSE) {
   }
 
 
-
-  # convert the vector to a factor
-  x <- haven::as_factor(x)
-
   # remove the first word if there are multiple words (using base to )
   x <- dplyr::if_else(
     stringr::str_detect(x, "\\s"),

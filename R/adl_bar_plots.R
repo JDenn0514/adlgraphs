@@ -109,33 +109,44 @@ adl_bar_plots <- function(
 
   # create the bar plot
   plot <- df %>%
-    ggplot(., aes(x = {{ x }}, y = {{ y }}, group = {{ group }}, fill = {{ fill }}))
+    ggplot2::ggplot(., ggplot2::aes(x = {{ x }}, y = {{ y }}, group = {{ group }}, fill = {{ fill }}))
 
 
   if (is.null(position)) {
+    # position is NULL
+
     if (freq_plot == TRUE) {
+      # if freq_plot is set to TRUE
+
       if (direction == "horizontal") {
+        # if direction is set to horizontal
+
         if (is.null(group) && is.null(fill)) {
+          # if the group is set to NULL and fill is set to NULL
+
           plot <- plot +
-            geom_col(
+            ggplot2::geom_col(
               fill = adl_palettes$primary,
               width = 0.8
             ) +
-            geom_text(
-              aes(label = {{ col_label }}, x = ({{ x }} + distance_from_col)),
+            ggplot2::geom_text(
+              ggplot2::aes(label = {{ col_label }}, x = ({{ x }} + distance_from_col)),
               family = "L",
               size = col_text_size,
               color = "#2c2e35",
               hjust = 0
             ) +
             theme_h_bar(...)
+
         } else {
+          # if fill and group are not set to NULL
+
           plot <- plot +
-            geom_col(
+            ggplot2::geom_col(
               width = 0.8
             ) +
-            geom_text(
-              aes(label = {{ col_label }}, x = ({{ x }} + distance_from_col)),
+            ggplot2::geom_text(
+              ggplot2::aes(label = {{ col_label }}, x = ({{ x }} + distance_from_col)),
               family = "L",
               size = col_text_size,
               color = "#2c2e35",
@@ -145,14 +156,18 @@ adl_bar_plots <- function(
         }
       }
       else if (direction == "vertical") {
+        # if the direction is set to vertical
+
         if (is.null(group) && is.null(fill)) {
+          # if group and fill are NULL
+
           plot <- plot +
-            geom_col(
+            ggplot2::geom_col(
               fill = adl_palettes$primary,
               width = 0.8,
             ) +
-            geom_text(
-              aes(label = {{ col_label }}, y = ({{ y }} + distance_from_col)),
+            ggplot2::geom_text(
+              ggplot2::aes(label = {{ col_label }}, y = ({{ y }} + distance_from_col)),
               family = "L",
               size = col_text_size,
               color = "#2c2e35",
@@ -161,12 +176,15 @@ adl_bar_plots <- function(
             theme_v_bar(...)
 
         } else {
+          # if neither group nor fill are NULL
+
+
           plot <- plot +
-            geom_col(
+            ggplot2::geom_col(
               width = 0.8
             ) +
-            geom_text(
-              aes(label = {{ col_label }}, y = ({{ y }} + distance_from_col)),
+            ggplot2::geom_text(
+              ggplot2::aes(label = {{ col_label }}, y = ({{ y }} + distance_from_col)),
               family = "L",
               size = col_text_size,
               color = "#2c2e35",
@@ -177,19 +195,23 @@ adl_bar_plots <- function(
         }
       }
     } else if (freq_plot == FALSE) {
+      # freq_plot is set to false (i.e., it is a mean plot)
+
       if (direction == "horizontal") {
+        # if direction is set to horizontal
+
         plot <- plot +
-          geom_col(
+          ggplot2::geom_col(
             fill = adl_palettes$primary,
             width = 0.8
           ) +
-          geom_errorbar(
-            aes(xmin = lower, xmax = upper),
+          ggplot2::geom_errorbar(
+            ggplot2::aes(xmin = conf.low, xmax = conf.high),
             width = 0.2,
             color = "#2c2e35"
           ) +
-          geom_label(
-            aes(label = col_label, x = distance_from_col),
+          ggplot2::geom_label(
+            ggplot2::aes(label = col_label, x = distance_from_col),
             family = "L",
             size = col_text_size,
             hjust = 0,
@@ -198,19 +220,22 @@ adl_bar_plots <- function(
             label.padding = unit(2.5, "pt")
           ) +
           theme_h_bar(...)
+
       } else if (direction == "vertical") {
+        # if direction is to vertical
+
         plot <- plot +
-          geom_col(
+          ggplot2::geom_col(
             fill = adl_palettes$primary,
             width = 0.8
           ) +
-          geom_errorbar(
-            aes(ymin = lower, ymax = upper),
+          ggplot2::geom_errorbar(
+            ggplot2::aes(ymin = conf.low, ymax = conf.high),
             width = 0.2,
             color = "#2c2e35"
           ) +
-          geom_label(
-            aes(label = {{ col_label }}, y = distance_from_col),
+          ggplot2::geom_label(
+            ggplot2::aes(label = {{ col_label }}, y = distance_from_col),
             family = "L",
             size = col_text_size,
             vjust = 0,
@@ -222,17 +247,21 @@ adl_bar_plots <- function(
       }
     }
   } else if (position == "dodge") {
+    # if position is set to dodge
+
     if (freq_plot == TRUE) {
+      # if frequency plot is set to true
+
       if (direction == "horizontal") {
         # normal horizontal freq plot
         plot <- plot +
-          geom_col(
-            aes(fill = {{ fill }}),
+          ggplot2::geom_col(
+            ggplot2::aes(fill = {{ fill }}),
             position = position_dodge2(width = dodge_width, reverse = dodge_reverse),
             width = 0.8
           ) +
-          geom_text(
-            aes(label = {{ col_label }}, x = ({{ x }} + distance_from_col)),
+          ggplot2::geom_text(
+            ggplot2::aes(label = {{ col_label }}, x = ({{ x }} + distance_from_col)),
             position = position_dodge2(width = dodge_width, reverse = dodge_reverse),
             family = "L",
             size = col_text_size,
@@ -244,13 +273,13 @@ adl_bar_plots <- function(
       else if (direction == "vertical") {
         # normal vertical freak plot
         plot <- plot +
-          geom_col(
-            aes(fill = {{ fill }}),
+          ggplot2::geom_col(
+            ggplot2::aes(fill = {{ fill }}),
             position = position_dodge2(width = dodge_width, reverse = dodge_reverse),
             width = 0.8
           ) +
-          geom_text(
-            aes(label = {{ col_label }}, y = ({{ y }} + distance_from_col)),
+          ggplot2::geom_text(
+            ggplot2::aes(label = {{ col_label }}, y = ({{ y }} + distance_from_col)),
             position = position_dodge2(width = dodge_width, reverse = dodge_reverse),
             family = "L",
             size = col_text_size,
@@ -261,22 +290,24 @@ adl_bar_plots <- function(
 
       }
     } else if (freq_plot == FALSE) {
+      # if freq_plot is set to false
+
       if (direction == "horizontal") {
         # horizontal dodged mean plot
         plot <- plot +
-          geom_col(
-            aes(fill = {{ fill }}),
+          ggplot2::geom_col(
+            ggplot2::aes(fill = {{ fill }}),
             position = position_dodge(width = dodge_width),
             width = 0.8
           ) +
-          geom_errorbar(
-            aes(xmin = lower, xmax = upper),
+          ggplot2::geom_errorbar(
+            ggplot2::aes(xmin = conf.low, xmax = conf.high),
             position = position_dodge(width = dodge_width),
             width = 0.2,
             color = "#2c2e35"
           ) +
-          geom_label(
-            aes(label = {{ col_label }}, x = distance_from_col),
+          ggplot2::geom_label(
+            ggplot2::aes(label = {{ col_label }}, x = distance_from_col),
             position = position_dodge(width = dodge_width),
             hjust = 0,
             family = "L",
@@ -287,23 +318,23 @@ adl_bar_plots <- function(
           ) +
           theme_h_bar(...)
 
-      } else if (direction == "vertical") {
+      } else {
         # vertical dodged mean plot
         plot <- plot +
-          geom_col(
-            aes(fill = {{ fill }}),
+          ggplot2::geom_col(
+            ggplot2::aes(fill = {{ fill }}),
             position = position_dodge(width = dodge_width),
             width = 0.8
           ) +
-          geom_errorbar(
-            aes(ymin = lower, ymax = upper),
+          ggplot2::geom_errorbar(
+            ggplot2::aes(ymin = conf.low, ymax = conf.high),
             position = position_dodge(width = dodge_width),
             width = 0.2,
             color = "#2c2e35"
           ) +
-          geom_label(
-            aes(label = {{ col_label }}, y = distance_from_col),
-            position = position_dodge(width = dodge_width),
+          ggplot2::geom_label(
+            ggplot2::aes(label = {{ col_label }}, y = distance_from_col),
+            position = ggplot2::position_dodge(width = dodge_width),
             vjust = 0,
             family = "L",
             size = col_text_size,
@@ -313,18 +344,21 @@ adl_bar_plots <- function(
           ) +
           theme_v_bar(...)
       }
+
     }
 
   }
   else if (position == "stack") {
+    # id position is set to "stack
+
     if (direction == "horizontal") {
       plot <- plot +
-        geom_col(
-          position = position_stack(vjust = 0.5, reverse = TRUE)
+        ggplot2::geom_col(
+          position = ggplot2::position_stack(vjust = 0.5, reverse = TRUE)
         ) +
-        geom_label(
+        ggplot2::geom_label(
           aes(label = {{ col_label }}),
-          position = position_stack(vjust = 0.5, reverse = TRUE),
+          position = ggplot2::position_stack(vjust = 0.5, reverse = TRUE),
           family = "L",
           size = col_text_size,
           hjust = 0.5,
@@ -339,8 +373,6 @@ adl_bar_plots <- function(
   }
   return(plot)
 }
-
-
 
 
 

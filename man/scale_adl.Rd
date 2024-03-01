@@ -61,7 +61,7 @@ whatever is in the string (in this case the title would be "some string")
 }}
 
 \item{wrap_legend_labels}{Determine number of characters per line in the
-labels. Uses \code{\link[=label_wrap]{label_wrap()}} \code{\link[scales:label_wrap]{scales::label_wrap()}} to wrap the text across
+labels. Uses \link[scales]{label_wrap} to wrap the text across
 multiple lines. If left blank, defaults to \code{NULL} which does not wrap the
 labels at all.}
 
