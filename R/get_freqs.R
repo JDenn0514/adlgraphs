@@ -31,16 +31,21 @@
 #' get_means(test_data, "trad_n")
 #'
 #' # Let's do that again but add weights
-#' get_means(test_data, trad_n, wt = wts)
+#' get_freqs(test_data, trad_n, wt = wts)
 #'
 #' # the wt argument can also be in quotes like this
-#' get_means(test_data, "trad_n", wt = "wts")
+#' get_freqs(test_data, "trad_n", wt = "wts")
 #'
 #' # Now let's do the average score for different education levels
-#' get_means(test_data, trad_n, edu_f, wts)
+#' get_freqs(test_data, trad_n, edu_f, wts)
 #'
 #' # it also works with quotes
-#' get_means(test_data, "trad_n", "edu_f", "wts")
+#' get_freqs(test_data, "trad_n", "edu_f", "wts")
+#'
+#' # if we want to pivot the results so they look like cross tabs, then we need
+#' # to set `cross_tab` to TRUE
+#' get_freqs(test_data, trad_n, edu_f, wts, cross_tab = TRUE)
+
 #'
 #' # you can also pipe in the `df` argument if you want to do some data
 #' # transformations before you calculate the means. For example, say you want
