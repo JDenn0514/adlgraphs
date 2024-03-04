@@ -61,8 +61,11 @@ scale_adl <- function(type = "categorical",
   }
 
 
+
+
   # create the "sequential" palettes
   if (type == "sequential") {
+    return("yes sequential")
 
     if (missing(n)) {
       stop("n must be supplied when calculating a sequential color palette")
@@ -106,6 +109,7 @@ scale_adl <- function(type = "categorical",
     }
 
   }
+
 
   # if order = "reverse" reverse the color palette order
   if (direction == "reverse") {
@@ -154,7 +158,15 @@ scale_adl <- function(type = "categorical",
     )
   }
 
-
 }
+
+
+
+
+
+
+
+
+
 
 

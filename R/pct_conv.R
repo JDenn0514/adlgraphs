@@ -36,7 +36,9 @@
 #'
 
 pct_conv <- function(data, x = pct, digits = 1) {
-  data %>% dplyr::mutate(pct_lab := make_percent(pct, 1))
+  data %>% dplyr::mutate(
+    pct = pct*100,
+    pct_lab := make_percent(pct, scale = 1, digits = digits))
 }
 
 

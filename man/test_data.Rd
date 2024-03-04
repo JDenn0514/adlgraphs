@@ -3,7 +3,7 @@
 \docType{data}
 \name{test_data}
 \alias{test_data}
-\title{{dataset_title},}
+\title{{test_data},}
 \format{
 A data frame with {nrow(df)} rows and {ncol(df)} variables:
 \describe{
@@ -24,6 +24,6 @@ A data frame with {nrow(df)} rows and {ncol(df)} variables:
 test_data
 }
 \description{
-{dataset_description},
+{This is a fake data set created purely to demonstrate the different capabilities of this package},
 }
 \keyword{datasets}
