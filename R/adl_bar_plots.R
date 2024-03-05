@@ -64,9 +64,6 @@
 #'
 #'
 
-
-# Add the ability to add groups to a non-dodged or stacked bar
-
 adl_bar_plots <- function(
     df,
     x,

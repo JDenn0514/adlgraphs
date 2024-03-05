@@ -15,13 +15,20 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r load-packages}
+```{r load-packages, message = FALSE}
+# load in the libraries
+
+# for num_rev and test_data
 library(adlgraphs)
-library(tibble)
+# this is for some other basic data transformations
 library(dplyr)
+# for working with labelled data
 library(labelled)
+# to make labelled data
 library(haven)
+# to check for differences
 library(waldo)
+
 ```
 
 
@@ -35,185 +42,92 @@ library(waldo)
 
 ## `num_rev()` 
 
-`num_rev()` was designed with `forcats::fct_rev()` in mind. However, instead of operating on factors, `num_rev()` operates on numeric vectors. Often, when working with survey data, we want to reverse the values of a numeric vector. However, when this is done, any underlying metadata of the variable is lost. The purpose of `num_rev()` is to fix this by automate the process of reversing a numeric vector, while maintaining the variable and value labels. In addition, this function adds a new attribute called `transformation` that describes the data transformation used to create this variable. 
-
-In this vignette, I hope to show you how this function makes life a lot easier if you want to reverse a variable while maintaining the metadata. The examples in this vignette get increasingly complex as I progress.
-
-Let's look at an example with a fake data set comprised of four variables. In this data set, `w` has no value labels or variable label, `x` has only a variable label, `y` has only value labels, `z` has both variable and value labels. This allows us to see how the function provides different outputs depending on what kind of metadata the function has.
-
+`num_rev()` was designed with `forcats::fct_rev()` in mind. However, instead of operating on factors, `num_rev()` operates on numeric vectors. Let's take a look at how this operates in practice. To do so, let's look at the variable `prod_isr` from the data set `test_data`. As we can see, survey respondents saw the a positively valanced statement, "I would feel comfortable buying products from Israel", with the values ranging from 1 to 4 where `1 = Strongly agree` and `4 = Strongly disagree`.
 
 ```{r}
-library(adlgraphs)
-library(tibble)
-library(dplyr)
-library(labelled)
-library(haven)
-library(waldo)
-
-# create the new data
-df <- tibble::tibble(
-  w = sample(1:4, 20, replace = TRUE),
-  x = sample(1:4, 20, replace = TRUE),
-  y = sample(1:4, 20, replace = TRUE),
-  z = sample(1:4, 20, replace = TRUE)
-) %>% 
-  # add value labels to y and z but not x to see what happens with no labels
-  labelled::set_value_labels(
-    z = c(`Strongly agree` = 1,
-          `Somewhat agree` = 2,
-          `Somewhat disagree` = 3,
-          `Strongly disagree` = 4),
-    y = c(`Strongly agree` = 1,
-          `Somewhat agree` = 2,
-          `Somewhat disagree` = 3,
-          `Strongly disagree` = 4),
-  ) %>%
-  # set variable labels to x and z
-  labelled::set_variable_labels(
-    x = "This is the variable label for x",
-    z = "This is the variable label for z"
-  )
+str(test_data$prod_isr)
 ```
 
-Now let's show how this function works in practice as well as how you would do the same data transformation without this function. We will start by showing it `w` because it has no metadata which makes it relatively easy to replicate without the function. 
+In survey research, we often have to reverse a variable. This is primarily done for two reasons. The first is because we want to flip the valence of the question. One reason this might be the case is because we wanted to create an index by summing this up with other variables. If the other statements were negatively valanced, it may be in our best interest to keep the value labels the same but reverse the valance of `prod_isr` so that it can now be interpreted as "I would not feel comfortable buying products from Israel." Since the value labels don't change, the people who were previously classified as "Strongly agree" are now going be classified as "Strongly disagree", etc.
+
+The second reason one might reverse the values, is to change the direction of the scale. For example, as the values in `prod_isr` increase, so does one's level of disagreement. We might want to reverse the values so that now a 1 = "Strongly disagree" and a 4 = "Strongly agree", and thus a higher number means more agreement. Because this method does not flip the valance of the question, people who were originally classified as "Strongly agree" are still going to be classified as "Strongly agree". Put another way, the question isn't changing and therefore people's responses aren't changing. The only thing that changes is the value associated with their response.
+
+`num_rev()` was designed with the second goal in mind. Normally when simply reversing the values by subtracting them, all underlying metadata and attributes are lost. As a result, we would have to reverse the values, update the value labels and set the variable label again. This is really time consuming. The purpose of `num_rev()` is to fix this by automating this process of reversing a numeric vector, while maintaining the variable and value labels. In addition, this function adds a new attribute called `transformation` that describes the data transformation used to create this variable. 
+
+I'm now going to show this function in action. So we can see that while the values are flipped, the value labels for each respondent is the same.
 
 ```{r}
-new_df <- df %>% 
-  mutate(
-    fun_w = num_rev(w),
-    # first subtract w from 5 and then use structure to add the metadata
-    base_w = 5 - w %>% 
-      structure(transformation = "Reversing 'w'"),
-    .keep = "used"
-  )
+new_df <- test_data %>% 
+  # let's make a new variable with the num_rev function
+  mutate(prod_isr_rev = num_rev(prod_isr)) %>% 
+  # keep only these two variables
+  select(prod_isr_rev, prod_isr)
 
-
-# see the results
 head(new_df)
 ```
 
-Now let's check to see if `fun_w` and `base_w` are identical using `waldo::compare()`. We can see that there are no differences between the two vectors. In addition, check the underlying structure of the data, specifically of the two variables. We can see that both variables have an attribute called "transformation" that contains information explaining what happened sort of data transformation the variables underwent. 
-
+As we can see below, the variable labels are also the same. This means that the only thing that really changed, is the values.
 
 ```{r}
-# use waldo::compare to see if there are differences
-waldo::compare(new_df$fun_w, new_df$base_w)
+test_data %>% 
+  # let's make a new variable with the num_rev function
+  mutate(prod_isr_rev = num_rev(prod_isr)) %>% 
+  # keep only these two variables
+  select(prod_isr_rev, prod_isr) %>% 
+  # get the variable labels for both variables
+  get_variable_labels()
 
-# check the structure of the data now
-str(new_df)
 ```
 
-Now let's check this with `x` from the new data. Let's compare a new variable created using the `num_rev()` function called `num_rev_x` to a new variable created through a simple reversal by doing `5 - x` that we'll call . We can see that the values are the same, but hte 
+Now that it's clear what this function does and what it doesn't do, let's try manually doing it. First, let's try just subtracting 5 from `prod_isr`. As we can see all attributes have been stripped.
+
 ```{r}
-new_df <- df %>% 
-  mutate(
-    fun_x = num_rev(x),
-    sub_x = 5 - x
-  )
+new_df <- test_data %>% 
+  # reverse the variable
+  mutate(prod_isr_rev = 5 - prod_isr)
+
+# check attributes
+attributes(new_df$prod_isr_rev)
+
 ```
 
-
-Since `x` has a variable label, it will be a bit more in-depth having to replicate the results we get from the `num_rev()` function. We can see that both variables are the same. Moreover, what was just one line of code ended up being ~5 lines of code. While this may not seem like much, it becomes a lot when you have a bunch of variables to do this over. Now to understand the output from `str(new_df)`, there are three things to note here:
-
- - The first is that the first line of each variable indicates the values in this variable and that there are 10 values.
-
- - The second line shows you the there is a variable label attribute
-
- - The third line shows you the transformation attribute
+This means we need to add both value and variable labels to the variable. To do this, we'll use the `haven::labelled()` function.
 
 ```{r}
-new_df <- df %>% 
+new_df <- test_data %>% 
   mutate(
-    fun_x = num_rev(x),
-    # use haven labelled to add the variable label
-    base_x = haven::labelled(
-      # reverse the vector
-      5 - x,
-      # add the variable label
-      label = "This is the variable label for x"
-    ) %>% 
-      # add the attribute for the transformation
-      structure(transformation = "Reversing 'x'"),
-    .keep = "used"
+    prod_isr_rev = labelled(
+      x = 5 - prod_isr,
+      labels = c(
+        `Strongly disagree` = 1,
+        `Somewhat disagree` = 2,
+        `Somewhat agree` = 3,
+        `Strongly agree` = 4
+      ),
+      label = "I am comfortable buying products from Israel"
+    )
   )
 
+attributes(new_df$prod_isr_rev)
 
-# check to see if the data is the same
-waldo::compare(new_df$fun_x, new_df$base_x)
-
-# check the structure of the data now
-str(new_df)
 ```
 
-Now if we check `y` we will see something similar. First, since this variable has value labels, we need tomake sure that we add the value labels in when doing it in the base model and note that in the transformation. More importantly, we can see that while the values in `fun_y` and `base_y` changed, the value labels stayed the same as in `y`. This is important because the person's response didn't change, the only thing that did is the value we are associating with it. Moreover, we can that the "label" attribute is gone now and two "labels" attributes show up instead. This is because the original variable did not have a variabel label but did have value labels.
+There is an easier of doing this by using `labelled::val_labels()` and `labelled::var_label()` to leverage the existing value and variable labels from `prod_isr`. However, when setting the value labels, we have to use `rev()` to reverse them.
 
 ```{r}
-new_df <- df %>% 
+new_df <- test_data %>% 
   mutate(
-    fun_y = num_rev(y),
-    # use haven labelled to add the variable label
-    base_y = haven::labelled(
-      # reverse the vector
-      5 - y,
-      # add the variable label
-      labels = c("Strongly disagree" = 1,
-                 "Somewhat disagree" = 2,
-                 "Somewhat agree" = 3,
-                 "Strongly agree" = 4)
-    ) %>% 
-      # add the attribute for the transformation
-      structure(transformation = "Reversing 'y' while maintaining correct value labels"),
-    .keep = "used"
+    prod_isr_rev = labelled(
+      x = 5 - prod_isr,
+      labels = val_labels(test_data$prod_isr) %>% rev(),
+      label = var_label(test_data$prod_isr)
+    )
   )
 
-# preview data
-head(new_df)
-
-# check to see if the data is the same
-waldo::compare(new_df$fun_y, new_df$base_y)
-
-# check the structure of the data now
-str(new_df)
+attributes(new_df$prod_isr_rev)
 ```
 
-`z` is the most complex variable as it contains both variable and value labels. What was originally one line of code quickly became 9 lines of code. To get the same result as `num_rev()`, we need to use `haven::labelled()` to add both the variable label and the value labels and we need to add `structure()` to add the transformation.
-
-```{r}
-new_df <- df %>% 
-  mutate(
-    fun_z = num_rev(z),
-    # use haven labelled to add the variable label
-    base_z = haven::labelled(
-      # reverse the vector
-      5 - z,
-      # add the variable label
-      labels = c("Strongly disagree" = 1,
-                 "Somewhat disagree" = 2,
-                 "Somewhat agree" = 3,
-                 "Strongly agree" = 4),
-      label = c("This is the variable label for z")
-    ) %>% 
-      # add the attribute for the transformation
-      structure(transformation = "Reversing 'z' while maintaining correct value labels"),
-    .keep = "used"
-  )
-
-# preview data
-head(new_df)
-
-# check to see if the data is the same
-waldo::compare(new_df$fun_z, new_df$base_z)
-
-# check the structure of the data now
-str(new_df)
-```
-
-
-
-
-
-
-
+Now that you know how to do it manually, I think it's clear that using `num_rev()` is much easier.
 
 
 

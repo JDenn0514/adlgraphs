@@ -2,7 +2,8 @@
 #'
 #' Reverse a numeric variable while maintaining variable and value labels
 #' if available. Also adds an attribute describing the transformation the
-#' original variable underwent.
+#' original variable underwent. Please check the vignette to have a better
+#' understanding of exactly what this function does.
 #'
 #' @export
 #'
@@ -11,32 +12,11 @@
 #' @examples
 #'
 #' library(dplyr)
-#' library(labelled)
-#' library(adlgraphs)
-#' # create fake data
-#' df <- tibble::tibble(
-#'   w = sample(1:4, 10, replace = TRUE),
-#'   x = sample(1:4, 10, replace = TRUE),
-#'   y = sample(1:4, 10, replace = TRUE),
-#'   z = sample(1:4, 10, replace = TRUE)
-#' ) %>%
-#'   # add value labels to x and y but not z to see what happens with no labels
-#'   labelled::set_value_labels(
-#'     x = c(`Strongly agree` = 1,
-#'           `Somewhat agree` = 2,
-#'           `Somewhat disagree` = 3,
-#'           `Strongly disagree` = 4),
-#'     y = c(`Strongly agree` = 1,
-#'           `Somewhat agree` = 2,
-#'           `Somewhat disagree` = 3,
-#'           `Strongly disagree` = 4),
-#'   ) %>%
-#'   # set variable labels to x and z
-#'   labelled::set_variable_labels(
-#'     x = "This is the variable label for x",
-#'     z = "This is the variable label for z"
-#'   )
 #'
+#' test_data %>%
+#'   # reverse the variable accept_isr
+#'   mutate(accept_isr_rev = num_rev(accept_isr)) %>%
+#'   select(starts_with("accept"))
 #'
 #' rev_df <- df %>% mutate(rev_w = num_rev(w))
 #'
@@ -133,6 +113,7 @@ num_rev <- function(x) {
   }
 
 }
+
 
 
 
