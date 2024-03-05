@@ -84,19 +84,17 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JDenn0514/adlgraphs" class="external-link">adlgraphs</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/" class="external-link">tibble</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># load in the libraries</span></span>
+<span></span>
+<span><span class="co"># for num_rev and test_data</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JDenn0514/adlgraphs" class="external-link">adlgraphs</a></span><span class="op">)</span></span>
+<span><span class="co"># this is for some other basic data transformations</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     filter, lag</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
+<span><span class="co"># for working with labelled data</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://larmarange.github.io/labelled/" class="external-link">labelled</a></span><span class="op">)</span></span>
+<span><span class="co"># to make labelled data</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://haven.tidyverse.org" class="external-link">haven</a></span><span class="op">)</span></span>
+<span><span class="co"># to check for differences</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://waldo.r-lib.org" class="external-link">waldo</a></span><span class="op">)</span></span></code></pre></div>
 <p><code>adlgraphs</code> provides three main functions to reduce the
 amount of time it takes to perform a few very common data
@@ -114,277 +112,155 @@ factor</p></li>
 </h2>
 <p><code><a href="../reference/num_rev.html">num_rev()</a></code> was designed with
 <code><a href="https://forcats.tidyverse.org/reference/fct_rev.html" class="external-link">forcats::fct_rev()</a></code> in mind. However, instead of operating
-on factors, <code><a href="../reference/num_rev.html">num_rev()</a></code> operates on numeric vectors. Often,
-when working with survey data, we want to reverse the values of a
-numeric vector. However, when this is done, any underlying metadata of
-the variable is lost. The purpose of <code><a href="../reference/num_rev.html">num_rev()</a></code> is to fix
-this by automate the process of reversing a numeric vector, while
-maintaining the variable and value labels. In addition, this function
-adds a new attribute called <code>transformation</code> that describes
-the data transformation used to create this variable.</p>
-<p>In this vignette, I hope to show you how this function makes life a
-lot easier if you want to reverse a variable while maintaining the
-metadata. The examples in this vignette get increasingly complex as I
-progress.</p>
-<p>Let’s look at an example with a fake data set comprised of four
-variables. In this data set, <code>w</code> has no value labels or
-variable label, <code>x</code> has only a variable label, <code>y</code>
-has only value labels, <code>z</code> has both variable and value
-labels. This allows us to see how the function provides different
-outputs depending on what kind of metadata the function has.</p>
+on factors, <code><a href="../reference/num_rev.html">num_rev()</a></code> operates on numeric vectors. Let’s
+take a look at how this operates in practice. To do so, let’s look at
+the variable <code>prod_isr</code> from the data set
+<code>test_data</code>. As we can see, survey respondents saw the a
+positively valanced statement, “I would feel comfortable buying products
+from Israel”, with the values ranging from 1 to 4 where
+<code>1 = Strongly agree</code> and
+<code>4 = Strongly disagree</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JDenn0514/adlgraphs" class="external-link">adlgraphs</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/" class="external-link">tibble</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://larmarange.github.io/labelled/" class="external-link">labelled</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://haven.tidyverse.org" class="external-link">haven</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://waldo.r-lib.org" class="external-link">waldo</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># create the new data</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
-<span>  w <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="fl">20</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="fl">20</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="fl">20</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>  z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="fl">20</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="co"># add value labels to y and z but not x to see what happens with no labels</span></span>
-<span>  <span class="fu">labelled</span><span class="fu">::</span><span class="fu"><a href="https://larmarange.github.io/labelled/reference/val_labels.html" class="external-link">set_value_labels</a></span><span class="op">(</span></span>
-<span>    z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`Strongly agree` <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>          `Somewhat agree` <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>          `Somewhat disagree` <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>          `Strongly disagree` <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>,</span>
-<span>    y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`Strongly agree` <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>          `Somewhat agree` <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>          `Somewhat disagree` <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>          `Strongly disagree` <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>,</span>
-<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="co"># set variable labels to x and z</span></span>
-<span>  <span class="fu">labelled</span><span class="fu">::</span><span class="fu"><a href="https://larmarange.github.io/labelled/reference/var_label.html" class="external-link">set_variable_labels</a></span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="st">"This is the variable label for x"</span>,</span>
-<span>    z <span class="op">=</span> <span class="st">"This is the variable label for z"</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<p>Now let’s show how this function works in practice as well as how you
-would do the same data transformation without this function. We will
-start by showing it <code>w</code> because it has no metadata which
-makes it relatively easy to replicate without the function.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">test_data</span><span class="op">$</span><span class="va">prod_isr</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  dbl+lbl [1:207] 1, 3, 4, 1, 1, 4, 2, 4, 3, 3, 3, 4, 4, 1, 1, 1, 2, 2, 2, 2...</span></span>
+<span><span class="co">#&gt;  @ label        : chr "I would feel comfortable buying products from Israel"</span></span>
+<span><span class="co">#&gt;  @ format.spss  : chr "F40.0"</span></span>
+<span><span class="co">#&gt;  @ display_width: int 5</span></span>
+<span><span class="co">#&gt;  @ labels       : Named num [1:4] 1 2 3 4</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "names")= chr [1:4] "Strongly agree" "Somewhat agree" "Somewhat disagree" "Strongly disagree"</span></span></code></pre></div>
+<p>In survey research, we often have to reverse a variable. This is
+primarily done for two reasons. The first is because we want to flip the
+valence of the question. One reason this might be the case is because we
+wanted to create an index by summing this up with other variables. If
+the other statements were negatively valanced, it may be in our best
+interest to keep the value labels the same but reverse the valance of
+<code>prod_isr</code> so that it can now be interpreted as “I would not
+feel comfortable buying products from Israel.” Since the value labels
+don’t change, the people who were previously classified as “Strongly
+agree” are now going be classified as “Strongly disagree”, etc.</p>
+<p>The second reason one might reverse the values, is to change the
+direction of the scale. For example, as the values in
+<code>prod_isr</code> increase, so does one’s level of disagreement. We
+might want to reverse the values so that now a 1 = “Strongly disagree”
+and a 4 = “Strongly agree”, and thus a higher number means more
+agreement. Because this method does not flip the valance of the
+question, people who were originally classified as “Strongly agree” are
+still going to be classified as “Strongly agree”. Put another way, the
+question isn’t changing and therefore people’s responses aren’t
+changing. The only thing that changes is the value associated with their
+response.</p>
+<p><code><a href="../reference/num_rev.html">num_rev()</a></code> was designed with the second goal in mind.
+Normally when simply reversing the values by subtracting them, all
+underlying metadata and attributes are lost. As a result, we would have
+to reverse the values, update the value labels and set the variable
+label again. This is really time consuming. The purpose of
+<code><a href="../reference/num_rev.html">num_rev()</a></code> is to fix this by automating this process of
+reversing a numeric vector, while maintaining the variable and value
+labels. In addition, this function adds a new attribute called
+<code>transformation</code> that describes the data transformation used
+to create this variable.</p>
+<p>I’m now going to show this function in action. So we can see that
+while the values are flipped, the value labels for each respondent is
+the same.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    fun_w <span class="op">=</span> <span class="fu"><a href="../reference/num_rev.html">num_rev</a></span><span class="op">(</span><span class="va">w</span><span class="op">)</span>,</span>
-<span>    <span class="co"># first subtract w from 5 and then use structure to add the metadata</span></span>
-<span>    base_w <span class="op">=</span> <span class="fl">5</span> <span class="op">-</span> <span class="va">w</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span>transformation <span class="op">=</span> <span class="st">"Reversing 'w'"</span><span class="op">)</span>,</span>
-<span>    .keep <span class="op">=</span> <span class="st">"used"</span></span>
-<span>  <span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="co"># let's make a new variable with the num_rev function</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>prod_isr_rev <span class="op">=</span> <span class="fu"><a href="../reference/num_rev.html">num_rev</a></span><span class="op">(</span><span class="va">prod_isr</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="co"># keep only these two variables</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">prod_isr_rev</span>, <span class="va">prod_isr</span><span class="op">)</span></span>
 <span></span>
-<span></span>
-<span><span class="co"># see the results</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 3</span></span></span>
-<span><span class="co">#&gt;       w fun_w base_w</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>     1     4      4</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>     3     2      2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>     1     4      4</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>     2     3      3</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>     3     2      2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span>     1     4      4</span></span></code></pre></div>
-<p>Now let’s check to see if <code>fun_w</code> and <code>base_w</code>
-are identical using <code><a href="https://waldo.r-lib.org/reference/compare.html" class="external-link">waldo::compare()</a></code>. We can see that there
-are no differences between the two vectors. In addition, check the
-underlying structure of the data, specifically of the two variables. We
-can see that both variables have an attribute called “transformation”
-that contains information explaining what happened sort of data
-transformation the variables underwent.</p>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 2</span></span></span>
+<span><span class="co">#&gt;   prod_isr_rev          prod_isr             </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 4<span style="color: #949494;"> [Strongly agree]</span>    1<span style="color: #949494;"> [Strongly agree]</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 2<span style="color: #949494;"> [Somewhat disagree]</span> 3<span style="color: #949494;"> [Somewhat disagree]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 1<span style="color: #949494;"> [Strongly disagree]</span> 4<span style="color: #949494;"> [Strongly disagree]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 4<span style="color: #949494;"> [Strongly agree]</span>    1<span style="color: #949494;"> [Strongly agree]</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 4<span style="color: #949494;"> [Strongly agree]</span>    1<span style="color: #949494;"> [Strongly agree]</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 1<span style="color: #949494;"> [Strongly disagree]</span> 4<span style="color: #949494;"> [Strongly disagree]</span></span></span></code></pre></div>
+<p>As we can see below, the variable labels are also the same. This
+means that the only thing that really changed, is the values.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># use waldo::compare to see if there are differences</span></span>
-<span><span class="fu">waldo</span><span class="fu">::</span><span class="fu"><a href="https://waldo.r-lib.org/reference/compare.html" class="external-link">compare</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">$</span><span class="va">fun_w</span>, <span class="va">new_df</span><span class="op">$</span><span class="va">base_w</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> No differences</span></span>
-<span></span>
-<span><span class="co"># check the structure of the data now</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">)</span></span>
-<span><span class="co">#&gt; tibble [20 × 3] (S3: tbl_df/tbl/data.frame)</span></span>
-<span><span class="co">#&gt;  $ w     : int [1:20] 1 3 1 2 3 1 3 2 3 1 ...</span></span>
-<span><span class="co">#&gt;  $ fun_w : num [1:20] 4 2 4 3 2 4 2 3 2 4 ...</span></span>
-<span><span class="co">#&gt;   ..- attr(*, "transformation")= 'glue' chr "Reversing 'w'"</span></span>
-<span><span class="co">#&gt;  $ base_w: num [1:20] 4 2 4 3 2 4 2 3 2 4 ...</span></span>
-<span><span class="co">#&gt;   ..- attr(*, "transformation")= chr "Reversing 'w'"</span></span></code></pre></div>
-<p>Now let’s check this with <code>x</code> from the new data. Let’s
-compare a new variable created using the <code><a href="../reference/num_rev.html">num_rev()</a></code> function
-called <code>num_rev_x</code> to a new variable created through a simple
-reversal by doing <code>5 - x</code> that we’ll call . We can see that
-the values are the same, but hte</p>
+<code class="sourceCode R"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="co"># let's make a new variable with the num_rev function</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>prod_isr_rev <span class="op">=</span> <span class="fu"><a href="../reference/num_rev.html">num_rev</a></span><span class="op">(</span><span class="va">prod_isr</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="co"># keep only these two variables</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">prod_isr_rev</span>, <span class="va">prod_isr</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="co"># get the variable labels for both variables</span></span>
+<span>  <span class="fu"><a href="https://larmarange.github.io/labelled/reference/var_label.html" class="external-link">get_variable_labels</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $prod_isr_rev</span></span>
+<span><span class="co">#&gt; [1] "I would feel comfortable buying products from Israel"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $prod_isr</span></span>
+<span><span class="co">#&gt; [1] "I would feel comfortable buying products from Israel"</span></span></code></pre></div>
+<p>Now that it’s clear what this function does and what it doesn’t do,
+let’s try manually doing it. First, let’s try just subtracting 5 from
+<code>prod_isr</code>. As we can see all attributes have been
+stripped.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    fun_x <span class="op">=</span> <span class="fu"><a href="../reference/num_rev.html">num_rev</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
-<span>    sub_x <span class="op">=</span> <span class="fl">5</span> <span class="op">-</span> <span class="va">x</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<p>Since <code>x</code> has a variable label, it will be a bit more
-in-depth having to replicate the results we get from the
-<code><a href="../reference/num_rev.html">num_rev()</a></code> function. We can see that both variables are the
-same. Moreover, what was just one line of code ended up being ~5 lines
-of code. While this may not seem like much, it becomes a lot when you
-have a bunch of variables to do this over. Now to understand the output
-from <code>str(new_df)</code>, there are three things to note here:</p>
-<ul>
-<li><p>The first is that the first line of each variable indicates the
-values in this variable and that there are 10 values.</p></li>
-<li><p>The second line shows you the there is a variable label
-attribute</p></li>
-<li><p>The third line shows you the transformation attribute</p></li>
-</ul>
+<code class="sourceCode R"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="co"># reverse the variable</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>prod_isr_rev <span class="op">=</span> <span class="fl">5</span> <span class="op">-</span> <span class="va">prod_isr</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># check attributes</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">$</span><span class="va">prod_isr_rev</span><span class="op">)</span></span>
+<span><span class="co">#&gt; NULL</span></span></code></pre></div>
+<p>This means we need to add both value and variable labels to the
+variable. To do this, we’ll use the <code><a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">haven::labelled()</a></code>
+function.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<code class="sourceCode R"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    fun_x <span class="op">=</span> <span class="fu"><a href="../reference/num_rev.html">num_rev</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
-<span>    <span class="co"># use haven labelled to add the variable label</span></span>
-<span>    base_x <span class="op">=</span> <span class="fu">haven</span><span class="fu">::</span><span class="fu"><a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">labelled</a></span><span class="op">(</span></span>
-<span>      <span class="co"># reverse the vector</span></span>
-<span>      <span class="fl">5</span> <span class="op">-</span> <span class="va">x</span>,</span>
-<span>      <span class="co"># add the variable label</span></span>
-<span>      label <span class="op">=</span> <span class="st">"This is the variable label for x"</span></span>
-<span>    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>      <span class="co"># add the attribute for the transformation</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span>transformation <span class="op">=</span> <span class="st">"Reversing 'x'"</span><span class="op">)</span>,</span>
-<span>    .keep <span class="op">=</span> <span class="st">"used"</span></span>
+<span>    prod_isr_rev <span class="op">=</span> <span class="fu"><a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">labelled</a></span><span class="op">(</span></span>
+<span>      x <span class="op">=</span> <span class="fl">5</span> <span class="op">-</span> <span class="va">prod_isr</span>,</span>
+<span>      labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>        `Strongly disagree` <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>        `Somewhat disagree` <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>        `Somewhat agree` <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>        `Strongly agree` <span class="op">=</span> <span class="fl">4</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>      label <span class="op">=</span> <span class="st">"I am comfortable buying products from Israel"</span></span>
+<span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span></span>
-<span><span class="co"># check to see if the data is the same</span></span>
-<span><span class="fu">waldo</span><span class="fu">::</span><span class="fu"><a href="https://waldo.r-lib.org/reference/compare.html" class="external-link">compare</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">$</span><span class="va">fun_x</span>, <span class="va">new_df</span><span class="op">$</span><span class="va">base_x</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> No differences</span></span>
-<span></span>
-<span><span class="co"># check the structure of the data now</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">)</span></span>
-<span><span class="co">#&gt; tibble [20 × 3] (S3: tbl_df/tbl/data.frame)</span></span>
-<span><span class="co">#&gt;  $ x     : int [1:20] 2 1 2 1 2 1 4 3 4 2 ...</span></span>
-<span><span class="co">#&gt;   ..- attr(*, "label")= chr "This is the variable label for x"</span></span>
-<span><span class="co">#&gt;  $ fun_x : dbl+lbl [1:20] 3, 4, 3, 4, 3, 4, 1, 2, 1, 3, 3, 4, 3, 2, 2, 1, 1, 1, 2, 3</span></span>
-<span><span class="co">#&gt;    ..@ label         : chr "This is the variable label for x"</span></span>
-<span><span class="co">#&gt;    ..@ transformation: 'glue' chr "Reversing 'x'"</span></span>
-<span><span class="co">#&gt;  $ base_x: dbl+lbl [1:20] 3, 4, 3, 4, 3, 4, 1, 2, 1, 3, 3, 4, 3, 2, 2, 1, 1, 1, 2, 3</span></span>
-<span><span class="co">#&gt;    ..@ label         : chr "This is the variable label for x"</span></span>
-<span><span class="co">#&gt;    ..@ transformation: chr "Reversing 'x'"</span></span></code></pre></div>
-<p>Now if we check <code>y</code> we will see something similar. First,
-since this variable has value labels, we need tomake sure that we add
-the value labels in when doing it in the base model and note that in the
-transformation. More importantly, we can see that while the values in
-<code>fun_y</code> and <code>base_y</code> changed, the value labels
-stayed the same as in <code>y</code>. This is important because the
-person’s response didn’t change, the only thing that did is the value we
-are associating with it. Moreover, we can that the “label” attribute is
-gone now and two “labels” attributes show up instead. This is because
-the original variable did not have a variabel label but did have value
-labels.</p>
+<span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">$</span><span class="va">prod_isr_rev</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $labels</span></span>
+<span><span class="co">#&gt; Strongly disagree Somewhat disagree    Somewhat agree    Strongly agree </span></span>
+<span><span class="co">#&gt;                 1                 2                 3                 4 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $label</span></span>
+<span><span class="co">#&gt; [1] "I am comfortable buying products from Israel"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $class</span></span>
+<span><span class="co">#&gt; [1] "haven_labelled" "vctrs_vctr"     "double"</span></span></code></pre></div>
+<p>There is an easier of doing this by using
+<code><a href="https://larmarange.github.io/labelled/reference/val_labels.html" class="external-link">labelled::val_labels()</a></code> and
+<code><a href="https://larmarange.github.io/labelled/reference/var_label.html" class="external-link">labelled::var_label()</a></code> to leverage the existing value and
+variable labels from <code>prod_isr</code>. However, when setting the
+value labels, we have to use <code><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev()</a></code> to reverse them.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<code class="sourceCode R"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    fun_y <span class="op">=</span> <span class="fu"><a href="../reference/num_rev.html">num_rev</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span>,</span>
-<span>    <span class="co"># use haven labelled to add the variable label</span></span>
-<span>    base_y <span class="op">=</span> <span class="fu">haven</span><span class="fu">::</span><span class="fu"><a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">labelled</a></span><span class="op">(</span></span>
-<span>      <span class="co"># reverse the vector</span></span>
-<span>      <span class="fl">5</span> <span class="op">-</span> <span class="va">y</span>,</span>
-<span>      <span class="co"># add the variable label</span></span>
-<span>      labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Strongly disagree"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                 <span class="st">"Somewhat disagree"</span> <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>                 <span class="st">"Somewhat agree"</span> <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>                 <span class="st">"Strongly agree"</span> <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
-<span>    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>      <span class="co"># add the attribute for the transformation</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span>transformation <span class="op">=</span> <span class="st">"Reversing 'y' while maintaining correct value labels"</span><span class="op">)</span>,</span>
-<span>    .keep <span class="op">=</span> <span class="st">"used"</span></span>
+<span>    prod_isr_rev <span class="op">=</span> <span class="fu"><a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">labelled</a></span><span class="op">(</span></span>
+<span>      x <span class="op">=</span> <span class="fl">5</span> <span class="op">-</span> <span class="va">prod_isr</span>,</span>
+<span>      labels <span class="op">=</span> <span class="fu"><a href="https://larmarange.github.io/labelled/reference/val_labels.html" class="external-link">val_labels</a></span><span class="op">(</span><span class="va">test_data</span><span class="op">$</span><span class="va">prod_isr</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>      label <span class="op">=</span> <span class="fu"><a href="https://larmarange.github.io/labelled/reference/var_label.html" class="external-link">var_label</a></span><span class="op">(</span><span class="va">test_data</span><span class="op">$</span><span class="va">prod_isr</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="co"># preview data</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 3</span></span></span>
-<span><span class="co">#&gt;   y                     fun_y                 base_y               </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>            </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 1<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Strongly agree]</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 1<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Strongly agree]</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 3<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 3<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 3<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Somewhat disagree]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 2<span style="color: #949494;"> [Somewhat agree]</span>    3<span style="color: #949494;"> [Somewhat agree]</span>    3<span style="color: #949494;"> [Somewhat agree]</span></span></span>
-<span></span>
-<span><span class="co"># check to see if the data is the same</span></span>
-<span><span class="fu">waldo</span><span class="fu">::</span><span class="fu"><a href="https://waldo.r-lib.org/reference/compare.html" class="external-link">compare</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">$</span><span class="va">fun_y</span>, <span class="va">new_df</span><span class="op">$</span><span class="va">base_y</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> No differences</span></span>
-<span></span>
-<span><span class="co"># check the structure of the data now</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">)</span></span>
-<span><span class="co">#&gt; tibble [20 × 3] (S3: tbl_df/tbl/data.frame)</span></span>
-<span><span class="co">#&gt;  $ y     : int+lbl [1:20] 1, 1, 3, 3, 3, 2, 2, 4, 4, 1, 3, 4, 3, 2, 4, 4, 1, 1, 2, 1</span></span>
-<span><span class="co">#&gt;    ..@ labels: Named int [1:4] 1 2 3 4</span></span>
-<span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly agree" "Somewhat agree" "Somewhat disagree" "Strongly disagree"</span></span>
-<span><span class="co">#&gt;  $ fun_y : dbl+lbl [1:20] 4, 4, 2, 2, 2, 3, 3, 1, 1, 4, 2, 1, 2, 3, 1, 1, 4, 4, 3, 4</span></span>
-<span><span class="co">#&gt;    ..@ labels        : Named num [1:4] 1 2 3 4</span></span>
-<span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly disagree" "Somewhat disagree" "Somewhat agree" "Strongly agree"</span></span>
-<span><span class="co">#&gt;    ..@ transformation: 'glue' chr "Reversing 'y' while maintaining correct value labels"</span></span>
-<span><span class="co">#&gt;  $ base_y: dbl+lbl [1:20] 4, 4, 2, 2, 2, 3, 3, 1, 1, 4, 2, 1, 2, 3, 1, 1, 4, 4, 3, 4</span></span>
-<span><span class="co">#&gt;    ..@ labels        : Named num [1:4] 1 2 3 4</span></span>
-<span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly disagree" "Somewhat disagree" "Somewhat agree" "Strongly agree"</span></span>
-<span><span class="co">#&gt;    ..@ transformation: chr "Reversing 'y' while maintaining correct value labels"</span></span></code></pre></div>
-<p><code>z</code> is the most complex variable as it contains both
-variable and value labels. What was originally one line of code quickly
-became 9 lines of code. To get the same result as
-<code><a href="../reference/num_rev.html">num_rev()</a></code>, we need to use <code><a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">haven::labelled()</a></code> to
-add both the variable label and the value labels and we need to add
-<code><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure()</a></code> to add the transformation.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    fun_z <span class="op">=</span> <span class="fu"><a href="../reference/num_rev.html">num_rev</a></span><span class="op">(</span><span class="va">z</span><span class="op">)</span>,</span>
-<span>    <span class="co"># use haven labelled to add the variable label</span></span>
-<span>    base_z <span class="op">=</span> <span class="fu">haven</span><span class="fu">::</span><span class="fu"><a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">labelled</a></span><span class="op">(</span></span>
-<span>      <span class="co"># reverse the vector</span></span>
-<span>      <span class="fl">5</span> <span class="op">-</span> <span class="va">z</span>,</span>
-<span>      <span class="co"># add the variable label</span></span>
-<span>      labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Strongly disagree"</span> <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                 <span class="st">"Somewhat disagree"</span> <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>                 <span class="st">"Somewhat agree"</span> <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>                 <span class="st">"Strongly agree"</span> <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>,</span>
-<span>      label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"This is the variable label for z"</span><span class="op">)</span></span>
-<span>    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>      <span class="co"># add the attribute for the transformation</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span>transformation <span class="op">=</span> <span class="st">"Reversing 'z' while maintaining correct value labels"</span><span class="op">)</span>,</span>
-<span>    .keep <span class="op">=</span> <span class="st">"used"</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span><span class="co"># preview data</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 3</span></span></span>
-<span><span class="co">#&gt;   z                     fun_z                 base_z               </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;int+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>            </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 4<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly disagree]</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 1<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Strongly agree]</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 1<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Strongly agree]</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 1<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Strongly agree]</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 2<span style="color: #949494;"> [Somewhat agree]</span>    3<span style="color: #949494;"> [Somewhat agree]</span>    3<span style="color: #949494;"> [Somewhat agree]</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 4<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly disagree]</span></span></span>
-<span></span>
-<span><span class="co"># check to see if the data is the same</span></span>
-<span><span class="fu">waldo</span><span class="fu">::</span><span class="fu"><a href="https://waldo.r-lib.org/reference/compare.html" class="external-link">compare</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">$</span><span class="va">fun_z</span>, <span class="va">new_df</span><span class="op">$</span><span class="va">base_z</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> No differences</span></span>
-<span></span>
-<span><span class="co"># check the structure of the data now</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">)</span></span>
-<span><span class="co">#&gt; tibble [20 × 3] (S3: tbl_df/tbl/data.frame)</span></span>
-<span><span class="co">#&gt;  $ z     : int+lbl [1:20] 4, 1, 1, 1, 2, 4, 3, 1, 2, 2, 3, 2, 2, 2, 4, 2, 1, 4, 4, 1</span></span>
-<span><span class="co">#&gt;    ..@ labels: Named int [1:4] 1 2 3 4</span></span>
-<span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly agree" "Somewhat agree" "Somewhat disagree" "Strongly disagree"</span></span>
-<span><span class="co">#&gt;    ..@ label : chr "This is the variable label for z"</span></span>
-<span><span class="co">#&gt;  $ fun_z : dbl+lbl [1:20] 1, 4, 4, 4, 3, 1, 2, 4, 3, 3, 2, 3, 3, 3, 1, 3, 4, 1, 1, 4</span></span>
-<span><span class="co">#&gt;    ..@ labels        : Named num [1:4] 1 2 3 4</span></span>
-<span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly disagree" "Somewhat disagree" "Somewhat agree" "Strongly agree"</span></span>
-<span><span class="co">#&gt;    ..@ label         : chr "This is the variable label for z"</span></span>
-<span><span class="co">#&gt;    ..@ transformation: 'glue' chr "Reversing 'z' while maintaining correct value labels"</span></span>
-<span><span class="co">#&gt;  $ base_z: dbl+lbl [1:20] 1, 4, 4, 4, 3, 1, 2, 4, 3, 3, 2, 3, 3, 3, 1, 3, 4, 1, 1, 4</span></span>
-<span><span class="co">#&gt;    ..@ labels        : Named num [1:4] 1 2 3 4</span></span>
-<span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly disagree" "Somewhat disagree" "Somewhat agree" "Strongly agree"</span></span>
-<span><span class="co">#&gt;    ..@ label         : chr "This is the variable label for z"</span></span>
-<span><span class="co">#&gt;    ..@ transformation: chr "Reversing 'z' while maintaining correct value labels"</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">$</span><span class="va">prod_isr_rev</span><span class="op">)</span></span>
+<span><span class="co">#&gt; $labels</span></span>
+<span><span class="co">#&gt; Strongly disagree Somewhat disagree    Somewhat agree    Strongly agree </span></span>
+<span><span class="co">#&gt;                 4                 3                 2                 1 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $label</span></span>
+<span><span class="co">#&gt; [1] "I would feel comfortable buying products from Israel"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $class</span></span>
+<span><span class="co">#&gt; [1] "haven_labelled" "vctrs_vctr"     "double"</span></span></code></pre></div>
+<p>Now that you know how to do it manually, I think it’s clear that
+using <code><a href="../reference/num_rev.html">num_rev()</a></code> is much easier.</p>
 </div>
   </main>
 </div>
