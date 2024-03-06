@@ -1,6 +1,6 @@
 
 #' @importFrom dplyr %>% across where group_by everything mutate select
-#' bind_cols count rename
+#' bind_cols count rename all_of
 #' @importFrom grDevices colorRampPalette rgb
 #' @importFrom prismatic color
 #' @importFrom graphics rect par image text

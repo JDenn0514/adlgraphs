@@ -18,11 +18,6 @@
 #'   mutate(accept_isr_rev = num_rev(accept_isr)) %>%
 #'   select(starts_with("accept"))
 #'
-#' rev_df <- df %>% mutate(rev_w = num_rev(w))
-#'
-#' head(rev_df)
-#'
-#' str(rev_df)
 #'
 
 num_rev <- function(x) {

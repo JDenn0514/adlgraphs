@@ -146,7 +146,7 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
 
     # calculate the frequencies
     df_freq <- df %>%
-      tidyr::drop_na(all_of(x)) %>%
+      tidyr::drop_na(dplyr::all_of(x)) %>%
       dplyr::count(.data[[x]]) %>%
       dplyr::mutate(pct = prop.table(n))
 
