@@ -3,7 +3,7 @@ template:
   bootstrap: 5
   bslib:
     font_scale: 1.0
-    base_font: {google: "Lato"}
+    base_font: {google: "Roboto"}
     code_font: {google: "Overpass Mono"}
     heading_font: {google: "Titillium Web"}
     bg: "#fcfbf9"         # lighten springwood background
