@@ -3,12 +3,9 @@ template:
   bootstrap: 5
   bslib:
     font_scale: 1.0
-    base_font:
-      google: "Lato"
-    code_font:
-      google: "Overpass Mono"
-    heading_font:
-      google: "Titillium Web"
+    base_font: {google: "Lato"}
+    code_font: {google: "Overpass Mono"}
+    heading_font: {google: "Titillium Web"}
     bg: "#fcfbf9"         # lighten springwood background
     fg: "#2c2e35"         # contrast ratio: 15.76 for text
     primary: "#093c71"    # navy blue link text
