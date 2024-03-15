@@ -1,4 +1,7 @@
 
+# my own functions --------------------------------------------------------
+
+
 # make the
 accept_string_or_sym <- function(x) {
 
@@ -10,9 +13,10 @@ accept_string_or_sym <- function(x) {
   if (!is.character(x)) {
     # capture group and convert to a symbol object with ensym()
     #then use as_name() to make it a string
-    variable <- rlang::as_name(rlang::ensym(x))
+    x <- rlang::as_name(rlang::ensym(x))
   }
 
+  return(x)
 
 }
 
@@ -83,13 +87,38 @@ get_var_label <- function(x, lab) {
 
 }
 
-# wrap labels
+# Create a vector containing character strings comprised of all the variable
+# labels for each column in a data.frame or tibble.
+# write a function that will get the variable label for each column in the df
+get_all_var_labels <- function(df) {
+  # get a list of columns
+  cols <- names(df)
+
+  # write up a function that makes the string in the format we want
+  string_fun <- function(x) {
+    string <- labelled::var_label(df[[x]])
+  }
+
+  # map string_fun over each of the columns laid out earlier
+  purrr::map(cols, string_fun) %>%
+    setNames(cols) %>%
+    # undo the list and convert to a vector
+    unlist()
+}
+
+
+
+# functions from other packages -------------------------------------------
+
+
+# wrap labels from the scales package
 label_wrap <- function(width) {
   force(width)
   function(x) {
     unlist(lapply(strwrap(x, width = width, simplify = FALSE), paste0, collapse = "\n"))
   }
 }
+
 
 # import the gt_add_divider function from gtExtras
 gt_add_divider <- function(gt_object, columns, sides = "right", color = "grey",
@@ -124,23 +153,34 @@ gt_add_divider <- function(gt_object, columns, sides = "right", color = "grey",
   }
 }
 
-# Create a vector containing character strings comprised of all the variable
-# labels for each column in a data.frame or tibble.
-# write a function that will get the variable label for each column in the df
-get_all_var_labels <- function(df) {
-  # get a list of columns
-  cols <- names(df)
 
-  # write up a function that makes the string in the format we want
-  string_fun <- function(x) {
-    string <- labelled::var_label(df[[x]])
-  }
+# make single column facets from ggforce
+facet_col <- function(facets, scales = "fixed", space = "fixed",
+                      shrink = TRUE, labeller = "label_value",
+                      drop = TRUE, strip.position = 'top') {
+  space <- match.arg(space, c('free', 'fixed'))
+  facet <- facet_wrap(facets, ncol = 1, scales = scales, shrink = shrink, labeller = labeller, drop = drop, strip.position = strip.position)
+  params <- facet$params
 
-  # map string_fun over each of the columns laid out earlier
-  purrr::map(cols, string_fun) %>%
-    setNames(cols) %>%
-    # undo the list and convert to a vector
-    unlist()
+  params$space_free <- space == 'free'
+  ggproto(NULL, FacetCol, shrink = shrink, params = params)
 }
+
+# from ggforce
+FacetCol <- ggproto('FacetCol', FacetWrap,
+                    draw_panels = function(self, panels, layout, x_scales, y_scales, ranges, coord, data, theme, params) {
+                      combined <- ggproto_parent(FacetWrap, self)$draw_panels(panels, layout, x_scales, y_scales, ranges, coord, data, theme, params)
+                      if (params$space_free) {
+                        heights <- vapply(layout$PANEL, function(i) diff(ranges[[i]]$y.range), numeric(1))
+                        panel_heights <- unit(heights, "null")
+                        combined$heights[panel_rows(combined)$t] <- panel_heights
+                      }
+                      combined
+                    }
+)
+
+
+
+
 
 

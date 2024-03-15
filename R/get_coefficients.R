@@ -89,12 +89,10 @@ get_coefficients <- function(
     # remove the unnecessary columns if we are not adding the labels
     model_results <- model_results %>%
       broom.helpers::tidy_add_reference_rows() %>%
-      broom.helpers::tidy_add_estimate_to_reference_rows() %>%
       select(-c(var_class:contrasts_type))
   } else if (add_labels == TRUE) {
     model_results <- model_results %>%
-      broom.helpers::tidy_add_reference_rows() %>%
-      broom.helpers::tidy_add_estimate_to_reference_rows()
+      broom.helpers::tidy_add_reference_rows()
   }
 
   # determine if the values should be exponentiated
@@ -156,7 +154,14 @@ get_coefficients <- function(
 
   }
 
-  return(model_results)
+  model_results %>% dplyr::mutate(
+    dplyr::across(
+      dplyr::where(is.character),
+      ~forcats::fct_rev(forcats::as_factor(.x))
+    )
+  )
+
+  #return(model_results)
 
 }
 
