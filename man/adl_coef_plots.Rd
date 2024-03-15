@@ -92,7 +92,7 @@ graphs.
 This function works best when used in conjunction with \code{get_coefficients()}.
 
 \code{adl_coef_plots()} is a wrapper around \code{\link[ggplot2]{geom_point}},
-\code{\link[ggplot2]{geom_linerang}}/ and \code{\link[ggplot2]{geom_vline}}.
+\code{\link[ggplot2]{geom_linerange}}/ and \code{\link[ggplot2]{geom_vline}}.
 As a result, it is not possible to customize every aspect of this graph. If
 you would like to do so, I recommend using the actual geoms from \code{{ggplot2}}.
 

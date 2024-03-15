@@ -1,52 +1,54 @@
 #' Create coefficient plots in ADL's style
 #'
-#' This function allows users to create a coefficient plot with ADL's style.
-#' It is a wrapper around \code{\link[ggplot2]{geom_point}},
-#' \code{\link[ggplot2]{geom_text}}/,\code{\link[ggplot2]{geom_label}}, and
-#' \code{\link[ggplot2]{geom_errorbar}}. This function was created to
-#' standardize the graphs produced by CAR's team and to cut down on the amount
-#' of time it takes to make these graphs.
+#' This function allows users to create a coefficient plot with ADL's style and
+#' it was designed to help reduce the time it takes to make publication-ready
+#' graphs.
 #'
-#' As mentioned previously, this function is a wrapper around various `{ggplot2}`
-#' functions in order to save time when making simple bar plots, dodged bar
-#' plots, and stacked bar plots. As a result, it is not possible to combine
-#' every element of the graph. If you would like to do so, we recommend using the
-#' actual geoms from `{ggplot2}`.
+#' This function works best when used in conjunction with `get_coefficients()`.
 #'
-#' Each of the elements included serve a purpose to allow you to customize the
-#' graphs so that they look nice. Moreover, the arguments were created for the
-#' types of graphs that CAR produces, namely mean plots and frequency plots.
+#' `adl_coef_plots()` is a wrapper around \code{\link[ggplot2]{geom_point}},
+#' \code{\link[ggplot2]{geom_linerange}}/ and \code{\link[ggplot2]{geom_vline}}.
+#' As a result, it is not possible to customize every aspect of this graph. If
+#' you would like to do so, I recommend using the actual geoms from `{ggplot2}`.
+#'
+#' To differentiate between different variables and different models, use the
+#' `facet` and `color` arguments like you would normally. However, when just
+#' differentiating between variables, we recommend using the `facet` argument
+#' as it makes it easier to distinguish the different variables and to compare
+#' the estimates their values have.
 #'
 #'
 #' @param df A dataframe or tibble. This can be piped in like with a normal
 #'   \code{\link[ggplot2]{ggplot}} function.
-#'
-#' @param x Variable that goes in the x-axis. This is required.
-#' @param y Variable that goes in the y-axis. This is required.
-#' @param col_label Variable that provides the values to be used as the labels
-#'   in the plot. This is what is used in `geom_text` and `geom_label`
-#' @param group Explicitly set the overall grouping variable. This is used in
-#'   stacked graphs and dodged graphs. If NULL, the default, no grouping
-#'   variable is used. Note: No need to set this if the  data is not grouped
-#'   at all.
+#' @param x Variable that goes in the x-axis.
+#' @param y Variable that goes in the y-axis.
 #' @param color Set the grouping variable for which the color of the dots and
 #'   the confidence intervals are colored. If NULL, the default, no grouping
 #'   variable is used. Note: No need to set this if the
-#'   data is not grouped at all.
-#' @param direction A character string indicating the direction of the bars.
-#'   There are two options:
-#'   1. "vertical", the default, the bars are vertical
-#'   2. "horizontal" the bars are horizontal
-#'   This must be set explicitly as it affects the location of the text, labels,
-#'   and error bars.
-#' @param col_text_size The size of the text inside/on top of the columns.
-#'   Default is 3.25.
-#' @param distance_from_col How far the labels are from the bars in freq plots
-#'   and how far they are from the bottom of the bar in the mean plots.
-#' @param freq_plot Logical. Determines if this is a frequency plot. If `TRUE`,
-#'   default, then the graph will be styled as a frequency plot with the bar
-#'   labels appearing outside the bars. `FALSE`, the graph will be styled as a
-#'   mean plot with the labels appearing.
+#'   data is not grouped at all
+#' @param facet Set the variable for which you want the plot faceted. This
+#'   is typically used instead of the `color` argument to distinguish the
+#'   different variables and their values. Default is `var_label` but can be set
+#'   to any other column in the object set in `df`. Must be set to `NULL` to
+#'   remove faceting from the plot.
+#' @param facet_order A character string indicating if the order of variables
+#'   with which the graph is faceted should be reversed or not. There are two
+#'   options:
+#'   1. "original" keep the original order faceting variables
+#'   2. "reverse" flips the order of faceting variables
+#'   Note: this does not change the ordering of the values within each facet on
+#'   the y-axis, it just reorders the different facets.
+#' @param wrap_facet_labels Determine number of characters per line in the
+#'   facet labels. Uses \link[scales]{label_wrap} to wrap the text across
+#'   multiple lines. If left blank, defaults to 50.
+#' @param wrap_y_labels Determine number of characters per line in the
+#'   y-axis labels. Uses \link[scales]{label_wrap} to wrap the text across
+#'   multiple lines. If left blank, defaults to 20.
+#' @param x_intercept The value for which the x_intercept should be set. Default
+#'   is 0 but for exponentiated models should be set to 1. If set to `NULL` then
+#'   no x_intercept is shown.
+#' @param point_size The size of the dots in the plot. Default is 3.5.
+#' @param line_width The thickness of the lines. Default is
 #' @param position A character string determining how the plot handles a grouped
 #'   graph. By default it is `NULL` which assumes there is no grouping variable.
 #'   If you set to "dodge" then you will get a dodged plot. This is best used
@@ -58,53 +60,129 @@
 #'   check out \code{\link[ggplot2]{position_dodge}}.
 #' @param dodge_reverse Reverses the order of the bars and text in a dodge plot.
 #'   For more info check out \code{\link[ggplot2]{position_dodge}}.
-#' @param ... Additional arguments passed on to `theme_default`
+#' @param ... Additional arguments passed on to `theme_coef()`
 #'
 #' @export
 #'
 #'
 
-# adl_coef_plots <- function(
-#     df,
-#     x,
-#     y,
-#     point_size = 3.5,
-#     color = NULL,
-#     facet = var_label
-# ) {
-#   plot <- df %>%
-#     ggplot2::ggplot(., ggplot2::aes(x = {{ x }}, y = {{ y }}, color = {{ color }}))
-#
-#
-#   # create the coefficient plot
-#   if (!is.null(color)) {
-#     # if color is not null
-#     plot <- plot +
-#       ggplot2::geom_point(size = point_size) +
-#       ggplot2::geom_linerange(ggplot2::aes(xmin = conf.low, xmax = conf.high)) +
-#       ggplot2::geom_vline(xintercept = 0) +
-#       #ggplot2::facet_wrap(~group, ncol = 1, scales = "free_y") +
-#       theme_coef()
-#
-#
-#   } else {
-#     # if color is null
-#     plot <- plot +
-#       ggplot2::geom_point(size = point_size) +
-#       ggplot2::geom_linerange(ggplot2::aes(xmin = conf.low, xmax = conf.high)) +
-#       ggplot2::geom_vline(xintercept = 1) +
-#       ggplot2::facet_wrap(~var_label, ncol = 1, scales = "free_y") +
-#       theme_coef()
-#   }
-#
-#   return(plot)
-#
-# }
-#
 
+adl_coef_plots <- function(
+    df,
+    x = estimate,
+    y = value_label,
+    color = NULL,
+    facet = var_label,
+    facet_order = "original",
+    wrap_facet_labels = 50,
+    wrap_y_labels = 20,
+    x_intercept = 0,
+    point_size = 3.5,
+    line_width = 1,
+    position = NULL,
+    dodge_width = 0.6,
+    dodge_reverse = FALSE,
+    ...
+) {
 
+  plot <- df %>%
+    ggplot2::ggplot(ggplot2::aes(x = {{ x }}, y = {{ y }}, color = {{ color }}))
 
+  if (is.null(position)) {
 
+    plot <- plot +
+      ggplot2::geom_point(
+        size = point_size
+      ) +
+      ggplot2::geom_linerange(
+        ggplot2::aes(xmin = conf.low, xmax = conf.high),
+        linewidth = line_width
+      ) +
+      theme_coef(...)
+
+  } else if (position == "dodge") {
+
+    plot <- plot +
+      ggplot2::geom_point(
+        position = position_dodge2(width = dodge_width, reverse = dodge_reverse),
+        size = point_size
+      ) +
+      ggplot2::geom_linerange(
+        ggplot2::aes(xmin = conf.low, xmax = conf.high),
+        position = position_dodge2(width = dodge_width, reverse = dodge_reverse),
+        linewidth = line_width
+      ) +
+      theme_coef(...)
+  }
+
+  if (!is.null(rlang::enexpr(facet))) {
+    # If facet is not NULL make a faceted plot.
+    # Use rlang::ensym to capture the expression the user supplied in "facet"
+    # as either a string or a symbol. Without this, is.null(facet) will return
+    # an error since facet defaults to the symbol var_label.
+
+    # enable "facet" to be either a string or symbol
+    facet <- accept_string_or_sym({{ facet }})
+
+    if (facet_order == "original") {
+      # if facet_order is set to "original", the default don't reverse the facet
+
+      plot <- plot +
+        facet_col(
+          ggplot2::vars(.data[[facet]]),
+          scales = "free_y",
+          space = "free",
+          labeller = ggplot2::label_wrap_gen(wrap_facet_labels)
+        )
+
+    } else if (facet_order == "reverse") {
+      # if facet_order is "reverse", reverse the order of the facets
+
+      plot <- plot +
+        facet_col(
+          ggplot2::vars(forcats::fct_rev(.data[[facet]])),
+          scales = "free_y",
+          space = "free",
+          labeller = ggplot2::label_wrap_gen(wrap_facet_labels)
+        )
+
+    } else {
+
+      cli::cli_abort('`facet_order` must be either "original" or "reverse"')
+
+    }
+
+  }
+
+  if (is.numeric(x_intercept)) {
+    # if x_intercept is not NULL set the xintercept to whatever is specified
+
+    plot <- plot +
+      ggplot2::geom_vline(xintercept = x_intercept)
+
+  } else if (is.null(x_intercept)) {
+    # if x_intercept is NULL don't add it
+
+    plot <- plot
+
+  } else {
+    # if x_intercept is not numeric
+
+    cli::cli_abort(
+      c(
+        '`x_intercept` must be either `NULL` or a {.cls numeric} value',
+        x = "You've supplied`x_intercept` as a {.cls {class(x_intercept)}} value"
+      )
+    )
+
+  }
+
+  #
+  plot <- plot + ggplot2::scale_y_discrete(labels = label_wrap(wrap_y_labels))
+
+  return(plot)
+
+}
 
 
 

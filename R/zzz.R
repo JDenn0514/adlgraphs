@@ -11,6 +11,7 @@ utils::globalVariables(
     "estimate", "wts", ".", "adl_palettes", "lower", "upper", "x", "correlation",
     "trad_avg_n", "x_title", "estimate", "std.error", "var_class",
     "contrasts_type", "conf.high", "conf.low", "ss", "p.value", "label", "x_f",
-    ".data", "n", "pct", "General Population", "pct_lab", "group_f", "sd"
+    ".data", "n", "pct", "General Population", "pct_lab", "group_f", "sd",
+    "value_label"
   )
 )

@@ -159,7 +159,7 @@ facet_col <- function(facets, scales = "fixed", space = "fixed",
                       shrink = TRUE, labeller = "label_value",
                       drop = TRUE, strip.position = 'top') {
   space <- match.arg(space, c('free', 'fixed'))
-  facet <- facet_wrap(facets, ncol = 1, scales = scales, shrink = shrink, labeller = labeller, drop = drop, strip.position = strip.position)
+  facet <- ggplot2::facet_wrap(facets, ncol = 1, scales = scales, shrink = shrink, labeller = labeller, drop = drop, strip.position = strip.position)
   params <- facet$params
 
   params$space_free <- space == 'free'
@@ -167,7 +167,7 @@ facet_col <- function(facets, scales = "fixed", space = "fixed",
 }
 
 # from ggforce
-FacetCol <- ggproto('FacetCol', FacetWrap,
+FacetCol <- ggplot2::ggproto('FacetCol', ggplot2::FacetWrap,
                     draw_panels = function(self, panels, layout, x_scales, y_scales, ranges, coord, data, theme, params) {
                       combined <- ggproto_parent(FacetWrap, self)$draw_panels(panels, layout, x_scales, y_scales, ranges, coord, data, theme, params)
                       if (params$space_free) {
