@@ -69,17 +69,15 @@ no x_intercept is shown.}
 
 \item{position}{A character string determining how the plot handles a grouped
 graph. By default it is \code{NULL} which assumes there is no grouping variable.
-If you set to "dodge" then you will get a dodged plot. This is best used
-when comparing two groups, especially when they do not add up to 100. If
-you set it to "stacked" then you get a stacked plot. This should be used
-when comparing multiple statements with likert scales and other things that
-add up to 100.}
+If set to "dodge", it will create a dodged plot based on the variable
+supplied in color.}
 
-\item{dodge_width}{This adjusts the width in the dodge plot. For more info
-check out \code{\link[ggplot2]{position_dodge}}.}
-
-\item{dodge_reverse}{Reverses the order of the bars and text in a dodge plot.
+\item{dodge_width}{This adjusts the width in the dodge plot. Default is 0.6.
 For more info check out \code{\link[ggplot2]{position_dodge}}.}
+
+\item{dodge_reverse}{Logical. If set to TRUE, reverses the order of the dots
+and confidence intervals. Default is FALSE. For more info check out
+\code{\link[ggplot2]{position_dodge}}.}
 
 \item{...}{Additional arguments passed on to \code{theme_coef()}}
 }
@@ -98,7 +96,7 @@ you would like to do so, I recommend using the actual geoms from \code{{ggplot2}
 
 To differentiate between different variables and different models, use the
 \code{facet} and \code{color} arguments like you would normally. However, when just
-differentiating between variables, we recommend using the \code{facet} argument
+differentiating between variables, using the \code{facet} argument is recommended
 as it makes it easier to distinguish the different variables and to compare
 the estimates their values have.
 }

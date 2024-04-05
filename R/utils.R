@@ -33,7 +33,7 @@ get_unique_labels <- function(x) {
     # convert to a factor
     group_cols <- haven::as_factor(x)
     # get the unique values
-    group_cols <- unique(group_cols)
+    group_cols <- fct_unique(group_cols)
 
 
   } else if (is.numeric(x) && !is.null(sjlabelled::get_labels(x))) {
@@ -42,13 +42,13 @@ get_unique_labels <- function(x) {
     # convert to a factor
     group_cols <- sjlabelled::as_label(x)
     # get the unique values
-    group_cols <- unique(group_cols)
+    group_cols <- fct_unique(group_cols)
 
   } else if (is.character(x) || is.factor(x)) {
     # if group is of class character or factor return x
 
     # get the unique values
-    group_cols <- unique(x)
+    group_cols <- fct_unique(x)
 
   } else {
     # if group is anything else (ie numeric)
@@ -56,7 +56,7 @@ get_unique_labels <- function(x) {
     # force to a factor
     group_cols <- as.factor(x)
     # get unique values
-    group_cols <- unique(group_cols)
+    group_cols <- fct_unique(group_cols)
 
   }
 
@@ -110,6 +110,38 @@ get_all_var_labels <- function(df) {
 
 # functions from other packages -------------------------------------------
 
+#
+check_factor <- function(x, arg = caller_arg(x), call = caller_env()) {
+  if (is.character(x)) {
+    factor(x)
+  } else if (is.factor(x)) {
+    x
+  } else {
+    cli::cli_abort(
+      "{.arg {arg}} must be a factor or character vector, not {.obj_type_friendly {x}}.",
+      call = call
+    )
+  }
+}
+
+# get unique factors (from forcats)
+fct_unique <- function(f) {
+  f <- check_factor(f)
+
+  levels <- levels(f)
+  out <- seq_along(levels)
+
+  # Ensure out includes any implicit missings
+  if (anyNA(f)) {
+    out <- c(out, NA_integer_)
+  }
+
+  structure(
+    out,
+    levels = levels,
+    class = c(if (is.ordered(f)) "ordered", "factor")
+  )
+}
 
 # wrap labels from the scales package
 label_wrap <- function(width) {

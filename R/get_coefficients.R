@@ -17,9 +17,9 @@
 #' @param conf.level A number between 0 and 1 that signifies the width of the
 #'   desired confidence interval. Default is 0.95, which corresponds to a 95%
 #'   confidence interval.
-#' @param standardize If TRUE, reports standardized regression coefficients by
+#' @param standardize Logical. If TRUE, reports standardized regression coefficients by
 #'   scaling and mean-centering input data. Default is FALSE.
-#' @param n.sd If `standardize` is TRUE, determines the number of standard
+#' @param n.sd Logical. If `standardize` is TRUE, determines the number of standard
 #'   deviations used to scale the data. Default is 2.
 #' @param exponentiate Logical. If TRUE, reports exponentiated coefficients with
 #'   confidence intervals for exponential models like logit and Poisson models.
@@ -30,6 +30,12 @@
 #'   "No" if the term is not statistically significant.
 #' @param add_labels Logical. If TRUE adds variable and value labels
 #' @param add_n Logical. If true adds the number of observations per variable
+#' @param model_name A character string that adds a new column titled `model`
+#'   with the supplied character string as the rows. If `NULL`, the default, no
+#'   column is created.
+#'
+#'   This is useful if you are comparing multiple models with similar variable
+#'   and need to clarify which estimates are associated with which model.
 #'
 #' @export
 
@@ -43,7 +49,8 @@ get_coefficients <- function(
     exponentiate = FALSE,
     add_ss = TRUE,
     add_labels = TRUE,
-    add_n = FALSE
+    add_n = FALSE,
+    model_name = NULL
 ) {
 
   # get the model summary
@@ -86,32 +93,57 @@ get_coefficients <- function(
 
   # add reference rows
   if (add_labels == FALSE) {
+
     # remove the unnecessary columns if we are not adding the labels
     model_results <- model_results %>%
       broom.helpers::tidy_add_reference_rows() %>%
       select(-c(var_class:contrasts_type))
+
   } else if (add_labels == TRUE) {
+
     model_results <- model_results %>%
       broom.helpers::tidy_add_reference_rows()
+
   }
 
   # determine if the values should be exponentiated
   if (exponentiate == TRUE) {
+    # if exponentiate is TRUE
 
     # exponentiate the estimate and confidence intervals
     model_results <- model_results %>%
-      dplyr::mutate(across(c(estimate, conf.high, conf.low), exp))
+      dplyr::mutate(
+        dplyr::across(
+          c(estimate, conf.high, conf.low),
+          exp
+        ),
+        dplyr::across(
+          c(estimate, conf.high, conf.low),
+          ~tidyr::replace_na(.x, 1)
+        )
+      )
 
   } else if (exponentiate == FALSE) {
+    # if exponentiate is FALSE
 
     # don't exponentiate
-    model_results
+    model_results <- model_results %>%
+      dplyr::mutate(
+        dplyr::across(
+          c(estimate, conf.high, conf.low),
+          ~tidyr::replace_na(.x, 0)
+        )
+      )
+
 
   }
 
   # should we add statistical signficance
   if (add_ss == TRUE) {
+    # if add_ss is TRUE
+
     model_results <- model_results %>%
+      # create a new column called SS indicating if it is statistically significant
       dplyr::mutate(
         ss = dplyr::case_when(
           p.value < 0.05 ~ "Yes",
@@ -120,12 +152,14 @@ get_coefficients <- function(
       ) %>%
       # move it after p.value
       dplyr::relocate(ss, .after = p.value)
+
   } else if (add_ss == FALSE) {
     model_results <- model_results
   }
 
   # determine if we should add labels
   if (add_labels == TRUE) {
+    # if add_labels is set to TRUE
 
     model_results <- model_results %>%
       # add value labels
@@ -135,6 +169,7 @@ get_coefficients <- function(
       rename(value_label = label)
 
   } else if (add_labels == FALSE) {
+    # if add_labels is set to FALSE
 
     # don't add any labels
     model_results <- model_results
@@ -147,6 +182,7 @@ get_coefficients <- function(
     # add the number of observations for each term
     model_results <- model_results %>%
       broom.helpers::tidy_add_n()
+
   } else if (add_n == FALSE) {
 
     # don't add number of observations
@@ -154,6 +190,17 @@ get_coefficients <- function(
 
   }
 
+  if (!is.null(model_name)) {
+    # if model_name is not NULL
+
+    model_results <- model_results %>%
+      # add a column with the value in model_name
+      tibble::add_column(model = model_name)
+
+  }
+
+  # convert each character column to a factor and reverse it
+  # use forcats::as_factor() to set the levels based on their order of appearance
   model_results %>% dplyr::mutate(
     dplyr::across(
       dplyr::where(is.character),
@@ -164,7 +211,6 @@ get_coefficients <- function(
   #return(model_results)
 
 }
-
 
 
 

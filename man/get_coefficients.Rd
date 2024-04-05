@@ -12,7 +12,8 @@ get_coefficients(
   exponentiate = FALSE,
   add_ss = TRUE,
   add_labels = TRUE,
-  add_n = FALSE
+  add_n = FALSE,
+  model_name = NULL
 )
 }
 \arguments{
@@ -23,10 +24,10 @@ piped into the function.}
 desired confidence interval. Default is 0.95, which corresponds to a 95\%
 confidence interval.}
 
-\item{standardize}{If TRUE, reports standardized regression coefficients by
+\item{standardize}{Logical. If TRUE, reports standardized regression coefficients by
 scaling and mean-centering input data. Default is FALSE.}
 
-\item{n.sd}{If \code{standardize} is TRUE, determines the number of standard
+\item{n.sd}{Logical. If \code{standardize} is TRUE, determines the number of standard
 deviations used to scale the data. Default is 2.}
 
 \item{exponentiate}{Logical. If TRUE, reports exponentiated coefficients with
@@ -41,6 +42,13 @@ rate ratio for count models. Default is FALSE.}
 \item{add_labels}{Logical. If TRUE adds variable and value labels}
 
 \item{add_n}{Logical. If true adds the number of observations per variable}
+
+\item{model_name}{A character string that adds a new column titled \code{model}
+with the supplied character string as the rows. If \code{NULL}, the default, no
+column is created.
+
+This is useful if you are comparing multiple models with similar variable
+and need to clarify which estimates are associated with which model.}
 }
 \description{
 This function was created to produce results very similar to what you'll find
