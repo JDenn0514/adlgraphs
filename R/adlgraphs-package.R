@@ -9,7 +9,7 @@
 #' position_dodge2 position_dodge rel unit waiver element_rect position_stack
 #' facet_wrap vars ggproto FacetWrap
 #' @import showtext
-#' @importFrom rlang set_names sym := .data
+#' @importFrom rlang set_names sym := .data caller_arg caller_env
 #' @importFrom sysfonts font_add_google
 #' @importFrom gt gt tab_spanner fmt_markdown tab_style
 #' @importFrom cli cli_abort

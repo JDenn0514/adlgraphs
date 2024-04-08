@@ -85,7 +85,7 @@ adl_bar_plots <- function(
   if (missing(df)) {
     cli::cli_abort(c(
       "{.var df} is missing",
-      "i" = "An object of type data.frame or tibble must be supplied to {.var df}"
+      "i" = "An object of type `data.frame` or `tibble` must be supplied to {.var df}"
     ))
   } else if (missing(x)) {
     cli::cli_abort(c(

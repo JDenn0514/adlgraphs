@@ -111,7 +111,7 @@ get_all_var_labels <- function(df) {
 # functions from other packages -------------------------------------------
 
 #
-check_factor <- function(x, arg = caller_arg(x), call = caller_env()) {
+check_factor <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
   if (is.character(x)) {
     factor(x)
   } else if (is.factor(x)) {
