@@ -66,7 +66,7 @@ get_unique_labels <- function(x) {
 
 
 # get the variable label if there is one
-get_var_label <- function(x) {
+get_var_label <- function(x, lab) {
 
   # get the label for the group variable
   if (!is.null(labelled::var_label(x))) {
@@ -79,7 +79,7 @@ get_var_label <- function(x) {
     # if there is no variable label then just set it to the variable name
 
     # set x_variable_label as the variable name
-    var_lab <- deparse(substitute(x))
+    var_lab <- lab
 
   }
 
