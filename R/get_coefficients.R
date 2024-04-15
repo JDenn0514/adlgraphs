@@ -71,11 +71,12 @@ get_coefficients <- function(
   # add confidence intervals
   model_results <- model_results %>%
     mutate(
-      # manually calculate the confidence intervals
-      conf.high = estimate - (std.error * qt(p = (1 - conf.level) / 2,
-                                             df = df.residual(model))),
+      # get low confidence intervals
       conf.low = estimate + (std.error * qt(p = (1 - conf.level) / 2,
                                             df = df.residual(model))),
+      # get high confidence intervals
+      conf.high = estimate - (std.error * qt(p = (1 - conf.level) / 2,
+                                             df = df.residual(model))),
       # round the confidence intervals to the nearest thousandth
       across(where(is.numeric), ~round(.x, 3))
     )
