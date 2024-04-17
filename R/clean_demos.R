@@ -7,11 +7,12 @@
 #'
 #' @param df A dataframe or tibble. This can be piped in like with a normal
 #'   \code{\link[ggplot2]{ggplot}} function.
-
+#'
+#' @export
 
 clean_demos <- function(df) {
 
-  if (c("race_1", "race_2", "race_3", "race_4", "race_5", "race_6") %in% colnames(pol_pos) ) {
+  if (c("race_1", "race_2", "race_3", "race_4", "race_5", "race_6") %in% colnames(df) ) {
 
     df <- df %>%
       mutate(

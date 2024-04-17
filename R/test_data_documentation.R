@@ -1,4 +1,4 @@
-#' @title {test_data},
+#' @title {Test Data},
 #' @description {This is a fake data set created purely to demonstrate the different capabilities of this package},
 
 #' @format A data frame with {nrow(df)} rows and {ncol(df)} variables:

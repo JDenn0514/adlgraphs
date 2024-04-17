@@ -42,11 +42,12 @@ reference:
     - adl_palettes
 - title: Data transformations
   contents:
+    - case_match_fct
+    - case_when_fct
     - make_dicho
     - make_binary
     - num_rev
-    - case_when_fct
-    - case_match_fct
+    - refactor
     - pct_conv
     - make_percent
     - pivot_longer_values
@@ -62,6 +63,8 @@ reference:
   contents:
     - make_df_oxy
     - write_word_table
+    - clean_demos
+
 - title: Data
   contents:
     - test_data

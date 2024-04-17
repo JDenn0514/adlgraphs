@@ -3,7 +3,7 @@
 \docType{data}
 \name{test_data}
 \alias{test_data}
-\title{{test_data},}
+\title{{Test Data},}
 \format{
 A data frame with {nrow(df)} rows and {ncol(df)} variables:
 \describe{

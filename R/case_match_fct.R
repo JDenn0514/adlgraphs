@@ -18,7 +18,7 @@
 #'   [recycled][vctrs::theory-faq-recycling] to the size of `.x`.
 #'
 #' @param .default The value used when values in `.x` aren't matched by any of
-#'   the LHS inputs. If `NULL`, the default, a missing value will be used.
+#'   the LHS inputs. If `NULL`, the default, a `NA` will be used.
 #'
 #' @export
 #'

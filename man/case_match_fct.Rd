@@ -23,7 +23,7 @@ The RHS inputs will be coerced to their common type. Each RHS input will be
 \link[vctrs:theory-faq-recycling]{recycled} to the size of \code{.x}.}
 
 \item{.default}{The value used when values in \code{.x} aren't matched by any of
-the LHS inputs. If \code{NULL}, the default, a missing value will be used.}
+the LHS inputs. If \code{NULL}, the default, a \code{NA} will be used.}
 }
 \description{
 Recode a variable using the \code{dplyr::case_match()} syntax

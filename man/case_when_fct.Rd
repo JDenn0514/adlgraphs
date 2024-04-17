@@ -22,24 +22,57 @@ size of the LHS inputs.
 
 \code{NULL} inputs are ignored.}
 
-\item{.default}{The value used when all of the LHS inputs return either
-\code{FALSE} or \code{NA}.
-
-\code{.default} must be size 1 or the same size as the common size computed
-from \code{...}.
-
-\code{.default} participates in the computation of the common type with the RHS
-inputs.
-
-\code{NA} values in the LHS conditions are treated like \code{FALSE}, meaning that
-the result at those locations will be assigned the \code{.default} value. To
-handle missing values in the conditions differently, you must explicitly
-catch them with another condition before they fall through to the
-\code{.default}. This typically involves some variation of \code{is.na(x) ~ value}
-tailored to your usage of \code{case_when()}.
-
-If \code{NULL}, the default, a missing value will be used.}
+\item{.default}{A string. The value used when all of the LHS inputs return either
+\code{FALSE} or \code{NA}. If \code{NULL}, the default, a \code{NA} will be used.}
 }
 \description{
-Recode a variable using the \code{dplyr::case_match()} syntax
+Recode a variable using the \code{dplyr::case_when()} syntax
+}
+\examples{
+# load the dplyr library so we can use `mutate()`
+library(dplyr)
+
+# let's use the `test_data` data set and convert `edu` to a dichotomous factor
+# of college degree vs no degree. I'll demonstrate this a few different ways
+new_data <- test_data \%>\%
+  mutate(
+    edu_f2 = case_when_fct(
+      edu \%in\% c(1:3) ~ "No degree",
+      # we can specify the other values explicitly like this
+      edu \%in\% c(4:5) ~ "College degree"
+    )
+  )
+
+# we can see that the `edu_f2` has two levels and they are in the correct
+# and it attached the transformation metadata
+str(new_data$edu_f2)
+
+# another way of doing this is to indicate that when edu is less than 4 it
+# means no degree and when edu is above 3  it means college degree, like this
+new_data <- test_data \%>\%
+  mutate(
+    edu_f2 = case_when_fct(
+      edu < 4 ~ "No degree",
+      # we can specify the other values explicitly like this
+      edu > 3 ~ "College degree"
+    )
+  )
+
+# let's check it again
+str(new_data$edu_f2)
+
+# yet another way to do it, is to use the `.default =` argument to specify
+# ALL other values not listed in the prior arguments
+new_data <- test_data \%>\%
+  mutate(
+    edu_f2 = case_when_fct(
+      edu < 4 ~ "No degree",
+      # we can specify the other values explicitly like this
+      .default = "College degree"
+    )
+  )
+
+# let's check it again
+str(new_data$edu_f2)
+
 }

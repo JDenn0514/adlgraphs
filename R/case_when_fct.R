@@ -1,6 +1,6 @@
 #' `case_when` with factor levels
 #'
-#' Recode a variable using the `dplyr::case_match()` syntax
+#' Recode a variable using the `dplyr::case_when()` syntax
 #'
 #'
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> A sequence of two-sided
@@ -18,25 +18,58 @@
 #'
 #'   `NULL` inputs are ignored.
 #'
-#' @param .default The value used when all of the LHS inputs return either
-#'   `FALSE` or `NA`.
+#' @param .default A string. The value used when all of the LHS inputs return either
+#'   `FALSE` or `NA`. If `NULL`, the default, a `NA` will be used.
 #'
-#'   `.default` must be size 1 or the same size as the common size computed
-#'   from `...`.
+#' @examples
+#' # load the dplyr library so we can use `mutate()`
+#' library(dplyr)
 #'
-#'   `.default` participates in the computation of the common type with the RHS
-#'   inputs.
+#' # let's use the `test_data` data set and convert `edu` to a dichotomous factor
+#' # of college degree vs no degree. I'll demonstrate this a few different ways
+#' new_data <- test_data %>%
+#'   mutate(
+#'     edu_f2 = case_when_fct(
+#'       edu %in% c(1:3) ~ "No degree",
+#'       # we can specify the other values explicitly like this
+#'       edu %in% c(4:5) ~ "College degree"
+#'     )
+#'   )
 #'
-#'   `NA` values in the LHS conditions are treated like `FALSE`, meaning that
-#'   the result at those locations will be assigned the `.default` value. To
-#'   handle missing values in the conditions differently, you must explicitly
-#'   catch them with another condition before they fall through to the
-#'   `.default`. This typically involves some variation of `is.na(x) ~ value`
-#'   tailored to your usage of `case_when()`.
+#' # we can see that the `edu_f2` has two levels and they are in the correct
+#' # and it attached the transformation metadata
+#' str(new_data$edu_f2)
 #'
-#'   If `NULL`, the default, a missing value will be used.
+#' # another way of doing this is to indicate that when edu is less than 4 it
+#' # means no degree and when edu is above 3  it means college degree, like this
+#' new_data <- test_data %>%
+#'   mutate(
+#'     edu_f2 = case_when_fct(
+#'       edu < 4 ~ "No degree",
+#'       # we can specify the other values explicitly like this
+#'       edu > 3 ~ "College degree"
+#'     )
+#'   )
+#'
+#' # let's check it again
+#' str(new_data$edu_f2)
+#'
+#' # yet another way to do it, is to use the `.default =` argument to specify
+#' # ALL other values not listed in the prior arguments
+#' new_data <- test_data %>%
+#'   mutate(
+#'     edu_f2 = case_when_fct(
+#'       edu < 4 ~ "No degree",
+#'       # we can specify the other values explicitly like this
+#'       .default = "College degree"
+#'     )
+#'   )
+#'
+#' # let's check it again
+#' str(new_data$edu_f2)
 #'
 #' @export
+
 
 case_when_fct <- function(..., .default = NULL) {
   # get the arguments from ...
