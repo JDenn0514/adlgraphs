@@ -38,16 +38,39 @@
 #' @export
 
 refactor <- function(f, new_levels, ordered = NA) {
-  if (is.na(ordered)) {
-    # if ordered = NA
 
-    # make
+  # get the argument name
+  f_lab <- deparse(substitute(f))
+
+  # convert character vector to
+  if (is.character(f)) {
+    # if f is a character vector make it a factor
+    f <- factor(f)
+  } else if (is.factor(f)) {
+    # if it is factor just leave it
+    f
+  } else {
+    # if it is not character vector or factor return an error
+    cli::cli_abort(
+      "{.arg {f_lab}} must be a factor or character vector, not {.obj_type_friendly {f}}.",
+    )
+  }
+
+  if (is.na(ordered)) {
+    # if ordered = NA, make it ordered or not based on the original factor
     ordered <- is.ordered(f)
   }
 
+  # make the new factor
   new_f <- factor(f, levels = new_levels, exclude = NULL, ordered = ordered)
-  attributes(new_f) <- utils::modifyList(attributes(f), attributes(new_f))
+
+  # update the attributes in f
+  # this function uses the attributes from new_f and keeps the ones in f that
+  # are not in new_f
+  attributes(new_f) <- utils::modifyList(as.list(attributes(f)), attributes(new_f))
+  # return the vector
   new_f
+
 }
 
 
