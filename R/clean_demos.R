@@ -9,64 +9,82 @@
 #'   \code{\link[ggplot2]{ggplot}} function.
 #'
 #' @export
+#'
+
+
 
 clean_demos <- function(df) {
 
-  if (c("race_1", "race_2", "race_3", "race_4", "race_5", "race_6") %in% colnames(df) ) {
+  if ("race_1" %in% colnames(df)) {
 
-    df <- df %>%
-      mutate(
+    df <- clean_race(df, "race_1")
 
-      )
+  }
 
+  if ("race_2" %in% colnames(df)) {
+
+    df <- clean_race(df, "race_2")
+
+  }
+
+  if ("race_3" %in% colnames(df)) {
+
+    df <- clean_race(df, "race_3")
+
+  }
+
+  if ("race_4" %in% colnames(df)) {
+
+    df <- clean_race(df, "race_4")
+
+  }
+
+  if ("race_5" %in% colnames(df)) {
+
+    df <- clean_race(df, "race_5")
+
+  }
+
+  if ("race_6" %in% colnames(df)) {
+
+    df <- clean_race(df, "race_6")
+
+  }
+
+  if ("asian_b" %in% colnames(df) && "hawaiian_b" %in% colnames(df)) {
     df <- df %>%
       dplyr::mutate(
-        ### Demographics
+        aapi_b = dplyr::case_when(
+          asian_b == 1 | hawaiian_b == 1 ~ 1,
+          .default = 0
+        )
+      )
+  }
 
-        ## race
-        # binaries
-        white_b = dplyr::case_match(
-          race_1,
-          1 ~ 1,
-          .default = 0
-        ),
-        black_b = dplyr::case_match(
-          race_2,
-          1 ~ 1,
-          .default = 0
-        ),
-        asian_b = dplyr::case_match(
-          race_3,
-          1 ~ 1,
-          .default = 0
-        ),
-        native_b = dplyr::case_match(
-          race_4,
-          1 ~ 1,
-          .default = 0
-        ),
-        hawaiian_b = dplyr::case_match(
-          race_5,
-          1 ~ 1,
-          .default = 0
-        ),
-        other_b = dplyr::case_match(
-          race_6,
-          1 ~ 1,
-          .default = 0
-        ),
+  if ("hispanic" %in% colnames(df)) {
+    df <- df %>%
+      dplyr::mutate(
         hispanic_b = dplyr::case_match(
           hispanic,
           1 ~ 1,
           .default = 0
-        ),
-        aapi_b = dplyr::case_when(
-          race_3 == 1 | race_5 == 1 ~ 1,
-          .default = 0
-        ),
+        )
+      )
+  }
+
+  if (
+    "white_b" %in% colnames(df) &&
+    "black_b" %in% colnames(df) &&
+    "aapi_b" %in% colnames(df) &&
+    "native_b" %in% colnames(df) &&
+    "other_b" %in% colnames(df)
+  ) {
+
+    df <- df %>%
+      dplyr::mutate(
         # get people of multiple races
         race_mult_n = white_b + black_b + aapi_b + native_b + other_b,
-        # Create the racial groups
+        # create the racial gropus
         race_f = adlgraphs::case_when_fct(
           race_mult_n > 1 | other_b == 1 | native_b == 1 ~ "Multi/Other",
           hispanic_b == 1 ~ "Hispanic",
@@ -75,8 +93,9 @@ clean_demos <- function(df) {
           white_b == 1 ~ "White"
         ),
         # reorder the levels
-        race_f = forcats::fct_relevel(race_f, "White", "Black", "Hispanic", "AAPI", "Multi/Other"),
-      )
+        race_f = refactor(race_f, c("White", "Black", "Hispanic", "AAPI", "Multi/Other")),
+      ) %>%
+      set_variable_labels(race_f = "Race/Ethnicity")
 
   }
 
@@ -93,6 +112,10 @@ clean_demos <- function(df) {
           1 ~ "A man",
           2 ~ "A woman"
         )
+      ) %>%
+      labelled::set_variable_labels(
+        gender_f2     = "Gender",
+        gender_f3     = "Gender"
       )
   }
 
@@ -108,6 +131,10 @@ clean_demos <- function(df) {
           edu < 4 ~ "No College Degree",
           edu > 3 ~ "At Least a Bachelor's Degree"
         )
+      ) %>%
+      labelled::set_variable_labels(
+        edu_f = "Highest Education Level",
+        edu_f2 = "College Graduate"
       )
 
   }
@@ -115,8 +142,6 @@ clean_demos <- function(df) {
   if ("income" %in% colnames(df)) {
     df <- df %>%
       dplyr::mutate(
-
-        ## Income
         # making income a nine group variable
         income_n9 = dplyr::case_match(
           income,
@@ -142,6 +167,10 @@ clean_demos <- function(df) {
           income == 11 ~ "$100,000 to $149,999",
           income == 12 ~ "$150,000 or more"
         )
+      ) %>%
+      labelled::set_variable_labels(
+        income_f9 = "Income",
+        income_n9 = "Income"
       )
   }
 
@@ -173,6 +202,12 @@ clean_demos <- function(df) {
           age_n %in% c(44:59) ~ "Gen X",
           age_n > 59 ~ "Baby Boomers/ Silent Generation"
         )
+      ) %>%
+      labelled::set_variable_labels(
+        age_n = "Age",
+        age_f6 = "Age Cohorts",
+        age_f4 = "Age Cohorts",
+        gens_f = "Age Cohort/Generation"
       )
   }
 
@@ -188,7 +223,12 @@ clean_demos <- function(df) {
           ideology == 3 ~ "Moderate",
           ideology %in% c(4, 5) ~ "Conservative"
         )
+      ) %>%
+      labelled::set_variable_labels(
+        ideo_f = "Political Ideology",
+        ideo_f3 = "Political Ideology"
       )
+
   }
 
   if ("partyid8" %in% colnames(df)) {
@@ -202,7 +242,12 @@ clean_demos <- function(df) {
           partyid8 %in% c(4,8) ~ "Independent",
           partyid8 %in% c(5:7) ~ "Republican",
         )
+      ) %>%
+      labelled::set_variable_labels(
+        pid_f8 = "Political Partisanship",
+        pid_f3 = "Political Partisanship"
       )
+
   }
 
   if ("partyid7" %in% colnames(df)) {
@@ -216,6 +261,10 @@ clean_demos <- function(df) {
           partyid7 %in% c(4) ~ "Independent",
           partyid7 %in% c(5:7) ~ "Republican",
         )
+      ) %>%
+      labelled::set_variable_labels(
+        pid_f7 = "Political Partisanship",
+        pid_f3 = "Political Partisanship"
       )
 
   }
@@ -231,10 +280,14 @@ clean_demos <- function(df) {
           c(1:2) ~ "Yes",
           c(3:4) ~ "No"
         )
+      ) %>%
+      labelled::set_variable_labels(
+        progressive_f = "Politically Progressive",
+        progressive_f2 = "Politically Progressive"
       )
   }
 
-  if (c("religpew", "born_again") %in% colnames(df)) {
+  if ("religpew"  %in% colnames(df) && "born_again" %in% colnames(df)) {
     df <- df %>%
       dplyr::mutate(
         ## Religion
@@ -252,9 +305,25 @@ clean_demos <- function(df) {
           religpew %in% c(3:4, 7:10) ~ "Other Faith",
           .default = paste(religpew_evan_f)
         ),
+        reltrad_f = refactor(
+          reltrad_f,
+          c(
+            "Non-Evangelical Protestant",
+            "Evangelical Protestant",
+            "Catholic",
+            "No Religion",
+            "Jewish",
+            "Other Faith",
+            "Something Else (Please specify)"
+          )
+        ),
 
         # make a dichotomous born_again variable
         born_again_f2 = haven::as_factor(born_again),
+      ) %>%
+      set_variable_labels(
+        reltrad_f = "Religious Identity",
+        born_again = "Evangelical/Born Again Christian",
       )
 
   }
@@ -266,4 +335,3 @@ clean_demos <- function(df) {
   }
 
 }
-

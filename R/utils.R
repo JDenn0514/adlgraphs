@@ -1,6 +1,39 @@
 
 # my own functions --------------------------------------------------------
 
+# clean the racial groups
+clean_race <- function(df, x) {
+
+  # get the label
+  label <- attributes(df[[x]])$labels
+  # get the value label so we
+  label <- stats::setNames(names(label), label)
+
+  if (label == "White") {
+    name <- "white_b"
+  } else if (label == "Black or African-American") {
+    name <- "black_b"
+  } else if (label == "Asian or Asian-American") {
+    name <- "asian_b"
+  } else if (label == "American Indian or Alaska Native") {
+    name <- "native_b"
+  } else if (label == "Native Hawaiian or other Pacific Islander") {
+    name <- "hawaiian_b"
+  } else if (label == "Some other race or origin") {
+    name <- "other_b"
+  }
+
+  df %>%
+    dplyr::mutate(
+      !!name := dplyr::case_match(
+        .data[[x]],
+        1 ~ 1,
+        .default = 0
+      )
+    )
+
+}
+
 
 # make the
 accept_string_or_sym <- function(x) {
