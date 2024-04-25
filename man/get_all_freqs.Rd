@@ -4,7 +4,7 @@
 \alias{get_all_freqs}
 \title{Export frequencies for a set of variables to a word doc.}
 \usage{
-get_all_freqs(df, x, group, wt, file_name)
+get_all_freqs(df, x, group, wt, show_genpop, file_name)
 }
 \arguments{
 \item{df}{An object of type data.frame or tibble. If piping the df into the
@@ -16,6 +16,9 @@ function, this is not required.}
 
 \item{wt}{A character string. Add if you have a weighting variable and want
 to get weighted frequencies}
+
+\item{show_genpop}{Logical. Should there be a column showing the frequencies
+for the general population}
 
 \item{file_name}{A character string specifying the name of the file to be
 created with the frequencies and where the file will be located. File must

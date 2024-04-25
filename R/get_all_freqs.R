@@ -9,12 +9,14 @@
 #' @param group A character string. The first grouping variable.
 #' @param wt A character string. Add if you have a weighting variable and want
 #'   to get weighted frequencies
+#' @param show_genpop Logical. Should there be a column showing the frequencies
+#'   for the general population
 #' @param file_name A character string specifying the name of the file to be
 #'   created with the frequencies and where the file will be located. File must
 #'   end in .docx
 #'
 #' @export
-get_all_freqs <- function(df, x, group, wt, file_name) {
+get_all_freqs <- function(df, x, group, wt, show_genpop, file_name) {
 
   if (missing(wt)) {
 
@@ -25,7 +27,7 @@ get_all_freqs <- function(df, x, group, wt, file_name) {
       # create a list of the dataframes
       df_list <- rep(list(df), leng)
       # get the frequencies
-      freqs <- purrr::pmap(list(df = df_list, x = x), get_freq_table)
+      freqs <- purrr::pmap(list(df = df_list, x = x, show_genpop = show_genpop), get_freq_table)
 
     } else {
 
@@ -36,7 +38,7 @@ get_all_freqs <- function(df, x, group, wt, file_name) {
       # create a vector of group
       group_list <- replicate(leng, group)
       # get the frequencies
-      freqs <- purrr::pmap(list(df = df_list, x = x, group = group_list), get_freq_table)
+      freqs <- purrr::pmap(list(df = df_list, x = x, group = group_list, show_genpop = show_genpop), get_freq_table)
 
     }
 
@@ -51,7 +53,7 @@ get_all_freqs <- function(df, x, group, wt, file_name) {
       # create a vector of the weights
       wt_list <- replicate(leng, wt)
       # get the frequencies
-      freqs <- purrr::pmap(list(df = df_list, x = x, wt = wt_list), get_freq_table)
+      freqs <- purrr::pmap(list(df = df_list, x = x, wt = wt_list, show_genpop = show_genpop), get_freq_table)
 
     } else {
 
@@ -64,7 +66,7 @@ get_all_freqs <- function(df, x, group, wt, file_name) {
       # create a vector of the list
       wt_list <- replicate(leng, wt)
       # get the frequencies
-      freqs <- purrr::pmap(list(df = df_list, x = x, group = group_list, wt = wt_list), get_freq_table)
+      freqs <- purrr::pmap(list(df = df_list, x = x, group = group_list, wt = wt_list, show_genpop = show_genpop), get_freq_table)
 
     }
 
