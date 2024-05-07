@@ -176,6 +176,17 @@ make_dicho <- function(x, flip_levels = FALSE) {
     )
   }
 
+  # get the original levels of the variable (this prevents the order from flipping)
+  lvl_x <- levels(x)
+
+  # get the binary levels
+  lvl_x_f2 <- dplyr::if_else(
+    stringr::str_detect(lvl_x, "\\s"),
+    stringr::str_replace(lvl_x, "\\w+\\s", ""),
+    lvl_x
+  ) %>%
+    stringr::str_to_title() %>%
+    unique()
 
   # remove the first word if there are multiple words (using base to )
   x <- dplyr::if_else(
@@ -188,7 +199,7 @@ make_dicho <- function(x, flip_levels = FALSE) {
   if (flip_levels == TRUE) {
 
     # Get the second level of the new vector
-    lab <- unique(x)[2]
+    lab <- unique(lvl_x_f2)[2]
 
     # change the factor levels
     forcats::fct_relevel(x, lab) %>%
@@ -203,16 +214,19 @@ make_dicho <- function(x, flip_levels = FALSE) {
   } else {
 
     # Get the first levels of the new vector
-    lab <- unique(x)[1]
+    lab <- unique(lvl_x_f2)[1]
 
     # add new attributes
-    forcats::as_factor(x) %>% structure(
-      # indicate that the original variable was converted to a dichotomous factor
-      transformation = glue::glue("Converting '{x_lab}' to a dichotomous factor with '{lab}' as the reference level"),
-      # add the original variable label
-      label = variable_label
-    )
+    forcats::fct_relevel(x, lab) %>%
+      structure(
+        # indicate that the original variable was converted to a dichotomous factor
+        transformation = glue::glue("Converting '{x_lab}' to a dichotomous factor with '{lab}' as the reference level"),
+        # add the original variable label
+        label = variable_label
+      )
 
   }
 }
+
+
 
