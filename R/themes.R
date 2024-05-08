@@ -315,7 +315,7 @@ theme_default <- function(
       hjust = 0,
       inherit.blank = TRUE
     ),
-    legend.title.align                = NULL,
+    legend.title.align               = NULL,
     legend.position                  = legend_position,
     legend.direction                 = NULL,
     legend.justification             = "center",
@@ -397,7 +397,7 @@ theme_default <- function(
     strip.text.y.right               = NULL,
     strip.switch.pad.grid            = unit(half_line / 2, "pt"),
     strip.switch.pad.wrap            = unit(half_line / 2, "pt"),
-    complete = FALSE,
+    complete = TRUE,
     validate = TRUE
   )
 }
