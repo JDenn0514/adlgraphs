@@ -247,13 +247,14 @@ theme_default <- function(
     axis.title.x                     = element_text(
       margin = margin(t = half_line),
       vjust = 1,
+      angle = 90,
       inherit.blank = TRUE
     ),
     axis.title.x.top                 = NULL,
     axis.title.x.bottom              = NULL,
     axis.title.y                     = element_text(
       margin = margin(r = half_line),
-      vjust = 1,
+      hjust = 1,
       inherit.blank = TRUE
     ),
     axis.title.y.left                = NULL,
