@@ -247,7 +247,6 @@ theme_default <- function(
     axis.title.x                     = element_text(
       margin = margin(t = half_line),
       vjust = 1,
-      inherit.blank = TRUE
     ),
     axis.title.x.top                 = NULL,
     axis.title.x.bottom              = NULL,
@@ -255,7 +254,6 @@ theme_default <- function(
       margin = margin(r = half_line),
       vjust = 1,
       angle = 90,
-      inherit.blank = TRUE
     ),
     axis.title.y.left                = NULL,
     axis.title.y.right               = NULL,
