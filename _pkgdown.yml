@@ -5,7 +5,7 @@ template:
     font_scale: 1.0
     base_font: {google: "Roboto"}
     code_font: {google: "Overpass Mono"}
-    heading_font: {google: "Titillium Web"}
+    heading_font: {google: "Roboto"}
     bg: "#fcfbf9"         # lighten springwood background
     fg: "#2c2e35"         # contrast ratio: 15.76 for text
     primary: "#093c71"    # navy blue link text
@@ -59,6 +59,7 @@ reference:
     - get_freqs
     - get_freq_table
     - get_all_freqs
+    - prettytable
 - title: Miscellaneous functions
   contents:
     - make_df_oxy

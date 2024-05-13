@@ -162,7 +162,7 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
         df_freq <- df_freq %>%
           dplyr::mutate(
             pct = make_percent(pct),
-            pct_lab = glue("{pct} (n = {n})"),
+            pct_lab = glue::glue("{pct} (n = {n})"),
           ) %>%
           dplyr::select(-c(pct, n)) %>%
           tidyr::pivot_wider(
@@ -171,20 +171,11 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
           ) %>%
           dplyr::arrange(.data[[x]])
 
-        return(df_freq)
-      } else{
 
-        # give df_freq as the output
-        return(df_freq)
+
       }
 
 
-
-    } else {
-      # if group is missing
-
-      # return the original df_freq as the output
-      return(df_freq)
 
     }
 
@@ -226,7 +217,7 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
           dplyr::mutate(
             n = round(n, 1),
             pct = make_percent(pct),
-            pct_lab = glue("{pct} (n = {n})"),
+            pct_lab = glue::glue("{pct} (n = {n})"),
           ) %>%
           dplyr::select(-c(pct, n)) %>%
           tidyr::pivot_wider(
@@ -235,21 +226,15 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
           ) %>%
           dplyr::arrange(.data[[x]])
 
-        return(df_freq)
-      } else {
-
-        return(df_freq)
-
       }
-
-    } else {
-
-        # give df_freq as the output
-        return(df_freq)
 
     }
 
   }
+
+  class_names <- class(df_freq)
+
+  df_freq %>% structure(class = c("adlgraphs_freqs", class_names))
 
 }
 

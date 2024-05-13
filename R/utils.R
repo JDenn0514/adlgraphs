@@ -66,7 +66,7 @@ get_unique_labels <- function(x) {
     # convert to a factor
     group_cols <- haven::as_factor(x)
     # get the unique values
-    group_cols <- fct_unique(group_cols)
+    group_cols <- forcats::fct_unique(group_cols)
 
 
   } else if (is.numeric(x) && !is.null(sjlabelled::get_labels(x))) {
@@ -75,13 +75,13 @@ get_unique_labels <- function(x) {
     # convert to a factor
     group_cols <- sjlabelled::as_label(x)
     # get the unique values
-    group_cols <- fct_unique(group_cols)
+    group_cols <- forcats::fct_unique(group_cols)
 
   } else if (is.character(x) || is.factor(x)) {
     # if group is of class character or factor return x
 
     # get the unique values
-    group_cols <- fct_unique(x)
+    group_cols <- forcats::fct_unique(x)
 
   } else {
     # if group is anything else (ie numeric)
@@ -89,7 +89,7 @@ get_unique_labels <- function(x) {
     # force to a factor
     group_cols <- as.factor(x)
     # get unique values
-    group_cols <- fct_unique(group_cols)
+    group_cols <- forcats::fct_unique(group_cols)
 
   }
 
