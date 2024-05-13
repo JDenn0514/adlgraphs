@@ -2,7 +2,7 @@
 
 
 # categorical colors
-primary <-  color("#00a0e0")
+primary <-  color("#14A2FC")
 
 secondary <- color("#DBDCDD")
 
@@ -15,7 +15,7 @@ pid3 <- color(c("#14A2FC",
 
 
 
-categorical <- color(c("#00a0e0",
+categorical <- color(c("#14A2FC",
                        "#DBDCDD",
                        "#a1d55d",
                        "#0A1A50",
@@ -38,8 +38,7 @@ likert_6 = color(c("#0A1A50",
                    "#14A2FC",
                    "#FFFFFF",
                    "#DBDCDD",
-                   "#595b60",
-                   "#2c2e35"))
+                   "#595b60"))
 
 # sequential
 bluescale <- color(c("#0A1A50",
