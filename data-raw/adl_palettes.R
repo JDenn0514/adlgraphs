@@ -14,7 +14,6 @@ pid3 <- color(c("#14A2FC",
 
 
 
-
 categorical <- color(c("#14A2FC",
                        "#DBDCDD",
                        "#a1d55d",
@@ -40,7 +39,7 @@ likert_6 = color(c("#0A1A50",
 
 # sequential
 bluescale <- color(c("#0A1A50",
-                     "#FFFFFF"))
+                     "#0A1A501A"))
 
 grayscale <- color(c("#2c2e35",
                      "#FFFFFF"))
