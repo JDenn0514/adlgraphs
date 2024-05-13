@@ -24,8 +24,6 @@ categorical <- color(c("#14A2FC",
                        "#FFE500",
                        "#2c2e35"))
 
-scales::alpha("#14A2FC", 0.8)
-
 
 # diverging
 likert_4 = color(c("#0A1A50",

@@ -95,7 +95,7 @@ clean_demos <- function(df) {
         # reorder the levels
         race_f = refactor(race_f, c("White", "Black", "Hispanic", "AAPI", "Multi/Other")),
       ) %>%
-      set_variable_labels(race_f = "Race/Ethnicity")
+      labelled::set_variable_labels(race_f = "Race/Ethnicity")
 
   }
 
@@ -321,7 +321,7 @@ clean_demos <- function(df) {
         # make a dichotomous born_again variable
         born_again_f2 = haven::as_factor(born_again),
       ) %>%
-      set_variable_labels(
+      labelled::set_variable_labels(
         reltrad_f = "Religious Identity",
         born_again = "Evangelical/Born Again Christian",
       )

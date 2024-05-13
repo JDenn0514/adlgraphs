@@ -38,7 +38,7 @@ prettytable.adlgraphs_freqs <- function(x) {
     x_lab <- colnames(x)[1]
 
     # get the label of the main variable
-    x_variable_label = get_var_label(x[1], x_lab)
+    x_variable_label <- get_var_label(x[1], x_lab)
 
     x %>%
       dplyr::mutate(
