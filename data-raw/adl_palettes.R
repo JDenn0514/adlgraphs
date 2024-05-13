@@ -38,9 +38,9 @@ likert_6 = color(c("#0A1A50",
                    "#595b60"))
 
 # sequential
-bluescale <- c("#0A1A50", "#DBDCDD")
+bluescale <- color(c("#0A1A50", "#e7e8ee"))
 
-grayscale <- c("#2c2e35FF", "#DBDCDD")
+grayscale <- color(c("#2c2e35FF", "#e1e3e4"))
 
 
 
@@ -74,4 +74,3 @@ adl_palettes <-
 rm(primary, secondary, tertiary, pid3, categorical, likert_4, likert_6, bluescale, grayscale)
 
 usethis::use_data(adl_palettes, overwrite = TRUE)
-adl_palettes$bluescale
