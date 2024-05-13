@@ -38,9 +38,9 @@ likert_6 = color(c("#0A1A50",
                    "#595b60"))
 
 # sequential
-bluescale <- c("#0A1A50", "#0A1A500D")
+bluescale <- c("#0A1A50", "#DBDCDD")
 
-grayscale <- c("#2c2e35FF", "#2C2E350D")
+grayscale <- c("#2c2e35FF", "#DBDCDD")
 
 
 
