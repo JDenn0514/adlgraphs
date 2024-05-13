@@ -16,19 +16,20 @@ pid3 <- color(c("#14A2FC",
 
 categorical <- color(c("#14A2FC",
                        "#DBDCDD",
-                       "#a1d55d",
+                       "#69DA78",
                        "#0A1A50",
                        "#E84C4C",
                        "#8099FF",
                        "#FFE500",
-                       "#2c2e35"))
+                       "#FFA828"))
+
 
 
 # diverging
 likert_4 = color(c("#0A1A50",
-                    "#14A2FC",
-                    "#DBDCDD",
-                    "#595b60"))
+                   "#14A2FC",
+                   "#DBDCDD",
+                   "#595b60"))
 
 likert_6 = color(c("#0A1A50",
                    "#005B98",
@@ -38,9 +39,11 @@ likert_6 = color(c("#0A1A50",
                    "#595b60"))
 
 # sequential
-bluescale <- color(c("#0A1A50", "#e7e8ee"))
+bluescale <- color(c("#0A1A50",
+                     "#E7E8EE"))
 
-grayscale <- color(c("#2c2e35FF", "#e1e3e4"))
+grayscale <- color(c("#2c2e35FF",
+                     "#e1e3e4"))
 
 
 
