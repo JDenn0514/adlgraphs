@@ -2,9 +2,7 @@
 % Please edit documentation in R/prettytable.R
 \name{prettytable}
 \alias{prettytable}
-\title{create a new generic function called "prettytable" that when used in conjunction
-with \code{get_freqs} or \code{get_means} will make a pretty table equivalent to that of
-\code{get_freq_table}. Here is a possible workflow example:}
+\title{Make pretty HTML tables}
 \usage{
 prettytable(x)
 }
@@ -12,23 +10,6 @@ prettytable(x)
 \item{x}{An object to turn into a pretty table.}
 }
 \description{
-pol_pos \%>\%
-get_freqs(power, race_f, wts) \%>\%
-prettytable()
-}
-\details{
-When a function calling UseMethod("fun") is applied to an object with class
-attribute \code{c("first", "second")}, the system searches for a function called
-\code{fun.first} and, if it finds it, applies it to the object. If no such function
-is found a function called \code{fun.second} is tried. If no class name produces a
-suitable function, the function fun.default is used, if it exists, or an error results.
-
-In my case, I want the generic to be "prettytable" and the classes will be
-\code{adlgraphs.freqs} or \code{adlgraphs.means}. As a result, I need to create functions called
-\code{prettytable.freqs} or \code{prettytable.means}.
-
-Make pretty HTML tables
-
 Takes a data frame object and makes it into a pretty table. This is designed
 to work within the \code{adlgraphs} package but it should work with most objects
 of class \code{tbl_df}, \code{tbl}, or \code{data.frame}. Very important note, at the moment,
