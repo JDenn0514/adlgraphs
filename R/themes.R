@@ -6,9 +6,9 @@
 #' in that all of the default ggplot2 themes are built off
 #' \code{\link[ggplot2]{theme_gray}}.
 #'
-#' @param base_size Base font size, given in pts. Also controls
-#'   the spacing in the graph.
-#' @param base_family Base font family. Default is Lato.
+#' @param base_size Base font size, given in pts. Also controls the spacing in
+#'   the graph.
+#' @param base_family Base font family. Default is Roboto
 #' @param base_line_size Base size for line elements.
 #' @param base_rect_size Base size for rect elements.
 #' @param legend_position The position of the legend. Options are: "left",
@@ -33,7 +33,7 @@
 #' @param grid_y_only Logical. Determines if only y-axis grid lines (horizontal
 #'   lines) should appear. If `FALSE`, the default, all grid lines appear. If
 #'   `TRUE`, only the y-axis grid lines appear and the  x-axis grid lines will
-#'   disppear.
+#'   disappear.
 #' @param grid_major Logical. Determines if the major grid lines should appear.
 #'   If `TRUE`, the default, the major grid lines will appear. If `FALSE`, the
 #'   major grid lines will disappear.
@@ -45,14 +45,24 @@
 #'   If `FALSE`, the major x-axis grid lines will disappear.
 #' @param grid_major_y Logical. Determines if the major y-axis grid lines will
 #'   appear. If `TRUE`, the default, the major y-axis grid lines will appear.
-#'   If `FALSE`, the major t-axis grid lines will disappear.
+#'   If `FALSE`, the major y-axis grid lines will disappear.
 #' @param grid_minor_x Logical. Determines if the minor x-axis grid lines will
 #'   appear. If `TRUE`, the default, the minor x-axis grid lines will appear.
 #'   If `FALSE`, the minor x-axis grid lines will disappear.
 #' @param grid_minor_y Logical. Determines if the minor y-axis grid lines will
 #'   appear. If `TRUE`, the default, the minor y-axis grid lines will appear.
-#'   If `FALSE`, the minor t-axis grid lines will disappear.
-#'
+#'   If `FALSE`, the minor y-axis grid lines will disappear.
+#' @param facet_title_bold Logical. Determines if the facet labels should be
+#'   bold or not. Default is `FALSE`.
+#' @param facet_title_size Size of the facet titles, specified in pts. Default
+#'   is `base_size * 0.8`
+#' @param facet_title_margin_top The margin above
+#' @param facet_title_margin_bottom The margin beneath the facet title,
+#'   specified in pts,
+#' @param panel_spacing_x Horizontal spacing between the different panels when
+#'   faceting a graph, given in pts. Default is 0.
+#' @param panel_spacing_y Vertical spacing between the different panels when
+#'   faceting a graph, given in pts. Default is 0.
 #'
 #'
 #' @export
@@ -66,19 +76,23 @@ theme_default <- function(
   # control the base font size, this also determines spacing
   base_size = 12,
   # control the base font
-  base_family = "L",
+  base_family = "R",
   # control the base line_width
   base_line_size = base_size / 24,
   # control the base rect_width
   base_rect_size = base_size / 24,
+  base_lineheight = 1.1,
+
   # determine where the legend is located
   legend_position = "right",
+
   # determine if the axis labels are shown (controls both axes)
   axis_text = TRUE,
   # determine if the x-axis labels are shown, only controls x-axis
   axis_text_x = TRUE,
   # determine if the y-axis labels are shown, only controls y-axis
   axis_text_y = TRUE,
+
   # determine if grid lines should be shown (controls major and minor, x and y grid lines)
   grid = TRUE,
   # only have x-axis grid lines
@@ -96,7 +110,19 @@ theme_default <- function(
   # determine if minor x axis grid lines are shown (vertical bars)
   grid_minor_x = TRUE,
   # determine if minor y axis grid lines are shown (horizontal bars)
-  grid_minor_y = TRUE
+  grid_minor_y = TRUE,
+
+  # determine if the facet titles should be bolded
+  facet_title_bold = FALSE,
+  # set the size of the facet titles
+  facet_title_size = base_size * 0.8,
+  # set the margins/spacing around the facet titles
+  facet_title_margin = margin(0.8 * half_line, 0.8 * half_line, 0.8 * half_line, 0.8 * half_line),
+
+  # adjust horizontal spacing between facet panels
+  panel_spacing_x = 0,
+  # adjust vertical spacing between facet panels
+  panel_spacing_y = 0
 ) {
 
   half_line <- base_size / 2
@@ -215,6 +241,25 @@ theme_default <- function(
     )
   }
 
+  # set the facet title face
+  if (isTRUE(facet_title_bold)) {
+    facet_title_bold <- "bold"
+  } else {
+    facet_title_bold <- "plain"
+  }
+
+  # set the horizontal panel spacing
+  if (!is.null(panel_spacing_x)) {
+    panel_spacing_x <- unit(panel_spacing_x, "pt")
+  }
+
+  # set the vertical panel spacing
+  if (!is.null(panel_spacing_y)) {
+    panel_spacing_y <- unit(panel_spacing_y, "pt")
+  }
+
+
+
 
   theme(
     line                             = element_line(
@@ -234,7 +279,7 @@ theme_default <- function(
       face = "plain",
       colour = "black",
       size = base_size,
-      lineheight = 1.1,
+      lineheight = base_lineheight,
       hjust = 0.5,
       vjust = 0.5,
       angle = 0,
@@ -306,7 +351,7 @@ theme_default <- function(
     legend.key.height                = NULL,
     legend.key.width                 = NULL,
     legend.text                      = element_text(
-      size = ggplot2::rel(0.8),
+      size = base_size * 0.8,
       inherit.blank = TRUE
     ),
     legend.text.align                = NULL,
@@ -326,8 +371,8 @@ theme_default <- function(
     panel.background                 = element_rect(fill = "white", colour = NA),
     panel.border                     = element_blank(),
     panel.spacing                    = unit(0, "pt"),
-    panel.spacing.x                  = NULL,
-    panel.spacing.y                  = NULL,
+    panel.spacing.x                  = panel_spacing_x,
+    panel.spacing.y                  = panel_spacing_y,
     panel.grid                       = NULL,
     panel.grid.major                 = grid_major_line,
     panel.grid.minor                 = grid_minor_line,
@@ -339,7 +384,6 @@ theme_default <- function(
     plot.background                  = element_rect(colour = "white"),
     plot.title                       = element_text(
       size = base_size * 1.2,
-      family = "TW",
       face = "bold",
       hjust = 0.5,
       vjust = 1,
@@ -348,7 +392,6 @@ theme_default <- function(
     ),
     plot.title.position              = "plot",
     plot.subtitle                    = element_text(
-      family = "TW",
       hjust = 0,
       vjust = 1,
       margin = margin(b = base_size * 1.2),
@@ -370,7 +413,7 @@ theme_default <- function(
     ),
     plot.tag.position                = "topleft",
     plot.tag.location                = NULL,
-    plot.margin                      = margin(base_size, base_size, base_size, base_size),
+    plot.margin                      = margin(half_line, half_line, half_line, half_line),
     strip.background                 = element_blank(),
     strip.background.x               = NULL,
     strip.background.y               = NULL,
@@ -378,9 +421,11 @@ theme_default <- function(
     strip.placement                  = "inside",
     strip.text                       = element_text(
       colour = "grey10",
-      size = base_size * 0.8,
+      size = facet_title_size,
       margin = margin(0.8 * half_line, 0.8 * half_line, 0.8 * half_line, 0.8 * half_line),
-      inherit.blank = TRUE
+      inherit.blank = TRUE,
+      hjust = 0.5,
+      face = facet_label_bold
     ),
     strip.text.x                     = NULL,
     strip.text.x.bottom              = NULL,
@@ -420,6 +465,7 @@ theme_coef <- function(
   base_size = 12,
   # determine if grid lines should be shown (controls major and minor, x and y grid lines)
   grid_x_only = TRUE,
+  facet_strip_title = 12,
   ...
 ) {
 
@@ -428,16 +474,13 @@ theme_coef <- function(
   theme_default(
     base_size = base_size,
     grid_x_only = grid_x_only,
+    facet_strip_title = facet_strip_title,
     ...
   ) +
     ggplot2::theme(
       strip.text = element_text(
-        face = "bold",
-        size = 12,
-        hjust = 0.5,
         margin = margin(t = 10, b = 5)
       ),
-      panel.spacing.x = unit(2, "lines"),
       axis.title.x = element_text(margin = margin(t = base_size)),
     )
 }
@@ -479,13 +522,7 @@ theme_h_stack <- function(
     legend_position = legend_position,
     axis_text = axis_text,
     ...
-  ) +
-    ggplot2::theme(
-      # adjust space margin around legend labels
-      legend.text = element_text(margin = margin(r = 0, l = - half_line)),
-      # adjust space around entire legend
-      legend.margin = margin(b = 0)
-    )
+  )
 }
 
 
