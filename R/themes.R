@@ -55,10 +55,15 @@
 #' @param facet_title_bold Logical. Determines if the facet labels should be
 #'   bold or not. Default is `FALSE`.
 #' @param facet_title_size Size of the facet titles, specified in pts. Default
-#'   is `base_size * 0.8`
-#' @param facet_title_margin_top The margin above
+#'   is `base_size * 0.8`.
+#' @param facet_title_margin_top The margin above the facet title, specified in
+#'   pts. Default is `0.8 * half_line`.
 #' @param facet_title_margin_bottom The margin beneath the facet title,
-#'   specified in pts,
+#'   specified in pts. Default is `0.8 * half_line`.
+#' @param facet_title_margin_right The margin to the right of the facet title,
+#'   specified in pts. Default is `0.8 * half_line`.
+#' @param facet_title_margin_left The margin to the left of the facet title,
+#'   specified in pts. Default is `0.8 * half_line`.
 #' @param panel_spacing_x Horizontal spacing between the different panels when
 #'   faceting a graph, given in pts. Default is 0.
 #' @param panel_spacing_y Vertical spacing between the different panels when
@@ -81,6 +86,7 @@ theme_default <- function(
   base_line_size = base_size / 24,
   # control the base rect_width
   base_rect_size = base_size / 24,
+  # control the spacing between lines
   base_lineheight = 1.1,
 
   # determine where the legend is located
@@ -117,7 +123,10 @@ theme_default <- function(
   # set the size of the facet titles
   facet_title_size = base_size * 0.8,
   # set the margins/spacing around the facet titles
-  facet_title_margin = margin(0.8 * half_line, 0.8 * half_line, 0.8 * half_line, 0.8 * half_line),
+  facet_title_margin_top = 0.8 * half_line,
+  facet_title_margin_bottom = 0.8 * half_line,
+  facet_title_margin_right = 0.8 * half_line,
+  facet_title_margin_left = 0.8 * half_line,
 
   # adjust horizontal spacing between facet panels
   panel_spacing_x = 0,
@@ -258,6 +267,12 @@ theme_default <- function(
     panel_spacing_y <- unit(panel_spacing_y, "pt")
   }
 
+  facet_title_margin <- margin(
+    t = facet_title_margin_top,
+    b = facet_title_margin_bottom,
+    r = facet_title_margin_right,
+    l = facet_title_margin_left
+  )
 
 
 
@@ -422,10 +437,15 @@ theme_default <- function(
     strip.text                       = element_text(
       colour = "grey10",
       size = facet_title_size,
-      margin = margin(0.8 * half_line, 0.8 * half_line, 0.8 * half_line, 0.8 * half_line),
+      margin = margin(
+        t = facet_title_margin_top,
+        b = facet_title_margin_bottom,
+        r = facet_title_margin_right,
+        l = facet_title_margin_left
+      ),
       inherit.blank = TRUE,
       hjust = 0.5,
-      face = facet_label_bold
+      face = facet_title_bold
     ),
     strip.text.x                     = NULL,
     strip.text.x.bottom              = NULL,
