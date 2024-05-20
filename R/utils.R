@@ -261,3 +261,58 @@ split_quantile <- function(x = NULL,
       labels = 1:type,
       include.lowest = TRUE)
 }
+
+
+# Check if all data points are inside bounds. If not, warn and remove them.
+fit_data_to_bounds <- function(bounds, x, w) {
+  is_inside_bounds <- (bounds[1] <= x) & (x <= bounds[2])
+  w_sum <- 1
+  if (!all(is_inside_bounds)) {
+    cli::cli_warn("Some data points are outside of `bounds`. Removing them.")
+    x <- x[is_inside_bounds]
+    w <- w[is_inside_bounds]
+    w_sum <- sum(w)
+    if (w_sum > 0) {
+      w <- w / w_sum
+    }
+  }
+
+  return(list(x = x, w = w, w_sum = w_sum))
+}
+
+# Update density estimation to mitigate boundary effect at known `bounds`:
+# - All x values will lie inside `bounds`.
+# - All y-values will be updated to have total probability of `bounds` be
+#   closer to 1. This is done by reflecting tails outside of `bounds` around
+#   their closest edge. This leads to those tails lie inside of `bounds`
+#   (completely, if they are not wider than `bounds` itself, which is a common
+#   situation) and correct boundary effect of default density estimation.
+#
+# `dens` - output of `stats::density`.
+# `bounds` - two-element vector with left and right known (user supplied)
+#   bounds of x values.
+# `from`, `to` - numbers used as corresponding arguments of `stats::density()`
+#   in case of no boundary correction.
+reflect_density <- function(dens, bounds, from, to) {
+  # No adjustment is needed if no finite bounds are supplied
+  if (all(is.infinite(bounds))) {
+    return(dens)
+  }
+
+  # Estimate linearly with zero tails (crucial to account for infinite bound)
+  f_dens <- stats::approxfun(
+    x = dens$x, y = dens$y, method = "linear", yleft = 0, yright = 0
+  )
+
+  # Create a uniform x-grid inside `bounds`
+  left <- max(from, bounds[1])
+  right <- min(to, bounds[2])
+  out_x <- seq(from = left, to = right, length.out = length(dens$x))
+
+  # Update density estimation by adding reflected tails from outside `bounds`
+  left_reflection <- f_dens(bounds[1] + (bounds[1] - out_x))
+  right_reflection <- f_dens(bounds[2] + (bounds[2] - out_x))
+  out_y <- f_dens(out_x) + left_reflection + right_reflection
+
+  list(x = out_x, y = out_y)
+}

@@ -130,8 +130,6 @@ StatDensityQuant <- ggproto(
   },
 
   setup_params = function(self, data, params) {
-    # determine if the plot is flipped
-    params$flipped_aes <- has_flipped_aes(data, params, main_is_orthogonal = FALSE, main_is_continuous = TRUE)
 
     # determine if there is x
     has_x <- !(is.null(data$x) && is.null(params$x))
@@ -184,7 +182,7 @@ StatDensityQuant <- ggproto(
       # if any of the values in bounds are finite
 
       # get the data within the bounds
-      sample_data <- ggplot2:::fit_data_to_bounds(bounds, data$x, weights)
+      sample_data <- fit_data_to_bounds(bounds, data$x, weights)
 
       # calculate the density
       d <- stats::density(
@@ -197,7 +195,7 @@ StatDensityQuant <- ggproto(
       )
 
       # Update density estimation to mitigate boundary effect at known `bounds`
-      dens <- ggplot2:::reflect_density(
+      dens <- reflect_density(
         dens = d,
         bounds = bounds,
         from = range[1],
