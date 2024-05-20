@@ -57,8 +57,8 @@ stat_density_quant <- function(mapping = NULL, data = NULL,
                                adjust = 1,
                                kernel = "gaussian",
                                n = 512,
-                               bounds = c(-Inf, Inf),
                                na.rm = FALSE,
+                               bounds = c(-Inf, Inf),
                                show.legend = NA,
                                inherit.aes = TRUE,
                                quantile_lines = FALSE,
@@ -93,17 +93,12 @@ stat_density_quant <- function(mapping = NULL, data = NULL,
 
 
 
-StatDensityQuant <- ggplot2::ggproto(
+StatDensityQuant <- ggproto(
   "StatDensityQuant",
   Stat,
   required_aes = "x",
 
-  default_aes = ggplot2::aes(
-    x = ggplot2::after_stat(density),
-    y = ggplot2::after_stat(density),
-    fill = NA,
-    weight = NULL
-  ),
+  default_aes = aes(x = after_stat(density), y = after_stat(density), fill = NA, weight = NULL),
 
   dropped_aes = "weight",
 
@@ -135,6 +130,8 @@ StatDensityQuant <- ggplot2::ggproto(
   },
 
   setup_params = function(self, data, params) {
+    # determine if the plot is flipped
+    params$flipped_aes <- has_flipped_aes(data, params, main_is_orthogonal = FALSE, main_is_continuous = TRUE)
 
     # determine if there is x
     has_x <- !(is.null(data$x) && is.null(params$x))
@@ -187,7 +184,7 @@ StatDensityQuant <- ggplot2::ggproto(
       # if any of the values in bounds are finite
 
       # get the data within the bounds
-      sample_data <- fit_data_to_bounds(bounds, data$x, weights)
+      sample_data <- ggplot2:::fit_data_to_bounds(bounds, data$x, weights)
 
       # calculate the density
       d <- stats::density(
@@ -200,7 +197,7 @@ StatDensityQuant <- ggplot2::ggproto(
       )
 
       # Update density estimation to mitigate boundary effect at known `bounds`
-      dens <- reflect_density(
+      dens <- ggplot2:::reflect_density(
         dens = d,
         bounds = bounds,
         from = range[1],
@@ -315,11 +312,4 @@ StatDensityQuant <- ggplot2::ggproto(
   }
 
 )
-
-
-
-
-
-
-
 
