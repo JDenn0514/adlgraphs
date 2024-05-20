@@ -7,7 +7,7 @@
 #' @importFrom ggplot2 theme element_line element_blank element_text theme_minimal
 #' margin guide_legend geom_errorbar ggplot aes geom_col geom_text geom_label
 #' position_dodge2 position_dodge rel unit waiver element_rect position_stack
-#' facet_wrap vars ggproto FacetWrap
+#' facet_wrap vars ggproto FacetWrap Stat
 #' @import showtext
 #' @importFrom rlang set_names sym := .data caller_arg caller_env
 #' @importFrom sysfonts font_add_google

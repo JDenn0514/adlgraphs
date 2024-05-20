@@ -26,6 +26,7 @@ reference:
   contents:
     - adl_bar_plots
     - adl_coef_plots
+    - stat_density_quant
 - title: Themes
   desc: Full blown `{ggplot2}` themes that affect almost all visual aspects of a
     graph. These are similar to `{ggplot2}` themes like
@@ -44,6 +45,7 @@ reference:
   contents:
     - case_match_fct
     - case_when_fct
+    - make_quarts
     - make_dicho
     - make_binary
     - num_rev

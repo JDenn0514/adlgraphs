@@ -245,7 +245,19 @@ FacetCol <- ggplot2::ggproto('FacetCol', ggplot2::FacetWrap,
 )
 
 
+# create quantiles
+split_quantile <- function(x = NULL,
+                           type = NULL) {
+  if(length(x) < 2) {
+    stop("The `x` argument provided to quantile split must be non-null and ",
+         "length at least 2.")
+  }
+  if(!is.numeric(type)) {
+    stop("The `type` argument provided to quantile split must be non-null and ",
+         "numeric.")
+  }
 
-
-
-
+  cut(x, breaks = quantile(x, probs = seq(0, 1, length.out = type + 1)),
+      labels = 1:type,
+      include.lowest = TRUE)
+}

@@ -6,9 +6,10 @@
 \usage{
 theme_default(
   base_size = 12,
-  base_family = "L",
+  base_family = "R",
   base_line_size = base_size/24,
   base_rect_size = base_size/24,
+  base_lineheight = 1.1,
   legend_position = "right",
   axis_text = TRUE,
   axis_text_x = TRUE,
@@ -21,14 +22,22 @@ theme_default(
   grid_major_x = TRUE,
   grid_major_y = TRUE,
   grid_minor_x = TRUE,
-  grid_minor_y = TRUE
+  grid_minor_y = TRUE,
+  facet_title_bold = FALSE,
+  facet_title_size = base_size * 0.8,
+  facet_title_margin_top = 0.8 * half_line,
+  facet_title_margin_bottom = 0.8 * half_line,
+  facet_title_margin_right = 0.8 * half_line,
+  facet_title_margin_left = 0.8 * half_line,
+  panel_spacing_x = 0,
+  panel_spacing_y = 0
 )
 }
 \arguments{
-\item{base_size}{Base font size, given in pts. Also controls
-the spacing in the graph.}
+\item{base_size}{Base font size, given in pts. Also controls the spacing in
+the graph.}
 
-\item{base_family}{Base font family. Default is Lato.}
+\item{base_family}{Base font family. Default is Roboto}
 
 \item{base_line_size}{Base size for line elements.}
 
@@ -62,7 +71,7 @@ disappear.}
 \item{grid_y_only}{Logical. Determines if only y-axis grid lines (horizontal
 lines) should appear. If \code{FALSE}, the default, all grid lines appear. If
 \code{TRUE}, only the y-axis grid lines appear and the  x-axis grid lines will
-disppear.}
+disappear.}
 
 \item{grid_major}{Logical. Determines if the major grid lines should appear.
 If \code{TRUE}, the default, the major grid lines will appear. If \code{FALSE}, the
@@ -78,7 +87,7 @@ If \code{FALSE}, the major x-axis grid lines will disappear.}
 
 \item{grid_major_y}{Logical. Determines if the major y-axis grid lines will
 appear. If \code{TRUE}, the default, the major y-axis grid lines will appear.
-If \code{FALSE}, the major t-axis grid lines will disappear.}
+If \code{FALSE}, the major y-axis grid lines will disappear.}
 
 \item{grid_minor_x}{Logical. Determines if the minor x-axis grid lines will
 appear. If \code{TRUE}, the default, the minor x-axis grid lines will appear.
@@ -86,7 +95,31 @@ If \code{FALSE}, the minor x-axis grid lines will disappear.}
 
 \item{grid_minor_y}{Logical. Determines if the minor y-axis grid lines will
 appear. If \code{TRUE}, the default, the minor y-axis grid lines will appear.
-If \code{FALSE}, the minor t-axis grid lines will disappear.}
+If \code{FALSE}, the minor y-axis grid lines will disappear.}
+
+\item{facet_title_bold}{Logical. Determines if the facet labels should be
+bold or not. Default is \code{FALSE}.}
+
+\item{facet_title_size}{Size of the facet titles, specified in pts. Default
+is \code{base_size * 0.8}.}
+
+\item{facet_title_margin_top}{The margin above the facet title, specified in
+pts. Default is \code{0.8 * half_line}.}
+
+\item{facet_title_margin_bottom}{The margin beneath the facet title,
+specified in pts. Default is \code{0.8 * half_line}.}
+
+\item{facet_title_margin_right}{The margin to the right of the facet title,
+specified in pts. Default is \code{0.8 * half_line}.}
+
+\item{facet_title_margin_left}{The margin to the left of the facet title,
+specified in pts. Default is \code{0.8 * half_line}.}
+
+\item{panel_spacing_x}{Horizontal spacing between the different panels when
+faceting a graph, given in pts. Default is 0.}
+
+\item{panel_spacing_y}{Vertical spacing between the different panels when
+faceting a graph, given in pts. Default is 0.}
 }
 \description{
 This function creates the default theme that all ADL theme functions are
