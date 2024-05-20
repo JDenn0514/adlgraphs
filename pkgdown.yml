@@ -3,7 +3,7 @@ pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   data_transformations: data_transformations.html
-last_built: 2024-05-20T18:12Z
+last_built: 2024-05-20T20:58Z
 urls:
   reference: https://jdenn0514.github.io/adlgraphs/reference
   article: https://jdenn0514.github.io/adlgraphs/articles
