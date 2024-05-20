@@ -15,6 +15,7 @@ stat_density_quant(
   kernel = "gaussian",
   n = 512,
   bounds = c(-Inf, Inf),
+  na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE,
   quantile_lines = FALSE,

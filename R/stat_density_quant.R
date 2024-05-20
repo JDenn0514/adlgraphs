@@ -58,6 +58,7 @@ stat_density_quant <- function(mapping = NULL, data = NULL,
                                kernel = "gaussian",
                                n = 512,
                                bounds = c(-Inf, Inf),
+                               na.rm = FALSE,
                                show.legend = NA,
                                inherit.aes = TRUE,
                                quantile_lines = FALSE,
@@ -134,8 +135,6 @@ StatDensityQuant <- ggplot2::ggproto(
   },
 
   setup_params = function(self, data, params) {
-    # determine if the plot is flipped
-    params$flipped_aes <- has_flipped_aes(data, params, main_is_orthogonal = FALSE, main_is_continuous = TRUE)
 
     # determine if there is x
     has_x <- !(is.null(data$x) && is.null(params$x))
