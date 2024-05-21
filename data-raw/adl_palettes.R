@@ -4,7 +4,7 @@
 # categorical prismatic::prismatic::colors
 primary <-  prismatic::color("#14A2FC")
 
-secondary <- prismatic::color("#DBDCDD")
+secondary <- prismatic::color("#595b60")
 
 tertiary <- prismatic::color("#69DA78")
 

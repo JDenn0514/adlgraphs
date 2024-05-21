@@ -485,7 +485,6 @@ theme_coef <- function(
   base_size = 12,
   # determine if grid lines should be shown (controls major and minor, x and y grid lines)
   grid_x_only = TRUE,
-  facet_strip_title = 12,
   ...
 ) {
 
