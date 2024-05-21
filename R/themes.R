@@ -493,7 +493,6 @@ theme_coef <- function(
   theme_default(
     base_size = base_size,
     grid_x_only = grid_x_only,
-    facet_strip_title = facet_strip_title,
     ...
   ) +
     ggplot2::theme(
