@@ -128,7 +128,7 @@ adl_bar_plots <- function(
             ) +
             ggplot2::geom_text(
               ggplot2::aes(label = {{ col_label }}, x = ({{ x }} + distance_from_col)),
-              family = "L",
+              family = "R",
               size = col_text_size,
               color = "#2c2e35",
               hjust = 0
@@ -144,7 +144,7 @@ adl_bar_plots <- function(
             ) +
             ggplot2::geom_text(
               ggplot2::aes(label = {{ col_label }}, x = ({{ x }} + distance_from_col)),
-              family = "L",
+              family = "R",
               size = col_text_size,
               color = "#2c2e35",
               hjust = 0
@@ -165,7 +165,7 @@ adl_bar_plots <- function(
             ) +
             ggplot2::geom_text(
               ggplot2::aes(label = {{ col_label }}, y = ({{ y }} + distance_from_col)),
-              family = "L",
+              family = "R",
               size = col_text_size,
               color = "#2c2e35",
               vjust = 0
@@ -182,7 +182,7 @@ adl_bar_plots <- function(
             ) +
             ggplot2::geom_text(
               ggplot2::aes(label = {{ col_label }}, y = ({{ y }} + distance_from_col)),
-              family = "L",
+              family = "R",
               size = col_text_size,
               color = "#2c2e35",
               vjust = 0
@@ -209,7 +209,7 @@ adl_bar_plots <- function(
           ) +
           ggplot2::geom_label(
             ggplot2::aes(label = {{ col_label }}, x = distance_from_col),
-            family = "L",
+            family = "R",
             size = col_text_size,
             hjust = 0,
             fill = "white",
@@ -233,7 +233,7 @@ adl_bar_plots <- function(
           ) +
           ggplot2::geom_label(
             ggplot2::aes(label = {{ col_label }}, y = distance_from_col),
-            family = "L",
+            family = "R",
             size = col_text_size,
             vjust = 0,
             fill = "white",
@@ -260,7 +260,7 @@ adl_bar_plots <- function(
           ggplot2::geom_text(
             ggplot2::aes(label = {{ col_label }}, x = ({{ x }} + distance_from_col)),
             position = position_dodge2(width = dodge_width, reverse = dodge_reverse),
-            family = "L",
+            family = "R",
             size = col_text_size,
             color = "#2c2e35",
             hjust = 0
@@ -278,7 +278,7 @@ adl_bar_plots <- function(
           ggplot2::geom_text(
             ggplot2::aes(label = {{ col_label }}, y = ({{ y }} + distance_from_col)),
             position = position_dodge2(width = dodge_width, reverse = dodge_reverse),
-            family = "L",
+            family = "R",
             size = col_text_size,
             color = "#2c2e35",
             vjust = 0
@@ -307,7 +307,7 @@ adl_bar_plots <- function(
             ggplot2::aes(label = {{ col_label }}, x = distance_from_col),
             position = position_dodge(width = dodge_width),
             hjust = 0,
-            family = "L",
+            family = "R",
             size = col_text_size,
             fill = "white",
             color = "#2c2e35",
@@ -333,7 +333,7 @@ adl_bar_plots <- function(
             ggplot2::aes(label = {{ col_label }}, y = distance_from_col),
             position = ggplot2::position_dodge(width = dodge_width),
             vjust = 0,
-            family = "L",
+            family = "R",
             size = col_text_size,
             fill = "white",
             color = "#2c2e35",
@@ -356,7 +356,7 @@ adl_bar_plots <- function(
         ggplot2::geom_label(
           aes(label = {{ col_label }}),
           position = ggplot2::position_stack(vjust = 0.5, reverse = TRUE),
-          family = "L",
+          family = "R",
           size = col_text_size,
           hjust = 0.5,
           fill = "white",
