@@ -208,7 +208,7 @@ adl_bar_plots <- function(
             color = "#2c2e35"
           ) +
           ggplot2::geom_label(
-            ggplot2::aes(label = col_label, x = distance_from_col),
+            ggplot2::aes(label = {{ col_label }}, x = distance_from_col),
             family = "L",
             size = col_text_size,
             hjust = 0,
