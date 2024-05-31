@@ -2,8 +2,10 @@
 
 #' Stat for density ridgeline plots
 #'
-#' This stat is the default stat used by [`geom_density_quant`]. It is very
-#' similar to \code{\link[ggplot2]{stat_density}} and
+#' This stat is the default stat that will be used in `geom_density_quant` when
+#' I get around to making it. Nevertheless, it still works with
+#' \code{\link[ggplot2]{geom_density}}. It is very similar to
+#' \code{\link[ggplot2]{stat_density}} and
 #' \code{\link[ggridges]{stat_density_ridges}} as it was built as a sort of
 #' combination of the two. One of the key differences between this function and
 #' those two is that this one uses the Sheather & Jones ("sj") as the default bandwidth
@@ -12,8 +14,61 @@
 #' addition, this function allows you to add quantile lines similar to
 #' \code{\link[ggridges]{stat_density_ridges}}.
 #'
-#' @param geom The geometric object to use to display the data. [`geom_density_quant`]
+#' @param mapping Set of aesthetic mappings created by `aes()`. If specified and
+#'   `inherit.aes = TRUE` (the default), it is combined with the default mapping
+#'    at the top level of the plot. You must supply `mapping` if there is no
+#'    plot mapping.
+#' @param data The data to be displayed in this layer. There are three
+#'    options:
+#'
+#'    If `NULL`, the default, the data is inherited from the plot
+#'    data as specified in the call to [ggplot()].
+#'
+#'    A `data.frame`, or other object, will override the plot
+#'    data. All objects will be fortified to produce a data frame. See
+#'    [fortify()] for which variables will be created.
+#'
+#'    A `function` will be called with a single argument,
+#'    the plot data. The return value must be a `data.frame`, and
+#'    will be used as the layer data. A `function` can be created
+#'    from a `formula` (e.g. `~ head(.x, 10)`).
+#' @param geom The geometric object to use to display the data. [`geom_density`]
 #'   is the default.
+#' @param position A position adjustment to use on the data for this layer. This
+#'   can be used in various ways, including to prevent overplotting and
+#'   improving the display. The `position` argument accepts the following:
+#'   * The result of calling a position function, such as `position_jitter()`.
+#'     This method allows for passing extra arguments to the position.
+#'   * A string naming the position adjustment. To give the position as a
+#'     string, strip the function name of the `position_` prefix. For example,
+#'     to use `position_jitter()`, give the position as `"jitter"`.
+#'   * For more information and other ways to specify the position, see the
+#'     [layer position][layer_positions] documentation.
+#' @param ... Other arguments passed on to [layer()]'s `params` argument. These
+#'   arguments broadly fall into one of 4 categories below. Notably, further
+#'   arguments to the `position` argument, or aesthetics that are required
+#'   can *not* be passed through `...`. Unknown arguments that are not part
+#'   of the 4 categories below are ignored.
+#'   * Static aesthetics that are not mapped to a scale, but are at a fixed
+#'     value and apply to the layer as a whole. For example, `colour = "red"`
+#'     or `linewidth = 3`. The geom's documentation has an **Aesthetics**
+#'     section that lists the available options. The 'required' aesthetics
+#'     cannot be passed on to the `params`. Please note that while passing
+#'     unmapped aesthetics as vectors is technically possible, the order and
+#'     required length is not guaranteed to be parallel to the input data.
+#'   * When constructing a layer using
+#'     a `stat_*()` function, the `...` argument can be used to pass on
+#'     parameters to the `geom` part of the layer. An example of this is
+#'     `stat_density(geom = "area", outline.type = "both")`. The geom's
+#'     documentation lists which parameters it can accept.
+#'   * Inversely, when constructing a layer using a
+#'     `geom_*()` function, the `...` argument can be used to pass on parameters
+#'     to the `stat` part of the layer. An example of this is
+#'     `geom_area(stat = "density", adjust = 0.5)`. The stat's documentation
+#'     lists which parameters it can accept.
+#'   * The `key_glyph` argument of [`layer()`] may also be passed on through
+#'     `...`. This can be one of the functions described as
+#'     [key glyphs][draw_key], to change the display of the layer in the legend.
 #' @param bw The smoothing bandwidth to be used.
 #'   If numeric, the standard deviation of the smoothing kernel.
 #'   If character, a rule to choose the bandwidth, as listed in
@@ -26,14 +81,24 @@
 #' @param n number of equally spaced points at which the density is to be
 #'   estimated, should be a power of two, see [density()] for
 #'   details
+#' @param na.rm If `FALSE` (the default), removes missing values with
+#'    a warning.  If `TRUE` silently removes missing values.
 #' @param bounds Known lower and upper bounds for estimated data. Default
 #'   `c(-Inf, Inf)` means that there are no (finite) bounds. If any bound is
 #'   finite, boundary effect of default density estimation will be corrected by
 #'   reflecting tails outside `bounds` around their closest edge. Data points
 #'   outside of bounds are removed with a warning.
-#' @param from,to The left and right-most points of the grid at which the density is to be estimated,
-#'   as in [`density()`]. If not provided, these are estimated from the data range and the bandwidth.
-#'   and sets it to `TRUE`.
+#' @param show.legend logical. Should this layer be included in the legends?
+#'   `NA`, the default, includes if any aesthetics are mapped.
+#'   `FALSE` never includes, and `TRUE` always includes.
+#'   It can also be a named logical vector to finely select the aesthetics to
+#'   display.
+#' @param inherit.aes If `FALSE`, overrides the default aesthetics,
+#'   rather than combining with them. This is most useful for helper functions
+#'   that define both data and aesthetics and shouldn't inherit behaviour from
+#'   the default plot specification, e.g. [borders()].
+#' @param quantile_lines Logical. Determines if quantile lines should be drawn
+#'   or not. FALSE is default.
 #' @param calc_ecdf If `TRUE`, `stat_density_ridges` calculates an empirical
 #'   cumulative distribution function (ecdf) and returns a variable `ecdf` and
 #'   a variable `quantile`. Both can be mapped onto aesthetics via `stat(ecdf)`
@@ -42,12 +107,6 @@
 #'   Used if either `calc_ecdf = TRUE` or `quantile_lines = TRUE`. If
 #'   `quantiles` is an integer then the data will be cut into that many equal
 #'   quantiles. If it is a vector of probabilities then the data will cut by them.
-#' @param quantile_fun Function that calculates quantiles. The function needs
-#'   to accept two parameters, a vector `x` holding the raw data values and a
-#'   vector `probs` providing the probabilities that define the quantiles.
-#'   Default is `quantile`.
-#' @param n The number of equally spaced points at which the density is to be
-#'   estimated. Should be a power of 2. Default is 512.
 #' @export
 
 stat_density_quant <- function(mapping = NULL, data = NULL,
@@ -63,10 +122,9 @@ stat_density_quant <- function(mapping = NULL, data = NULL,
                                inherit.aes = TRUE,
                                quantile_lines = FALSE,
                                calc_ecdf = FALSE,
-                               quantiles = 4,
-                               quantile_fun = quantile) {
+                               quantiles = 4) {
 
-  layer(
+  ggplot2::layer(
     data = data,
     mapping = mapping,
     stat = StatDensityQuant,
@@ -84,7 +142,6 @@ stat_density_quant <- function(mapping = NULL, data = NULL,
       calc_ecdf = calc_ecdf,
       quantiles = quantiles,
       quantile_lines = quantile_lines,
-      quantile_fun = quantile_fun,
       ...
     )
   )
@@ -158,8 +215,7 @@ StatDensityQuant <- ggproto(
 
   compute_group = function(data, scales, bw = "sj", adjust = 1, kernel = "gaussian",
                            n = 512, na.rm = FALSE, bounds = c(-Inf, Inf),
-                           calc_ecdf = FALSE, quantile_lines = FALSE, quantiles = 4,
-                           quantile_fun = quantile
+                           calc_ecdf = FALSE, quantile_lines = FALSE, quantiles = 4
   ) {
 
 
@@ -237,7 +293,7 @@ StatDensityQuant <- ggproto(
       probs <- quantiles
       probs[probs < 0 | probs > 1] <- NA
     }
-    qx <- na.omit(quantile_fun(data$x, probs = probs))
+    qx <- na.omit(stats::quantile(data$x, probs = probs))
 
     # if requested, add data frame for quantile lines
     df_quantiles <- NULL

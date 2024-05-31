@@ -25,6 +25,7 @@ Imports:
     grDevices,
     gt,
     gto,
+    highcharter,
     haven,
     jtools,
     labelled,

@@ -43,6 +43,8 @@ the graph.}
 
 \item{base_rect_size}{Base size for rect elements.}
 
+\item{base_lineheight}{Base line height for all text}
+
 \item{legend_position}{The position of the legend. Options are: "left",
 "right", "top", "bottom", or "none". "none" removes the legend. "right"
 is the default.}

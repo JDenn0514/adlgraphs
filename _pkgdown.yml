@@ -37,6 +37,7 @@ reference:
     - theme_h_bar
     - theme_h_stack
     - theme_coef
+    - hc_theme_default
 - title: Other graphing stuff
   contents:
     - scale_adl
@@ -49,6 +50,7 @@ reference:
     - make_dicho
     - make_binary
     - num_rev
+    - make_quarts
     - refactor
     - pct_conv
     - make_percent

@@ -11,6 +11,7 @@
 #' @param base_family Base font family. Default is Roboto
 #' @param base_line_size Base size for line elements.
 #' @param base_rect_size Base size for rect elements.
+#' @param base_lineheight Base line height for all text
 #' @param legend_position The position of the legend. Options are: "left",
 #'   "right", "top", "bottom", or "none". "none" removes the legend. "right"
 #'   is the default.

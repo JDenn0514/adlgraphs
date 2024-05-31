@@ -20,13 +20,73 @@ stat_density_quant(
   inherit.aes = TRUE,
   quantile_lines = FALSE,
   calc_ecdf = FALSE,
-  quantiles = 4,
-  quantile_fun = quantile
+  quantiles = 4
 )
 }
 \arguments{
-\item{geom}{The geometric object to use to display the data. \code{\link{geom_density_quant}}
+\item{mapping}{Set of aesthetic mappings created by \code{aes()}. If specified and
+\code{inherit.aes = TRUE} (the default), it is combined with the default mapping
+at the top level of the plot. You must supply \code{mapping} if there is no
+plot mapping.}
+
+\item{data}{The data to be displayed in this layer. There are three
+options:
+
+If \code{NULL}, the default, the data is inherited from the plot
+data as specified in the call to \code{\link[=ggplot]{ggplot()}}.
+
+A \code{data.frame}, or other object, will override the plot
+data. All objects will be fortified to produce a data frame. See
+\code{\link[=fortify]{fortify()}} for which variables will be created.
+
+A \code{function} will be called with a single argument,
+the plot data. The return value must be a \code{data.frame}, and
+will be used as the layer data. A \code{function} can be created
+from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
+
+\item{geom}{The geometric object to use to display the data. \code{\link{geom_density}}
 is the default.}
+
+\item{position}{A position adjustment to use on the data for this layer. This
+can be used in various ways, including to prevent overplotting and
+improving the display. The \code{position} argument accepts the following:
+\itemize{
+\item The result of calling a position function, such as \code{position_jitter()}.
+This method allows for passing extra arguments to the position.
+\item A string naming the position adjustment. To give the position as a
+string, strip the function name of the \code{position_} prefix. For example,
+to use \code{position_jitter()}, give the position as \code{"jitter"}.
+\item For more information and other ways to specify the position, see the
+\link[=layer_positions]{layer position} documentation.
+}}
+
+\item{...}{Other arguments passed on to \code{\link[=layer]{layer()}}'s \code{params} argument. These
+arguments broadly fall into one of 4 categories below. Notably, further
+arguments to the \code{position} argument, or aesthetics that are required
+can \emph{not} be passed through \code{...}. Unknown arguments that are not part
+of the 4 categories below are ignored.
+\itemize{
+\item Static aesthetics that are not mapped to a scale, but are at a fixed
+value and apply to the layer as a whole. For example, \code{colour = "red"}
+or \code{linewidth = 3}. The geom's documentation has an \strong{Aesthetics}
+section that lists the available options. The 'required' aesthetics
+cannot be passed on to the \code{params}. Please note that while passing
+unmapped aesthetics as vectors is technically possible, the order and
+required length is not guaranteed to be parallel to the input data.
+\item When constructing a layer using
+a \verb{stat_*()} function, the \code{...} argument can be used to pass on
+parameters to the \code{geom} part of the layer. An example of this is
+\code{stat_density(geom = "area", outline.type = "both")}. The geom's
+documentation lists which parameters it can accept.
+\item Inversely, when constructing a layer using a
+\verb{geom_*()} function, the \code{...} argument can be used to pass on parameters
+to the \code{stat} part of the layer. An example of this is
+\code{geom_area(stat = "density", adjust = 0.5)}. The stat's documentation
+lists which parameters it can accept.
+\item The \code{key_glyph} argument of \code{\link[=layer]{layer()}} may also be passed on through
+\code{...}. This can be one of the functions described as
+\link[=draw_key]{key glyphs}, to change the display of the layer in the legend.
+}}
 
 \item{bw}{The smoothing bandwidth to be used.
 If numeric, the standard deviation of the smoothing kernel.
@@ -40,14 +100,32 @@ For example, \code{adjust = 1/2} means use half of the default bandwidth.}
 
 \item{kernel}{Kernel. See list of available kernels in \code{\link[=density]{density()}}.}
 
-\item{n}{The number of equally spaced points at which the density is to be
-estimated. Should be a power of 2. Default is 512.}
+\item{n}{number of equally spaced points at which the density is to be
+estimated, should be a power of two, see \code{\link[=density]{density()}} for
+details}
+
+\item{na.rm}{If \code{FALSE} (the default), removes missing values with
+a warning.  If \code{TRUE} silently removes missing values.}
 
 \item{bounds}{Known lower and upper bounds for estimated data. Default
 \code{c(-Inf, Inf)} means that there are no (finite) bounds. If any bound is
 finite, boundary effect of default density estimation will be corrected by
 reflecting tails outside \code{bounds} around their closest edge. Data points
 outside of bounds are removed with a warning.}
+
+\item{show.legend}{logical. Should this layer be included in the legends?
+\code{NA}, the default, includes if any aesthetics are mapped.
+\code{FALSE} never includes, and \code{TRUE} always includes.
+It can also be a named logical vector to finely select the aesthetics to
+display.}
+
+\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
+
+\item{quantile_lines}{Logical. Determines if quantile lines should be drawn
+or not. FALSE is default.}
 
 \item{calc_ecdf}{If \code{TRUE}, \code{stat_density_ridges} calculates an empirical
 cumulative distribution function (ecdf) and returns a variable \code{ecdf} and
@@ -58,19 +136,12 @@ and \code{stat(quantile)}, respectively.}
 Used if either \code{calc_ecdf = TRUE} or \code{quantile_lines = TRUE}. If
 \code{quantiles} is an integer then the data will be cut into that many equal
 quantiles. If it is a vector of probabilities then the data will cut by them.}
-
-\item{quantile_fun}{Function that calculates quantiles. The function needs
-to accept two parameters, a vector \code{x} holding the raw data values and a
-vector \code{probs} providing the probabilities that define the quantiles.
-Default is \code{quantile}.}
-
-\item{from, to}{The left and right-most points of the grid at which the density is to be estimated,
-as in \code{\link[=density]{density()}}. If not provided, these are estimated from the data range and the bandwidth.
-and sets it to \code{TRUE}.}
 }
 \description{
-This stat is the default stat used by \code{\link{geom_density_quant}}. It is very
-similar to \code{\link[ggplot2]{stat_density}} and
+This stat is the default stat that will be used in \code{geom_density_quant} when
+I get around to making it. Nevertheless, it still works with
+\code{\link[ggplot2]{geom_density}}. It is very similar to
+\code{\link[ggplot2]{stat_density}} and
 \code{\link[ggridges]{stat_density_ridges}} as it was built as a sort of
 combination of the two. One of the key differences between this function and
 those two is that this one uses the Sheather & Jones ("sj") as the default bandwidth

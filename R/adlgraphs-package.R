@@ -30,5 +30,6 @@
 #' @importFrom tibble as_tibble
 #' @importFrom sjlabelled as_label get_labels
 #' @importFrom waldo compare
+#' @importFrom highcharter hc_theme hc_theme_merge
 #' @keywords internal
 "_PACKAGE"

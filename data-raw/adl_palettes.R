@@ -6,7 +6,7 @@ primary <-  prismatic::color("#14A2FC")
 
 secondary <- prismatic::color("#B0B1B3")
 
-tertiary <- prismatic::color("#69DA78")
+tertiary <- prismatic::color("#E84C4C")
 
 pid3 <- prismatic::color(c(
   "#14A2FC",
@@ -65,6 +65,7 @@ adl_palettes <-
     primary,
     secondary,
     tertiary,
+    binary,
     pid3,
     categorical,
     # divergent
@@ -77,6 +78,7 @@ adl_palettes <-
     "primary",
     "secondary",
     "tertiary",
+    "binary",
     "pid3",
     "categorical",
     "likert_6",
@@ -84,6 +86,6 @@ adl_palettes <-
     "bluescale"
   )
 
-rm(primary, secondary, tertiary, pid3, categorical, likert_4, likert_6, bluescale)
+rm(primary, secondary, tertiary, binary, pid3, categorical, likert_4, likert_6, bluescale)
 
 usethis::use_data(adl_palettes, overwrite = TRUE)

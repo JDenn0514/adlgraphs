@@ -257,7 +257,7 @@ split_quantile <- function(x = NULL,
          "numeric.")
   }
 
-  cut(x, breaks = quantile(x, probs = seq(0, 1, length.out = type + 1)),
+  cut(x, breaks = stats::quantile(x, probs = seq(0, 1, length.out = type + 1)),
       labels = 1:type,
       include.lowest = TRUE)
 }

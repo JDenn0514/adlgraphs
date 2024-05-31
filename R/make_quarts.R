@@ -4,9 +4,10 @@
 #' a factor vector with labels indicating which quartile it is in.
 #'
 #' @param x A numeric vector.
+#' @export
 
 make_quarts <- function(x) {
-  x <- fabricatr::split_quantile(x, 4)
+  x <- split_quantile(x, 4)
   x <- case_match_fct(
     x,
     "1" ~ "Lowest 25%",
