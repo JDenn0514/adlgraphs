@@ -71,9 +71,9 @@ Now let's look at these in action. Below is a simple vertical frequency plot. Wh
 ```{r}
 #| out.height: '100%'
 #| out.width: '100%'
-#| fig.width: 5
-#| fig.height: 5
-#| dpi: 400
+#| fig.width: 4
+#| fig.height: 4
+#| dpi: 300
 #| echo: FALSE
 
 test_data %>% 
@@ -113,7 +113,7 @@ Now let's take a look at a relatively simple horizontal bar plot. The same princ
 #| out.width: '100%'
 #| fig.width: 5
 #| fig.height: 4
-#| dpi: 400
+#| dpi: 300
 #| echo: FALSE
 
 test_data %>% 
@@ -155,7 +155,7 @@ We don't use dodged bar plots too frequently, but it is important to understand 
 #| out.width: '100%'
 #| fig.width: 5
 #| fig.height: 3.5
-#| dpi: 400
+#| dpi: 300
 #| echo: FALSE
 
 test_data %>% 
