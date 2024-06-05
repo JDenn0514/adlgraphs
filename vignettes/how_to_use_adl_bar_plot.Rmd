@@ -84,6 +84,7 @@ test_data %>%
     x = fct_rev(top_f),
     y = pct,
     col_label = pct_lab,
+    base_lineheight = 1
   ) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
   labs(
@@ -126,6 +127,7 @@ test_data %>%
     y = edu_f,
     col_label = pct_lab,
     direction = "horizontal",
+    base_lineheight = 1
   ) +
   scale_y_discrete(
     labels = label_wrap_gen(12),
@@ -181,7 +183,8 @@ test_data %>%
     fill = edu_f2,
     direction = "horizontal",
     position = "dodge",
-    legend_position = "right"
+    legend_position = "right",
+    base_lineheight = 1
   ) +
   scale_adl(
     direction = "reverse",
@@ -212,7 +215,7 @@ Sometimes, it is possible to add color to the text in the title when referring t
 #| out.width: '100%'
 #| fig.width: 5
 #| fig.height: 3.5
-#| dpi: 400
+#| dpi: 300
 #| echo: FALSE
 
 test_data %>% 
@@ -238,6 +241,7 @@ test_data %>%
     fill = edu_f2,
     direction = "horizontal",
     position = "dodge",
+    base_lineheight = 1
     #legend_position = "right"
   ) +
   scale_adl(
