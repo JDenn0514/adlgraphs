@@ -1,19 +1,36 @@
-#' @title {Test Data},
-#' @description {This is a fake data set created purely to demonstrate the different capabilities of this package},
+#' @title {test_data},
+#' @description {This is a fake dataset that is used to illustrate the various functions in the `adlgraphs` package},
 
 #' @format A data frame with {nrow(df)} rows and {ncol(df)} variables:
 #' \describe{
+#'   \item{resp_id}{Unique ID for each Respondent}
 #'   \item{wts}{Survey weighting variable}
-#'   \item{stick_together}{Jews stick together more than other Americans}
+#'   \item{edu}{What is the highest level of school you have completed or the highest degree you have received?}
+#'   \item{edu_f2}{College Graduate}
+#'   \item{pid_f3}{Political Partisanship}
 #'   \item{top}{An ideal society requires some groups to be on top and others to be on the bottom}
-#'   \item{view_zio}{How favorably do you view Zionism?}
+#'   \item{inferior}{Some groups of people are simply inferior to other groups}
+#'   \item{dominate}{No one group should dominate in society}
+#'   \item{deserving}{Groups at the bottom are just as deserving as groups at the top}
+#'   \item{special}{It is unfair for some groups in society to receive special treatment from the government}
+#'   \item{harder}{I have a harder time succeeding than my parents did}
+#'   \item{controlled}{Much of our lives are being controlled by plots hatched in secrecy}
+#'   \item{small}{Even though we live in a democracy, a few people will always run things anyway}
+#'   \item{run}{The people who really "run" the country are not known to the voters}
+#'   \item{big_events}{Big events like wars, recessions, and the outcomes of elections are controlled by small groups of people who are working in secret against the rest of us}
+#'   \item{accept_hamas}{If you had a close family member who supported Hamas, would your family and friends find it…}
 #'   \item{accept_isr}{If you had a close family member who supported Israel, would your family and friends find it…}
-#'   \item{prod_isr}{I would feel comfortable buying products from Israel}
-#'   \item{trad_n}{ADL Index}
-#'   \item{action_as_sum}{Number of actions taken since October 7th to combat anti-Jewish prejudice}
 #'   \item{dislike_jews}{How many of your close friends/family dislike Jews}
-#'   \item{edu}{Highest Education Level}
-#'   \item{edu_f}{Highest Education Level}
+#'   \item{stick_together}{Jews stick together more than other Americans}
+#'   \item{values}{Jews share my values.}
+#'   \item{head}{Jews always like to be at the head of things.}
+#'   \item{loyal}{Jews are more loyal to Israel than to America.}
+#'   \item{business_power}{Jews have too much power in the business world.}
+#'   \item{wall_street}{Jews have too much control and influence on Wall Street.}
+#'   \item{acts_avg}{Conspiracy Theory Belief}
+#'   \item{sdo_avg}{Social Dominance Orientation}
+#'   \item{trad_n}{ADL Index}
+#'   \item{edu_f}{What is the highest level of school you have completed or the highest degree you have received?}
 #'}
 
 "test_data"

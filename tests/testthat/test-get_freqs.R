@@ -4,8 +4,8 @@ testthat::test_that("expect outputs to be equal for freqs with just x", {
 
   # manually calculate the frequencies
   freq_x <- test_data %>%
-    tidyr::drop_na(accept_isr) %>%
-    dplyr::count(accept_isr) %>%
+    tidyr::drop_na(top) %>%
+    dplyr::count(top) %>%
     dplyr::mutate(pct = prop.table(n)) %>%
     structure(class = c("adlgraphs_freqs", "tbl_df", "tbl", "data.frame"))
 
@@ -13,12 +13,12 @@ testthat::test_that("expect outputs to be equal for freqs with just x", {
   # test without quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs(accept_isr)
+    test_data %>% get_freqs(top)
   )
   # test with quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs("accept_isr")
+    test_data %>% get_freqs("top")
   )
 })
 
@@ -26,8 +26,8 @@ testthat::test_that("expect outputs to be equal for freqs with just x and wts", 
 
   # manually calculate the mean
   freq_x <- test_data %>%
-    tidyr::drop_na(accept_isr) %>%
-    dplyr::count(accept_isr, wt = wts) %>%
+    tidyr::drop_na(top) %>%
+    dplyr::count(top, wt = wts) %>%
     dplyr::mutate(pct = prop.table(n),
                   n = round(n, 1)) %>%
     structure(class = c("adlgraphs_freqs", "tbl_df", "tbl", "data.frame"))
@@ -35,12 +35,12 @@ testthat::test_that("expect outputs to be equal for freqs with just x and wts", 
   # test without quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs(accept_isr, wt = wts)
+    test_data %>% get_freqs(top, wt = wts)
   )
   # test with quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs("accept_isr", wt = "wts")
+    test_data %>% get_freqs("top", wt = "wts")
   )
 })
 
@@ -49,20 +49,20 @@ testthat::test_that("expect outputs to be equal for freqs with a factor grouping
   # manually calculate the mean
   freq_x <- test_data %>%
     dplyr::group_by(edu_f) %>%
-    tidyr::drop_na(accept_isr) %>%
-    dplyr::count(accept_isr) %>%
+    tidyr::drop_na(top) %>%
+    dplyr::count(top) %>%
     dplyr::mutate(pct = prop.table(n)) %>%
     structure(class = c("adlgraphs_freqs", "grouped_df", "tbl_df", "tbl", "data.frame"))
 
   # test without quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs(accept_isr, edu_f)
+    test_data %>% get_freqs(top, edu_f)
   )
   # test with quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs("accept_isr", "edu_f")
+    test_data %>% get_freqs("top", "edu_f")
   )
 
 })
@@ -72,8 +72,8 @@ testthat::test_that("expect outputs to be equal for freqs with a factor grouping
   # manually calculate the mean
   freq_x <- test_data %>%
     dplyr::group_by(edu_f) %>%
-    tidyr::drop_na(accept_isr) %>%
-    dplyr::count(accept_isr) %>%
+    tidyr::drop_na(top) %>%
+    dplyr::count(top) %>%
     dplyr::mutate(
       pct = prop.table(n),
       n = round(n, 1),
@@ -85,18 +85,18 @@ testthat::test_that("expect outputs to be equal for freqs with a factor grouping
       names_from = edu_f,
       values_from = pct_lab
     ) %>%
-    dplyr::arrange(accept_isr) %>%
+    dplyr::arrange(top) %>%
     structure(class = c("adlgraphs_freqs", "tbl_df", "tbl", "data.frame"))
 
   # test without quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs(accept_isr, edu_f, cross_tab = TRUE)
+    test_data %>% get_freqs(top, edu_f, cross_tab = TRUE)
   )
   # test with quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs("accept_isr", "edu_f", cross_tab = TRUE)
+    test_data %>% get_freqs("top", "edu_f", cross_tab = TRUE)
   )
 })
 
@@ -107,20 +107,20 @@ testthat::test_that("expect outputs to be equal for freqs with a labelled groupi
     # convert edu to a factor
     mutate(edu = haven::as_factor(edu)) %>%
     dplyr::group_by(edu) %>%
-    tidyr::drop_na(accept_isr) %>%
-    dplyr::count(accept_isr) %>%
+    tidyr::drop_na(top) %>%
+    dplyr::count(top) %>%
     dplyr::mutate(pct = prop.table(n)) %>%
     structure(class = c("adlgraphs_freqs", "grouped_df", "tbl_df", "tbl", "data.frame"))
 
   # test without quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs(accept_isr, edu)
+    test_data %>% get_freqs(top, edu)
   )
   # test with quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs("accept_isr", "edu")
+    test_data %>% get_freqs("top", "edu")
   )
 
 })
@@ -132,8 +132,8 @@ testthat::test_that("expect outputs to be equal for mean with a labelled group v
     # convert edu to a factor
     mutate(edu = haven::as_factor(edu)) %>%
     dplyr::group_by(edu) %>%
-    tidyr::drop_na(accept_isr) %>%
-    dplyr::count(accept_isr) %>%
+    tidyr::drop_na(top) %>%
+    dplyr::count(top) %>%
     dplyr::mutate(
       pct = prop.table(n),
       n = round(n, 1),
@@ -145,18 +145,18 @@ testthat::test_that("expect outputs to be equal for mean with a labelled group v
       names_from = edu,
       values_from = pct_lab
     ) %>%
-    dplyr::arrange(accept_isr) %>%
+    dplyr::arrange(top) %>%
     structure(class = c("adlgraphs_freqs", "tbl_df", "tbl", "data.frame"))
 
   # test without quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs(accept_isr, edu, cross_tab = TRUE)
+    test_data %>% get_freqs(top, edu, cross_tab = TRUE)
   )
   # test with quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs("accept_isr", edu, cross_tab = TRUE)
+    test_data %>% get_freqs("top", edu, cross_tab = TRUE)
   )
 })
 
@@ -165,8 +165,8 @@ testthat::test_that("expect outputs to be equal for freqs with a factor grouping
   # manually calculate the mean
   freq_x <- test_data %>%
     dplyr::group_by(edu_f) %>%
-    tidyr::drop_na(accept_isr) %>%
-    dplyr::count(accept_isr, wt = wts) %>%
+    tidyr::drop_na(top) %>%
+    dplyr::count(top, wt = wts) %>%
     dplyr::mutate(pct = prop.table(n),
                   n = round(n, 1)) %>%
     structure(class = c("adlgraphs_freqs", "grouped_df", "tbl_df", "tbl", "data.frame"))
@@ -174,12 +174,12 @@ testthat::test_that("expect outputs to be equal for freqs with a factor grouping
   # test without quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs(accept_isr, edu_f, wt = wts)
+    test_data %>% get_freqs(top, edu_f, wt = wts)
   )
   # test with quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs("accept_isr", "edu_f", wt = "wts")
+    test_data %>% get_freqs("top", "edu_f", wt = "wts")
   )
 })
 
@@ -190,8 +190,8 @@ testthat::test_that("expect outputs to be equal for mean with a labelled group v
     # convert edu to a factor
     mutate(edu = haven::as_factor(edu)) %>%
     dplyr::group_by(edu) %>%
-    tidyr::drop_na(accept_isr) %>%
-    dplyr::count(accept_isr, wt = wts) %>%
+    tidyr::drop_na(top) %>%
+    dplyr::count(top, wt = wts) %>%
     dplyr::mutate(pct = prop.table(n),
                   n = round(n, 1)) %>%
     structure(class = c("adlgraphs_freqs", "grouped_df", "tbl_df", "tbl", "data.frame"))
@@ -199,12 +199,12 @@ testthat::test_that("expect outputs to be equal for mean with a labelled group v
   # test without quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs(accept_isr, edu, wt = wts)
+    test_data %>% get_freqs(top, edu, wt = wts)
   )
   # test with quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs("accept_isr", edu, wt = "wts")
+    test_data %>% get_freqs("top", edu, wt = "wts")
   )
 })
 
@@ -213,8 +213,8 @@ testthat::test_that("expect outputs to be equal for freqs with a factor grouping
   # manually calculate the mean
   freq_x <- test_data %>%
     dplyr::group_by(edu_f) %>%
-    tidyr::drop_na(accept_isr) %>%
-    dplyr::count(accept_isr, wt = wts) %>%
+    tidyr::drop_na(top) %>%
+    dplyr::count(top, wt = wts) %>%
     dplyr::mutate(
       pct = prop.table(n),
       n = round(n, 1),
@@ -226,18 +226,18 @@ testthat::test_that("expect outputs to be equal for freqs with a factor grouping
       names_from = edu_f,
       values_from = pct_lab
     ) %>%
-    dplyr::arrange(accept_isr) %>%
+    dplyr::arrange(top) %>%
     structure(class = c("adlgraphs_freqs", "tbl_df", "tbl", "data.frame"))
 
   # test without quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs(accept_isr, edu_f, wt = wts, cross_tab = TRUE)
+    test_data %>% get_freqs(top, edu_f, wt = wts, cross_tab = TRUE)
   )
   # test with quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs("accept_isr", "edu_f", wt = "wts", cross_tab = TRUE)
+    test_data %>% get_freqs("top", "edu_f", wt = "wts", cross_tab = TRUE)
   )
 })
 
@@ -248,8 +248,8 @@ testthat::test_that("expect outputs to be equal for mean with a labelled group v
     # convert edu to a factor
     mutate(edu = haven::as_factor(edu)) %>%
     dplyr::group_by(edu) %>%
-    tidyr::drop_na(accept_isr) %>%
-    dplyr::count(accept_isr, wt = wts) %>%
+    tidyr::drop_na(top) %>%
+    dplyr::count(top, wt = wts) %>%
     dplyr::mutate(
       pct = prop.table(n),
       n = round(n, 1),
@@ -261,18 +261,18 @@ testthat::test_that("expect outputs to be equal for mean with a labelled group v
       names_from = edu,
       values_from = pct_lab
     ) %>%
-    dplyr::arrange(accept_isr) %>%
+    dplyr::arrange(top) %>%
     structure(class = c("adlgraphs_freqs", "tbl_df", "tbl", "data.frame"))
 
   # test without quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs(accept_isr, edu, wt = wts, cross_tab = TRUE)
+    test_data %>% get_freqs(top, edu, wt = wts, cross_tab = TRUE)
   )
   # test with quotes
   testthat::expect_equal(
     freq_x,
-    test_data %>% get_freqs("accept_isr", edu, wt = "wts", cross_tab = TRUE)
+    test_data %>% get_freqs("top", edu, wt = "wts", cross_tab = TRUE)
   )
 })
 

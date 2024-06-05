@@ -43,10 +43,10 @@
 #' # you can also pipe in the `df` argument if you want to do some data
 #' # transformations before you calculate the means. For example, say you want
 #' # to compare the means of `trad_n` among people who agreed vs disagreed with
-#' # the variable `prod_isr`:
+#' # the variable `top`:
 #' test_data %>%
-#'   mutate(prod_isr_f2 = make_dicho(prod_isr)) %>%
-#'   get_means(trad_n, prod_isr_f2, wts)
+#'   mutate(top_f2 = make_dicho(top)) %>%
+#'   get_means(trad_n, top_f2, wts)
 #'
 #'
 #'

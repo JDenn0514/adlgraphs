@@ -31,5 +31,6 @@
 #' @importFrom sjlabelled as_label get_labels
 #' @importFrom waldo compare
 #' @importFrom highcharter hc_theme hc_theme_merge
+#' @import ggtext
 #' @keywords internal
 "_PACKAGE"

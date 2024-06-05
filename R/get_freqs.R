@@ -24,36 +24,36 @@
 #' # load the package
 #' library(dplyr)
 #'
-#' # Let's calculate the overall frequency for trad_n
-#' get_freqs(test_data, trad_n)
+#' # Let's calculate the overall frequency for big_events
+#' get_freqs(test_data, big_events)
 #'
 #' # it also works if x is a string
-#' get_means(test_data, "trad_n")
+#' get_means(test_data, "big_events")
 #'
 #' # Let's do that again but add weights
-#' get_freqs(test_data, trad_n, wt = wts)
+#' get_freqs(test_data, big_events, wt = wts)
 #'
 #' # the wt argument can also be in quotes like this
-#' get_freqs(test_data, "trad_n", wt = "wts")
+#' get_freqs(test_data, "big_events", wt = "wts")
 #'
 #' # Now let's do the average score for different education levels
-#' get_freqs(test_data, trad_n, edu_f, wts)
+#' get_freqs(test_data, big_events, edu_f, wts)
 #'
 #' # it also works with quotes
-#' get_freqs(test_data, "trad_n", "edu_f", "wts")
+#' get_freqs(test_data, "big_events", "edu_f", "wts")
 #'
 #' # if we want to pivot the results so they look like cross tabs, then we need
 #' # to set `cross_tab` to TRUE
-#' get_freqs(test_data, trad_n, edu_f, wts, cross_tab = TRUE)
+#' get_freqs(test_data, big_events, edu_f, wts, cross_tab = TRUE)
 
 #'
 #' # you can also pipe in the `df` argument if you want to do some data
 #' # transformations before you calculate the means. For example, say you want
-#' # to compare the means of `trad_n` among people who agreed vs disagreed with
-#' # the variable `prod_isr`:
+#' # to compare the frequencies of `big_events` among people who agreed vs
+#' # disagreed with the variable `top`:
 #' test_data %>%
-#'   mutate(prod_isr_f2 = make_dicho(prod_isr)) %>%
-#'   get_freqs(trad_n, prod_isr_f2, wts)
+#'   mutate(top_f2 = make_dicho(top)) %>%
+#'   get_freqs(trad_n, top_f2, wts)
 #'
 #'
 #'
