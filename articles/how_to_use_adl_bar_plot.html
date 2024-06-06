@@ -127,13 +127,23 @@ labelled either inside or outside the bar.</p></li>
 <li><p>Don’t include grid lines. They are unnecessary since the labels
 are already labelled.</p></li>
 <li><p>Don’t label axes if not necessary.</p></li>
+<li><p>When it comes to deciding the direction of the plot, just use
+your judgement on what looks best. All plots used on the website require
+a width of 1080px so if you are only comparing two bars, it may be
+better to just make it horizontal. However, it’s important to keep the
+aesthetic consistent throughout a report or presentation. For instance,
+if you are regularly using vertical bar plots, keep using that even if
+some might look a little better horizontally. The change in orientation
+may confuse readers and think it is demonstrating something
+different.</p></li>
 </ul>
 <div class="section level3">
-<h3 id="frequency-plots">Frequency plots<a class="anchor" aria-label="anchor" href="#frequency-plots"></a>
+<h3 id="simple-bar-plots">Simple bar plots<a class="anchor" aria-label="anchor" href="#simple-bar-plots"></a>
 </h3>
-<div class="section level4">
-<h4 id="simple-bar-plots-no-groups">Simple bar plots (no groups)<a class="anchor" aria-label="anchor" href="#simple-bar-plots-no-groups"></a>
-</h4>
+<p>Simple bar plots are ones in which we are only comparing two
+variables, the x and y axis variables. We use these for both
+demonstrating frequencies as well as means. Additionally, they can be
+vertical or horizontal.</p>
 <p>Now let’s look at these in action. Below is a simple vertical
 frequency plot. While this doesn’t have a subtitle, the rest of what is
 written above still applies. Each bar is directly labelled with the
@@ -156,6 +166,24 @@ to not have a specific order to them, then we would reorder them by
 percentage.)</p></li>
 </ul>
 <p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-2-1.png" width="100%" height="100%"></p>
+<p>Now let’s take a look at two simple vertical mean plots. The plot on
+the left shows the average score on the “American Conspiracy Thinking
+Scale” across educational groups. The American Conspiracy Thinking Scale
+shows the average response score across four statements. The plot on the
+right shows the average number of tropes endorsed from the ADL
+Index.</p>
+<ul>
+<li><p>Both plots show the data label inside at the bottom of the bar,
+with white surrounding the number to improve visibility</p></li>
+<li><p>Both plots have confidence intervals demonstrating statistical
+significance</p></li>
+<li><p>The plot on the right does not have the y-axis labelled. This is
+because one of the bars has “Tropes Endorsed” inside of it which tells
+people what the numbers mean. This ideal for when showing something
+easy, like average number of actions, statements, tropes, etc.</p></li>
+</ul>
+<p><img src="how_to_use_adl_bar_plot_files/figure-html/acts_avg%20mean-1.png" width="45%" height="45%" style="float:left; padding:10px"></p>
+<p><img src="how_to_use_adl_bar_plot_files/figure-html/trad_n%20mean-1.png" width="45%" height="45%" style="float:left; padding:10px"></p>
 <p>Now let’s take a look at a relatively simple horizontal bar plot. The
 same principles laid out previously apply here as well, however, there
 are some differences. For example, take the plot below. Here we are
@@ -183,31 +211,74 @@ breaks try to keep them to three maximum whenever possible.</p></li>
 <li><p>The x-axis is title is added to clarify what it is we are looking
 it.</p></li>
 </ul>
-<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-3-1.png" width="100%" height="100%"></p>
+<p><img src="how_to_use_adl_bar_plot_files/figure-html/education%20agree%20with%20top-1.png" width="100%" height="100%"></p>
 </div>
-<div class="section level4">
-<h4 id="dodged-frequency-plots-multiple-groups">Dodged frequency plots (multiple groups)<a class="anchor" aria-label="anchor" href="#dodged-frequency-plots-multiple-groups"></a>
-</h4>
+<div class="section level3">
+<h3 id="dodged-bar-plots">Dodged bar plots<a class="anchor" aria-label="anchor" href="#dodged-bar-plots"></a>
+</h3>
 <p>We don’t use dodged bar plots too frequently, but it is important to
-understand what to do if we do use them. In this example, we’ll look at
-how people with and withou a college degree differ in their support for
-various statements about conspiracy theories.</p>
+understand what to do if we do use them. We use dodged bar plots to
+demonstrate frequencies as well as mean plots. A typical example would
+be to compare the level of agreement with various statements among
+different groups of people. In this example, we’ll look at how people
+with and without a college degree differ in how much they agree with a
+few statements designed to measure conspiratorial mindset. The two
+images below show the same graph but one uses a legend to identify which
+group is associated with which bar and the other uses colored text in
+the title to identify the groups.</p>
 <ul>
-<li><p>When using dodged plots try to avoid using more than four groups.
-Any more than four groups and it begins to become a bit unclear what it
-is we are looking at.</p></li>
-<li><p>With horizontally bar plots, the legend should appear to the
-right of the columns and in the order of the columns, as is visible in
-the plot. However, where possible, add color to the title to indicate
-the groups and avoid legend.</p></li>
+<li><p>Coloring text in the title or subtitle to indicate the groups
+associated with the bars is typically better than including a legend as
+it makes the plot less cluttered.</p></li>
+<li><p>If using a legend, make sure that it is aligned with the
+direction of the bars and in the same order. We can see this in the left
+plot below. Since the plot is horizontal and the bars are above each
+other, the legend is to the right and the legend items are on top of
+each other. Furthermore, the order of the legend items are in the same
+order as the bars.</p></li>
+<li><p>Another note: Since these statements were a bit long, we made the
+plot horizontal and wrapped them ove three lines. Typically, anything
+more than two or three words will be made into a horizontal bar plot. As
+it relates to wrapping the text, use your judgement. Make sure the text
+is easy to read, doesn’t overlap with each other, and the relative sizes
+of the bars is easy to see.</p></li>
 </ul>
-<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-4-1.png" width="100%" height="100%"></p>
-<p>Sometimes, it is possible to add color to the text in the title when
-referring to the groups in the image. This should be done instead of
-using a legend as it reduces the clutter in the image. See how much
-cleaner the example below is?</p>
-<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-5-1.png" width="100%" height="100%"></p>
-</div>
+<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-3-1.png" width="45%" height="45%" style="float:left; padding:10px"></p>
+<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-4-1.png" width="45%" height="45%" style="float:right; padding:10px"></p>
+<p>Occasionally, we also do vertically dodged bar plots. As I mentioned
+above, we’ll use these when the axis labels are not large. For example,
+comparing the percentage of people endorsing different numbers of
+tropes/statements. Another example, comparing the average score for two
+measures across a group. I’ll demonstrate both examples below.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>acts_avg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span><span class="va">acts_avg</span>, label <span class="op">=</span> <span class="st">"American Conspiracy Thinking Scale"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/pivot_longer_values.html">pivot_longer_values</a></span><span class="op">(</span></span>
+<span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">acts_avg</span>, <span class="va">sdo_avg</span><span class="op">)</span>,</span>
+<span>    names_to <span class="op">=</span> <span class="st">"variables"</span>,</span>
+<span>    values_to <span class="op">=</span> <span class="st">"score"</span></span>
+<span>  <span class="op">)</span> </span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 500 × 28</span></span></span>
+<span><span class="co">#&gt;    resp_id   wts edu          edu_f2 pid_f3  top     inferior dominate deserving</span></span>
+<span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl+l&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+l&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lb&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lb&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>       1 0.937 4<span style="color: #949494;"> [Bachelor…</span> At Le… 1<span style="color: #949494;"> [Dem…</span> 4<span style="color: #949494;"> [Str…</span> 4<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stron…</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>       1 0.937 4<span style="color: #949494;"> [Bachelor…</span> At Le… 1<span style="color: #949494;"> [Dem…</span> 4<span style="color: #949494;"> [Str…</span> 4<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stron…</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>       2 0.303 5<span style="color: #949494;"> [Graduate…</span> At Le… 2<span style="color: #949494;"> [Ind…</span> 3<span style="color: #949494;"> [Som…</span> 3<span style="color: #949494;"> [Some…</span> 3<span style="color: #949494;"> [Some…</span> 3<span style="color: #949494;"> [Somew…</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>       2 0.303 5<span style="color: #949494;"> [Graduate…</span> At Le… 2<span style="color: #949494;"> [Ind…</span> 3<span style="color: #949494;"> [Som…</span> 3<span style="color: #949494;"> [Some…</span> 3<span style="color: #949494;"> [Some…</span> 3<span style="color: #949494;"> [Somew…</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>       3 0.937 4<span style="color: #949494;"> [Bachelor…</span> At Le… 1<span style="color: #949494;"> [Dem…</span> 2<span style="color: #949494;"> [Som…</span> 3<span style="color: #949494;"> [Some…</span> 2<span style="color: #949494;"> [Some…</span> 2<span style="color: #949494;"> [Somew…</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>       3 0.937 4<span style="color: #949494;"> [Bachelor…</span> At Le… 1<span style="color: #949494;"> [Dem…</span> 2<span style="color: #949494;"> [Som…</span> 3<span style="color: #949494;"> [Some…</span> 2<span style="color: #949494;"> [Some…</span> 2<span style="color: #949494;"> [Somew…</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>       4 0.408 3<span style="color: #949494;"> [Some Col…</span> No Co… 2<span style="color: #949494;"> [Ind…</span> 4<span style="color: #949494;"> [Str…</span> 3<span style="color: #949494;"> [Some…</span> 1<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stron…</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>       4 0.408 3<span style="color: #949494;"> [Some Col…</span> No Co… 2<span style="color: #949494;"> [Ind…</span> 4<span style="color: #949494;"> [Str…</span> 3<span style="color: #949494;"> [Some…</span> 1<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stron…</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>       5 0.627 5<span style="color: #949494;"> [Graduate…</span> At Le… 3<span style="color: #949494;"> [Rep…</span> 4<span style="color: #949494;"> [Str…</span> 4<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stron…</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>       5 0.627 5<span style="color: #949494;"> [Graduate…</span> At Le… 3<span style="color: #949494;"> [Rep…</span> 4<span style="color: #949494;"> [Str…</span> 4<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stron…</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 490 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 19 more variables: special &lt;dbl+lbl&gt;, harder &lt;dbl+lbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   controlled &lt;dbl+lbl&gt;, small &lt;dbl+lbl&gt;, run &lt;dbl+lbl&gt;, big_events &lt;dbl+lbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   accept_hamas &lt;dbl+lbl&gt;, accept_isr &lt;dbl+lbl&gt;, dislike_jews &lt;dbl+lbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   stick_together &lt;dbl+lbl&gt;, values &lt;dbl+lbl&gt;, head &lt;dbl+lbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   loyal &lt;dbl+lbl&gt;, business_power &lt;dbl+lbl&gt;, wall_street &lt;dbl+lbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   trad_n &lt;dbl&gt;, edu_f &lt;fct&gt;, variables &lt;chr+lbl&gt;, score &lt;dbl&gt;</span></span></span></code></pre></div>
 <div class="section level4">
 <h4 id="stacked-frequency-bar-plots">Stacked frequency bar plots<a class="anchor" aria-label="anchor" href="#stacked-frequency-bar-plots"></a>
 </h4>
