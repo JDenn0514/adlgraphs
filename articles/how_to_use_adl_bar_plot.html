@@ -111,7 +111,7 @@ the <code>adlgraphs</code> package to make creating bar plots
 easier.</p></li>
 </ul>
 <div class="section level2">
-<h2 id="cars-bar-plot-data-visualization-and-style-guide">CAR’s bar plot data visualization and style guide<a class="anchor" aria-label="anchor" href="#cars-bar-plot-data-visualization-and-style-guide"></a>
+<h2 id="cars-bar-plot-visualization-and-style-guide">CAR’s bar plot visualization and style guide<a class="anchor" aria-label="anchor" href="#cars-bar-plot-visualization-and-style-guide"></a>
 </h2>
 <p>Some general rules that apply to all bar plots:</p>
 <ul>
@@ -179,8 +179,9 @@ with white surrounding the number to improve visibility</p></li>
 significance</p></li>
 <li><p>The plot on the right does not have the y-axis labelled. This is
 because one of the bars has “Tropes Endorsed” inside of it which tells
-people what the numbers mean. This ideal for when showing something
-easy, like average number of actions, statements, tropes, etc.</p></li>
+people what the numbers mean. This is ideal for when the y-axis is
+something easy to understand like average number of actions, statements,
+tropes, etc.</p></li>
 </ul>
 <p><img src="how_to_use_adl_bar_plot_files/figure-html/acts_avg%20mean-1.png" width="48%" height="48%" style="float:left; padding:10px"></p>
 <p><img src="how_to_use_adl_bar_plot_files/figure-html/trad_n%20mean-1.png" width="48%" height="48%" style="float:right; padding:10px"></p>
@@ -250,40 +251,54 @@ above, we’ll use these when the axis labels are not large. For example,
 comparing the percentage of people endorsing different numbers of
 tropes/statements. Another example, comparing the average score for two
 measures across a group. I’ll demonstrate both examples below.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>acts_avg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span><span class="va">acts_avg</span>, label <span class="op">=</span> <span class="st">"American Conspiracy Thinking Scale"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/pivot_longer_values.html">pivot_longer_values</a></span><span class="op">(</span></span>
-<span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">acts_avg</span>, <span class="va">sdo_avg</span><span class="op">)</span>,</span>
-<span>    names_to <span class="op">=</span> <span class="st">"variables"</span>,</span>
-<span>    values_to <span class="op">=</span> <span class="st">"score"</span></span>
-<span>  <span class="op">)</span> </span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 500 × 28</span></span></span>
-<span><span class="co">#&gt;    resp_id   wts edu          edu_f2 pid_f3  top     inferior dominate deserving</span></span>
-<span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl+l&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+l&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lb&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lb&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>       1 0.937 4<span style="color: #949494;"> [Bachelor…</span> At Le… 1<span style="color: #949494;"> [Dem…</span> 4<span style="color: #949494;"> [Str…</span> 4<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stron…</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>       1 0.937 4<span style="color: #949494;"> [Bachelor…</span> At Le… 1<span style="color: #949494;"> [Dem…</span> 4<span style="color: #949494;"> [Str…</span> 4<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stron…</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>       2 0.303 5<span style="color: #949494;"> [Graduate…</span> At Le… 2<span style="color: #949494;"> [Ind…</span> 3<span style="color: #949494;"> [Som…</span> 3<span style="color: #949494;"> [Some…</span> 3<span style="color: #949494;"> [Some…</span> 3<span style="color: #949494;"> [Somew…</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>       2 0.303 5<span style="color: #949494;"> [Graduate…</span> At Le… 2<span style="color: #949494;"> [Ind…</span> 3<span style="color: #949494;"> [Som…</span> 3<span style="color: #949494;"> [Some…</span> 3<span style="color: #949494;"> [Some…</span> 3<span style="color: #949494;"> [Somew…</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>       3 0.937 4<span style="color: #949494;"> [Bachelor…</span> At Le… 1<span style="color: #949494;"> [Dem…</span> 2<span style="color: #949494;"> [Som…</span> 3<span style="color: #949494;"> [Some…</span> 2<span style="color: #949494;"> [Some…</span> 2<span style="color: #949494;"> [Somew…</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>       3 0.937 4<span style="color: #949494;"> [Bachelor…</span> At Le… 1<span style="color: #949494;"> [Dem…</span> 2<span style="color: #949494;"> [Som…</span> 3<span style="color: #949494;"> [Some…</span> 2<span style="color: #949494;"> [Some…</span> 2<span style="color: #949494;"> [Somew…</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>       4 0.408 3<span style="color: #949494;"> [Some Col…</span> No Co… 2<span style="color: #949494;"> [Ind…</span> 4<span style="color: #949494;"> [Str…</span> 3<span style="color: #949494;"> [Some…</span> 1<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stron…</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>       4 0.408 3<span style="color: #949494;"> [Some Col…</span> No Co… 2<span style="color: #949494;"> [Ind…</span> 4<span style="color: #949494;"> [Str…</span> 3<span style="color: #949494;"> [Some…</span> 1<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stron…</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>       5 0.627 5<span style="color: #949494;"> [Graduate…</span> At Le… 3<span style="color: #949494;"> [Rep…</span> 4<span style="color: #949494;"> [Str…</span> 4<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stron…</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>       5 0.627 5<span style="color: #949494;"> [Graduate…</span> At Le… 3<span style="color: #949494;"> [Rep…</span> 4<span style="color: #949494;"> [Str…</span> 4<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stro…</span> 1<span style="color: #949494;"> [Stron…</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 490 more rows</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 19 more variables: special &lt;dbl+lbl&gt;, harder &lt;dbl+lbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   controlled &lt;dbl+lbl&gt;, small &lt;dbl+lbl&gt;, run &lt;dbl+lbl&gt;, big_events &lt;dbl+lbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   accept_hamas &lt;dbl+lbl&gt;, accept_isr &lt;dbl+lbl&gt;, dislike_jews &lt;dbl+lbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   stick_together &lt;dbl+lbl&gt;, values &lt;dbl+lbl&gt;, head &lt;dbl+lbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   loyal &lt;dbl+lbl&gt;, business_power &lt;dbl+lbl&gt;, wall_street &lt;dbl+lbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   trad_n &lt;dbl&gt;, edu_f &lt;fct&gt;, variables &lt;chr+lbl&gt;, score &lt;dbl&gt;</span></span></span></code></pre></div>
-<div class="section level4">
-<h4 id="stacked-frequency-bar-plots">Stacked frequency bar plots<a class="anchor" aria-label="anchor" href="#stacked-frequency-bar-plots"></a>
-</h4>
+<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-5-1.png" width="100%" height="100%"></p>
+</div>
+<div class="section level3">
+<h3 id="stacked-frequency-bar-plots">Stacked frequency bar plots<a class="anchor" aria-label="anchor" href="#stacked-frequency-bar-plots"></a>
+</h3>
 <p>This one of the most common bar plots CAR uses. The example is a
 typical use case</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="how-to-create-bar-plots-using-the-adlgraphs-package">How to create bar plots using the <code>adlgraphs</code>
+package<a class="anchor" aria-label="anchor" href="#how-to-create-bar-plots-using-the-adlgraphs-package"></a>
+</h2>
+<p>This section is going to deal with all the different ways that we can
+customize bar plots to make them perfect using the `adl</p>
+<div class="section level3">
+<h3 id="using-adl_bar_plots">Using <code>adl_bar_plots()</code><a class="anchor" aria-label="anchor" href="#using-adl_bar_plots"></a>
+</h3>
+<p>The main function behind creating various bar plots is
+<code><a href="../reference/adl_bar_plots.html">adl_bar_plots()</a></code>. This function has arguments that enable
+the creation of simple, dodged, or stacked bar plots, as well as control
+over the direction of the bars. In addition, there are arguments that
+enable the customization of various other elements. In this section I
+will demonstrate what the different arguments do and how to use them to
+produce the style of graph you want.</p>
+<div class="section level4">
+<h4 id="creating-simple-bar-plots">Creating simple bar plots<a class="anchor" aria-label="anchor" href="#creating-simple-bar-plots"></a>
+</h4>
+</div>
+<div class="section level4">
+<h4 id="creating-dodged-bar-plots">Creating dodged bar plots<a class="anchor" aria-label="anchor" href="#creating-dodged-bar-plots"></a>
+</h4>
+</div>
+<div class="section level4">
+<h4 id="creating-stacked-bar-plots">Creating stacked bar plots<a class="anchor" aria-label="anchor" href="#creating-stacked-bar-plots"></a>
+</h4>
+</div>
+<div class="section level4">
+<h4 id="switching-the-order-of-the-axes">Switching the order of the axes<a class="anchor" aria-label="anchor" href="#switching-the-order-of-the-axes"></a>
+</h4>
+</div>
+</div>
+<div class="section level3">
+<h3 id="using-scale_adl">Using <code>scale_adl()</code><a class="anchor" aria-label="anchor" href="#using-scale_adl"></a>
+</h3>
+<div class="section level5">
+<h5 id="using-scale_adl-1">Using scale_adl<a class="anchor" aria-label="anchor" href="#using-scale_adl-1"></a>
+</h5>
 </div>
 </div>
 </div>
