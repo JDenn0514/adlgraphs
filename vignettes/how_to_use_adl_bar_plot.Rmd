@@ -34,7 +34,7 @@ This tutorial is comprised of two parts and will likely be updated periodically 
 
 -   The second part demonstrates how to use various functions from the `adlgraphs` package to make creating bar plots easier.
 
-## CAR's bar plot data visualization and style guide
+## CAR's bar plot visualization and style guide
 
 Some general rules that apply to all bar plots:
 
@@ -105,7 +105,8 @@ Now let's take a look at two simple vertical mean plots. The plot on the left sh
 
 - Both plots have confidence intervals demonstrating statistical significance
 
-- The plot on the right does not have the y-axis labelled. This is because one of the bars has "Tropes Endorsed" inside of it which tells people what the numbers mean. This ideal for when showing something easy, like average number of actions, statements, tropes, etc. 
+- The plot on the right does not have the y-axis labelled. This is because one of the bars has "Tropes Endorsed" inside of it which tells people what the numbers mean. This is ideal for when the y-axis is something easy to understand like average number of actions, statements, tropes, etc. 
+
 
 ```{r acts_avg mean}
 #| out.height: '48%'
@@ -132,6 +133,7 @@ test_data %>%
   )
   
 ```
+
 
 ```{r trad_n mean}
 #| out.height: '48%'
@@ -344,6 +346,12 @@ Occasionally, we also do vertically dodged bar plots. As I mentioned above, we'l
 
 
 ```{r}
+#| out.height: '100%'
+#| out.width: '100%'
+#| fig.width: 5
+#| fig.height: 3.5
+#| dpi: 300
+#| echo: FALSE
 
 test_data %>% 
   mutate(acts_avg = structure(acts_avg, label = "American Conspiracy Thinking Scale")) %>% 
@@ -351,13 +359,52 @@ test_data %>%
     cols = c(acts_avg, sdo_avg),
     names_to = "variables",
     values_to = "score"
-  ) 
+  ) %>% 
+  mutate(variables_f = as_factor(variables)) %>% 
+  group_by(variables_f, edu_f) %>% 
+  get_means(score, wt = wts) %>% 
+  adl_bar_plots(
+    x = edu_f,
+    y = mean,
+    col_label = mean,
+    group = variables_f,
+    fill = variables_f,
+    freq_plot = FALSE,
+    position = "dodge",
+    dodge_width = 0.85,
+    legend_position = "top"
+  ) +
+  scale_adl(
+    palette = "binary",
+    wrap_legend_labels = 20
+
+  )
   
 
 ```
 
 
 
-#### Stacked frequency bar plots
+### Stacked frequency bar plots
 
 This one of the most common bar plots CAR uses. The example is a typical use case
+
+## How to create bar plots using the `adlgraphs` package
+
+This section is going to deal with all the different ways that we can customize bar plots to make them perfect using the `adl
+
+### Using `adl_bar_plots()` 
+
+The main function behind creating various bar plots is `adl_bar_plots()`. This function has arguments that enable the creation of simple, dodged, or stacked bar plots, as well as control over the direction of the bars. In addition, there are arguments that enable the customization of various other elements. In this section I will demonstrate what the different arguments do and how to use them to produce the style of graph you want.
+
+#### Creating simple bar plots
+
+#### Creating dodged bar plots
+
+#### Creating stacked bar plots
+
+#### Switching the order of the axes
+
+### Using `scale_adl()`
+
+##### Using scale_adl
