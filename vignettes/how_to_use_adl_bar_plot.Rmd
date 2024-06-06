@@ -108,8 +108,8 @@ Now let's take a look at two simple vertical mean plots. The plot on the left sh
 - The plot on the right does not have the y-axis labelled. This is because one of the bars has "Tropes Endorsed" inside of it which tells people what the numbers mean. This ideal for when showing something easy, like average number of actions, statements, tropes, etc. 
 
 ```{r acts_avg mean}
-#| out.height: '45%'
-#| out.width: '45%'
+#| out.height: '48%'
+#| out.width: '48%'
 #| fig.width: 5
 #| fig.height: 4
 #| dpi: 300
@@ -134,8 +134,8 @@ test_data %>%
 ```
 
 ```{r trad_n mean}
-#| out.height: '45%'
-#| out.width: '45%'
+#| out.height: '48%'
+#| out.width: '48%'
 #| fig.width: 5
 #| fig.height: 4
 #| dpi: 300
