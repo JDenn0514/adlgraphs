@@ -1,6 +1,8 @@
 
 # adlgraphs
 
+# adlgraphs <a href="https://jdenn0514.github.io/adlgraphs/"><img src="man/figures/logo.png" align="right" height="150" alt="adlgraphs website" /></a>
+
 ## Overview
 
 The goal of adlgraphs is to to help ensure that the data visualizations
