@@ -50,9 +50,12 @@ Some general rules that apply to all bar plots:
 
 -   Don't label axes if not necessary.
 
-### Frequency plots
+-   When it comes to deciding the direction of the plot, just use your judgement on what looks best. All plots used on the website require a width of 1080px so if you are only comparing two bars, it may be better to just make it horizontal. However, it's important to keep the aesthetic consistent throughout a report or presentation. For instance, if you are regularly using vertical bar plots, keep using that even if some might look a little better horizontally. The change in orientation may confuse readers and think it is demonstrating something different.
 
-#### Simple bar plots (no groups)
+
+### Simple bar plots
+
+Simple bar plots are ones in which we are only comparing two variables, the x and y axis variables. We use these for both demonstrating frequencies as well as means. Additionally, they can be vertical or horizontal.
 
 Now let's look at these in action. Below is a simple vertical frequency plot. While this doesn't have a subtitle, the rest of what is written above still applies. Each bar is directly labelled with the percentage.
 
@@ -84,18 +87,84 @@ test_data %>%
     x = fct_rev(top_f),
     y = pct,
     col_label = pct_lab,
-    base_lineheight = 0.8
   ) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
   labs(
     x = glue('"{str_wrap(var_label(test_data$top), 55)}"'),
     y = NULL,
-    title = "Nearly 50% of Americans Think an Ideal\nSociety Is Hierarchical"
+    title = "About 40% of Americans Think an Ideal\nSociety Is Hierarchical"
   )
 
 
 
 ```
+
+Now let's take a look at two simple vertical mean plots. The plot on the left shows the average score on the "American Conspiracy Thinking Scale" across educational groups. The American Conspiracy Thinking Scale shows the average response score across four statements. The plot on the right shows the average number of tropes endorsed from the ADL Index. 
+
+- Both plots show the data label inside at the bottom of the bar, with white surrounding the number to improve visibility
+
+- Both plots have confidence intervals demonstrating statistical significance
+
+- The plot on the right does not have the y-axis labelled. This is because one of the bars has "Tropes Endorsed" inside of it which tells people what the numbers mean. This ideal for when showing something easy, like average number of actions, statements, tropes, etc. 
+
+```{r acts_avg mean}
+#| out.height: '45%'
+#| out.width: '45%'
+#| fig.width: 5
+#| fig.height: 4
+#| dpi: 300
+#| echo: FALSE
+#| out.extra: 'style="float:left; padding:10px"'
+
+test_data %>% 
+  get_means(acts_avg, edu_f, wts) %>% 
+  mutate(mean_lab = round(mean, 2)) %>% 
+  adl_bar_plots(
+    x = edu_f,
+    y = mean,
+    col_label = mean_lab,
+    freq_plot = FALSE
+  ) +
+  labs(
+    x = NULL,
+    y = 'Average Score on the\n"American Conspiracy Thinking Scale"',
+    title = "Education Is Not A Significant\nModerator of Conspiratorial Sentiment"
+  )
+  
+```
+
+```{r trad_n mean}
+#| out.height: '45%'
+#| out.width: '45%'
+#| fig.width: 5
+#| fig.height: 4
+#| dpi: 300
+#| echo: FALSE
+#| out.extra: 'style="float:left; padding:10px"'
+
+test_data %>% 
+  get_means(trad_n, edu_f, wts) %>% 
+  mutate(
+    mean_lab = round(mean, 2),
+    mean_lab = case_when(
+      edu_f == "High School or Less" ~ "4.69\nTropes\nEndorsed",
+      .default = paste(mean_lab)
+    )
+  ) %>% 
+  adl_bar_plots(
+    x = edu_f,
+    y = mean,
+    col_label = mean_lab,
+    freq_plot = FALSE
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Education Does not Appear to Have A\nRelationship with Antisemitic Sentiment"
+  )
+  
+```
+
 
 Now let's take a look at a relatively simple horizontal bar plot. The same principles laid out previously apply here as well, however, there are some differences. For example, take the plot below. Here we are looking at the percentage of people from each education level who agree with a specific statement. Normally we would show this as a stacked plot with all response options, but occasionally we want something simpler. While this graph could be vertical, it is easier to read if done horizontally. Namely, people don't have to turn their head to read the axes. Some notes:
 
@@ -109,11 +178,11 @@ Now let's take a look at a relatively simple horizontal bar plot. The same princ
 
 -   The x-axis is title is added to clarify what it is we are looking it.
 
-```{r}
+```{r education agree with top}
 #| out.height: '100%'
 #| out.width: '100%'
 #| fig.width: 5
-#| fig.height: 4
+#| fig.height: 3
 #| dpi: 300
 #| echo: FALSE
 
@@ -126,8 +195,7 @@ test_data %>%
     x = pct,
     y = edu_f,
     col_label = pct_lab,
-    direction = "horizontal",
-    base_lineheight = 1
+    direction = "horizontal"
   ) +
   scale_y_discrete(
     labels = label_wrap_gen(12),
@@ -144,21 +212,24 @@ test_data %>%
 
 ```
 
-#### Dodged frequency plots (multiple groups)
+### Dodged bar plots 
 
-We don't use dodged bar plots too frequently, but it is important to understand what to do if we do use them. In this example, we'll look at how people with and withou a college degree differ in their support for various statements about conspiracy theories.
+We don't use dodged bar plots too frequently, but it is important to understand what to do if we do use them. We use dodged bar plots to demonstrate frequencies as well as mean plots. A typical example would be to compare the level of agreement with various statements among different groups of people. In this example, we'll look at how people with and without a college degree differ in how much they agree with a few statements designed to measure conspiratorial mindset. The two images below show the same graph but one uses a legend to identify which group is associated with which bar and the other uses colored text in the title to identify the groups.
 
-- When using dodged plots try to avoid using more than four groups. Any more than four groups and it begins to become a bit unclear what it is we are looking at.
+- Coloring text in the title or subtitle to indicate the groups associated with the bars is typically better than including a legend as it makes the plot less cluttered.
 
-- With horizontally bar plots, the legend should appear to the right of the columns and in the order of the columns, as is visible in the plot. However, where possible, add color to the title to indicate the groups and avoid legend.
+- If using a legend, make sure that it is aligned with the direction of the bars and in the same order. We can see this in the left plot below. Since the plot is horizontal and the bars are above each other, the legend is to the right and the legend items are on top of each other. Furthermore, the order of the legend items are in the same order as the bars.
+
+- Another note: Since these statements were a bit long, we made the plot horizontal and wrapped them ove three lines. Typically, anything more than two or three words will be made into a horizontal bar plot. As it relates to wrapping the text, use your judgement. Make sure the text is easy to read, doesn't overlap with each other, and the relative sizes of the bars is easy to see.
 
 ```{r}
-#| out.height: '100%'
-#| out.width: '100%'
+#| out.height: '45%'
+#| out.width: '45%'
 #| fig.width: 5
 #| fig.height: 3.5
 #| dpi: 300
 #| echo: FALSE
+#| out.extra: 'style="float:left; padding:10px"'
 
 test_data %>% 
   pivot_longer_values(
@@ -184,7 +255,6 @@ test_data %>%
     direction = "horizontal",
     position = "dodge",
     legend_position = "right",
-    base_lineheight = 0.5
   ) +
   scale_adl(
     direction = "reverse",
@@ -193,14 +263,13 @@ test_data %>%
     wrap_legend_labels = 25,
     legend_title = "none"
   ) +
-  theme(legend.key.spacing.y = unit(2, "pt")) +
   scale_y_discrete(
     labels = label_wrap_gen(30),
     expand = expansion(mult = c(0, 0.05))
   ) +
   scale_x_continuous(expand = expansion(mult = c(0, 0.2))) +
   labs(
-    x = "Percentage who agree",
+    x = "Percentage who agree with each statement",
     y = NULL,
     title = "People With and Without a Bachelor's Degree Agree\nwith Conspiratorial Statements at Similar Rates"
   )
@@ -208,15 +277,15 @@ test_data %>%
 
 ```
 
-Sometimes, it is possible to add color to the text in the title when referring to the groups in the image. This should be done instead of using a legend as it reduces the clutter in the image. See how much cleaner the example below is?
 
 ```{r}
-#| out.height: '100%'
-#| out.width: '100%'
+#| out.height: '45%'
+#| out.width: '45%'
 #| fig.width: 5
 #| fig.height: 3.5
 #| dpi: 300
 #| echo: FALSE
+#| out.extra: 'style="float:right; padding:10px"'
 
 test_data %>% 
   pivot_longer_values(
@@ -241,8 +310,6 @@ test_data %>%
     fill = edu_f2,
     direction = "horizontal",
     position = "dodge",
-    base_lineheight = 1
-    #legend_position = "right"
   ) +
   scale_adl(
     palette = "binary",
@@ -263,12 +330,29 @@ test_data %>%
   ) +
   scale_x_continuous(expand = expansion(mult = c(0, 0.2))) +
   labs(
-    x = "Percentage who agree",
+    x = "Percentage who agree with each statement",
     y = NULL,
     title = "People <span style = 'color:#14A2FCFF'>with</span> and <span style = 'color:#B0B1B3FF'>without</span> a Bachelor's Degree Agree<br>with Conspiratorial Statements at Similar Rates"
 
   )
 
+
+```
+
+Occasionally, we also do vertically dodged bar plots. As I mentioned above, we'll use these when the axis labels are not large. For example, comparing the percentage of people endorsing different numbers of tropes/statements. Another example, comparing the average score for two measures across a group. I'll demonstrate both examples below.
+
+
+
+```{r}
+
+test_data %>% 
+  mutate(acts_avg = structure(acts_avg, label = "American Conspiracy Thinking Scale")) %>% 
+  pivot_longer_values(
+    cols = c(acts_avg, sdo_avg),
+    names_to = "variables",
+    values_to = "score"
+  ) 
+  
 
 ```
 

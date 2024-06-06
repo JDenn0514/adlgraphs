@@ -10,6 +10,7 @@ theme_default(
   base_line_size = base_size/24,
   base_rect_size = base_size/24,
   base_lineheight = 1.1,
+  markdown = FALSE,
   legend_position = "right",
   axis_text = TRUE,
   axis_text_x = TRUE,
@@ -44,6 +45,11 @@ the graph.}
 \item{base_rect_size}{Base size for rect elements.}
 
 \item{base_lineheight}{Base line height for all text}
+
+\item{markdown}{Logical. If TRUE, all text based theme elements use
+\code{element_markdown()} from the ggtext package to add markdown, HMTL, and CSS
+capabilities. If FALSE, the default, all text based theme elements just use
+\code{element_text()}}
 
 \item{legend_position}{The position of the legend. Options are: "left",
 "right", "top", "bottom", or "none". "none" removes the legend. "right"
