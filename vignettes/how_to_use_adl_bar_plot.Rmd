@@ -184,7 +184,7 @@ test_data %>%
     direction = "horizontal",
     position = "dodge",
     legend_position = "right",
-    base_lineheight = 1
+    base_lineheight = 0.5
   ) +
   scale_adl(
     direction = "reverse",
@@ -193,7 +193,7 @@ test_data %>%
     wrap_legend_labels = 25,
     legend_title = "none"
   ) +
-  #theme(legend.key.spacing.y = unit(5, "pt")) +
+  theme(legend.key.spacing.y = unit(2, "pt")) +
   scale_y_discrete(
     labels = label_wrap_gen(30),
     expand = expansion(mult = c(0, 0.05))
