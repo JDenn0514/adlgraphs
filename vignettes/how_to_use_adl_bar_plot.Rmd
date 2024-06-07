@@ -115,7 +115,7 @@ Now let's take a look at two simple vertical mean plots. The plot on the left sh
 #| fig.height: 4
 #| dpi: 300
 #| echo: FALSE
-#| out.extra: 'style="float:left; padding:10px"'
+#| out.extra: 'style="float:left; padding:5px"'
 
 test_data %>% 
   get_means(acts_avg, edu_f, wts) %>% 
@@ -142,7 +142,7 @@ test_data %>%
 #| fig.height: 4
 #| dpi: 300
 #| echo: FALSE
-#| out.extra: 'style="float:right; padding:10px"'
+#| out.extra: 'style="float:right; padding:5px"'
 
 test_data %>% 
   get_means(trad_n, edu_f, wts) %>% 
@@ -225,13 +225,13 @@ We don't use dodged bar plots too frequently, but it is important to understand 
 - Another note: Since these statements were a bit long, we made the plot horizontal and wrapped them ove three lines. Typically, anything more than two or three words will be made into a horizontal bar plot. As it relates to wrapping the text, use your judgement. Make sure the text is easy to read, doesn't overlap with each other, and the relative sizes of the bars is easy to see.
 
 ```{r}
-#| out.height: '45%'
-#| out.width: '45%'
+#| out.height: '48%'
+#| out.width: '48%'
 #| fig.width: 5
 #| fig.height: 3.5
 #| dpi: 300
 #| echo: FALSE
-#| out.extra: 'style="float:left; padding:10px"'
+#| out.extra: 'style="float:left; padding:5px"'
 
 test_data %>% 
   pivot_longer_values(
@@ -281,13 +281,13 @@ test_data %>%
 
 
 ```{r}
-#| out.height: '45%'
-#| out.width: '45%'
+#| out.height: '48%'
+#| out.width: '48%'
 #| fig.width: 5
 #| fig.height: 3.5
 #| dpi: 300
 #| echo: FALSE
-#| out.extra: 'style="float:right; padding:10px"'
+#| out.extra: 'style="float:right; padding:5px"'
 
 test_data %>% 
   pivot_longer_values(
@@ -376,9 +376,15 @@ test_data %>%
   ) +
   scale_adl(
     palette = "binary",
-    wrap_legend_labels = 20
-
+    wrap_legend_labels = 20,
+    legend_title = "Average Score:"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "People Have More Conspiratorial Beliefs\nthan Social Dominance Orientation"
   )
+  
   
 
 ```
