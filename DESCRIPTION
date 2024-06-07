@@ -1,7 +1,7 @@
 Type: Package
 Package: adlgraphs
 Title: Create Graphs with ADL Style and Branding
-Version: 0.2.0.01
+Version: 0.2.0.9000
 Authors@R: 
     person("Jacob", "Dennen", , "jdennen@adl.org", role = c("aut", "cre"))
 Description: This package is designed to make it easier for folks at CAR
