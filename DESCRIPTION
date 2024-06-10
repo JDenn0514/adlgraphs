@@ -36,6 +36,7 @@ Imports:
     rlang,
     showtext,
     sjlabelled,
+    skimr,
     stats,
     stringr,
     sysfonts,

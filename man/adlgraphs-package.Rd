@@ -6,6 +6,8 @@
 \alias{adlgraphs-package}
 \title{adlgraphs: Create Graphs with ADL Style and Branding}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 This package is designed to make it easier for folks at CAR at ADL to make graphs. The package contains all of the different themes related to various graph styles, a guide to which colors to use and when, and various functions created related to various graphs (mainly for coefficient plots).
 }
 \seealso{
