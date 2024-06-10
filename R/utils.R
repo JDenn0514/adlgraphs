@@ -129,7 +129,7 @@ get_all_var_labels <- function(df) {
 
   # write up a function that makes the string in the format we want
   string_fun <- function(x) {
-    string <- labelled::var_label(df[[x]])
+    string <- attributes(df[[x]])$label
   }
 
   # map string_fun over each of the columns laid out earlier
