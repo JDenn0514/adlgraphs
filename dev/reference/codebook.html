@@ -108,7 +108,9 @@ about the variable that doesn't fit in the other attributes.</p></li>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">test_data_codebook</span> <span class="op">&lt;-</span> <span class="fu">codebook</span><span class="op">(</span><span class="va">test_data</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in codebook(test_data):</span> object 'attr_levels' not found</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in dplyr::mutate(., levels = lapply(data, levels), value_labels = value_labels,     transformation = transformation, question_preface = question_preface,     survey_flow = survey_flow, note = note, col_type = unlist(lapply(data,         vctrs::vec_ptype_abbr)), class = lapply(data, class),     type = unlist(lapply(data, typeof)), missing = unlist(lapply(data,         skimr::n_missing)), unique_values = unlist(lapply(data,         unique_values)), range = lapply(data, generic_range)):</span> <span style="color: #00BBBB;">ℹ</span> In argument: `missing = unlist(lapply(data, skimr::n_missing))`.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `loadNamespace()`:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> there is no package called ‘skimr’</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">test_data_codebook</span></span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'test_data_codebook' not found</span>
