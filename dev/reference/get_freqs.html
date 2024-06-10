@@ -112,83 +112,83 @@ variables with other functions like <code>map()</code> <code><a href="https://pu
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   big_events                n   pct</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 1<span style="color: #949494;"> [Strongly agree]</span>       42 0.168</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 2<span style="color: #949494;"> [Somewhat agree]</span>       78 0.312</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 3<span style="color: #949494;"> [Somewhat disagree]</span>    65 0.26 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 4<span style="color: #949494;"> [Strongly disagree]</span>    65 0.26 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 1<span style="color: #949494;"> [Strongly agree]</span>       39 0.156</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 2<span style="color: #949494;"> [Somewhat agree]</span>       89 0.356</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 3<span style="color: #949494;"> [Somewhat disagree]</span>    66 0.264</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 4<span style="color: #949494;"> [Strongly disagree]</span>    56 0.224</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># it also works if x is a string</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="get_means.html">get_means</a></span><span class="op">(</span><span class="va">test_data</span>, <span class="st">"big_events"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 6</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    mean    sd     n std.error conf.low conf.high</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  2.61  1.05   250      0.07     2.48      2.74</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  2.56  1.01   250      0.06     2.43      2.68</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Let's do that again but add weights</span></span></span>
 <span class="r-in"><span><span class="fu">get_freqs</span><span class="op">(</span><span class="va">test_data</span>, <span class="va">big_events</span>, wt <span class="op">=</span> <span class="va">wts</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   big_events                n   pct</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 1<span style="color: #949494;"> [Strongly agree]</span>     42.1 0.174</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 2<span style="color: #949494;"> [Somewhat agree]</span>     72.6 0.299</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 3<span style="color: #949494;"> [Somewhat disagree]</span>  64.5 0.266</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 4<span style="color: #949494;"> [Strongly disagree]</span>  63.5 0.262</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 1<span style="color: #949494;"> [Strongly agree]</span>     37.8 0.144</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 2<span style="color: #949494;"> [Somewhat agree]</span>     87.6 0.333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 3<span style="color: #949494;"> [Somewhat disagree]</span>  73.7 0.280</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 4<span style="color: #949494;"> [Strongly disagree]</span>  63.8 0.243</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># the wt argument can also be in quotes like this</span></span></span>
 <span class="r-in"><span><span class="fu">get_freqs</span><span class="op">(</span><span class="va">test_data</span>, <span class="st">"big_events"</span>, wt <span class="op">=</span> <span class="st">"wts"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   big_events                n   pct</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 1<span style="color: #949494;"> [Strongly agree]</span>     42.1 0.174</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 2<span style="color: #949494;"> [Somewhat agree]</span>     72.6 0.299</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 3<span style="color: #949494;"> [Somewhat disagree]</span>  64.5 0.266</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 4<span style="color: #949494;"> [Strongly disagree]</span>  63.5 0.262</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 1<span style="color: #949494;"> [Strongly agree]</span>     37.8 0.144</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 2<span style="color: #949494;"> [Somewhat agree]</span>     87.6 0.333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 3<span style="color: #949494;"> [Somewhat disagree]</span>  73.7 0.280</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 4<span style="color: #949494;"> [Strongly disagree]</span>  63.8 0.243</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Now let's do the average score for different education levels</span></span></span>
 <span class="r-in"><span><span class="fu">get_freqs</span><span class="op">(</span><span class="va">test_data</span>, <span class="va">big_events</span>, <span class="va">edu_f</span>, <span class="va">wts</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 16 × 4</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Groups:   edu_f [4]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    edu_f               big_events                n   pct</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> High School or Less 1<span style="color: #949494;"> [Strongly agree]</span>     14.2 0.195</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> High School or Less 2<span style="color: #949494;"> [Somewhat agree]</span>     28.9 0.397</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> High School or Less 3<span style="color: #949494;"> [Somewhat disagree]</span>  19.2 0.264</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> High School or Less 4<span style="color: #949494;"> [Strongly disagree]</span>  10.5 0.144</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Some College        1<span style="color: #949494;"> [Strongly agree]</span>     13.6 0.159</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Some College        2<span style="color: #949494;"> [Somewhat agree]</span>     21.9 0.256</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Some College        3<span style="color: #949494;"> [Somewhat disagree]</span>  24.1 0.282</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Some College        4<span style="color: #949494;"> [Strongly disagree]</span>  25.9 0.302</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Bachelor's Degree   1<span style="color: #949494;"> [Strongly agree]</span>      7.8 0.167</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Bachelor's Degree   2<span style="color: #949494;"> [Somewhat agree]</span>     11.8 0.255</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> Bachelor's Degree   3<span style="color: #949494;"> [Somewhat disagree]</span>  10.4 0.225</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> Bachelor's Degree   4<span style="color: #949494;"> [Strongly disagree]</span>  16.4 0.353</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> Graduate Degree     1<span style="color: #949494;"> [Strongly agree]</span>      6.6 0.173</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> Graduate Degree     2<span style="color: #949494;"> [Somewhat agree]</span>      9.9 0.261</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> Graduate Degree     3<span style="color: #949494;"> [Somewhat disagree]</span>  10.8 0.284</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> Graduate Degree     4<span style="color: #949494;"> [Strongly disagree]</span>  10.7 0.282</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    edu_f               big_events                n    pct</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> High School or Less 1<span style="color: #949494;"> [Strongly agree]</span>      6.2 0.073<span style="text-decoration: underline;">3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> High School or Less 2<span style="color: #949494;"> [Somewhat agree]</span>     33.6 0.398 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> High School or Less 3<span style="color: #949494;"> [Somewhat disagree]</span>  28.7 0.339 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> High School or Less 4<span style="color: #949494;"> [Strongly disagree]</span>  16.1 0.190 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Some College        1<span style="color: #949494;"> [Strongly agree]</span>     21.1 0.197 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Some College        2<span style="color: #949494;"> [Somewhat agree]</span>     33.3 0.311 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Some College        3<span style="color: #949494;"> [Somewhat disagree]</span>  22   0.206 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Some College        4<span style="color: #949494;"> [Strongly disagree]</span>  30.5 0.286 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Bachelor's Degree   1<span style="color: #949494;"> [Strongly agree]</span>      7.1 0.185 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Bachelor's Degree   2<span style="color: #949494;"> [Somewhat agree]</span>     12.3 0.321 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> Bachelor's Degree   3<span style="color: #949494;"> [Somewhat disagree]</span>  12.2 0.319 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> Bachelor's Degree   4<span style="color: #949494;"> [Strongly disagree]</span>   6.7 0.175 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> Graduate Degree     1<span style="color: #949494;"> [Strongly agree]</span>      3.5 0.105 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> Graduate Degree     2<span style="color: #949494;"> [Somewhat agree]</span>      8.5 0.254 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> Graduate Degree     3<span style="color: #949494;"> [Somewhat disagree]</span>  10.8 0.325 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> Graduate Degree     4<span style="color: #949494;"> [Strongly disagree]</span>  10.5 0.316 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># it also works with quotes</span></span></span>
 <span class="r-in"><span><span class="fu">get_freqs</span><span class="op">(</span><span class="va">test_data</span>, <span class="st">"big_events"</span>, <span class="st">"edu_f"</span>, <span class="st">"wts"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 16 × 4</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Groups:   edu_f [4]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    edu_f               big_events                n   pct</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> High School or Less 1<span style="color: #949494;"> [Strongly agree]</span>     14.2 0.195</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> High School or Less 2<span style="color: #949494;"> [Somewhat agree]</span>     28.9 0.397</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> High School or Less 3<span style="color: #949494;"> [Somewhat disagree]</span>  19.2 0.264</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> High School or Less 4<span style="color: #949494;"> [Strongly disagree]</span>  10.5 0.144</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Some College        1<span style="color: #949494;"> [Strongly agree]</span>     13.6 0.159</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Some College        2<span style="color: #949494;"> [Somewhat agree]</span>     21.9 0.256</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Some College        3<span style="color: #949494;"> [Somewhat disagree]</span>  24.1 0.282</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Some College        4<span style="color: #949494;"> [Strongly disagree]</span>  25.9 0.302</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Bachelor's Degree   1<span style="color: #949494;"> [Strongly agree]</span>      7.8 0.167</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Bachelor's Degree   2<span style="color: #949494;"> [Somewhat agree]</span>     11.8 0.255</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> Bachelor's Degree   3<span style="color: #949494;"> [Somewhat disagree]</span>  10.4 0.225</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> Bachelor's Degree   4<span style="color: #949494;"> [Strongly disagree]</span>  16.4 0.353</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> Graduate Degree     1<span style="color: #949494;"> [Strongly agree]</span>      6.6 0.173</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> Graduate Degree     2<span style="color: #949494;"> [Somewhat agree]</span>      9.9 0.261</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> Graduate Degree     3<span style="color: #949494;"> [Somewhat disagree]</span>  10.8 0.284</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> Graduate Degree     4<span style="color: #949494;"> [Strongly disagree]</span>  10.7 0.282</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    edu_f               big_events                n    pct</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> High School or Less 1<span style="color: #949494;"> [Strongly agree]</span>      6.2 0.073<span style="text-decoration: underline;">3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> High School or Less 2<span style="color: #949494;"> [Somewhat agree]</span>     33.6 0.398 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> High School or Less 3<span style="color: #949494;"> [Somewhat disagree]</span>  28.7 0.339 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> High School or Less 4<span style="color: #949494;"> [Strongly disagree]</span>  16.1 0.190 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Some College        1<span style="color: #949494;"> [Strongly agree]</span>     21.1 0.197 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Some College        2<span style="color: #949494;"> [Somewhat agree]</span>     33.3 0.311 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Some College        3<span style="color: #949494;"> [Somewhat disagree]</span>  22   0.206 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Some College        4<span style="color: #949494;"> [Strongly disagree]</span>  30.5 0.286 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Bachelor's Degree   1<span style="color: #949494;"> [Strongly agree]</span>      7.1 0.185 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Bachelor's Degree   2<span style="color: #949494;"> [Somewhat agree]</span>     12.3 0.321 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> Bachelor's Degree   3<span style="color: #949494;"> [Somewhat disagree]</span>  12.2 0.319 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> Bachelor's Degree   4<span style="color: #949494;"> [Strongly disagree]</span>   6.7 0.175 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> Graduate Degree     1<span style="color: #949494;"> [Strongly agree]</span>      3.5 0.105 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> Graduate Degree     2<span style="color: #949494;"> [Somewhat agree]</span>      8.5 0.254 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> Graduate Degree     3<span style="color: #949494;"> [Somewhat disagree]</span>  10.8 0.325 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> Graduate Degree     4<span style="color: #949494;"> [Strongly disagree]</span>  10.5 0.316 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># if we want to pivot the results so they look like cross tabs, then we need</span></span></span>
 <span class="r-in"><span><span class="co"># to set `cross_tab` to TRUE</span></span></span>
@@ -196,10 +196,10 @@ variables with other functions like <code>map()</code> <code><a href="https://pu
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   big_events            `High School or Less` `Some College` `Bachelor's Degree`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span>             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 1<span style="color: #949494;"> [Strongly agree]</span>    19.46% (n = 14.2)     15.93% (n = 1… 16.73% (n = 7.8)   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 2<span style="color: #949494;"> [Somewhat agree]</span>    39.71% (n = 28.9)     25.64% (n = 2… 25.54% (n = 11.8)  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 3<span style="color: #949494;"> [Somewhat disagree]</span> 26.39% (n = 19.2)     28.19% (n = 2… 22.45% (n = 10.4)  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 4<span style="color: #949494;"> [Strongly disagree]</span> 14.44% (n = 10.5)     30.24% (n = 2… 35.28% (n = 16.4)  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 1<span style="color: #949494;"> [Strongly agree]</span>    7.33% (n = 6.2)       19.7% (n = 21… 18.5% (n = 7.1)    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 2<span style="color: #949494;"> [Somewhat agree]</span>    39.77% (n = 33.6)     31.11% (n = 3… 32.12% (n = 12.3)  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 3<span style="color: #949494;"> [Somewhat disagree]</span> 33.88% (n = 28.7)     20.62% (n = 2… 31.86% (n = 12.2)  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 4<span style="color: #949494;"> [Strongly disagree]</span> 19.02% (n = 16.1)     28.57% (n = 3… 17.53% (n = 6.7)   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: `Graduate Degree` &lt;glue&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># you can also pipe in the `df` argument if you want to do some data</span></span></span>
@@ -209,21 +209,21 @@ variables with other functions like <code>map()</code> <code><a href="https://pu
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>top_f2 <span class="op">=</span> <span class="fu"><a href="make_dicho.html">make_dicho</a></span><span class="op">(</span><span class="va">top</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu">get_freqs</span><span class="op">(</span><span class="va">trad_n</span>, <span class="va">top_f2</span>, <span class="va">wts</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 28 × 4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 29 × 4</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Groups:   top_f2 [2]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    top_f2 trad_n     n    pct</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Agree       0  13.7 0.143 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Agree       1  13.5 0.141 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Agree       2  14.5 0.151 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Agree       3   9.7 0.101 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Agree       4   6.6 0.068<span style="text-decoration: underline;">5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Agree       5   2.7 0.027<span style="text-decoration: underline;">9</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Agree       6   6.7 0.070<span style="text-decoration: underline;">0</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Agree       7   2.9 0.030<span style="text-decoration: underline;">5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Agree       8   3.7 0.038<span style="text-decoration: underline;">7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Agree       9   1.9 0.020<span style="text-decoration: underline;">3</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 18 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Agree       0   4.9 0.051<span style="text-decoration: underline;">2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Agree       1  10.4 0.107 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Agree       2  13.9 0.144 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Agree       3  11.2 0.116 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Agree       4  11.4 0.118 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Agree       5   2.4 0.025<span style="text-decoration: underline;">3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Agree       6   8.4 0.087<span style="text-decoration: underline;">1</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Agree       7   2.6 0.026<span style="text-decoration: underline;">7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Agree       8   3.1 0.032<span style="text-decoration: underline;">6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Agree       9   5.9 0.061<span style="text-decoration: underline;">4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 19 more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
