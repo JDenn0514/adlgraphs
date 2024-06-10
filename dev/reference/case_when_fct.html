@@ -101,7 +101,7 @@ size of the LHS inputs.</p>
 <span class="r-in"><span><span class="co"># we can see that the `edu_f2` has two levels and they are in the correct</span></span></span>
 <span class="r-in"><span><span class="co"># and it attached the transformation metadata</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">new_data</span><span class="op">$</span><span class="va">edu_f2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Factor w/ 2 levels "No degree","College degree": 1 2 2 2 1 1 2 1 1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Factor w/ 2 levels "No degree","College degree": 2 2 1 1 2 2 1 2 1 1 ...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># another way of doing this is to indicate that when edu is less than 4 it</span></span></span>
 <span class="r-in"><span><span class="co"># means no degree and when edu is above 3  it means college degree, like this</span></span></span>
@@ -116,7 +116,7 @@ size of the LHS inputs.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># let's check it again</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">new_data</span><span class="op">$</span><span class="va">edu_f2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Factor w/ 2 levels "No degree","College degree": 1 2 2 2 1 1 2 1 1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Factor w/ 2 levels "No degree","College degree": 2 2 1 1 2 2 1 2 1 1 ...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># yet another way to do it, is to use the `.default =` argument to specify</span></span></span>
 <span class="r-in"><span><span class="co"># ALL other values not listed in the prior arguments</span></span></span>
@@ -131,7 +131,7 @@ size of the LHS inputs.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># let's check it again</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">new_data</span><span class="op">$</span><span class="va">edu_f2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Factor w/ 2 levels "No degree","College degree": 1 2 2 2 1 1 2 1 1 1 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Factor w/ 2 levels "No degree","College degree": 2 2 1 1 2 2 1 2 1 1 ...</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
