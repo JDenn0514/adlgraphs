@@ -82,6 +82,12 @@ codebook <- function(data) {
     attr_levels
   )
 
+  levels <- purrr::map2(
+    rep(list(data), len),
+    names,
+    attr_levels
+  )
+
   # get the value labels
   value_labels <- purrr::map2(
     # use `rep` to repeat the data set, `list` to make it into a list of data
@@ -166,7 +172,7 @@ codebook <- function(data) {
 
   res <- res %>%
     dplyr::mutate(
-      levels = lapply(data, levels),
+      levels = levels,
       value_labels = value_labels,
       transformation = transformation,
       question_preface = question_preface,
