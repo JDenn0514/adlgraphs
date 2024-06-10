@@ -1,6 +1,33 @@
 
 # my own functions --------------------------------------------------------
 
+# get value labels based on data and variable
+attr_val_labels <- function(data, x) {
+  attributes(data[[x]])$labels
+}
+# get factor levels based on data and variable
+attr_levels <- function(data, x) {
+  attributes(data[[x]])$levels
+}
+# get transformation attribute based on data and variable
+attr_transformation <- function(data, x) {
+  attributes(data[[x]])$transformation
+}
+# get note attribute based on data and variable
+attr_note <- function(data, x) {
+  attributes(data[[x]])$note
+}
+# get question preface attribute based on data and variable
+attr_question_preface <- function(data, x) {
+  attributes(data[[x]])$question_preface
+}
+# get survey_flow attribute based on data and variable
+attr_survey_flow <- function(data, x) {
+  attributes(data[[x]])$survey_flow
+}
+
+
+
 # clean the racial groups
 clean_race <- function(df, x) {
 
