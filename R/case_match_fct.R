@@ -108,24 +108,42 @@ case_match_fct <- function(.x, ..., .default = NULL) {
   # proper vector instead of NAs
   args_rhs[[arg_len]] = .default
 
-  # set the vector to a factor and specify the levels
-  factor(
-    dplyr::case_match(.x, ..., .default = .default),
-    levels = args_rhs
-  ) %>%
-    structure(
-      label = labelled::var_label(.x),
-      transformation = glue::glue(
-        "Recoded '{x_lab}' as a factor and set the levels based on their order.
+  default <- .default
+
+  if (is.null(.default)) {
+      # set the vector to a factor and specify the levels
+    factor(
+      dplyr::case_match(.x, ..., .default = .default),
+      levels = args_rhs
+    ) %>%
+      structure(
+        label = labelled::var_label(.x),
+        transformation = glue::glue(
+          "Recoded '{x_lab}' as a factor and set the levels based on their order.
+          The data transformation is as follows:
+          {text}"
+        )
+      )
+
+  } else {
+    # set the vector to a factor and specify the levels
+    factor(
+      dplyr::case_match(.x, ..., .default = .default),
+      levels = args_rhs
+    ) %>%
+      structure(
+        label = labelled::var_label(.x),
+        transformation = glue::glue(
+          "Recoded '{x_lab}' as a factor and set the levels based on their order.
         The data transformation is as follows:
         {text},
-        Everything else has become '{.default}'"
+        Everything else has become '{default}'"
+        )
       )
-    )
+
+  }
 
 }
-
-
 
 
 
