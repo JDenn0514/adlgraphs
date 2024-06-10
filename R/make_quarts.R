@@ -7,6 +7,10 @@
 #' @export
 
 make_quarts <- function(x) {
+
+  # get the variable name
+  x_lab <- deparse(substitute(x))
+
   x <- split_quantile(x, 4)
   x <- case_match_fct(
     x,
@@ -14,8 +18,12 @@ make_quarts <- function(x) {
     "2" ~ "Second Lowest 25%",
     "3" ~ "Second Highest 25%",
     "4" ~ "Highest 25%"
-  )
+  ) %>%
+    structure(
+      transformation = glue::glue("Converted {x_lab} into a factor variable with four levels based on the quartiles")
+    )
 }
+
 
 
 
