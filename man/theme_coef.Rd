@@ -4,7 +4,16 @@
 \alias{theme_coef}
 \title{Theme for coefficient plots}
 \usage{
-theme_coef(base_size = 12, grid_x_only = TRUE, ...)
+theme_coef(
+  base_size = 12,
+  grid_x_only = TRUE,
+  facet_title_margin_top = base_size,
+  facet_title_margin_bottom = half_line,
+  facet_title_margin_right = 0.8 * half_line,
+  facet_title_margin_left = 0.8 * half_line,
+  markdown = FALSE,
+  ...
+)
 }
 \arguments{
 \item{base_size}{Base font size, given in pts. Also controls the spacing in

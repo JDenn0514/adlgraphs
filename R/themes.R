@@ -540,6 +540,17 @@ theme_default <- function(
         vjust = 0.5,
         angle = 0,
         margin = margin(),
+        fill = "white",
+        box.color = "white",
+        halign = 0.5,
+        valign = 0.5,
+        linetype = "solid",
+        linewidth = base_line_size,
+        padding = unit(c(0, 0, 0, 0), "pt"),,
+        r = unit(0, "pt"),
+        align_widths = FALSE,
+        align_heights = FALSE,
+        rotate_margins = FALSE,
         debug = FALSE
       ),
       title                            = NULL,
@@ -726,6 +737,11 @@ theme_coef <- function(
   base_size = 12,
   # determine if grid lines should be shown (controls major and minor, x and y grid lines)
   grid_x_only = TRUE,
+  facet_title_margin_top = base_size,
+  facet_title_margin_bottom = half_line,
+  facet_title_margin_right = 0.8 * half_line,
+  facet_title_margin_left = 0.8 * half_line,
+  markdown = FALSE,
   ...
 ) {
 
@@ -734,14 +750,14 @@ theme_coef <- function(
   theme_default(
     base_size = base_size,
     grid_x_only = grid_x_only,
+    facet_title_margin_top = facet_title_margin_top,
+    facet_title_margin_bottom = facet_title_margin_bottom,
+    facet_title_margin_right = facet_title_margin_right,
+    facet_title_margin_left = facet_title_margin_left,
+    markdonw = markdown,
     ...
   ) +
-    ggplot2::theme(
-      strip.text = element_text(
-        margin = margin(t = 10, b = 5)
-      ),
-      axis.title.x = element_text(margin = margin(t = base_size)),
-    )
+    ggplot2::theme(axis.title.x = element_text(margin = margin(t = base_size)))
 }
 
 
@@ -770,6 +786,7 @@ theme_h_stack <- function(
   axis_text = FALSE,
   # determine if grid lines should be shown (controls major and minor, x and y grid lines)
   grid = FALSE,
+  markdown = FALSE,
   ...
 ) {
 
@@ -780,6 +797,7 @@ theme_h_stack <- function(
     grid = grid,
     legend_position = legend_position,
     axis_text = axis_text,
+    markdown = markdown,
     ...
   )
 }
@@ -815,6 +833,7 @@ theme_h_bar <- function(
   axis_text_x = FALSE,
   # determine if grid lines should be shown (controls major and minor, x and y grid lines)
   grid = FALSE,
+  markdown = FALSE,
   ...
 ) {
 
@@ -825,6 +844,7 @@ theme_h_bar <- function(
     legend_position = legend_position,
     axis_text_x = axis_text_x,
     grid = grid,
+    markdown = markdown,
     ...
   )
 }
@@ -857,6 +877,7 @@ theme_v_bar <- function(
   axis_text_y = FALSE,
   # determine if grid lines should be shown (controls major and minor, x and y grid lines)
   grid = FALSE,
+  markdown = FALSE,
   ...
 ) {
 
@@ -867,6 +888,7 @@ theme_v_bar <- function(
     legend_position = legend_position,
     axis_text_y = axis_text_y,
     grid = grid,
+    markdown = markdown,
     ...
   )
 }
