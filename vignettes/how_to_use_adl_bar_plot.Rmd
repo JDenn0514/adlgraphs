@@ -341,17 +341,50 @@ test_data %>%
 
 ```
 
-Occasionally, we also do vertically dodged bar plots. As I mentioned above, we'll use these when the axis labels are not large. For example, comparing the percentage of people endorsing different numbers of tropes/statements. Another example, comparing the average score for two measures across a group. I'll demonstrate both examples below.
-
-
+Occasionally, we also do vertically dodged bar plots. As I mentioned above, we'll use these when the axis labels are not large. For example, comparing the percentage of people endorsing different numbers of tropes/statements among different groups, like college graduates vs non-college graduates. Another example, comparing the average score for two measures, like conspiracy belief and social dominance orientation, across a group, like education level. I'll demonstrate both examples below.
 
 ```{r}
-#| out.height: '100%'
-#| out.width: '100%'
+#| out.height: '48%'
+#| out.width: '48%'
 #| fig.width: 5
 #| fig.height: 3.5
 #| dpi: 300
 #| echo: FALSE
+#| out.extra: 'style="float:right; padding:5px"'
+
+test_data %>% 
+  get_freqs(pol_part_sum, edu_f2) %>% 
+  pct_conv() %>% 
+  adl_bar_plots(
+    x = pol_part_sum,
+    y = pct,
+    col_label = pct_lab,
+    fill = edu_f2,
+    group = edu_f2,
+    position = "dodge",
+    legend_position = "top"
+  ) +
+  scale_adl(n = 2) +
+  scale_x_continuous(breaks = c(0:14)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    x = "Number of Actions Related to Political Participation People Have Done",
+    y = NULL,
+    title = ""
+  )
+
+```
+
+
+```{r}
+#| out.height: '48%'
+#| out.width: '48%'
+#| fig.width: 5
+#| fig.height: 3.5
+#| dpi: 300
+#| echo: FALSE
+#| out.extra: 'style="float:right; padding:5px"'
+
 
 test_data %>% 
   mutate(acts_avg = structure(acts_avg, label = "American Conspiracy Thinking Scale")) %>% 
@@ -382,7 +415,7 @@ test_data %>%
   labs(
     x = NULL,
     y = NULL,
-    title = "People Have More Conspiratorial Beliefs\nthan Social Dominance Orientation"
+    title = "Conspiracy Theory Belief is Higher than Social\nDominance Orientation Regardless of One's Education"
   )
   
   
