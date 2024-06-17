@@ -12,7 +12,7 @@
 #' @param base_line_size Base size for line elements.
 #' @param base_rect_size Base size for rect elements.
 #' @param base_lineheight Base line height for all text
-#' @param markdown Logical. If TRUE, all text based theme elements use
+#' @param markdown Logical. If TRUE, the plot title and subtitle use
 #'   `element_markdown()` from the ggtext package to add markdown, HMTL, and CSS
 #'   capabilities. If FALSE, the default, all text based theme elements just use
 #'   `element_text()`
@@ -83,7 +83,7 @@
 
 
 theme_default <- function(
-  # control the base font size, this also determines spacing
+    # control the base font size, this also determines spacing
   base_size = 12,
   # control the base font
   base_family = "R",
@@ -235,56 +235,55 @@ theme_default <- function(
     l = facet_title_margin_left
   )
 
+  if (axis_text == FALSE) {
+    axis_text_labels <- element_blank()
+  } else {
+    axis_text_labels <- element_text(
+      size = rel(0.8),
+      colour = "#595b60",
+      inherit.blank = TRUE
+    )
+  }
+
+  # set the x axis labels
+  if (axis_text_x == FALSE || axis_text == FALSE) {
+    axis_text_x_labels <- element_blank()
+  } else {
+    axis_text_x_labels <- element_text(
+      size = rel(0.8),
+      colour = "#595b60",
+      margin = margin(t = 0.8 * half_line / 2,
+                      b = 0.8 * half_line / 2),
+      vjust = 1,
+      hjust = 0.5,
+      inherit.blank = TRUE
+    )
+  }
+
+  # set the y axis labels
+  if (axis_text_y == FALSE || axis_text == FALSE) {
+    axis_text_y_labels <- element_blank()
+  } else {
+    axis_text_y_labels <- element_text(
+      size = rel(0.8),
+      colour = "#595b60",
+      margin = margin(r = 0.8 * half_line / 2,
+                      l = 0.8 * half_line / 2),
+      vjust = 0.5,
+      hjust = 1,
+      inherit.blank = TRUE
+    )
+  }
+
+  # set the facet title face
+  if (isTRUE(facet_title_bold)) {
+    facet_title_bold <- "bold"
+  } else {
+    facet_title_bold <- "plain"
+  }
+
+
   if (isFALSE(markdown)) {
-
-    # set the axis text
-    if (axis_text == FALSE) {
-      axis_text_labels <- element_blank()
-    } else {
-      axis_text_labels <- element_text(
-        size = rel(0.8),
-        colour = "#595b60",
-        inherit.blank = TRUE
-      )
-    }
-
-    # set the x axis labels
-    if (axis_text_x == FALSE || axis_text == FALSE) {
-      axis_text_x_labels <- element_blank()
-    } else {
-      axis_text_x_labels <- element_text(
-        size = rel(0.8),
-        colour = "#595b60",
-        margin = margin(t = 0.8 * half_line / 2,
-                        b = 0.8 * half_line / 2),
-        vjust = 1,
-        hjust = 0.5,
-        inherit.blank = TRUE
-      )
-    }
-
-    # set the y axis labels
-    if (axis_text_y == FALSE || axis_text == FALSE) {
-      axis_text_y_labels <- element_blank()
-    } else {
-      axis_text_y_labels <- element_text(
-        size = rel(0.8),
-        colour = "#595b60",
-        margin = margin(r = 0.8 * half_line / 2,
-                        l = 0.8 * half_line / 2),
-        vjust = 0.5,
-        hjust = 1,
-        inherit.blank = TRUE
-      )
-    }
-
-    # set the facet title face
-    if (isTRUE(facet_title_bold)) {
-      facet_title_bold <- "bold"
-    } else {
-      facet_title_bold <- "plain"
-    }
-
 
     theme(
       line                             = element_line(
@@ -477,46 +476,11 @@ theme_default <- function(
 
   } else if (isTRUE(markdown)) {
 
-    # set the axis text
-    if (axis_text == FALSE) {
-      axis_text_labels <- element_blank()
-    } else {
-      axis_text_labels <- element_markdown(
-        size = rel(0.8),
-        colour = "#595b60",
-        inherit.blank = TRUE
-      )
-    }
-
-    # set the x axis labels
-    if (axis_text_x == FALSE || axis_text == FALSE) {
-      axis_text_x_labels <- element_blank()
-    } else {
-      axis_text_x_labels <- element_markdown(
-        size = rel(0.8),
-        colour = "#595b60",
-        margin = margin(t = 0.8 * half_line / 2,
-                        b = 0.8 * half_line / 2),
-        vjust = 1,
-        hjust = 0.5,
-        inherit.blank = TRUE
-      )
-    }
-
-    # set the y axis labels
-    if (axis_text_y == FALSE || axis_text == FALSE) {
-      axis_text_y_labels <- element_blank()
-    } else {
-      axis_text_y_labels <- element_markdown(
-        size = rel(0.8),
-        colour = "#595b60",
-        margin = margin(r = 0.8 * half_line / 2,
-                        l = 0.8 * half_line / 2),
-        vjust = 0.5,
-        hjust = 1,
-        inherit.blank = TRUE
-      )
-    }
+    bold_style <- marquee::classic_style(
+      weight = "bold",
+      lineheight = 1,
+      align = "center"
+    )
 
     theme(
       line                             = element_line(
@@ -531,8 +495,9 @@ theme_default <- function(
         linewidth = base_rect_size,
         linetype = 1
       ),
-      text                             = element_markdown(
+      text                             = element_text(
         family = base_family,
+        face = "plain",
         colour = "black",
         size = base_size,
         lineheight = base_lineheight,
@@ -540,29 +505,18 @@ theme_default <- function(
         vjust = 0.5,
         angle = 0,
         margin = margin(),
-        fill = "white",
-        box.color = "white",
-        halign = 0.5,
-        valign = 0.5,
-        linetype = "solid",
-        linewidth = base_line_size,
-        padding = unit(c(0, 0, 0, 0), "pt"),,
-        r = unit(0, "pt"),
-        align_widths = FALSE,
-        align_heights = FALSE,
-        rotate_margins = FALSE,
         debug = FALSE
       ),
       title                            = NULL,
       aspect.ratio                     = NULL,
       axis.title                       = NULL,
-      axis.title.x                     = element_markdown(
+      axis.title.x                     = element_text(
         margin = margin(t = half_line),
         vjust = 1,
       ),
       axis.title.x.top                 = NULL,
       axis.title.x.bottom              = NULL,
-      axis.title.y                     = element_markdown(
+      axis.title.y                     = element_text(
         margin = margin(r = half_line),
         vjust = 1,
         angle = 90,
@@ -617,12 +571,12 @@ theme_default <- function(
       legend.key.size                  = unit(1.2, "lines"),
       legend.key.height                = NULL,
       legend.key.width                 = NULL,
-      legend.text                      = element_markdown(
+      legend.text                      = element_text(
         size = base_size * 0.8,
         inherit.blank = TRUE
       ),
       legend.text.align                = NULL,
-      legend.title                     = element_markdown(
+      legend.title                     = element_text(
         hjust = 0,
         inherit.blank = TRUE
       ),
@@ -649,7 +603,7 @@ theme_default <- function(
       panel.grid.minor.y               = grid_minor_y_line,
       panel.ontop                      = FALSE,
       plot.background                  = element_rect(colour = "white"),
-      plot.title                       = element_markdown(
+      plot.title                       = marquee::element_marquee(
         size = base_size * 1.2,
         hjust = 0.5,
         vjust = 1,
@@ -657,13 +611,14 @@ theme_default <- function(
         inherit.blank = TRUE
       ),
       plot.title.position              = "plot",
-      plot.subtitle                    = element_markdown(
+      plot.subtitle                    = marquee::element_marquee(
+        size = base_size,
         hjust = 0,
         vjust = 1,
         margin = margin(b = base_size * 1.2),
         inherit.blank = TRUE
       ),
-      plot.caption                     = element_markdown(
+      plot.caption                     = element_text(
         size = base_size * 0.66,
         hjust = 1,
         vjust = 1,
@@ -685,7 +640,7 @@ theme_default <- function(
       strip.background.y               = NULL,
       strip.clip                       = "inherit",
       strip.placement                  = "inside",
-      strip.text                       = element_markdown(
+      strip.text                       = element_text(
         colour = "grey10",
         size = facet_title_size,
         margin = margin(
@@ -700,11 +655,11 @@ theme_default <- function(
       strip.text.x                     = NULL,
       strip.text.x.bottom              = NULL,
       strip.text.x.top                 = NULL,
-      strip.text.y                     = element_markdown(
+      strip.text.y                     = element_text(
         angle = -90,
         inherit.blank = TRUE
       ),
-      strip.text.y.left                = element_markdown(
+      strip.text.y.left                = element_text(
         angle = -90,
         inherit.blank = TRUE
       ),
@@ -733,7 +688,7 @@ theme_default <- function(
 #'
 #' @export
 theme_coef <- function(
-  # set the base font size
+    # set the base font size
   base_size = 12,
   # determine if grid lines should be shown (controls major and minor, x and y grid lines)
   grid_x_only = TRUE,
@@ -778,7 +733,7 @@ theme_coef <- function(
 #'
 #' @export
 theme_h_stack <- function(
-  # set the base font size
+    # set the base font size
   base_size = 12,
   # put the legend at the top of the graph
   legend_position = "top",
@@ -825,7 +780,7 @@ theme_h_stack <- function(
 #' @export
 #'
 theme_h_bar <- function(
-  # set the base font size
+    # set the base font size
   base_size = 12,
   # adjust the position of the legend
   legend_position = "none",

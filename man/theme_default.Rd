@@ -46,7 +46,7 @@ the graph.}
 
 \item{base_lineheight}{Base line height for all text}
 
-\item{markdown}{Logical. If TRUE, all text based theme elements use
+\item{markdown}{Logical. If TRUE, the plot title and subtitle use
 \code{element_markdown()} from the ggtext package to add markdown, HMTL, and CSS
 capabilities. If FALSE, the default, all text based theme elements just use
 \code{element_text()}}
