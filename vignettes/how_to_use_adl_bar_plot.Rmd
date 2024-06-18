@@ -289,6 +289,15 @@ test_data %>%
 #| echo: FALSE
 #| out.extra: 'style="float:right; padding:5px"'
 
+
+
+
+bold_style <- marquee::classic_style(
+  weight = "bold",
+  lineheight = 1,
+  align = "center"
+)
+
 test_data %>% 
   pivot_longer_values(
     cols = c(controlled:run),
@@ -311,31 +320,30 @@ test_data %>%
     group = edu_f2,
     fill = edu_f2,
     direction = "horizontal",
-    position = "dodge",
+    position = "dodge"
   ) +
+  #theme_h_bar(markdown = TRUE) +
   scale_adl(
     palette = "binary",
     wrap_legend_labels = 25,
     legend_title = "none"
   ) +
   theme(
-    plot.title = element_markdown(
-      size = 12 * 1.2,
-      hjust = 0.5,
-      vjust = 1,
-      margin = margin(b = 12)
-    )
+    plot.title = marquee::element_marquee(
+      family = "Roboto",
+      width = 1,
+      style = bold_style
+    ),
   ) +
   scale_y_discrete(
-    labels = label_wrap_gen(30),
+    labels = scales::label_wrap(30),
     expand = expansion(mult = c(0, 0.05))
   ) +
   scale_x_continuous(expand = expansion(mult = c(0, 0.2))) +
   labs(
     x = "Percentage who agree with each statement",
     y = NULL,
-    title = "People <span style = 'color:#14A2FCFF'>with</span> and <span style = 'color:#B0B1B3FF'>without</span> a Bachelor's Degree Agree<br>with Conspiratorial Statements at Similar Rates"
-
+    title = "People {#14A2FCFF with} and {#B0B1B3FF without} a Bachelor's Degree Agree with Conspiratorial Statements at Similar Rates",
   )
 
 
@@ -370,7 +378,7 @@ test_data %>%
   labs(
     x = "Number of Actions Related to Political Participation People Have Done",
     y = NULL,
-    title = ""
+    title = "People {#14A2FCFF with} a Bachelor's degree are slightly more politically active than people {#B0B1B3FF without} a Bachelor's Degree",
   )
 
 ```
@@ -404,8 +412,10 @@ test_data %>%
     fill = variables_f,
     freq_plot = FALSE,
     position = "dodge",
-    dodge_width = 0.85,
-    legend_position = "top"
+    dodge_width = 0.85
+  ) +
+  theme_v_bar(
+    markdown = TRUE
   ) +
   scale_adl(
     palette = "binary",
@@ -415,7 +425,7 @@ test_data %>%
   labs(
     x = NULL,
     y = NULL,
-    title = "Conspiracy Theory Belief is Higher than Social\nDominance Orientation Regardless of One's Education"
+    title = "{#14A2FCFF Conspiracy Theory Belief} Is Consistently Higher than {#B0B1B3FF Social Dominance Orientation} Across All Education Levels",
   )
   
   
