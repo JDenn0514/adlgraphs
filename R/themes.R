@@ -611,7 +611,7 @@ theme_default <- function(
         width = 1,
         style = bold_style,
         margin = margin(b = base_size),
-        inherit.blank = FALSE
+        inherit.blank = TRUE
       ),
       plot.title.position              = "plot",
       plot.subtitle                    = marquee::element_marquee(
@@ -621,7 +621,7 @@ theme_default <- function(
         vjust = 1,
         width = 1,
         margin = margin(b = base_size * 1.2),
-        inherit.blank = FALSE
+        inherit.blank = TRUE
       ),
       plot.caption                     = element_text(
         size = base_size * 0.66,
