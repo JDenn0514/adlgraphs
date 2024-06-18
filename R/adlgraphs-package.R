@@ -32,6 +32,6 @@
 #' @importFrom waldo compare
 #' @importFrom highcharter hc_theme hc_theme_merge
 #' @importFrom skimr n_missing
-#' @import ggtext
+#' @import marquee classic_style element_marquee
 #' @keywords internal
 "_PACKAGE"
