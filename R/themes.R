@@ -604,7 +604,7 @@ theme_default <- function(
       panel.ontop                      = FALSE,
       plot.background                  = element_rect(colour = "white"),
       plot.title                       = marquee::element_marquee(
-        family = base_family,
+        family = "Roboto",
         size = base_size * 1.2,
         hjust = 0.5,
         vjust = 1,
@@ -615,7 +615,7 @@ theme_default <- function(
       ),
       plot.title.position              = "plot",
       plot.subtitle                    = marquee::element_marquee(
-        family = base_family,
+        family = "Roboto",
         size = base_size,
         hjust = 0,
         vjust = 1,
