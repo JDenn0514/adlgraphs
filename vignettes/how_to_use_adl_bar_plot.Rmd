@@ -23,7 +23,6 @@ library(forcats)
 library(haven)
 library(labelled)
 library(glue)
-library(ggtext)
 ```
 
 At CAR, our data visualization often consists of creating bar plots. These can be stacked bar plots or dodged/grouped bar plots, horizontally or vertically oriented, and with or without confidence intervals. While bar plots may not be the flashiest of graphs, they are really valuable due to the ease at which they convey information, the amount of information they can convey, and the fact that most people know how to read them.
@@ -322,19 +321,19 @@ test_data %>%
     direction = "horizontal",
     position = "dodge"
   ) +
-  #theme_h_bar(markdown = TRUE) +
+  theme_h_bar(markdown = TRUE) +
   scale_adl(
     palette = "binary",
     wrap_legend_labels = 25,
     legend_title = "none"
   ) +
-  theme(
-    plot.title = marquee::element_marquee(
-      family = "Roboto",
-      width = 1,
-      style = bold_style
-    ),
-  ) +
+  # theme(
+  #   plot.title = marquee::element_marquee(
+  #     family = "Roboto",
+  #     width = 1,
+  #     style = bold_style
+  #   ),
+  # ) +
   scale_y_discrete(
     labels = scales::label_wrap(30),
     expand = expansion(mult = c(0, 0.05))
@@ -343,7 +342,7 @@ test_data %>%
   labs(
     x = "Percentage who agree with each statement",
     y = NULL,
-    title = "People {#14A2FCFF with} and {#B0B1B3FF without} a Bachelor's Degree Agree with Conspiratorial Statements at Similar Rates",
+    title = "People {#14A2FCFF with} and {#B0B1B3FF without} a Bachelor's Degree Agree With Conspiratorial Statements at Similar Rates",
   )
 
 
@@ -372,13 +371,16 @@ test_data %>%
     position = "dodge",
     legend_position = "top"
   ) +
+  theme_v_bar(
+    markdown = TRUE
+  ) +
   scale_adl(n = 2) +
   scale_x_continuous(breaks = c(0:14)) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
   labs(
     x = "Number of Actions Related to Political Participation People Have Done",
     y = NULL,
-    title = "People {#14A2FCFF with} a Bachelor's degree are slightly more politically active than people {#B0B1B3FF without} a Bachelor's Degree",
+    title = "People {#14A2FCFF With} a Bachelor's Degree Are More Politically Active than People {#B0B1B3FF Without} a Bachelor's Degree",
   )
 
 ```
@@ -425,7 +427,7 @@ test_data %>%
   labs(
     x = NULL,
     y = NULL,
-    title = "{#14A2FCFF Conspiracy Theory Belief} Is Consistently Higher than {#B0B1B3FF Social Dominance Orientation} Across All Education Levels",
+    title = "{#14A2FCFF Conspiracy Theory Belief} Is Higher than {#B0B1B3FF Social Dominance Orientation} Across All Education Levels",
   )
   
   
