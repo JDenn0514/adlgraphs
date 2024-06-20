@@ -8,8 +8,9 @@
 A list of 9 \code{color} objects elements.
 \describe{
 \item{primary}{Primary categorical color}
-\item{secondary}{Seconday categorical color}
+\item{secondary}{Secondary categorical color}
 \item{tertiary}{Tertiary categorical color}
+\item{binary}{Palette comprised of the primary and secondary colors (categorical)}
 \item{pid3}{Palette for partisanship/ideology (categorical)}
 \item{categorical}{Palette for categorical data for up to 7 groups (categorical)}
 \item{likert_6}{Palette for likert scales with 6 response options (diverging)}
