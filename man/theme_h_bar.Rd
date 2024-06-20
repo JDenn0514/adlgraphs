@@ -9,7 +9,6 @@ theme_h_bar(
   legend_position = "none",
   axis_text_x = FALSE,
   grid = FALSE,
-  markdown = FALSE,
   ...
 )
 }

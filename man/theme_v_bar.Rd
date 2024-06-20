@@ -9,7 +9,6 @@ theme_v_bar(
   legend_position = "none",
   axis_text_y = FALSE,
   grid = FALSE,
-  markdown = FALSE,
   ...
 )
 }

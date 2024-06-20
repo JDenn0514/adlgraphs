@@ -11,7 +11,6 @@ theme_coef(
   facet_title_margin_bottom = half_line,
   facet_title_margin_right = 0.8 * half_line,
   facet_title_margin_left = 0.8 * half_line,
-  markdown = FALSE,
   ...
 )
 }
@@ -23,6 +22,18 @@ the graph.}
 lines) should appear. If \code{FALSE}, the default, all grid lines appear. If
 \code{TRUE}, only the x-axis grid lines appear and the y-axis grid lines will
 disappear.}
+
+\item{facet_title_margin_top}{The margin above the facet title, specified in
+pts. Default is \code{0.8 * half_line}.}
+
+\item{facet_title_margin_bottom}{The margin beneath the facet title,
+specified in pts. Default is \code{0.8 * half_line}.}
+
+\item{facet_title_margin_right}{The margin to the right of the facet title,
+specified in pts. Default is \code{0.8 * half_line}.}
+
+\item{facet_title_margin_left}{The margin to the left of the facet title,
+specified in pts. Default is \code{0.8 * half_line}.}
 
 \item{...}{Other arguments passed onto \code{theme_default()}.}
 }

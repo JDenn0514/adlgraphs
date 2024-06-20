@@ -9,7 +9,6 @@ theme_h_stack(
   legend_position = "top",
   axis_text = FALSE,
   grid = FALSE,
-  markdown = FALSE,
   ...
 )
 }
