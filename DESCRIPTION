@@ -42,7 +42,8 @@ Imports:
     sysfonts,
     tibble,
     tidyr,
-    waldo
+    waldo,
+    vctrs
 Suggests: 
     knitr,
     rmarkdown,

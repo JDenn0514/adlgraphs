@@ -33,5 +33,6 @@
 #' @importFrom highcharter hc_theme hc_theme_merge
 #' @importFrom skimr n_missing
 #' @importFrom marquee classic_style element_marquee
+#' @importFrom vctrs vec_ptype_abbr
 #' @keywords internal
 "_PACKAGE"

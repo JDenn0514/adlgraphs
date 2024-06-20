@@ -2,7 +2,7 @@
 % Please edit documentation in R/codebook.R
 \name{codebook}
 \alias{codebook}
-\title{Create a codebook based on underlying metadata inside of a dataset or tibble}
+\title{Create a data codebook}
 \usage{
 codebook(data)
 }
@@ -10,8 +10,8 @@ codebook(data)
 \item{data}{An object of type data.frame or tibble}
 }
 \description{
-This function takes a data.frame or tibble and creates a codebook. The new
-object is a data.frame where each row represents the underlying metadata
+This function takes a \code{data.frame} and creates a codebook. The new
+object is a \code{data.frame} where each row contains different metadata info
 found within each column from the original data set. Each column in the new
 data set represents a different element of the underlying metadata. This is
 similar to \code{labelled::look_for()} but shows more of the underlying metadata.
@@ -44,8 +44,9 @@ about the variable that doesn't fit in the other attributes.
 }
 }
 \examples{
+# create the codebook
 test_data_codebook <- codebook(test_data)
-
+# view the codebook
 test_data_codebook
 
 
