@@ -161,7 +161,7 @@ test_data %>%
   labs(
     x = NULL,
     y = NULL,
-    title = "Education Does not Appear to Have A\nRelationship with Antisemitic Sentiment"
+    title = "Education Does Not Appear to Have A\nRelationship with Antisemitic Sentiment"
   )
   
 ```
@@ -215,22 +215,19 @@ test_data %>%
 
 ### Dodged bar plots 
 
-We don't use dodged bar plots too frequently, but it is important to understand what to do if we do use them. We use dodged bar plots to demonstrate frequencies as well as mean plots. A typical example would be to compare the level of agreement with various statements among different groups of people. In this example, we'll look at how people with and without a college degree differ in how much they agree with a few statements designed to measure conspiratorial mindset. The two images below show the same graph but one uses a legend to identify which group is associated with which bar and the other uses colored text in the title to identify the groups.
+We don't use dodged bar plots too frequently, but it is important to understand what to do if we do use them. We use dodged bar plots to demonstrate frequencies as well as mean plots. A typical example would be to compare the level of agreement with various statements among different groups of people. In this example, we'll look at how people with and without a college degree differ in how much they agree with a few statements designed to measure conspiratorial mindset. 
 
-- Coloring text in the title or subtitle to indicate the groups associated with the bars is typically better than including a legend as it makes the plot less cluttered.
-
-- If using a legend, make sure that it is aligned with the direction of the bars and in the same order. We can see this in the left plot below. Since the plot is horizontal and the bars are above each other, the legend is to the right and the legend items are on top of each other. Furthermore, the order of the legend items are in the same order as the bars.
+- Make sure legend is aligned with the direction of the bars and in the same order. We can see this in the plot below. Since the plot is horizontal and the bars are above each other, the legend is to the right and the legend items are on top of each other. Furthermore, the order of the legend items are in the same order as the bars.
 
 - Another note: Since these statements were a bit long, we made the plot horizontal and wrapped them ove three lines. Typically, anything more than two or three words will be made into a horizontal bar plot. As it relates to wrapping the text, use your judgement. Make sure the text is easy to read, doesn't overlap with each other, and the relative sizes of the bars is easy to see.
 
 ```{r}
-#| out.height: '48%'
-#| out.width: '48%'
+#| out.height: '100%'
+#| out.width: '100%'
 #| fig.width: 5
-#| fig.height: 3.5
+#| fig.height: 3
 #| dpi: 300
 #| echo: FALSE
-#| out.extra: 'style="float:left; padding:5px"'
 
 test_data %>% 
   pivot_longer_values(
@@ -258,8 +255,6 @@ test_data %>%
     legend_position = "right",
   ) +
   scale_adl(
-    direction = "reverse",
-    legend_order = "reverse",
     palette = "binary",
     wrap_legend_labels = 25,
     legend_title = "none"
@@ -272,128 +267,23 @@ test_data %>%
   labs(
     x = "Percentage who agree with each statement",
     y = NULL,
-    title = "People With and Without a Bachelor's Degree Agree\nwith Conspiratorial Statements at Similar Rates"
+    title = "People Without a Bachelor's Degree Agree with\nConspiracies More than those with a Bachelor's Degree"
   )
 
-
-```
-
-
-```{r}
-#| out.height: '48%'
-#| out.width: '48%'
-#| fig.width: 5
-#| fig.height: 3.5
-#| dpi: 300
-#| echo: FALSE
-#| out.extra: 'style="float:right; padding:5px"'
-
-
-
-
-bold_style <- marquee::classic_style(
-  weight = "bold",
-  lineheight = 1,
-  align = "center"
-)
-
-test_data %>% 
-  pivot_longer_values(
-    cols = c(controlled:run),
-    names_to = "conspiracies",
-    values_to = "resp"
-  ) %>% 
-  mutate(
-    resp_f2 = make_dicho(resp),
-    conspiracies_f = haven::as_factor(conspiracies)
-  ) %>% 
-  group_by(edu_f2, conspiracies_f) %>% 
-  get_freqs(resp_f2, wt = wts) %>% 
-  pct_conv() %>% 
-  filter(resp_f2 == "Agree") %>% 
-  mutate(edu_f2 = fct_rev(edu_f2)) %>% 
-  adl_bar_plots(
-    x = pct,
-    y = conspiracies_f,
-    col_label = pct_lab,
-    group = edu_f2,
-    fill = edu_f2,
-    direction = "horizontal",
-    position = "dodge"
-  ) +
-  theme_h_bar(markdown = TRUE) +
-  scale_adl(
-    palette = "binary",
-    wrap_legend_labels = 25,
-    legend_title = "none"
-  ) +
-  # theme(
-  #   plot.title = marquee::element_marquee(
-  #     family = "Roboto",
-  #     width = 1,
-  #     style = bold_style
-  #   ),
-  # ) +
-  scale_y_discrete(
-    labels = scales::label_wrap(30),
-    expand = expansion(mult = c(0, 0.05))
-  ) +
-  scale_x_continuous(expand = expansion(mult = c(0, 0.2))) +
-  labs(
-    x = "Percentage who agree with each statement",
-    y = NULL,
-    title = "People {#14A2FCFF with} and {#B0B1B3FF without} a Bachelor's Degree Agree With Conspiratorial Statements at Similar Rates",
-  )
 
 
 ```
 
 Occasionally, we also do vertically dodged bar plots. As I mentioned above, we'll use these when the axis labels are not large. For example, comparing the percentage of people endorsing different numbers of tropes/statements among different groups, like college graduates vs non-college graduates. Another example, comparing the average score for two measures, like conspiracy belief and social dominance orientation, across a group, like education level. I'll demonstrate both examples below.
 
-```{r}
-#| out.height: '48%'
-#| out.width: '48%'
-#| fig.width: 5
-#| fig.height: 3.5
-#| dpi: 300
-#| echo: FALSE
-#| out.extra: 'style="float:right; padding:5px"'
-
-test_data %>% 
-  get_freqs(pol_part_sum, edu_f2) %>% 
-  pct_conv() %>% 
-  adl_bar_plots(
-    x = pol_part_sum,
-    y = pct,
-    col_label = pct_lab,
-    fill = edu_f2,
-    group = edu_f2,
-    position = "dodge",
-    legend_position = "top"
-  ) +
-  theme_v_bar(
-    markdown = TRUE
-  ) +
-  scale_adl(n = 2) +
-  scale_x_continuous(breaks = c(0:14)) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
-  labs(
-    x = "Number of Actions Related to Political Participation People Have Done",
-    y = NULL,
-    title = "People {#14A2FCFF With} a Bachelor's Degree Are More Politically Active than People {#B0B1B3FF Without} a Bachelor's Degree",
-  )
-
-```
-
 
 ```{r}
-#| out.height: '48%'
-#| out.width: '48%'
+#| out.height: '100%'
+#| out.width: '100%'
 #| fig.width: 5
-#| fig.height: 3.5
+#| fig.height: 4
 #| dpi: 300
 #| echo: FALSE
-#| out.extra: 'style="float:right; padding:5px"'
 
 
 test_data %>% 
@@ -414,10 +304,9 @@ test_data %>%
     fill = variables_f,
     freq_plot = FALSE,
     position = "dodge",
-    dodge_width = 0.85
-  ) +
-  theme_v_bar(
-    markdown = TRUE
+    dodge_reverse = TRUE,
+    dodge_width = 0.85,
+    legend_position = "top"
   ) +
   scale_adl(
     palette = "binary",
@@ -427,7 +316,7 @@ test_data %>%
   labs(
     x = NULL,
     y = NULL,
-    title = "{#14A2FCFF Conspiracy Theory Belief} Is Higher than {#B0B1B3FF Social Dominance Orientation} Across All Education Levels",
+    title = "Conspiracy Theory Belief Is Higher than Social\nDominance Orientation Across All Education Levels",
   )
   
   
@@ -438,7 +327,69 @@ test_data %>%
 
 ### Stacked frequency bar plots
 
-This one of the most common bar plots CAR uses. The example is a typical use case
+This one of the most common bar plots CAR uses. We use horizontal stacked plots to demonstrate frequencies of different statements. We do not use vertical stacked plots. Here are some general notes unique to horizontal stacked plots:
+
+- When comparing frequencies of different statements, the legend should almost always go on top.
+
+- Each statement goes above the bar instead of to the left of it. 
+
+- Each bar should be labelled. The labels should have white backgrounds for added visibility and should be centered within the bar. If two labels overlap, manually adjust their spacing.
+
+- The order of the response options goes like this: agree to disagree; true to false; favorable to unfavorable; etc. When used within the same report, it is important to keep the order of the response options the same in every graph. Generally, we want the value we are highlighting to come first. Oftentimes, this is the percentage who think a negative statement is true or agree with it.
+
+- The order of the statements should go from highest (on the top) to lowest (on the bottom)
+
+
+
+```{r}
+#| out.height: '100%'
+#| out.width: '100%'
+#| fig.width: 5
+#| fig.height: 3.5
+#| dpi: 300
+#| echo: FALSE
+
+test_data %>% 
+  pivot_longer_values(
+    cols = c(controlled:run),
+    names_to = "conspiracies",
+    values_to = "resp"
+  ) %>% 
+  mutate(
+    resp_f = haven::as_factor(resp),
+    conspiracies = haven::as_factor(conspiracies) %>% fct_rev()
+  ) %>% 
+  get_freqs(resp_f, conspiracies, wt = wts) %>% 
+  pct_conv() %>% 
+  adl_bar_plots(
+    x = pct, 
+    y = conspiracies,
+    col_label = pct_lab,
+    fill = resp_f,
+    group = resp_f,
+    direction = "horizontal",
+    position = "stack"
+  ) +
+  theme(
+    legend.text = element_text(margin = margin(r = 4)),
+    legend.box.spacing = unit(0, "pt")
+  ) +
+  scale_adl(
+    palette = "likert_4",
+    n = 4,
+    wrap_legend_labels = 10,
+    legend_title = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "A Majority of Americans Agree with Each\nConspiratorial Statement"
+  ) 
+
+  
+  
+```
+
 
 ## How to create bar plots using the `adlgraphs` package
 
