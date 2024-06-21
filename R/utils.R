@@ -1,31 +1,6 @@
 
 # my own functions --------------------------------------------------------
 
-# get value labels based on data and variable
-attr_val_labels <- function(data, x) {
-  attributes(data[[x]])$labels
-}
-# get factor levels based on data and variable
-attr_levels <- function(data, x) {
-  attributes(data[[x]])$levels
-}
-# get transformation attribute based on data and variable
-attr_transformation <- function(data, x) {
-  attributes(data[[x]])$transformation
-}
-# get note attribute based on data and variable
-attr_note <- function(data, x) {
-  attributes(data[[x]])$note
-}
-# get question preface attribute based on data and variable
-attr_question_preface <- function(data, x) {
-  attributes(data[[x]])$question_preface
-}
-# get survey_flow attribute based on data and variable
-attr_survey_flow <- function(data, x) {
-  attributes(data[[x]])$survey_flow
-}
-
 
 
 # clean the racial groups
@@ -147,24 +122,6 @@ get_var_label <- function(x, lab) {
 
 }
 
-# Create a vector containing character strings comprised of all the variable
-# labels for each column in a data.frame or tibble.
-# write a function that will get the variable label for each column in the df
-get_all_var_labels <- function(df) {
-  # get a list of columns
-  cols <- names(df)
-
-  # write up a function that makes the string in the format we want
-  string_fun <- function(x) {
-    string <- attributes(df[[x]])$label
-  }
-
-  # map string_fun over each of the columns laid out earlier
-  purrr::map(cols, string_fun) %>%
-    setNames(cols) %>%
-    # undo the list and convert to a vector
-    unlist()
-}
 
 
 

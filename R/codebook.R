@@ -1,12 +1,12 @@
-#' Create a data codebook
+#' Create a df codebook
 #'
-#' This function takes a `data.frame` and creates a codebook. The new
-#' object is a `data.frame` where each row contains different metadata info
-#' found within each column from the original data set. Each column in the new
-#' data set represents a different element of the underlying metadata. This is
-#' similar to `labelled::look_for()` but shows more of the underlying metadata.
+#' This function takes a `df.frame` and creates a codebook. The new
+#' object is a `df.frame` where each row contains different metadf info
+#' found within each column from the original df set. Each column in the new
+#' df set represents a different element of the underlying metadf. This is
+#' similar to `labelled::look_for()` but shows more of the underlying metadf.
 #'
-#' Currently, the new data set provided by this function has the following columns:
+#' Currently, the new df set provided by this function has the following columns:
 #'
 #'  * pos - The position of the variable.
 #'
@@ -19,13 +19,13 @@
 #'  * value_labels - If the variable is a labelled vector, the value labels are
 #'    listed here.
 #'
-#'  * transformation - An explanation of any potential data transformations the
+#'  * transformation - An explanation of any potential df transformations the
 #'    variable underwent is listed here. This useful if you want to remember how
 #'    a variable was created without going back to the cleaning script.
 #'
 #'  * question_preface - This contains the question preface. To elaborate, some
 #'    questions in surveys enable respondents to select multiple responses. Each
-#'    response gets it's own variable in the data. The value listed here is
+#'    response gets it's own variable in the df. The value listed here is
 #'    supposed to contain that text that prefaced the response options. The
 #'    actual response option is listed under 'label'.
 #'
@@ -43,107 +43,60 @@
 #'
 #'  * range - If a numeric variable, shows the range of the values.
 #'
-#' @param data An object of type data.frame or tibble
+#' @param df An object of type df.frame or tibble
 #'
 #' @examples
 #' # create the codebook
-#' test_data_codebook <- codebook(test_data)
+#' test_df_codebook <- codebook(test_df)
 #' # view the codebook
-#' test_data_codebook
+#' test_df_codebook
 #'
 #'
 #' @export
 
 
-codebook <- function(data) {
+codebook <- function(df) {
 
-  data_lab <- deparse(substitute(data))
+  df_lab <- deparse(substitute(df))
 
-  if (!is.data.frame(data) || !tibble::is_tibble(data)) {
+  if (!is.data.frame(df) || !tibble::is_tibble(df)) {
     cli::cli_abort(c(
-      "{.var data} must be of class {.cls tbl_df}, {.cls tbl}, or {.cls data.frame}",
-      "x" = "You've supplied an object of class {.cls {class(data)}}"
+      "{.var df} must be of class {.cls tbl_df}, {.cls tbl}, or {.cls df.frame}",
+      "x" = "You've supplied an object of class {.cls {class(df)}}"
     ))
   }
 
   # attr the variable names
-  names <- names(data)
+  names <- names(df)
   # get the number of variables
   len <- length(names)
 
   if (!len) stop("there are no names to search in that object")
 
   # get the variable labels
-  labels <- get_all_var_labels(data)
+  labels <- get_all_var_labels(df)
 
   # get the factor levels
-  factor_levels <- purrr::map2(
-    rep(list(data), len),
-    names,
-    attr_levels
-  )
+  factor_levels <- get_all_factor_levels({{ df }})
 
-  levels <- purrr::map2(
-    rep(list(data), len),
-    names,
-    attr_levels
-  )
-
+  levels <- get_all_factor_levels({{ df }})
   # get the value labels
-  value_labels <- purrr::map2(
-    # use `rep` to repeat the data set, `list` to make it into a list of data
-    # sets, and len to determine how many times to repeat it
-    rep(list(data), len),
-    # the names of the variables
-    names,
-    # the function to get the value labels
-    attr_val_labels
-  )
+  value_labels <- get_all_val_labels({{ df }})
 
   # get the transformation attribute
-  transformation <- purrr::map2(
-    # use `rep` to repeat the data set, `list` to make it into a list of data
-    # sets, and len to determine how many times to repeat it
-    rep(list(data), len),
-    # the names of the variables
-    names,
-    # the function to get the 'transformation' attribute
-    attr_transformation
-  )
+  transformation <- get_all_transformation({{ df }})
 
   # get the note attribute
-  note <- purrr::map2(
-    # use `rep` to repeat the data set, `list` to make it into a list of data
-    # sets, and len to determine how many times to repeat it
-    rep(list(data), len),
-    # the names of the variables
-    names,
-    # the function to get the note attribute
-    attr_note
-  )
+  note <- get_all_note({{ df }})
 
-  question_preface <- purrr::map2(
-    # use `rep` to repeat the data set, `list` to make it into a list of data
-    # sets, and len to determine how many times to repeat it
-    rep(list(data), len),
-    # the names of the variables
-    names,
-    # the function to get the question preface
-    attr_question_preface
-  )
+  # get the question_preface attribute
+  question_preface <- get_all_question_preface({{ df }})
 
-  survey_flow <- purrr::map2(
-    # use `rep` to repeat the data set, `list` to make it into a list of data
-    # sets, and len to determine how many times to repeat it
-    rep(list(data), len),
-    # the names of the variables
-    names,
-    # the function to get the survey flow
-    attr_survey_flow
-
-  )
+  # get the survey_flow attribute
+  survey_flow <- get_all_survey_flow({{ df }})
 
   pos <- which(names %in% names)
+
   # reordering according to pos
   # not forgetting that some variables don't have a label
   if (length(labels)) {
@@ -179,19 +132,15 @@ codebook <- function(data) {
       question_preface = question_preface,
       survey_flow = survey_flow,
       note = note,
-      col_type = unlist(lapply(data, vctrs::vec_ptype_abbr)),
-      class = lapply(data, class),
-      type = unlist(lapply(data, typeof)),
-      missing = unlist(lapply(data, n_missing)), # retrocompatibility
-      unique_values = unlist(lapply(data, unique_values)),
-      range = lapply(data, generic_range)
+      col_type = unlist(lapply(df, vctrs::vec_ptype_abbr)),
+      class = lapply(df, class),
+      type = unlist(lapply(df, typeof)),
+      missing = unlist(lapply(df, n_missing)), # retrocompatibility
+      unique_values = unlist(lapply(df, unique_values)),
+      range = lapply(df, generic_range)
     )
 
   return(res)
 
 }
-
-
-
-
 
