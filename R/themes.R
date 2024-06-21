@@ -82,7 +82,7 @@ theme_default <- function(
     # control the base font size, this also determines spacing
   base_size = 12,
   # control the base font
-  base_family = "R",
+  base_family = "Rob Normal",
   # control the base line_width
   base_line_size = base_size / 24,
   # control the base rect_width
@@ -397,8 +397,8 @@ theme_default <- function(
     panel.ontop                      = FALSE,
     plot.background                  = element_rect(colour = "white"),
     plot.title                       = element_text(
+      family = "Rob Heavy",
       size = base_size * 1.2,
-      face = "bold",
       hjust = 0.5,
       vjust = 1,
       margin = margin(b = base_size),

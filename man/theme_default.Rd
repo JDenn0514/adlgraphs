@@ -6,7 +6,7 @@
 \usage{
 theme_default(
   base_size = 12,
-  base_family = "R",
+  base_family = "Rob Normal",
   base_line_size = base_size/24,
   base_rect_size = base_size/24,
   base_lineheight = 1.1,
