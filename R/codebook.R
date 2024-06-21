@@ -182,7 +182,7 @@ codebook <- function(data) {
       col_type = unlist(lapply(data, vctrs::vec_ptype_abbr)),
       class = lapply(data, class),
       type = unlist(lapply(data, typeof)),
-      missing = unlist(lapply(data, skimr::n_missing)), # retrocompatibility
+      missing = unlist(lapply(data, n_missing)), # retrocompatibility
       unique_values = unlist(lapply(data, unique_values)),
       range = lapply(data, generic_range)
     )
