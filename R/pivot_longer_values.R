@@ -18,9 +18,9 @@ pivot_longer_values <- function(data, cols, names_to, values_to) {
       values_to = values_to
     )
 
+  df_new <- data %>% select({{ cols }})
   # create a vector containing the variable labels
-  var_labs <- labelled::var_label(x = data %>% select( {{ cols }})) %>%
-    unlist()
+  var_labs <- get_all_var_labels(df_new)
 
   # flip the names and values of the vector
   var_labs <- setNames(names(var_labs), var_labs)

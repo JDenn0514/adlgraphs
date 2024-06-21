@@ -301,10 +301,7 @@ reflect_density <- function(dens, bounds, from, to) {
   list(x = out_x, y = out_y)
 }
 
-#' From skimr package
-#' Calculate the sum of `NA` and `NULL` (i.e. missing) values.
-#' @param x A vector
-#' @export
+
 n_missing <- function(x) {
   sum(is.na(x) | is.null(x))
 }
