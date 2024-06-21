@@ -1,10 +1,15 @@
-#' Within this package there are a variety of functions that make it easy to
-#' access the underlying metadata within the data. This is because it is
-#' easier to add metadata on the front end to make analysis and visualization
-#' quicker and easier on the back end.
+#' These are a set of functions that make it easy to access attributes/metadata
+#' from a vector or column in a `data.frame`. These functions do not allow you to
+#' change, set, or remove attributes, only to access them.
 #'
+#' @param x A vector object or the name of a column in a data.frame
+#' @param df A `data.frame` or `tibble` object. This should be specified when `x`
+#'   is only the name of a column.
 
-#' Get the variable label
+
+#' Get the variable label attribute
+#' @rdname attributes
+#' @export
 attr_var_label <- function(x, df) {
   if (missing(df)) {
     attributes(x)$label
@@ -13,7 +18,9 @@ attr_var_label <- function(x, df) {
   }
 }
 
-# get value labels based on df and variable
+#' Get the value labels attribute
+#' @rdname attributes
+#' @export
 attr_val_labels <- function(x, df) {
   if (missing(df)) {
     attributes(x)$labels
@@ -22,7 +29,9 @@ attr_val_labels <- function(x, df) {
   }
 }
 
-# get factor levels based on df and variable
+#' Get the factor levels attribute from a vector
+#' @rdname attributes
+#' @export
 attr_levels <- function(x, df) {
   if (missing(df)) {
     attributes(x)$levels
@@ -30,7 +39,10 @@ attr_levels <- function(x, df) {
     attributes(df[[x]])$levels
   }
 }
-# get transformation attribute based on df and variable
+
+#' Get the transformation attribute from a vector
+#' @rdname attributes
+#' @export
 attr_transformation <- function(x, df) {
   if (missing(df)) {
     attributes(x)$transformation
@@ -38,7 +50,10 @@ attr_transformation <- function(x, df) {
     attributes(df[[x]])$transformation
   }
 }
-# get note attribute based on df and variable
+
+#' Get the note attribute
+#' @rdname attributes
+#' @export
 attr_note <- function(x, df) {
   if (missing(df)) {
     attributes(x)$note
@@ -46,7 +61,10 @@ attr_note <- function(x, df) {
     attributes(df[[x]])$note
   }
 }
-# get question preface attribute based on df and variable
+
+#' get question preface attribute
+#' @rdname attributes
+#' @export
 attr_question_preface <- function(x, df) {
   if (missing(df)) {
     attributes(x)$question_preface
@@ -54,7 +72,11 @@ attr_question_preface <- function(x, df) {
     attributes(df[[x]])$question_preface
   }
 }
-# get survey_flow attribute based on df and variable
+
+
+# get survey_flow attribute
+#' @rdname attributes
+#' @export
 attr_survey_flow <- function(x, df) {
   if (missing(df)) {
     attributes(x)$survey_flow

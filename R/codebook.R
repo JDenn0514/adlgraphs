@@ -47,9 +47,9 @@
 #'
 #' @examples
 #' # create the codebook
-#' test_df_codebook <- codebook(test_df)
+#' test_data_codebook <- codebook(test_data)
 #' # view the codebook
-#' test_df_codebook
+#' test_data_codebook
 #'
 #'
 #' @export
