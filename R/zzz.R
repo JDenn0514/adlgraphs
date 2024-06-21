@@ -1,8 +1,10 @@
 
 .onLoad <- function(...) {
-  sysfonts::font_add_google("Roboto", "R", regular.wt = 400)
-  showtext::showtext_opts(dpi = 500)
-  showtext::showtext_auto(TRUE)
+  systemfonts::register_variant(name = "Rob Normal", family = "Roboto", weight = "normal")
+  systemfonts::register_variant(name = "Rob Heavy", family = "Roboto", weight = "heavy")
+  systemfonts::register_variant(name = "Rob Bold", family = "Roboto", weight = "bold")
+  systemfonts::register_variant(name = "Rob Medium", family = "Roboto", weight = "medium")
+
 }
 
 utils::globalVariables(
@@ -18,3 +20,4 @@ utils::globalVariables(
     "jewish", "reltrad_f"
   )
 )
+

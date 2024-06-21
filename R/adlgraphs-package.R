@@ -8,9 +8,7 @@
 #' margin guide_legend geom_errorbar ggplot aes geom_col geom_text geom_label
 #' position_dodge2 position_dodge rel unit waiver element_rect position_stack
 #' facet_wrap vars ggproto FacetWrap Stat
-#' @import showtext
 #' @importFrom rlang set_names sym := .data caller_arg caller_env
-#' @importFrom sysfonts font_add_google
 #' @importFrom gt gt tab_spanner fmt_markdown tab_style
 #' @importFrom cli cli_abort
 #' @importFrom labelled var_label
@@ -34,5 +32,6 @@
 #' @importFrom skimr n_missing
 #' @importFrom marquee classic_style element_marquee
 #' @importFrom vctrs vec_ptype_abbr
+#' @importFrom systemfonts register_variant
 #' @keywords internal
 "_PACKAGE"
