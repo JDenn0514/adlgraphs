@@ -34,6 +34,7 @@ Imports:
     prismatic,
     purrr,
     rlang,
+    rstudioapi,
     sjlabelled,
     stats,
     stringr,

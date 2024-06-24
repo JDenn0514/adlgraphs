@@ -6,7 +6,6 @@
 \usage{
 theme_default(
   base_size = 12,
-  base_family = "Rob Normal",
   base_line_size = base_size/24,
   base_rect_size = base_size/24,
   base_lineheight = 1.1,
@@ -36,8 +35,6 @@ theme_default(
 \arguments{
 \item{base_size}{Base font size, given in pts. Also controls the spacing in
 the graph.}
-
-\item{base_family}{Base font family. Default is Roboto}
 
 \item{base_line_size}{Base size for line elements.}
 

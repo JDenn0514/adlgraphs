@@ -8,7 +8,6 @@
 #'
 #' @param base_size Base font size, given in pts. Also controls the spacing in
 #'   the graph.
-#' @param base_family Base font family. Default is Roboto
 #' @param base_line_size Base size for line elements.
 #' @param base_rect_size Base size for rect elements.
 #' @param base_lineheight Base line height for all text
@@ -81,8 +80,6 @@
 theme_default <- function(
     # control the base font size, this also determines spacing
   base_size = 12,
-  # control the base font
-  base_family = "Rob Normal",
   # control the base line_width
   base_line_size = base_size / 24,
   # control the base rect_width
@@ -270,9 +267,35 @@ theme_default <- function(
 
   # set the facet title face
   if (isTRUE(facet_title_bold)) {
-    facet_title_bold <- "bold"
+    facet_title_bold <- element_text(
+      family = adlgraphs_global$font$bold$family,
+      face = "bold",
+      colour = "grey10",
+      size = facet_title_size,
+      margin = margin(
+        t = facet_title_margin_top,
+        b = facet_title_margin_bottom,
+        r = facet_title_margin_right,
+        l = facet_title_margin_left
+      ),
+      inherit.blank = TRUE,
+      hjust = 0.5
+    )
   } else {
-    facet_title_bold <- "plain"
+    facet_title_bold <- element_text(
+      family = adlgraphs_global$font$regular$family,
+      face = "plain",
+      colour = "grey10",
+      size = facet_title_size,
+      margin = margin(
+        t = facet_title_margin_top,
+        b = facet_title_margin_bottom,
+        r = facet_title_margin_right,
+        l = facet_title_margin_left
+      ),
+      inherit.blank = TRUE,
+      hjust = 0.5
+    )
   }
 
   theme(
@@ -289,7 +312,7 @@ theme_default <- function(
       linetype = 1
     ),
     text                             = element_text(
-      family = base_family,
+      family = adlgraphs_global$font$regular$family,
       face = "plain",
       colour = "black",
       size = base_size,
@@ -397,7 +420,8 @@ theme_default <- function(
     panel.ontop                      = FALSE,
     plot.background                  = element_rect(colour = "white"),
     plot.title                       = element_text(
-      family = "Rob Heavy",
+      family = adlgraphs_global$font$heavy$family,
+      face = "bold",
       size = base_size * 1.2,
       hjust = 0.5,
       vjust = 1,
@@ -406,6 +430,7 @@ theme_default <- function(
     ),
     plot.title.position              = "plot",
     plot.subtitle                    = element_text(
+      family = adlgraphs_global$font$heavy$family,
       hjust = 0,
       vjust = 1,
       margin = margin(b = base_size * 1.2),
@@ -433,19 +458,7 @@ theme_default <- function(
     strip.background.y               = NULL,
     strip.clip                       = "inherit",
     strip.placement                  = "inside",
-    strip.text                       = element_text(
-      colour = "grey10",
-      size = facet_title_size,
-      margin = margin(
-        t = facet_title_margin_top,
-        b = facet_title_margin_bottom,
-        r = facet_title_margin_right,
-        l = facet_title_margin_left
-      ),
-      inherit.blank = TRUE,
-      hjust = 0.5,
-      face = facet_title_bold
-    ),
+    strip.text                       = facet_title_bold,
     strip.text.x                     = NULL,
     strip.text.x.bottom              = NULL,
     strip.text.x.top                 = NULL,

@@ -31,6 +31,7 @@
 #' @importFrom highcharter hc_theme hc_theme_merge
 #' @importFrom marquee classic_style element_marquee
 #' @importFrom vctrs vec_ptype_abbr
-#' @importFrom systemfonts register_variant
+#' @importFrom systemfonts register_font
+#' @importFrom rstudioapi isAvailable getVersion
 #' @keywords internal
 "_PACKAGE"

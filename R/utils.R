@@ -36,6 +36,27 @@ clean_race <- function(df, x) {
 
 }
 
+#' Identify correct font path based on filename
+#'
+#' Taking a list of font paths, search for a specific filename. If a perfect
+#' match is found, return that path.
+#'
+#' @param filename the complete file name, less a .otf or .ttf extension.
+#' @param path a vector of filepaths
+#'
+#' @noRd
+find_path <- function(filename, paths){
+  result <- grep(paste0("(\\\\|/)", filename, ".[ot]tf$"), paths, value = TRUE)
+
+  if(length(result) >= 1){
+    return(result[1])
+  } else {
+    stop(
+      paste0("Font '", filename, "' not found."),
+      call. = FALSE)
+  }
+}
+
 
 # make the
 accept_string_or_sym <- function(x) {
