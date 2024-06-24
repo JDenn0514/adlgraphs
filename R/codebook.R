@@ -1,12 +1,12 @@
 #' Create a df codebook
 #'
-#' This function takes a `df.frame` and creates a codebook. The new
-#' object is a `df.frame` where each row contains different metadf info
-#' found within each column from the original df set. Each column in the new
-#' df set represents a different element of the underlying metadf. This is
-#' similar to `labelled::look_for()` but shows more of the underlying metadf.
+#' This function takes a `data.frame` and creates a codebook. The new
+#' object is a `data.frame` where each row contains different metadata info
+#' found within each column from the original data set. Each column in the new
+#' data set represents a different element of the underlying metadata. This is
+#' similar to `labelled::look_for()` but shows more of the underlying metadata.
 #'
-#' Currently, the new df set provided by this function has the following columns:
+#' Currently, the new data set provided by this function has the following columns:
 #'
 #'  * pos - The position of the variable.
 #'
@@ -19,13 +19,13 @@
 #'  * value_labels - If the variable is a labelled vector, the value labels are
 #'    listed here.
 #'
-#'  * transformation - An explanation of any potential df transformations the
+#'  * transformation - An explanation of any potential data transformations the
 #'    variable underwent is listed here. This useful if you want to remember how
 #'    a variable was created without going back to the cleaning script.
 #'
 #'  * question_preface - This contains the question preface. To elaborate, some
 #'    questions in surveys enable respondents to select multiple responses. Each
-#'    response gets it's own variable in the df. The value listed here is
+#'    response gets it's own variable in the data. The value listed here is
 #'    supposed to contain that text that prefaced the response options. The
 #'    actual response option is listed under 'label'.
 #'
@@ -43,7 +43,7 @@
 #'
 #'  * range - If a numeric variable, shows the range of the values.
 #'
-#' @param df An object of type df.frame or tibble
+#' @param df An object of class `data.frame` or `tibble`
 #'
 #' @examples
 #' # create the codebook

@@ -4,11 +4,12 @@ Title: Create Graphs with ADL Style and Branding
 Version: 0.2.0.9000
 Authors@R: 
     person("Jacob", "Dennen", , "jdennen@adl.org", role = c("aut", "cre"))
-Description: This package is designed to make it easier for folks at CAR
-    at ADL to make graphs. The package contains all of the different
-    themes related to various graph styles, a guide to which colors to use
-    and when, and various functions created related to various graphs
-    (mainly for coefficient plots).
+Description: The goal of adlgraphs is to to help ensure that the data 
+    visualizations produced by the Center for Antisemitism Research (CAR) at the
+    Anti-Defamation League (ADL) are consistent with ADL's brand guidelines and 
+    that CAR's data visualizations are consistent and cohesive. In addition, it 
+    contains a myriad array of different functions to help make data analysis 
+    and data cleaning quicker, easier, and more succinct.
 License: MIT + file LICENSE
 URL: https://github.com/JDenn0514/adlgraphs,
     https://jdenn0514.github.io/adlgraphs/
