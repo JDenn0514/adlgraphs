@@ -66,6 +66,7 @@ reference:
     - prettytable
 - title: Miscellaneous functions
   contents:
+    - attr_var_label
     - codebook
     - make_df_oxy
     - write_word_table

@@ -1,10 +1,14 @@
 #' These are a set of functions that make it easy to access attributes/metadata
-#' from a vector or column in a `data.frame`. These functions do not allow you to
-#' change, set, or remove attributes, only to access them.
+#' from a vector or column in a `data.frame`. Note: these functions do not allow
+#' you to change, set, or remove attributes.
 #'
 #' @param x A vector object or the name of a column in a data.frame
 #' @param df A `data.frame` or `tibble` object. This should be specified when `x`
 #'   is only the name of a column.
+#'
+#' @name attributes
+#' @aliases NULL
+NULL
 
 
 #' Get the variable label attribute
