@@ -8,9 +8,7 @@
 \alias{attr_note}
 \alias{attr_question_preface}
 \alias{attr_survey_flow}
-\title{These are a set of functions that make it easy to access attributes/metadata
-from a vector or column in a \code{data.frame}. Note: these functions do not allow
-you to change, set, or remove attributes.}
+\title{Functions to access metadata}
 \usage{
 attr_var_label(x, df)
 
@@ -36,16 +34,53 @@ is only the name of a column.}
 These are a set of functions that make it easy to access attributes/metadata
 from a vector or column in a \code{data.frame}. Note: these functions do not allow
 you to change, set, or remove attributes.
+}
+\details{
+\describe{
 
-Get the variable label attribute
+\item{\code{attr_var_label()}}{This function gets the the variable label.}
 
-Get the value labels attribute
+\item{\code{attr_val_labels()}}{This function gets the value labels.}
 
-Get the factor levels attribute from a vector
+\item{\code{attr_levels()}}{This function gets the factor levels.}
 
-Get the transformation attribute from a vector
+\item{\code{attr_transformation()}}{This function gets the "transformation"
+attribute which tells you what data transformation the variable underwent
+when it was created.}
 
-Get the note attribute
+\item{\code{attr_question_preface()}}{This function gets the "question_preface"
+attribute. Some questions in surveys enable respondents to select multiple
+responses. Each response gets it's own variable in the data, which is labeled
+"label. The text stored in this attribute contains the text that respondents
+saw before the response options.}
 
-get question preface attribute
+\item{\code{attr_survey_flow()}}{This function gets teh the "survey_flow"
+attribute. This is used to indicate if there was an experiment or some sort
+of branching involved in the survey flow}
+
+\item{\code{attr_note()}}{This function gets the  "note" attribute which
+contains miscellaneous information about the variable.}
+
+}
+}
+\examples{
+library(adlgraphs)
+
+# get the variable labels
+attr_var_label(x = test_data$edu)
+attr_var_label(x = "edu", df =  test_data)
+
+# get the value labels
+attr_val_labels(x = test_data$edu)
+attr_val_labels(x = "edu", df = test_data)
+
+# get the levels for edu_f
+attr_levels(x = test_data$edu_f)
+attr_levels(x = "edu_f", df = test_data)
+
+# get the transformation
+attr_transformation(x = test_data$edu_f)
+attr_transformation(x = "edu_f", df = test_data)
+
+
 }

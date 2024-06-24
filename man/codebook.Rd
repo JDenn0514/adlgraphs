@@ -2,22 +2,22 @@
 % Please edit documentation in R/codebook.R
 \name{codebook}
 \alias{codebook}
-\title{Create a data codebook}
+\title{Create a df codebook}
 \usage{
-codebook(data)
+codebook(df)
 }
 \arguments{
-\item{data}{An object of type data.frame or tibble}
+\item{df}{An object of type df.frame or tibble}
 }
 \description{
-This function takes a \code{data.frame} and creates a codebook. The new
-object is a \code{data.frame} where each row contains different metadata info
-found within each column from the original data set. Each column in the new
-data set represents a different element of the underlying metadata. This is
-similar to \code{labelled::look_for()} but shows more of the underlying metadata.
+This function takes a \code{df.frame} and creates a codebook. The new
+object is a \code{df.frame} where each row contains different metadf info
+found within each column from the original df set. Each column in the new
+df set represents a different element of the underlying metadf. This is
+similar to \code{labelled::look_for()} but shows more of the underlying metadf.
 }
 \details{
-Currently, the new data set provided by this function has the following columns:
+Currently, the new df set provided by this function has the following columns:
 \itemize{
 \item pos - The position of the variable.
 \item variable - The name of the variable.
@@ -25,12 +25,12 @@ Currently, the new data set provided by this function has the following columns:
 \item levels - If the variable is a factor, the factor levels are listed here.
 \item value_labels - If the variable is a labelled vector, the value labels are
 listed here.
-\item transformation - An explanation of any potential data transformations the
+\item transformation - An explanation of any potential df transformations the
 variable underwent is listed here. This useful if you want to remember how
 a variable was created without going back to the cleaning script.
 \item question_preface - This contains the question preface. To elaborate, some
 questions in surveys enable respondents to select multiple responses. Each
-response gets it's own variable in the data. The value listed here is
+response gets it's own variable in the df. The value listed here is
 supposed to contain that text that prefaced the response options. The
 actual response option is listed under 'label'.
 \item survey flow - This is used to indicate if there was an experiment or some
