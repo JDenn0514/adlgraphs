@@ -1,8 +1,8 @@
 ---
-title: "data_transformations"
+title: "Data Transformations"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{data_transformations}
+  %\VignetteIndexEntry{Data Transformations}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -23,11 +23,7 @@ library(adlgraphs)
 # this is for some other basic data transformations
 library(dplyr)
 # for working with labelled data
-library(labelled)
-# to make labelled data
-library(haven)
-# to check for differences
-library(waldo)
+
 
 ```
 
@@ -52,9 +48,9 @@ In survey research, we often have to reverse a variable. This is primarily done 
 
 The second reason one might reverse the values, is to change the direction of the scale. For example, as the values in `top` increase, so does one's level of disagreement. We might want to reverse the values so that now a 1 = "Strongly disagree" and a 4 = "Strongly agree", and thus a higher number means more agreement. Because this method does not flip the valance of the question, people who were originally classified as "Strongly agree" are still going to be classified as "Strongly agree". Put another way, the question isn't changing and therefore people's responses aren't changing. The only thing that changes is the value associated with their response.
 
-`num_rev()` was designed with the second goal in mind. Normally when simply reversing the values by subtracting them, all underlying metadata and attributes are lost. As a result, we would have to reverse the values, update the value labels and set the variable label again. This is really time consuming. The purpose of `num_rev()` is to fix this by automating this process of reversing a numeric vector, while maintaining the variable and value labels. In addition, this function adds a new attribute called `transformation` that describes the data transformation used to create this variable. 
+`num_rev()` was designed with the second goal in mind. Normally when simply reversing the values by subtracting them, all underlying metadata and attributes are lost. As a result, we would have to reverse the values, update the value labels and set the variable label again. This is really time consuming. The purpose of `num_rev()` is to fix this by automating this process of reversing a numeric vector while maintaining the variable and value labels. In addition, this function adds a new attribute called `transformation` that describes the data transformation used to create this variable. 
 
-I'm now going to show this function in action. So we can see that while the values are flipped, the value labels for each respondent is the same.
+I'm now going to show this function in action. We can see that when `top` = 1, `top_rev` = 4; when `top` = 2, `top_rev` = 3; `top` = 3, `top_rev` = 2; and when `top` = 4, `top_rev` = 1. 
 
 ```{r}
 new_df <- test_data %>% 
@@ -66,68 +62,32 @@ new_df <- test_data %>%
 head(new_df)
 ```
 
-As we can see below, the variable labels are also the same. This means that the only thing that really changed, is the values.
+This function does a lot more than just `5 - top`. Let's take a look. Using `str()` we can see that both variables have "label" and "labels" attributes and `top_rev` has a new attribute called "transformation". The new "transformation" attribute is automatically added and describes what sort of data transformation the variable underwent when it was created. This is valuable in case you forgot how it was created. In addition, both variables have the same variable label as seen in the "label" attribute. The key difference between these can be found in the "labels" attribute. In `top_rev`, the labels are reversed. In the original variable, `top`, 1 = "Strongly agree", 2 = "Somewhat agree", etc. However, in the new variable 4 = "Strongly agree", 3 = "Somewhat agree", etc.
 
 ```{r}
-test_data %>% 
-  # let's make a new variable with the num_rev function
-  mutate(top_rev = num_rev(top)) %>% 
-  # keep only these two variables
-  select(top_rev, top) %>% 
-  # get the variable labels for both variables
-  get_variable_labels()
+
+str(new_df)
 
 ```
 
-Now that it's clear what this function does and what it doesn't do, let's try manually doing it. First, let's try just subtracting 5 from `top`. As we can see all attributes have been stripped.
+Now, there are two reasons that the different labels is significant. First, it means that when we check the frequencies for both variables we will get the same results. The only difference is the order of the response options.
 
 ```{r}
-new_df <- test_data %>% 
-  # reverse the variable
-  mutate(top_rev = 5 - top)
+get_freq_table(new_df, top_rev)
 
-# check attributes
-attributes(new_df$top_rev)
+get_freq_table(new_df, top)
 
 ```
 
-This means we need to add both value and variable labels to the variable. To do this, we'll use the `haven::labelled()` function.
+Second, the means of the variable will be different. For `top`, higher score means more disagreement. However, for `top_rev`, a higher number means more agreement. We can see the differences below.
 
 ```{r}
-new_df <- test_data %>% 
-  mutate(
-    top_rev = labelled(
-      x = 5 - top,
-      labels = c(
-        `Strongly disagree` = 1,
-        `Somewhat disagree` = 2,
-        `Somewhat agree` = 3,
-        `Strongly agree` = 4
-      ),
-      label = "An ideal society requires some groups to be on top and others to be on the bottom"
-    )
-  )
 
-attributes(new_df$top_rev)
+get_means(new_df, top_rev)
+
+get_means(new_df, top)
 
 ```
-
-There is an easier of doing this by using `labelled::val_labels()` and `labelled::var_label()` to leverage the existing value and variable labels from `top`. However, when setting the value labels, we have to use `rev()` to reverse them.
-
-```{r}
-new_df <- test_data %>% 
-  mutate(
-    top_rev = labelled(
-      x = 5 - top,
-      labels = val_labels(test_data$top) %>% rev(),
-      label = var_label(test_data$top)
-    )
-  )
-
-attributes(new_df$top_rev)
-```
-
-Now that you know how to do it manually, I think it's clear that using `num_rev()` is much easier.
 
 
 

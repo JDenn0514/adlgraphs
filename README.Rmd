@@ -13,7 +13,7 @@ produced by the Center for Antisemitism Research (CAR) at the Anti-Defamation
 League (ADL) are consistent with ADL's brand guidelines and that CAR's 
 data visualizations are consistent and cohesive. In addition, it contains a myriad
 array of different functions to help make data analysis and data cleaning, 
-quicker, easier, and more succinct
+quicker, easier, and more succinct.
 
 ## Installation
 

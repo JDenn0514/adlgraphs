@@ -1,3 +1,6 @@
+#### THIS CODE IS HEAVILY INSPIRED BY CODE FROM cmapplot SO SHOUT OUT THEM
+#### FOR THE HELP
+
 # Initialize environment for adlgraphs global variables
 adlgraphs_global <- new.env(parent = emptyenv())
 

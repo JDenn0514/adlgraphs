@@ -125,11 +125,11 @@ get_unique_labels <- function(x) {
 get_var_label <- function(x, lab) {
 
   # get the label for the group variable
-  if (!is.null(labelled::var_label(x))) {
+  if (!is.null(attr_var_label(x))) {
     # if group has a variable label
 
     # set group_variable_label to the variable label
-    var_lab <- labelled::var_label(x)
+    var_lab <- attr_var_label(x)
 
   } else {
     # if there is no variable label then just set it to the variable name
