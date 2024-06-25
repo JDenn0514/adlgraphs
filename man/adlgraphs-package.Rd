@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-This package is designed to make it easier for folks at CAR at ADL to make graphs. The package contains all of the different themes related to various graph styles, a guide to which colors to use and when, and various functions created related to various graphs (mainly for coefficient plots).
+The goal of adlgraphs is to to help ensure that the data visualizations produced by the Center for Antisemitism Research (CAR) at the Anti-Defamation League (ADL) are consistent with ADL's brand guidelines and that CAR's data visualizations are consistent and cohesive. In addition, it contains a myriad array of different functions to help make data analysis and data cleaning quicker, easier, and more succinct.
 }
 \seealso{
 Useful links:

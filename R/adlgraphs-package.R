@@ -3,7 +3,6 @@
 #' bind_cols count rename all_of
 #' @importFrom grDevices colorRampPalette rgb
 #' @importFrom prismatic color
-#' @importFrom graphics rect par image text
 #' @importFrom ggplot2 theme element_line element_blank element_text theme_minimal
 #' margin guide_legend geom_errorbar ggplot aes geom_col geom_text geom_label
 #' position_dodge2 position_dodge rel unit waiver element_rect position_stack
@@ -11,7 +10,7 @@
 #' @importFrom rlang set_names sym := .data caller_arg caller_env
 #' @importFrom gt gt tab_spanner fmt_markdown tab_style
 #' @importFrom cli cli_abort
-#' @importFrom labelled var_label
+#' @importFrom labelled var_label set_variable_labels set_value_labels
 #' @import glue
 #' @importFrom utils tail
 #' @importFrom stats qt df.residual setNames weighted.mean sd
