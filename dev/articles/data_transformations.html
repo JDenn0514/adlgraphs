@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="adlgraphs">
-<title>data_transformations • adlgraphs</title>
+<title>Data Transformations • adlgraphs</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -19,7 +19,7 @@
 <link href="../deps/Overpass_Mono-0.4.9/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="data_transformations">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Data Transformations">
 <meta property="og:description" content="adlgraphs">
 <meta property="og:image" content="https://jdenn0514.github.io/adlgraphs/logo.png">
 <meta name="robots" content="noindex">
@@ -51,7 +51,7 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/data_transformations.html">data_transformations</a>
+    <a class="dropdown-item" href="../articles/data_transformations.html">Data Transformations</a>
     <a class="dropdown-item" href="../articles/how_to_use_adl_bar_plot.html">How to Use the `adl_bar_plots` function</a>
   </div>
 </li>
@@ -82,7 +82,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>data_transformations</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Data Transformations</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/JDenn0514/adlgraphs/blob/HEAD/vignettes/data_transformations.Rmd" class="external-link"><code>vignettes/data_transformations.Rmd</code></a></small>
@@ -98,12 +98,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JDenn0514/adlgraphs" class="external-link">adlgraphs</a></span><span class="op">)</span></span>
 <span><span class="co"># this is for some other basic data transformations</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="co"># for working with labelled data</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://larmarange.github.io/labelled/" class="external-link">labelled</a></span><span class="op">)</span></span>
-<span><span class="co"># to make labelled data</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://haven.tidyverse.org" class="external-link">haven</a></span><span class="op">)</span></span>
-<span><span class="co"># to check for differences</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://waldo.r-lib.org" class="external-link">waldo</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># for working with labelled data</span></span></code></pre></div>
 <p><code>adlgraphs</code> provides three main functions to reduce the
 amount of time it takes to perform a few very common data
 transformations:</p>
@@ -161,13 +156,14 @@ underlying metadata and attributes are lost. As a result, we would have
 to reverse the values, update the value labels and set the variable
 label again. This is really time consuming. The purpose of
 <code><a href="../reference/num_rev.html">num_rev()</a></code> is to fix this by automating this process of
-reversing a numeric vector, while maintaining the variable and value
+reversing a numeric vector while maintaining the variable and value
 labels. In addition, this function adds a new attribute called
 <code>transformation</code> that describes the data transformation used
 to create this variable.</p>
-<p>I’m now going to show this function in action. So we can see that
-while the values are flipped, the value labels for each respondent is
-the same.</p>
+<p>I’m now going to show this function in action. We can see that when
+<code>top</code> = 1, <code>top_rev</code> = 4; when <code>top</code> =
+2, <code>top_rev</code> = 3; <code>top</code> = 3, <code>top_rev</code>
+= 2; and when <code>top</code> = 4, <code>top_rev</code> = 1.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="co"># let's make a new variable with the num_rev function</span></span>
@@ -185,87 +181,1001 @@ the same.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 4<span style="color: #949494;"> [Strongly agree]</span>    1<span style="color: #949494;"> [Strongly agree]</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 2<span style="color: #949494;"> [Somewhat disagree]</span> 3<span style="color: #949494;"> [Somewhat disagree]</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 1<span style="color: #949494;"> [Strongly disagree]</span> 4<span style="color: #949494;"> [Strongly disagree]</span></span></span></code></pre></div>
-<p>As we can see below, the variable labels are also the same. This
-means that the only thing that really changed, is the values.</p>
+<p>This function does a lot more than just <code>5 - top</code>. Let’s
+take a look. Using <code><a href="https://rdrr.io/r/utils/str.html" class="external-link">str()</a></code> we can see that both variables
+have “label” and “labels” attributes and <code>top_rev</code> has a new
+attribute called “transformation”. The new “transformation” attribute is
+automatically added and describes what sort of data transformation the
+variable underwent when it was created. This is valuable in case you
+forgot how it was created. In addition, both variables have the same
+variable label as seen in the “label” attribute. The key difference
+between these can be found in the “labels” attribute. In
+<code>top_rev</code>, the labels are reversed. In the original variable,
+<code>top</code>, 1 = “Strongly agree”, 2 = “Somewhat agree”, etc.
+However, in the new variable 4 = “Strongly agree”, 3 = “Somewhat agree”,
+etc.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="co"># let's make a new variable with the num_rev function</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>top_rev <span class="op">=</span> <span class="fu"><a href="../reference/num_rev.html">num_rev</a></span><span class="op">(</span><span class="va">top</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="co"># keep only these two variables</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">top_rev</span>, <span class="va">top</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="co"># get the variable labels for both variables</span></span>
-<span>  <span class="fu"><a href="https://larmarange.github.io/labelled/reference/var_label.html" class="external-link">get_variable_labels</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $top_rev</span></span>
-<span><span class="co">#&gt; [1] "An ideal society requires some groups to be on top and others to be on the bottom"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $top</span></span>
-<span><span class="co">#&gt; [1] "An ideal society requires some groups to be on top and others to be on the bottom"</span></span></code></pre></div>
-<p>Now that it’s clear what this function does and what it doesn’t do,
-let’s try manually doing it. First, let’s try just subtracting 5 from
-<code>top</code>. As we can see all attributes have been stripped.</p>
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">)</span></span>
+<span><span class="co">#&gt; tibble [250 × 2] (S3: tbl_df/tbl/data.frame)</span></span>
+<span><span class="co">#&gt;  $ top_rev: dbl+lbl [1:250] 1, 1, 2, 4, 2, 1, 2, 2, 1, 2, 1, 2, 1, 1, 2, 3, 3, 1, ...</span></span>
+<span><span class="co">#&gt;    ..@ labels        : Named num [1:4] 1 2 3 4</span></span>
+<span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly disagree" "Somewhat disagree" "Somewhat agree" "Strongly agree"</span></span>
+<span><span class="co">#&gt;    ..@ label         : chr "An ideal society requires some groups to be on top and others to be on the bottom"</span></span>
+<span><span class="co">#&gt;    ..@ transformation: 'glue' chr "Reversing 'top' while maintaining correct value labels"</span></span>
+<span><span class="co">#&gt;  $ top    : dbl+lbl [1:250] 4, 4, 3, 1, 3, 4, 3, 3, 4, 3, 4, 3, 4, 4, 3, 2, 2, 4, ...</span></span>
+<span><span class="co">#&gt;    ..@ label        : chr "An ideal society requires some groups to be on top and others to be on the bottom"</span></span>
+<span><span class="co">#&gt;    ..@ format.spss  : chr "F40.0"</span></span>
+<span><span class="co">#&gt;    ..@ display_width: int 5</span></span>
+<span><span class="co">#&gt;    ..@ labels       : Named num [1:4] 1 2 3 4</span></span>
+<span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly agree" "Somewhat agree" "Somewhat disagree" "Strongly disagree"</span></span></code></pre></div>
+<p>Now, there are two reasons that the different labels is significant.
+First, it means that when we check the frequencies for both variables we
+will get the same results. The only difference is the order of the
+response options.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="co"># reverse the variable</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>top_rev <span class="op">=</span> <span class="fl">5</span> <span class="op">-</span> <span class="va">top</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># check attributes</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">$</span><span class="va">top_rev</span><span class="op">)</span></span>
-<span><span class="co">#&gt; NULL</span></span></code></pre></div>
-<p>This means we need to add both value and variable labels to the
-variable. To do this, we’ll use the <code><a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">haven::labelled()</a></code>
-function.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_freq_table.html">get_freq_table</a></span><span class="op">(</span><span class="va">new_df</span>, <span class="va">top_rev</span><span class="op">)</span></span></code></pre></div>
+<div id="mwlefoodfi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#mwlefoodfi table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#mwlefoodfi thead, #mwlefoodfi tbody, #mwlefoodfi tfoot, #mwlefoodfi tr, #mwlefoodfi td, #mwlefoodfi th {
+  border-style: none;
+}
+
+#mwlefoodfi p {
+  margin: 0;
+  padding: 0;
+}
+
+#mwlefoodfi .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#mwlefoodfi .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#mwlefoodfi .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#mwlefoodfi .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#mwlefoodfi .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#mwlefoodfi .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#mwlefoodfi .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#mwlefoodfi .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#mwlefoodfi .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#mwlefoodfi .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#mwlefoodfi .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#mwlefoodfi .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#mwlefoodfi .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#mwlefoodfi .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#mwlefoodfi .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mwlefoodfi .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#mwlefoodfi .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#mwlefoodfi .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#mwlefoodfi .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mwlefoodfi .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#mwlefoodfi .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mwlefoodfi .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#mwlefoodfi .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mwlefoodfi .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mwlefoodfi .gt_left {
+  text-align: left;
+}
+
+#mwlefoodfi .gt_center {
+  text-align: center;
+}
+
+#mwlefoodfi .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#mwlefoodfi .gt_font_normal {
+  font-weight: normal;
+}
+
+#mwlefoodfi .gt_font_bold {
+  font-weight: bold;
+}
+
+#mwlefoodfi .gt_font_italic {
+  font-style: italic;
+}
+
+#mwlefoodfi .gt_super {
+  font-size: 65%;
+}
+
+#mwlefoodfi .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#mwlefoodfi .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#mwlefoodfi .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#mwlefoodfi .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#mwlefoodfi .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#mwlefoodfi .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#mwlefoodfi .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="table gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead><tr class="gt_col_headings">
+<th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="An ideal society requires some groups to be on top and others to be on the bottom">An ideal society requires some groups to be on top and others to be on the bottom</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="N">N</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Percent">Percent</th>
+    </tr></thead>
+<tbody class="gt_table_body">
+<tr>
+<td headers="x_f" class="gt_row gt_center">Strongly disagree</td>
+<td headers="n" class="gt_row gt_right">65</td>
+<td headers="pct" class="gt_row gt_right">26%</td>
+</tr>
+<tr>
+<td headers="x_f" class="gt_row gt_center">Somewhat disagree</td>
+<td headers="n" class="gt_row gt_right">88</td>
+<td headers="pct" class="gt_row gt_right">35.2%</td>
+</tr>
+<tr>
+<td headers="x_f" class="gt_row gt_center">Somewhat agree</td>
+<td headers="n" class="gt_row gt_right">75</td>
+<td headers="pct" class="gt_row gt_right">30%</td>
+</tr>
+<tr>
+<td headers="x_f" class="gt_row gt_center">Strongly agree</td>
+<td headers="n" class="gt_row gt_right">22</td>
+<td headers="pct" class="gt_row gt_right">8.8%</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    top_rev <span class="op">=</span> <span class="fu"><a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">labelled</a></span><span class="op">(</span></span>
-<span>      x <span class="op">=</span> <span class="fl">5</span> <span class="op">-</span> <span class="va">top</span>,</span>
-<span>      labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>        `Strongly disagree` <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>        `Somewhat disagree` <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>        `Somewhat agree` <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>        `Strongly agree` <span class="op">=</span> <span class="fl">4</span></span>
-<span>      <span class="op">)</span>,</span>
-<span>      label <span class="op">=</span> <span class="st">"An ideal society requires some groups to be on top and others to be on the bottom"</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">$</span><span class="va">top_rev</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $labels</span></span>
-<span><span class="co">#&gt; Strongly disagree Somewhat disagree    Somewhat agree    Strongly agree </span></span>
-<span><span class="co">#&gt;                 1                 2                 3                 4 </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $label</span></span>
-<span><span class="co">#&gt; [1] "An ideal society requires some groups to be on top and others to be on the bottom"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $class</span></span>
-<span><span class="co">#&gt; [1] "haven_labelled" "vctrs_vctr"     "double"</span></span></code></pre></div>
-<p>There is an easier of doing this by using
-<code><a href="https://larmarange.github.io/labelled/reference/val_labels.html" class="external-link">labelled::val_labels()</a></code> and
-<code><a href="https://larmarange.github.io/labelled/reference/var_label.html" class="external-link">labelled::var_label()</a></code> to leverage the existing value and
-variable labels from <code>top</code>. However, when setting the value
-labels, we have to use <code><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev()</a></code> to reverse them.</p>
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="../reference/get_freq_table.html">get_freq_table</a></span><span class="op">(</span><span class="va">new_df</span>, <span class="va">top</span><span class="op">)</span></span></code></pre></div>
+<div id="eexombwkke" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#eexombwkke table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#eexombwkke thead, #eexombwkke tbody, #eexombwkke tfoot, #eexombwkke tr, #eexombwkke td, #eexombwkke th {
+  border-style: none;
+}
+
+#eexombwkke p {
+  margin: 0;
+  padding: 0;
+}
+
+#eexombwkke .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#eexombwkke .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#eexombwkke .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#eexombwkke .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#eexombwkke .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#eexombwkke .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#eexombwkke .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#eexombwkke .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#eexombwkke .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#eexombwkke .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#eexombwkke .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#eexombwkke .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#eexombwkke .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#eexombwkke .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#eexombwkke .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#eexombwkke .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#eexombwkke .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#eexombwkke .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#eexombwkke .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eexombwkke .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#eexombwkke .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#eexombwkke .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#eexombwkke .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eexombwkke .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#eexombwkke .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#eexombwkke .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#eexombwkke .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eexombwkke .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#eexombwkke .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#eexombwkke .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#eexombwkke .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#eexombwkke .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#eexombwkke .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eexombwkke .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#eexombwkke .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eexombwkke .gt_left {
+  text-align: left;
+}
+
+#eexombwkke .gt_center {
+  text-align: center;
+}
+
+#eexombwkke .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#eexombwkke .gt_font_normal {
+  font-weight: normal;
+}
+
+#eexombwkke .gt_font_bold {
+  font-weight: bold;
+}
+
+#eexombwkke .gt_font_italic {
+  font-style: italic;
+}
+
+#eexombwkke .gt_super {
+  font-size: 65%;
+}
+
+#eexombwkke .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#eexombwkke .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#eexombwkke .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#eexombwkke .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#eexombwkke .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#eexombwkke .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#eexombwkke .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="table gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead><tr class="gt_col_headings">
+<th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="An ideal society requires some groups to be on top and others to be on the bottom">An ideal society requires some groups to be on top and others to be on the bottom</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="N">N</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Percent">Percent</th>
+    </tr></thead>
+<tbody class="gt_table_body">
+<tr>
+<td headers="x_f" class="gt_row gt_center">Strongly agree</td>
+<td headers="n" class="gt_row gt_right">22</td>
+<td headers="pct" class="gt_row gt_right">8.8%</td>
+</tr>
+<tr>
+<td headers="x_f" class="gt_row gt_center">Somewhat agree</td>
+<td headers="n" class="gt_row gt_right">75</td>
+<td headers="pct" class="gt_row gt_right">30%</td>
+</tr>
+<tr>
+<td headers="x_f" class="gt_row gt_center">Somewhat disagree</td>
+<td headers="n" class="gt_row gt_right">88</td>
+<td headers="pct" class="gt_row gt_right">35.2%</td>
+</tr>
+<tr>
+<td headers="x_f" class="gt_row gt_center">Strongly disagree</td>
+<td headers="n" class="gt_row gt_right">65</td>
+<td headers="pct" class="gt_row gt_right">26%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Second, the means of the variable will be different. For
+<code>top</code>, higher score means more disagreement. However, for
+<code>top_rev</code>, a higher number means more agreement. We can see
+the differences below.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    top_rev <span class="op">=</span> <span class="fu"><a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link">labelled</a></span><span class="op">(</span></span>
-<span>      x <span class="op">=</span> <span class="fl">5</span> <span class="op">-</span> <span class="va">top</span>,</span>
-<span>      labels <span class="op">=</span> <span class="fu"><a href="https://larmarange.github.io/labelled/reference/val_labels.html" class="external-link">val_labels</a></span><span class="op">(</span><span class="va">test_data</span><span class="op">$</span><span class="va">top</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>      label <span class="op">=</span> <span class="fu"><a href="https://larmarange.github.io/labelled/reference/var_label.html" class="external-link">var_label</a></span><span class="op">(</span><span class="va">test_data</span><span class="op">$</span><span class="va">top</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">$</span><span class="va">top_rev</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $labels</span></span>
-<span><span class="co">#&gt; Strongly disagree Somewhat disagree    Somewhat agree    Strongly agree </span></span>
-<span><span class="co">#&gt;                 4                 3                 2                 1 </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $label</span></span>
-<span><span class="co">#&gt; [1] "An ideal society requires some groups to be on top and others to be on the bottom"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $class</span></span>
-<span><span class="co">#&gt; [1] "haven_labelled" "vctrs_vctr"     "double"</span></span></code></pre></div>
-<p>Now that you know how to do it manually, I think it’s clear that
-using <code><a href="../reference/num_rev.html">num_rev()</a></code> is much easier.</p>
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="../reference/get_means.html">get_means</a></span><span class="op">(</span><span class="va">new_df</span>, <span class="va">top_rev</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
+<span><span class="co">#&gt;    mean    sd     n std.error conf.low conf.high</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  2.22  0.93   250      0.06      2.1      2.33</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="../reference/get_means.html">get_means</a></span><span class="op">(</span><span class="va">new_df</span>, <span class="va">top</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
+<span><span class="co">#&gt;    mean    sd     n std.error conf.low conf.high</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  2.78  0.93   250      0.06     2.67       2.9</span></span></code></pre></div>
 </div>
   </main>
 </div>
