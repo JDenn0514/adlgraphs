@@ -148,14 +148,14 @@ make_dicho <- function(x, flip_levels = FALSE) {
   x_lab <- deparse(substitute(x))
 
   # get the variable lable
-  variable_label <- labelled::var_label(x)
+  variable_label <- attr_var_label(x)
 
   if (haven::is.labelled(x)) {
 
     # if x is class haven_labelled convert to a factor using haven::as_factor
     x <- haven::as_factor(x)
 
-  } else if (is.numeric(x) && !is.null(sjlabelled::get_labels(x))) {
+  } else if (is.numeric(x) && !is.null(attr_val_labels(x))) {
 
     # if x is class numeric AND DOES contain value labels
     # convert to a factor with sjlabelled

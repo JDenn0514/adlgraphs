@@ -148,7 +148,7 @@ make_binary <- function(x, flip_values = FALSE) {
   # get the object's name
   x_lab <- deparse(substitute(x))
   # make a new object containing the variable label
-  variable_label <- var_label(x)
+  variable_label <- attr_var_label(x)
 
   # convert the vector to a dichotomous factor
   x <- make_dicho(x)
@@ -174,10 +174,7 @@ make_binary <- function(x, flip_values = FALSE) {
         label = variable_label,
         labels = values
       )
-      # haven::labelled(
-      #   labels = values,
-      #   label = variable_label
-      # )
+
 
   } else if (flip_values == TRUE) {
 

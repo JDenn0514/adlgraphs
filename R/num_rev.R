@@ -26,7 +26,7 @@ num_rev <- function(x) {
   x_lab <- deparse(substitute(x))
 
 
-  if (haven::is.labelled(x) || (is.numeric(x) && !is.null(sjlabelled::get_labels(x)))) {
+  if (haven::is.labelled(x) || (is.numeric(x) && !is.null(attr_val_labels(x)))) {
     # if x is haven_labelled or numeric with value labels
 
     ## reverse the values of x in a new vector "rev_x" ---------
@@ -39,7 +39,7 @@ num_rev <- function(x) {
 
     ## create a new reversed named vector  "rev_name_vec" ---------
     # get the named vector using base functions
-    name_vec <- attributes(x)$labels
+    name_vec <- attr_val_labels(x)
     # get the value labels from the named vector and reverse the order of the vector
     labels <- stats::setNames(names(name_vec), name_vec) %>% rev()
     # create a new named vector with the flipped names so that when we reverse
@@ -52,14 +52,14 @@ num_rev <- function(x) {
     # to the reversed vector ()
 
 
-    if (!is.null(labelled::var_label(x))) {
+    if (!is.null(attr_var_label(x))) {
       # if x has a variable label
 
       # add variable and value labels
       haven::labelled(
         x = rev_x,
         labels = rev_name_vec,
-        label = labelled::var_label(x)
+        label = attr_var_label(x)
       ) %>%
         # add the transformation annotation
         structure(transformation = glue::glue("Reversing '{x_lab}' while maintaining correct value labels"))
@@ -85,13 +85,13 @@ num_rev <- function(x) {
     # now what was a 1 is equal to a 4 and what was a 2 is equal to 3, etc.
     rev_x <- max_x - x
 
-    if (!is.null(labelled::var_label(x))) {
+    if (!is.null(attr_var_label(x))) {
       # if x has a variable label
 
       # add variable label
       haven::labelled(
         x = rev_x,
-        label = labelled::var_label(x)
+        label = attr_var_label(x)
       ) %>%
         # add the transformation annotation
         structure(transformation = glue::glue("Reversing '{x_lab}'"))

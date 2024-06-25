@@ -132,7 +132,7 @@ case_match_fct <- function(.x, ..., .default = NULL) {
       levels = args_rhs
     ) %>%
       structure(
-        label = labelled::var_label(.x),
+        label = attr_var_label(.x),
         transformation = glue::glue(
           "Recoded '{x_lab}' as a factor and set the levels based on their order.
         The data transformation is as follows:
