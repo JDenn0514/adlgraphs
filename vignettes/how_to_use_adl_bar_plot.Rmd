@@ -1,8 +1,8 @@
 ---
-title: "How to Use the `adl_bar_plots` function"
+title: "Making bar plots"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{How to Use the `adl_bar_plots` function}
+  %\VignetteIndexEntry{Making bar plots}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
