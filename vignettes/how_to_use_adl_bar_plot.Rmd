@@ -10,8 +10,7 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  dpi = 400
+  comment = "#>"
 )
 ```
 
@@ -69,7 +68,7 @@ Now let's look at these in action. Below is a simple vertical frequency plot. Wh
 
 -   Each column is directly labeled outside the bar with the data value it represents and the % symbol.
 
--   Lastly, the order of the bars is not reordered by percentage since the values of the x-axis already have an inherent order. Furthermore, "Strongly disagree" appears on the far left and "Strongly agree" appears on the far right. (Note: If the values of the x-axis were to not have a specific order to them, then we would reorder them by percentage.)
+-   Lastly, the order of the bars is not reordered by percentage since the values of the x-axis already have an inherent order.
 
 ```{r}
 #| out.height: '100%'
@@ -84,7 +83,7 @@ test_data %>%
   get_freqs(top_f, wt = wts) %>% 
   pct_conv() %>% 
   adl_bar_plots(
-    x = fct_rev(top_f),
+    x = top_f,
     y = pct,
     col_label = pct_lab,
   ) +
@@ -226,7 +225,7 @@ We don't use dodged bar plots too frequently, but it is important to understand 
 ```{r}
 #| out.height: '100%'
 #| out.width: '100%'
-#| fig.width: 6
+#| fig.width: 6.5
 #| fig.height: 3.5
 #| dpi: 300
 #| echo: FALSE
@@ -395,13 +394,135 @@ test_data %>%
 
 ## How to create bar plots using the `adlgraphs` package
 
-This section is going to deal with all the different ways that we can customize bar plots to make them perfect using the `adl
+This section is going to walk you through the graph creation process step by step. The main functions from this package that we will use are:
 
-### Using `adl_bar_plots()` 
+- `get_means()`: Calculate means and confidence intervals.
 
-The main function behind creating various bar plots is `adl_bar_plots()`. This function has arguments that enable the creation of simple, dodged, or stacked bar plots, as well as control over the direction of the bars. In addition, there are arguments that enable the customization of various other elements. In this section I will demonstrate what the different arguments do and how to use them to produce the style of graph you want.
+- `get_freqs()`: Calculate frequencies. 
 
-#### Creating simple bar plots
+- `pct_conv()`: Convert the results in `get_freqs()` to be easier to use in graphs by multiplying the `pct` values by 100 and creating a new variable called `pct_lab` that takes the `pct` values and adds the "%" symbol.
+
+- `adl_bar_plots()`: Take the prepared data and make a bar plot.
+
+- `scale_adl()`: Set the colors and adjust other stuff related to the legend
+
+- `theme_default()`, `theme_v_bar()`, `theme_h_bar()`, `theme_h_stack()`: Adjust the visual appearance (theme) of the bar plot. These are already included in `adl_bar_plot()` so you won't need to use these very often.
+
+
+
+#### Graph 1
+
+Let's start off by making the first graph presented in this vignette. First, we need to get the data for the graph. To do that, we're going to convert the variable `top` into a factor variable named `top_f` by leveraging the the underlying metadata with the [`haven::as_factor()`](https://haven.tidyverse.org/reference/as_factor.html) function. Then, we use `get_freqs()` to calculate the frequencies.
+
+```{r}
+# use the test data set
+df <- test_data %>% 
+  # convert top_f into a factor variable based on the underlying labels
+  mutate(top_f = haven::as_factor(top)) %>% 
+  # calculate the weighted frequencies
+  get_freqs(top_f, wt = wts) 
+
+df
+
+```
+
+If the variable does not have value labels, then we can manually make a new variable a factor with the correct response options using [`case_match_fct()`], like what's below. We can see that the results are the exact same, but the example below requires a lot more code (This is why metadata is so valuable!).
+
+```{r}
+test_data %>% 
+  # make top_f and set the factor levels using case_match_fct()
+  mutate(top_f = case_match_fct(
+    top,
+    1 ~ "Strongly agree",
+    2 ~ "Somewhat agree",
+    3 ~ "Somewhat disagree",
+    4 ~ "Strongly disagree"
+  )) %>% 
+  # calculate the weighrted frequencies
+  get_freqs(top_f, wt = wts)
+
+
+```
+
+Okay, now that we have the data, let's make it easier to use in the graph with the `pct_conv()` function. This function takes the `pct` variable multiplies it by 100 and then takes that value and adds the % symbol in a new variable called `pct_lab`. We can see this below.
+
+```{r}
+
+df <- df %>% 
+  # clean up the data
+  pct_conv()
+
+df
+```
+
+Now that we have the data for a frequency plot properly set up, we can make the bar plot. To do this we will use the `adl_bar_plots()` function and because this a simple graph, we only need to specify `x`, `y`, and `col_label`. We set `x` to "top_f" so that the graph is vertical and the response options are on the x-axis. We set `y` to "pct" so that the bars set to the heights of the percentage. Moreover, we need `y` to be a numeric value. `col_label` is set to "pct_lab" and is the label that goes outside the bars. 
+
+```{r}
+#| out.height: '100%'
+#| out.width: '100%'
+#| fig.width: 5
+#| fig.height: 5
+#| dpi: 300
+#| echo: FALSE
+
+plot <- df %>% 
+  adl_bar_plots(
+    # set the x-axis to top_f so it is vertical
+    x = top_f,
+    # set the y-axis to the pct 
+    y = pct,
+    # set the variable that is used for the labels
+    col_label = pct_lab
+  ) 
+
+plot
+
+```
+
+Now we need to add the plot title and axis title using `labs()`. We don't need the y-axis title so set `y = NULL`. We are going to use [`attr_var_label()`] to get the variable label, so set `x = attr_var_label(test_data$top)`. 
+
+```{r}
+#| out.height: '100%'
+#| out.width: '100%'
+#| fig.width: 5
+#| fig.height: 5
+#| dpi: 300
+#| echo: FALSE
+
+plot <- plot + 
+  labs(
+    y = NULL,
+    x = attr_var_label(test_data$top),
+    title = "About 40% of Americans Think an Ideal Society is Hierarchical"
+  )
+
+plot 
+
+```
+
+Unfortunately, the x-axis title is too long. Since we are using [`attr_var_label()`], we need to use [`stringr::str_wrap()`](https://stringr.tidyverse.org/reference/str_wrap.html) to wrap the x-axis title. We are setting it to 55 so that the line break occurs after 55 characters. The plot title is also too long so we need to fix that as well. One way to do this is to use [`stringr::str_wrap()`](https://stringr.tidyverse.org/reference/str_wrap.html) again, or we can manually set it by adding `\n` to the title. `\n` indicates where the line break should occur.
+
+
+
+```{r}
+#| out.height: '100%'
+#| out.width: '100%'
+#| fig.width: 5
+#| fig.height: 5
+#| dpi: 300
+#| echo: FALSE
+
+plot <- plot +
+  labs(
+    y = NULL,
+    x = str_wrap(attr_var_label(test_data$top), 55),
+    title = "About 40% of Americans Think an Ideal\nSociety is Hierarchical"
+  )
+plot
+```
+
+
+
 
 #### Creating dodged bar plots
 
