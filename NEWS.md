@@ -1,3 +1,24 @@
+# adlgraphs 0.2.2
+
+## New functions
+
+#### `make_factor`
+
+- This function takes a labelled vector and uses the value labels to turn it into a factor
+- contains two arguments: `x` and `ordered`
+
+## Bug fixes and small additions
+
+#### `pivot_longer_values`
+
+- Added a new argument that enables you to add a variable label to the variable that contains the names (names_to)
+- Using internal functions to reduce external dependencies
+
+#### attr_var_label
+
+- Updated the internal code so that it only gives you the attribute under "label"
+- Previously if "label" was NULL, it would give you the values in "labels"
+
 # adlgraphs 0.2.1
 
 #### This update features a lot of new changes:
