@@ -463,7 +463,6 @@ Now that we have the data for a frequency plot properly set up, we can make the 
 #| fig.width: 5
 #| fig.height: 5
 #| dpi: 300
-#| echo: FALSE
 
 plot <- df %>% 
   adl_bar_plots(
@@ -479,7 +478,7 @@ plot
 
 ```
 
-Now we need to add the plot title and axis title using `labs()`. We don't need the y-axis title so set `y = NULL`. We are going to use [`attr_var_label()`] to get the variable label, so set `x = attr_var_label(test_data$top)`. 
+Now we need to add the plot title and axis title using `labs()`. We don't need the y-axis title so set `y = NULL`. We are going to use `attr_var_label()` to get the variable label, so set `x = attr_var_label(test_data$top)`. 
 
 ```{r}
 #| out.height: '100%'
@@ -487,7 +486,6 @@ Now we need to add the plot title and axis title using `labs()`. We don't need t
 #| fig.width: 5
 #| fig.height: 5
 #| dpi: 300
-#| echo: FALSE
 
 plot <- plot + 
   labs(
@@ -500,7 +498,7 @@ plot
 
 ```
 
-Unfortunately, the x-axis title is too long. Since we are using [`attr_var_label()`], we need to use [`stringr::str_wrap()`](https://stringr.tidyverse.org/reference/str_wrap.html) to wrap the x-axis title. We are setting it to 55 so that the line break occurs after 55 characters. The plot title is also too long so we need to fix that as well. One way to do this is to use [`stringr::str_wrap()`](https://stringr.tidyverse.org/reference/str_wrap.html) again, or we can manually set it by adding `\n` to the title. `\n` indicates where the line break should occur.
+Unfortunately, the x-axis title is too long. Since we are using `attr_var_label()`, we need to use [`stringr::str_wrap()`](https://stringr.tidyverse.org/reference/str_wrap.html) to wrap the x-axis title. We are setting it to 55 so that the line break occurs after 55 characters. The plot title is also too long so we need to fix that as well. One way to do this is to use [`stringr::str_wrap()`](https://stringr.tidyverse.org/reference/str_wrap.html) again, or we can manually set it by adding `\n` to the title. `\n` indicates where the line break should occur.
 
 
 
@@ -510,7 +508,6 @@ Unfortunately, the x-axis title is too long. Since we are using [`attr_var_label
 #| fig.width: 5
 #| fig.height: 5
 #| dpi: 300
-#| echo: FALSE
 
 plot <- plot +
   labs(
