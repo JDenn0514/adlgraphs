@@ -382,20 +382,49 @@ graph is vertical and the response options are on the x-axis. We set
 percentage. Moreover, we need <code>y</code> to be a numeric value.
 <code>col_label</code> is set to “pct_lab” and is the label that goes
 outside the bars.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/adl_bar_plots.html">adl_bar_plots</a></span><span class="op">(</span></span>
+<span>    <span class="co"># set the x-axis to top_f so it is vertical</span></span>
+<span>    x <span class="op">=</span> <span class="va">top_f</span>,</span>
+<span>    <span class="co"># set the y-axis to the pct </span></span>
+<span>    y <span class="op">=</span> <span class="va">pct</span>,</span>
+<span>    <span class="co"># set the variable that is used for the labels</span></span>
+<span>    col_label <span class="op">=</span> <span class="va">pct_lab</span></span>
+<span>  <span class="op">)</span> </span>
+<span></span>
+<span><span class="va">plot</span></span></code></pre></div>
 <p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-9-1.png" width="100%" height="100%"></p>
 <p>Now we need to add the plot title and axis title using
 <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>. We don’t need the y-axis title so set
-<code>y = NULL</code>. We are going to use
-[<code><a href="../reference/attributes.html">attr_var_label()</a></code>] to get the variable label, so set
+<code>y = NULL</code>. We are going to use <code><a href="../reference/attributes.html">attr_var_label()</a></code>
+to get the variable label, so set
 <code>x = attr_var_label(test_data$top)</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="va">plot</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    x <span class="op">=</span> <span class="fu"><a href="../reference/attributes.html">attr_var_label</a></span><span class="op">(</span><span class="va">test_data</span><span class="op">$</span><span class="va">top</span><span class="op">)</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"About 40% of Americans Think an Ideal Society is Hierarchical"</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">plot</span> </span></code></pre></div>
 <p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-10-1.png" width="100%" height="100%"></p>
 <p>Unfortunately, the x-axis title is too long. Since we are using
-[<code><a href="../reference/attributes.html">attr_var_label()</a></code>], we need to use <a href="https://stringr.tidyverse.org/reference/str_wrap.html" class="external-link"><code>stringr::str_wrap()</code></a>
+<code><a href="../reference/attributes.html">attr_var_label()</a></code>, we need to use <a href="https://stringr.tidyverse.org/reference/str_wrap.html" class="external-link"><code>stringr::str_wrap()</code></a>
 to wrap the x-axis title. We are setting it to 55 so that the line break
 occurs after 55 characters. The plot title is also too long so we need
 to fix that as well. One way to do this is to use <a href="https://stringr.tidyverse.org/reference/str_wrap.html" class="external-link"><code>stringr::str_wrap()</code></a>
 again, or we can manually set it by adding <code>\n</code> to the title.
 <code>\n</code> indicates where the line break should occur.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="va">plot</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    x <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_wrap.html" class="external-link">str_wrap</a></span><span class="op">(</span><span class="fu"><a href="../reference/attributes.html">attr_var_label</a></span><span class="op">(</span><span class="va">test_data</span><span class="op">$</span><span class="va">top</span><span class="op">)</span>, <span class="fl">55</span><span class="op">)</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"About 40% of Americans Think an Ideal\nSociety is Hierarchical"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="va">plot</span></span></code></pre></div>
 <p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-11-1.png" width="100%" height="100%"></p>
 </div>
 <div class="section level4">
