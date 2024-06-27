@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">adlgraphs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,6 +52,31 @@
       <small>Source: <a href="https://github.com/JDenn0514/adlgraphs/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.2" id="adlgraphs-022">adlgraphs 0.2.2<a class="anchor" aria-label="anchor" href="#adlgraphs-022"></a></h2>
+<div class="section level3">
+<h3 id="new-functions-0-2-2">New functions<a class="anchor" aria-label="anchor" href="#new-functions-0-2-2"></a></h3>
+<div class="section level5">
+<h5 id="make_factor-0-2-2"><code>make_factor</code><a class="anchor" aria-label="anchor" href="#make_factor-0-2-2"></a></h5>
+<ul><li>This function takes a labelled vector and uses the value labels to turn it into a factor</li>
+<li>contains two arguments: <code>x</code> and <code>ordered</code>
+</li>
+</ul></div>
+</div>
+<div class="section level3">
+<h3 id="bug-fixes-and-small-additions-0-2-2">Bug fixes and small additions<a class="anchor" aria-label="anchor" href="#bug-fixes-and-small-additions-0-2-2"></a></h3>
+<div class="section level5">
+<h5 id="pivot_longer_values-0-2-2"><code>pivot_longer_values</code><a class="anchor" aria-label="anchor" href="#pivot_longer_values-0-2-2"></a></h5>
+<ul><li>Added a new argument that enables you to add a variable label to the variable that contains the names (names_to)</li>
+<li>Using internal functions to reduce external dependencies</li>
+</ul></div>
+<div class="section level5">
+<h5 id="attr_var_label-0-2-2">attr_var_label<a class="anchor" aria-label="anchor" href="#attr_var_label-0-2-2"></a></h5>
+<ul><li>Updated the internal code so that it only gives you the attribute under “label”</li>
+<li>Previously if “label” was NULL, it would give you the values in “labels”</li>
+</ul></div>
+</div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.1" id="adlgraphs-021">adlgraphs 0.2.1<a class="anchor" aria-label="anchor" href="#adlgraphs-021"></a></h2>
 <div class="section level5">
