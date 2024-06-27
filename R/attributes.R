@@ -65,9 +65,9 @@ NULL
 #' @export
 attr_var_label <- function(x, df) {
   if (missing(df)) {
-    attributes(x)$label
+    attr(x, "label", exact = TRUE)
   } else {
-    attributes(df[[x]])$label
+    attr(df[[x]], "label", exact = TRUE)
   }
 }
 

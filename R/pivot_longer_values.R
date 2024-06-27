@@ -6,10 +6,12 @@
 #' new variable created in the `names_to` variable.
 #'
 #' @inheritParams tidyr::pivot_longer
+#' @param name_label Add a variable label to the new column with the names of
+#'   the columns
 #'
 #' @export
 
-pivot_longer_values <- function(data, cols, names_to, values_to) {
+pivot_longer_values <- function(data, cols, names_to, values_to, name_label = NA) {
   # create the long data frame
   long <- data %>%
     tidyr::pivot_longer(
@@ -18,16 +20,28 @@ pivot_longer_values <- function(data, cols, names_to, values_to) {
       values_to = values_to
     )
 
-  df_new <- data %>% select({{ cols }})
-  # create a vector containing the variable labels
-  var_labs <- get_all_var_labels(df_new)
+
+  # get the newly created vector of names
+  names <- long[[{{ names_to }}]]
+  # get the newly created vector of values
+  values <- long[[{{ values_to }}]]
+  # get the variable labels to go into names as value labels
+  var_labs <- data %>%
+    select({{ cols }}) %>%
+    get_all_var_labels()
 
   # flip the names and values of the vector
   var_labs <- setNames(names(var_labs), var_labs)
 
-  # add the vector of labels as value labels to the new column of names
-  labelled::val_labels(long[{{names_to}}]) <- var_labs
+  names <- structure(
+    names,
+    labels = var_labs,
+    label = name_label
+  )
 
+  long[[{{ names_to }}]] <- names
   return(long)
+
+
 
 }

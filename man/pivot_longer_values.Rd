@@ -4,7 +4,7 @@
 \alias{pivot_longer_values}
 \title{Pivot data from wide to long with value labels}
 \usage{
-pivot_longer_values(data, cols, names_to, values_to)
+pivot_longer_values(data, cols, names_to, values_to, name_label = NA)
 }
 \arguments{
 \item{data}{A data frame to pivot.}
@@ -36,6 +36,9 @@ from the data stored in cell values. If \code{names_to} is a character
 containing the special \code{.value} sentinel, this value will be ignored,
 and the name of the value column will be derived from part of the
 existing column names.}
+
+\item{name_label}{Add a variable label to the new column with the names of
+the columns}
 }
 \description{
 This function is a wrapper around \code{\link[tidyr]{pivot_longer}}. This
