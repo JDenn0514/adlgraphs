@@ -103,23 +103,13 @@ get_means <- function(df, x, group, wt) {
 
     }
 
-    if (haven::is.labelled(df[[group]])) {
-      # if group is haven_labelled
-
-      df <- df %>%
-        # convert to a factor using haven::as_factor
-        dplyr::mutate(group_f = haven::as_factor(.data[[group]])) %>%
-        # group by group_f
-        dplyr::group_by(group_f)
-
-
-    } else if (is.numeric(df[[group]]) && !is.null(sjlabelled::get_labels(df[[group]]))) {
+    if (is.numeric(df[[group]]) && !is.null(attr_val_labels)) {
       # if group is class numeric AND DOES contain value labels
 
       # convert to a factor with sjlabelled
       df <- df %>%
-        # convert to a factor using haven::as_factor
-        dplyr::mutate(group_f = sjlabelled::as_label(.data[[group]])) %>%
+        # convert to a factor using make_factor
+        dplyr::mutate(group_f = make_factor(.data[[group]])) %>%
         # group by group_f
         dplyr::group_by(group_f)
 

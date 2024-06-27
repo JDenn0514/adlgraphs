@@ -79,7 +79,7 @@ Now let's look at these in action. Below is a simple vertical frequency plot. Wh
 #| echo: FALSE
 
 test_data %>% 
-  mutate(top_f = as_factor(top)) %>% 
+  mutate(top_f = make_factor(top)) %>% 
   get_freqs(top_f, wt = wts) %>% 
   pct_conv() %>% 
   adl_bar_plots(
@@ -238,7 +238,7 @@ test_data %>%
   ) %>% 
   mutate(
     resp_f2 = make_dicho(resp),
-    conspiracies_f = haven::as_factor(conspiracies)
+    conspiracies_f = make_factor(conspiracies)
   ) %>% 
   group_by(edu_f2, conspiracies_f) %>% 
   get_freqs(resp_f2, wt = wts) %>% 
@@ -294,7 +294,7 @@ test_data %>%
     names_to = "variables",
     values_to = "score"
   ) %>% 
-  mutate(variables_f = as_factor(variables)) %>% 
+  mutate(variables_f = make_factor(variables)) %>% 
   group_by(variables_f, edu_f) %>% 
   get_means(score, wt = wts) %>% 
   adl_bar_plots(
@@ -357,8 +357,8 @@ test_data %>%
     values_to = "resp"
   ) %>% 
   mutate(
-    resp_f = haven::as_factor(resp),
-    conspiracies = haven::as_factor(conspiracies) %>% fct_rev()
+    resp_f = make_factor(resp),
+    conspiracies = make_factor(conspiracies) %>% fct_rev()
   ) %>% 
   get_freqs(resp_f, conspiracies, wt = wts) %>% 
   pct_conv() %>% 
@@ -412,13 +412,13 @@ This section is going to walk you through the graph creation process step by ste
 
 #### Graph 1
 
-Let's start off by making the first graph presented in this vignette. First, we need to get the data for the graph. To do that, we're going to convert the variable `top` into a factor variable named `top_f` by leveraging the the underlying metadata with the [`haven::as_factor()`](https://haven.tidyverse.org/reference/as_factor.html) function. Then, we use `get_freqs()` to calculate the frequencies.
+Let's start off by making the first graph presented in this vignette. First, we need to get the data for the graph. To do that, we're going to convert the variable `top` into a factor variable named `top_f` by leveraging the the underlying metadata with the `make_factor()` function. Then, we use `get_freqs()` to calculate the frequencies.
 
 ```{r}
 # use the test data set
 df <- test_data %>% 
   # convert top_f into a factor variable based on the underlying labels
-  mutate(top_f = haven::as_factor(top)) %>% 
+  mutate(top_f = make_factor(top)) %>% 
   # calculate the weighted frequencies
   get_freqs(top_f, wt = wts) 
 

@@ -7,7 +7,7 @@
 make_dicho(x, flip_levels = FALSE)
 }
 \arguments{
-\item{x}{A vector of type \code{haven_labelled} or \code{factor}.}
+\item{x}{A labelled vector or \code{factor}.}
 
 \item{flip_levels}{Logical. If \code{FALSE}, the default, the factor levels are
 kept the same. If \code{TRUE}, the factor levels are flipped. Only specify this
@@ -25,9 +25,8 @@ that are opposites (e.g., "Agree" and "Disagree")
 \href{https://haven.tidyverse.org/reference/labelled.html}{\code{haven_labelled}},
 or \code{numeric} with value labels. If the vector is  numeric with no value
 labels, the function will return an error. This is because the function first
-converts the vector to a factor using \code{\link[=as_factor]{as_factor()}} \code{\link[haven:as_factor]{haven::as_factor()}}
-from the \code{haven} package. Then, it removes the first word if there are
-multiple words in the factor level.
+converts the vector to a factor using \code{make_factor()}. Then, it removes the
+first word if there are multiple words in the factor level.
 
 The resulting factor levels default to alphabetical but if you want to
 reverse them, just set \code{flip_levels = TRUE} in the function.
@@ -102,7 +101,7 @@ unique(dicho_df$dicho_x)
 dicho_df <- df \%>\%
   dplyr::mutate(
     # convert variable to a factor
-    factor_x = haven::as_factor(x),
+    factor_x = make_factor(x),
     # convert the factor to a dichotomous factor
     dicho_x = make_dicho(factor_x)
   )

@@ -103,7 +103,7 @@ unique(binary_df$binary_x)
 binary_df <- df \%>\%
   dplyr::mutate(
     # convert variable to a factor
-    factor_x = haven::as_factor(x),
+    factor_x = make_factor(x),
     # convert the factor to a binary variable
     binary_x = make_binary(factor_x)
   )

@@ -37,7 +37,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
 
       # get the frequencies without weights and without a grouping variable
       df %>%
-        dplyr::mutate(x_f = haven::as_factor(.data[[x]])) %>%
+        dplyr::mutate(x_f = make_factor(.data[[x]])) %>%
         get_freqs(x_f) %>%
         dplyr::mutate(pct = make_percent(pct)) %>%
         gt::gt() %>%
@@ -67,7 +67,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
         # if show_genpop = FALSE don't show the overall frequencies
 
         df %>%
-          dplyr::mutate(x_f = haven::as_factor(.data[[x]])) %>%
+          dplyr::mutate(x_f = make_factor(.data[[x]])) %>%
           get_freqs(x_f, {{ group }}, cross_tab = TRUE) %>%
           gt::gt() %>%
           gt::cols_label(x_f = x_variable_label) %>%
@@ -81,7 +81,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
 
         genpop_df <- df %>%
           # convert to a factor (this even works with numeric variables)
-          dplyr::mutate(x_f = haven::as_factor(.data[[x]])) %>%
+          dplyr::mutate(x_f = make_factor(.data[[x]])) %>%
           # calculate the frequencies
           get_freqs(x_f) %>%
           # data transforming
@@ -96,7 +96,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
 
         group_df <- df %>%
           # convert to a factor (this even works with numeric variables)
-          mutate(x_f = haven::as_factor(.data[[x]])) %>%
+          mutate(x_f = make_factor(.data[[x]])) %>%
           # calculate frequencies for x_f with a group and make it cross tabs
           get_freqs(x_f, {{group}}, cross_tab = TRUE) %>%
           # remove x_f
@@ -136,7 +136,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
 
       # get the frequencies without weights and without a grouping variable
       df %>%
-        dplyr::mutate(x_f = haven::as_factor(.data[[x]])) %>%
+        dplyr::mutate(x_f = make_factor(.data[[x]])) %>%
         get_freqs(x_f, wt = {{ wt }}) %>%
         dplyr::mutate(pct = make_percent(pct)) %>%
         gt::gt() %>%
@@ -166,7 +166,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
         # if show_genpop = FALSE don't show the overall frequencies
 
         df %>%
-          dplyr::mutate(x_f = haven::as_factor(.data[[x]])) %>%
+          dplyr::mutate(x_f = make_factor(.data[[x]])) %>%
           get_freqs(x_f, {{ group }}, {{ wt }}, cross_tab = TRUE) %>%
           gt::gt() %>%
           gt::cols_label(x_f = x_variable_label) %>%
@@ -180,7 +180,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
 
         genpop_df <- df %>%
           # convert to a factor (this even works with numeric variables)
-          dplyr::mutate(x_f = haven::as_factor(.data[[x]])) %>%
+          dplyr::mutate(x_f = make_factor(.data[[x]])) %>%
           # calculate the frequencies
           get_freqs(x_f, wt = {{ wt }}) %>%
           # data transforming
@@ -195,7 +195,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
 
         group_df <- df %>%
           # convert to a factor (this even works with numeric variables)
-          mutate(x_f = haven::as_factor(.data[[x]])) %>%
+          mutate(x_f = make_factor(.data[[x]])) %>%
           # calculate frequencies for x_f with a group and make it cross tabs
           get_freqs(x_f, {{group}}, {{ wt }}, cross_tab = TRUE) %>%
           # remove x_f

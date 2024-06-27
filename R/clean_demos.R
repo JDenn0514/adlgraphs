@@ -105,7 +105,7 @@ clean_demos <- function(df) {
 
         ## gender
         # making a three category variable
-        gender_f3 = haven::as_factor(sex),
+        gender_f3 = make_factor(sex),
         # making a binary numeric
         gender_f2 = dplyr::case_match(
           sex,
@@ -125,7 +125,7 @@ clean_demos <- function(df) {
       dplyr::mutate(
         ## EDU
         # create the five group education variable
-        edu_f = haven::as_factor(edu),
+        edu_f = make_factor(edu),
         # making a binary factor
         edu_f2 = adlgraphs::case_when_fct(
           edu < 4 ~ "No College Degree",
@@ -216,7 +216,7 @@ clean_demos <- function(df) {
       dplyr::mutate(
         ## Politics
         # 5 group political ideology
-        ideo_f = haven::as_factor(ideology),
+        ideo_f = make_factor(ideology),
         # set up the order and make it three groups
         ideo_f3 = adlgraphs::case_when_fct(
           ideology %in% c(1, 2) ~ "Liberal",
@@ -235,7 +235,7 @@ clean_demos <- function(df) {
     df <- df %>%
       dplyr::mutate(
         # convert to a factor
-        pid_f8 = haven::as_factor(partyid8),
+        pid_f8 = make_factor(partyid8),
         # set the order and make three groups
         pid_f3 = adlgraphs::case_when_fct(
           partyid8 %in% c(1:3) ~ "Democrat",
@@ -254,7 +254,7 @@ clean_demos <- function(df) {
     df <- df %>%
       dplyr::mutate(
         # convert to a factor
-        pid_f7 = haven::as_factor(partyid7),
+        pid_f7 = make_factor(partyid7),
         # set the order and make three groups
         pid_f3 = adlgraphs::case_when_fct(
           partyid7 %in% c(1:3) ~ "Democrat",
@@ -273,7 +273,7 @@ clean_demos <- function(df) {
     df <- df %>%
       dplyr::mutate(
         # convert progressive to a factor
-        progressive_f = haven::as_factor(progressive),
+        progressive_f = make_factor(progressive),
         # convert to a dichotomous factor
         progressive_f2 = dplyr::case_match(
           progressive,
@@ -292,7 +292,7 @@ clean_demos <- function(df) {
       dplyr::mutate(
         ## Religion
         # simple conversion to a factor
-        religpew_f = haven::as_factor(religpew),
+        religpew_f = make_factor(religpew),
         # make the reltrad groups
         religpew_evan_f = dplyr::case_when(
           religpew %in% c(1, 5) & born_again == 1 ~ "Evangelical Protestant",
@@ -319,7 +319,7 @@ clean_demos <- function(df) {
         ),
 
         # make a dichotomous born_again variable
-        born_again_f2 = haven::as_factor(born_again),
+        born_again_f2 = make_factor(born_again),
       ) %>%
       labelled::set_variable_labels(
         reltrad_f = "Religious Identity",
@@ -330,7 +330,7 @@ clean_demos <- function(df) {
 
   if ("jewish" %in% colnames(df)) {
 
-    df <- df %>% dplyr::mutate(jewish_f2 = haven::as_factor(jewish))
+    df <- df %>% dplyr::mutate(jewish_f2 = make_factor(jewish))
 
   }
 

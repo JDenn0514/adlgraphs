@@ -83,24 +83,16 @@ accept_string_or_sym <- function(x) {
 # individual numbers
 get_unique_labels <- function(x) {
 
-  if (haven::is.labelled(x)) {
+  if (is.numeric(x) && attr_val_labels(x)) {
     # if group is haven_labelled
 
     # convert to a factor
-    group_cols <- haven::as_factor(x)
+    group_cols <- make_factor(x)
     # get the unique values
     group_cols <- forcats::fct_unique(group_cols)
 
 
-  } else if (is.numeric(x) && !is.null(sjlabelled::get_labels(x))) {
-    # if group is class numeric AND DOES contain value labels
-
-    # convert to a factor
-    group_cols <- sjlabelled::as_label(x)
-    # get the unique values
-    group_cols <- forcats::fct_unique(group_cols)
-
-  } else if (is.character(x) || is.factor(x)) {
+  }  else if (is.character(x) || is.factor(x)) {
     # if group is of class character or factor return x
 
     # get the unique values

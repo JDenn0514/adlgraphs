@@ -44,7 +44,7 @@ prettytable.adlgraphs_freqs <- function(x) {
       dplyr::mutate(
         pct = make_percent(pct),
         n = round(n, 2),
-        x_f = haven::as_factor(.data[[x_lab]])
+        x_f = make_factor(.data[[x_lab]])
       ) %>%
       select(x_f, n, pct) %>%
       gt::gt() %>%
@@ -73,7 +73,7 @@ prettytable.adlgraphs_freqs <- function(x) {
         pct = make_percent(pct),
         n = round(n, 2),
         pct_lab = glue::glue("{pct} (n = {n})"),
-        x_f = haven::as_factor(.data[[x_lab]])
+        x_f = make_factor(.data[[x_lab]])
       ) %>%
       dplyr::select(c(x_f, dplyr::all_of({{ group_lab }}), pct_lab)) %>%
       tidyr::pivot_wider(

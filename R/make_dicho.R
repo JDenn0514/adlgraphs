@@ -10,9 +10,8 @@
 #' \href{https://haven.tidyverse.org/reference/labelled.html}{`haven_labelled`},
 #' or `numeric` with value labels. If the vector is  numeric with no value
 #' labels, the function will return an error. This is because the function first
-#' converts the vector to a factor using [as_factor()] [haven::as_factor()]
-#' from the `haven` package. Then, it removes the first word if there are
-#' multiple words in the factor level.
+#' converts the vector to a factor using `make_factor()`. Then, it removes the
+#' first word if there are multiple words in the factor level.
 #'
 #' The resulting factor levels default to alphabetical but if you want to
 #' reverse them, just set `flip_levels = TRUE` in the function.
@@ -24,7 +23,7 @@
 #' original vector did not have a variable label, then this attribute will not
 #' show up. This is only useful if you care about
 #'
-#' @param x A vector of type `haven_labelled` or `factor`.
+#' @param x A labelled vector or `factor`.
 #'
 #' @param flip_levels Logical. If `FALSE`, the default, the factor levels are
 #'   kept the same. If `TRUE`, the factor levels are flipped. Only specify this
@@ -95,7 +94,7 @@
 #' dicho_df <- df %>%
 #'   dplyr::mutate(
 #'     # convert variable to a factor
-#'     factor_x = haven::as_factor(x),
+#'     factor_x = make_factor(x),
 #'     # convert the factor to a dichotomous factor
 #'     dicho_x = make_dicho(factor_x)
 #'   )
@@ -150,16 +149,10 @@ make_dicho <- function(x, flip_levels = FALSE) {
   # get the variable lable
   variable_label <- attr_var_label(x)
 
-  if (haven::is.labelled(x)) {
+  if (is.numeric(x) && !is.null(attr_val_labels(x))) {
 
     # if x is class haven_labelled convert to a factor using haven::as_factor
-    x <- haven::as_factor(x)
-
-  } else if (is.numeric(x) && !is.null(attr_val_labels(x))) {
-
-    # if x is class numeric AND DOES contain value labels
-    # convert to a factor with sjlabelled
-    x <- sjlabelled::as_label(x)
+    x <- make_factor(x)
 
   } else if (is.character(x) || is.factor(x)) {
 
