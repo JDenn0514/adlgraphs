@@ -310,14 +310,14 @@ often.</p></li>
 <p>Let’s start off by making the first graph presented in this vignette.
 First, we need to get the data for the graph. To do that, we’re going to
 convert the variable <code>top</code> into a factor variable named
-<code>top_f</code> by leveraging the the underlying metadata with the <a href="https://haven.tidyverse.org/reference/as_factor.html" class="external-link"><code>haven::as_factor()</code></a>
-function. Then, we use <code><a href="../reference/get_freqs.html">get_freqs()</a></code> to calculate the
-frequencies.</p>
+<code>top_f</code> by leveraging the the underlying metadata with the
+<code><a href="../reference/make_factor.html">make_factor()</a></code> function. Then, we use
+<code><a href="../reference/get_freqs.html">get_freqs()</a></code> to calculate the frequencies.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># use the test data set</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="co"># convert top_f into a factor variable based on the underlying labels</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>top_f <span class="op">=</span> <span class="fu">haven</span><span class="fu">::</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">top</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>top_f <span class="op">=</span> <span class="fu"><a href="../reference/make_factor.html">make_factor</a></span><span class="op">(</span><span class="va">top</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="co"># calculate the weighted frequencies</span></span>
 <span>  <span class="fu"><a href="../reference/get_freqs.html">get_freqs</a></span><span class="op">(</span><span class="va">top_f</span>, wt <span class="op">=</span> <span class="va">wts</span><span class="op">)</span> </span>
 <span></span>

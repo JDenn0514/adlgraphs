@@ -77,7 +77,7 @@ that are opposites (e.g., "Agree" and "Disagree")</p>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
-<dd><p>A vector of type <code>haven_labelled</code> or <code>factor</code>.</p></dd>
+<dd><p>A labelled vector or <code>factor</code>.</p></dd>
 
 
 <dt>flip_levels</dt>
@@ -92,9 +92,8 @@ if you want to change the order of the factor level.</p></dd>
 <a href="https://haven.tidyverse.org/reference/labelled.html" class="external-link"><code>haven_labelled</code></a>,
 or <code>numeric</code> with value labels. If the vector is  numeric with no value
 labels, the function will return an error. This is because the function first
-converts the vector to a factor using <code><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor()</a></code> <code><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">haven::as_factor()</a></code>
-from the <code>haven</code> package. Then, it removes the first word if there are
-multiple words in the factor level.</p>
+converts the vector to a factor using <code><a href="make_factor.html">make_factor()</a></code>. Then, it removes the
+first word if there are multiple words in the factor level.</p>
 <p>The resulting factor levels default to alphabetical but if you want to
 reverse them, just set <code>flip_levels = TRUE</code> in the function.</p>
 <p>In addition, this function adds two new attributes. The first attribute,
@@ -195,7 +194,7 @@ show up. This is only useful if you care about</p>
 <span class="r-in"><span><span class="va">dicho_df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="co"># convert variable to a factor</span></span></span>
-<span class="r-in"><span>    factor_x <span class="op">=</span> <span class="fu">haven</span><span class="fu">::</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    factor_x <span class="op">=</span> <span class="fu"><a href="make_factor.html">make_factor</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="co"># convert the factor to a dichotomous factor</span></span></span>
 <span class="r-in"><span>    dicho_x <span class="op">=</span> <span class="fu">make_dicho</span><span class="op">(</span><span class="va">factor_x</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
