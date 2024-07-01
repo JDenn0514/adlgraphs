@@ -105,8 +105,27 @@ labels, this function returns an error.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># let's make a new variable and data set</span></span></span>
 <span class="r-in"><span><span class="va">new_df</span> <span class="op">&lt;-</span> <span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="co"># convert top into a factor</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>top_f <span class="op">=</span> <span class="fu">make_factor</span><span class="op">(</span><span class="va">top</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># compare the "top_f" to "top"</span></span></span>
+<span class="r-in"><span><span class="va">new_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">top</span>, <span class="va">top_f</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 250 × 2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    top                   top_f            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 4<span style="color: #949494;"> [Strongly disagree]</span> Strongly disagree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 4<span style="color: #949494;"> [Strongly disagree]</span> Strongly disagree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 3<span style="color: #949494;"> [Somewhat disagree]</span> Somewhat disagree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 1<span style="color: #949494;"> [Strongly agree]</span>    Strongly agree   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 3<span style="color: #949494;"> [Somewhat disagree]</span> Somewhat disagree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 4<span style="color: #949494;"> [Strongly disagree]</span> Strongly disagree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 3<span style="color: #949494;"> [Somewhat disagree]</span> Somewhat disagree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 3<span style="color: #949494;"> [Somewhat disagree]</span> Somewhat disagree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 4<span style="color: #949494;"> [Strongly disagree]</span> Strongly disagree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 3<span style="color: #949494;"> [Somewhat disagree]</span> Somewhat disagree</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 240 more rows</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># check the attributes to see the label and transformation</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">new_df</span><span class="op">$</span><span class="va">top_f</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $levels</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Strongly agree"    "Somewhat agree"    "Somewhat disagree"</span>
