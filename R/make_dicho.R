@@ -1,10 +1,9 @@
 #' Make dichotomous factors
 #'
-#' Convert a vector of class `factor` or
-#' \href{https://haven.tidyverse.org/reference/labelled.html}{`haven_labelled`}
-#' to a "dichotomous factor vector". When I refer to a "dichotomous factor
-#' vector", I am referring to a vector of class `factor` with only two levels
-#' that are opposites (e.g., "Agree" and "Disagree")
+#' Convert a vector of class `factor` or `numeric` with value labels (e.g.,
+#' \href{https://haven.tidyverse.org/reference/labelled.html}{`haven_labelled`})
+#' to a dichotomous factor vector. A dichotomous factor vector is a vector of
+#' class `factor` with only two bipolar levels (e.g., "Agree" and "Disagree")
 #'
 #' `make_dicho` was designed to work on any vector that is of class `factor`,
 #' \href{https://haven.tidyverse.org/reference/labelled.html}{`haven_labelled`},
@@ -21,7 +20,7 @@
 #' underwent to create this new vector. The second attribute, `label`, contains
 #' the variable label that was found in the original variable. However, if the
 #' original vector did not have a variable label, then this attribute will not
-#' show up. This is only useful if you care about
+#' show up.
 #'
 #' @param x A labelled vector or `factor`.
 #'
@@ -32,112 +31,96 @@
 #' @export
 #'
 #' @examples
-#' library(tibble)
+#' # load the libraries
 #' library(dplyr)
-#' library(labelled)
-#' library(haven)
+#' library(adlgraphs)
 #'
-#' # create fake data
-#' df <- tibble::tribble(
-#'   ~x, ~y, ~z,
-#'   3, 2, 3,
-#'   4, 4, 2,
-#'   2, 6, 1,
-#'   1, 1, 4,
-#'   5, 4, 3,
-#'   6, 5, 6
-#' ) %>%
-#' # add value labels
-#' labelled::set_value_labels(
-#'   x = c(`Strongly agree` = 1,
-#'         `Agree` = 2,
-#'         `Somewhat agree` = 3,
-#'         `Somewhat disagree` = 4,
-#'         `Disagree` = 5,
-#'         `Strongly disagree` = 6),
-#'   y = c(`Strongly agree` = 1,
-#'         `Agree` = 2,
-#'         `Somewhat agree` = 3,
-#'         `Somewhat disagree` = 4,
-#'         `Disagree` = 5,
-#'         `Strongly disagree` = 6),
-#'   z = c(`Strongly agree` = 1,
-#'         `Agree` = 2,
-#'         `Somewhat agree` = 3,
-#'         `Somewhat disagree` = 4,
-#'         `Disagree` = 5,
-#'         `Strongly disagree` = 6)
-#' ) %>%
-#' # add variable labels
-#' labelled::set_variable_labels(
-#'   x = "This is the variable label for x",
-#'   y = "This is the variable label for y",
-#'   z = "This is the variable label for z"
-#' )
+#' # Check a labelled variable -------------------------------------------------
 #'
-#' # show the data transformation with a haven_labelled vector
-#' dicho_df <- df %>% dplyr::mutate(dicho_x = make_dicho(x))
-#' # check the updated dataset
-#' dicho_df
+#' # convert "top" into a dichotomous factor
+#' new_df <- test_data %>%
+#'   mutate(top_f2 = make_dicho(top)) %>%
+#'   # keep only two relevant variables
+#'   select(top, top_f2)
 #'
-#' # Check the attributes
-#' attributes(dicho_df$dicho_x)
-#' # another way of checking the attributes
-#' str(dicho_df$dicho_x)
+#' # compare "top" to "top_f2"
+#' # we can see all response with "agree" in the name are now "agree" and
+#' # all those with "disagree" are now "disagree"
+#' new_df
 #'
-#' # check the factor levels
-#' unique(dicho_df$dicho_x)
+#' # show the attributes
+#' attributes(new_df$top_f2)
 #'
-#' # ----------------------------------------------------------------------------
+#' # Check a factor variable ---------------------------------------------------
+#' new_df <- test_data %>%
+#'   mutate(
+#'     # convert it to a factor
+#'     top_f = make_factor(top),
+#'     # convert the dichotomous factor
+#'     top_f2 = make_dicho(top_f)
+#'   ) %>%
+#'   # select the three variables to compare them
+#'   select(top, top_f, top_f2)
 #'
-#' # function also works with factors
-#' dicho_df <- df %>%
-#'   dplyr::mutate(
-#'     # convert variable to a factor
-#'     factor_x = make_factor(x),
-#'     # convert the factor to a dichotomous factor
-#'     dicho_x = make_dicho(factor_x)
-#'   )
+#' # compare the three variables
+#' new_df
 #'
-#' # check the updated dataset
-#' dicho_df
+#' # show the attributes for the new variable
+#' attributes(new_df$top_f2)
 #'
-#' # Check the attributes
-#' attributes(dicho_df$dicho_x)
-#' # another way of checking the attributes
-#' str(dicho_df$dicho_x)
+#' # Show it with flipped levels -----------------------------------------------
 #'
-#' # check the factor levels
-#' unique(dicho_df$dicho_x)
+#' # let's do the same thing but let's flip the levels now
+#' new_df <- test_data %>%
+#'   mutate(
+#'     # show it without flipping the levels
+#'     top_f2 = make_dicho(top),
+#'     # show it with the levels being flipped
+#'     top_f2_flip = make_dicho(top, flip_levels = TRUE)
+#'   ) %>%
+#'   # keep only relevant variables
+#'   select(top, top_f2, top_f2_flip)
 #'
+#' # compare them
+#' new_df
+#'
+#' # They look the same but if we check the levels of the factor we can see
+#' # that they are in different orders
+#' attributes(new_df$top_f2)
+#' attributes(new_df$top_f2_flip)
+#'
+
 #' # ----------------------------------------------------------------------------
 #' # function also works inside dplyr::across()
 #'
 #' # Create new columns using `across()`
-#' dicho_df <- df %>%
+#' new_df <- test_data %>%
 #'   dplyr::mutate(
 #'     # use this example if you don't want to flip the factor levels
 #'     dplyr::across(
-#'       x:z,
+#'       c(top:deserving),
 #'       make_dicho,
-#'       .names = "dicho_{col}"
+#'       .names = "{col}_f2"
 #'     ),
 #'     # if you want to flip the factor levels, follow this example
 #'     dplyr::across(
-#'       x:z,
+#'       c(top:deserving),
 #'       ~make_dicho(., flip_levels = TRUE),
-#'       .names = "dicho_flipped_{col}"
+#'       .names = "{col}_f2_flip"
 #'     )
-#'   )
+#'   ) %>%
+#'   # select the variables with "f2" in the name
+#'   select(contains("f2"))
+#'
 #' # show that the function worked properly by creating two new sets of variables
-#' dicho_df
+#' new_df
 #'
 #' # show the underlying structure of the entire df
-#' str(dicho_df)
+#' str(new_df)
 #'
 #' # show how the levels are flipped when "flip_levels = TRUE"
-#' levels(dicho_df$dicho_x)
-#' levels(dicho_df$dicho_flipped_x)
+#' levels(new_df$top_f2)
+#' levels(new_df$top_f2_flip)
 #'
 #'
 

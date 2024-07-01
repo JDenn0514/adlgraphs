@@ -33,8 +33,13 @@
 #'
 #' # let's make a new variable and data set
 #' new_df <- test_data %>%
+#'   # convert top into a factor
 #'   mutate(top_f = make_factor(top))
 #'
+#' # compare the "top_f" to "top"
+#' new_df %>% select(top, top_f)
+#'
+#' # check the attributes to see the label and transformation
 #' attributes(new_df$top_f)
 #'
 #' @export
