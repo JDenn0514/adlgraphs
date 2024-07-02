@@ -99,7 +99,7 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
 
     }
 
-    if (is.numeric(df[[group]]) && !is.null(attr_val_labels)) {
+    if (is.numeric(df[[group]]) && !is.null(attr_val_labels(df[[group]]))) {
       # if group is class numeric AND DOES contain value labels
 
       # convert to a factor with sjlabelled
@@ -109,7 +109,7 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
         # group by group_f
         dplyr::group_by(group_f)
 
-    } else if (is.character(x) || is.factor(x)) {
+    } else if (is.character(df[[group]]) || is.factor(df[[group]])) {
       # if group is of class character or factor return x
 
       df <- df %>%
@@ -161,11 +161,7 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
           ) %>%
           dplyr::arrange(.data[[x]])
 
-
-
       }
-
-
 
     }
 
@@ -227,7 +223,6 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
   df_freq %>% structure(class = c("adlgraphs_freqs", class_names))
 
 }
-
 
 
 

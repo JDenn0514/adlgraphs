@@ -103,7 +103,7 @@ get_means <- function(df, x, group, wt) {
 
     }
 
-    if (is.numeric(df[[group]]) && !is.null(attr_val_labels)) {
+    if (is.numeric(df[[group]]) && !is.null(attr_val_labels(df[[group]]))) {
       # if group is class numeric AND DOES contain value labels
 
       # convert to a factor with sjlabelled
@@ -113,7 +113,7 @@ get_means <- function(df, x, group, wt) {
         # group by group_f
         dplyr::group_by(group_f)
 
-    } else if (is.character(x) || is.factor(x)) {
+    } else if (is.character(df[[group]]) || is.factor(df[[group]])) {
       # if group is of class character or factor return x
 
       df <- df %>%
@@ -122,12 +122,13 @@ get_means <- function(df, x, group, wt) {
         # group by group_f
         dplyr::group_by(group_f)
 
+
     } else {
       # if group is anything else (ie numeric)
 
       df <- df %>%
         # force to a factor
-        dplyr::mutate(group_f = as.factor(group)) %>%
+        dplyr::mutate(group_f = as.factor(.data[[group]])) %>%
         # group by group_f
         dplyr::group_by(group_f)
 
@@ -232,3 +233,6 @@ get_means <- function(df, x, group, wt) {
   }
 
 }
+
+
+
