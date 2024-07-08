@@ -115,11 +115,6 @@ adlgraphs_global$font <- list(
           "You can make this change permanent:\n   ",
           "Tools > Global Options > General > Graphics > Graphics Device > Backend == 'AGG'."
         ))
-      } else {
-        packageStartupMessage(paste(
-          "adlgraphs requires RStudio to use Roboto fonts in the R plots window.\n   ",
-          "Please install RStudio. <https://www.rstudio.com>"))
-
       }
     }
     # Otherwise, notify user
