@@ -108,22 +108,14 @@ adlgraphs_global$font <- list(
 
     # ... and check on rstudio graphics
     if (rstudioapi::isAvailable()){
-      if(rstudioapi::getVersion() > 1.4){
-        if(getOption("RStudioGD.backend") != "ragg"){
-          options(RStudioGD.backend = "ragg")
-          packageStartupMessage(paste(
-            "cmapplot has set RStudio graphics to `ragg` for the current session.",
-            "You can make this change permanent:\n   ",
-            "Tools > Global Options > General > Graphics > Graphics Device > Backend == 'AGG'."
-          ))
-        }
-      } else {
+      if(getOption("RStudioGD.backend") != "ragg"){
+        options(RStudioGD.backend = "ragg")
         packageStartupMessage(paste(
-          "adlgraphs requires RStudio v1.4 or greater to use Roboto fonts",
-          "in the R plots window.\nPlease update RStudio."))
+          "adlgraphs has set RStudio graphics to `ragg` for the current session.",
+          "You can make this change permanent:\n   ",
+          "Tools > Global Options > General > Graphics > Graphics Device > Backend == 'AGG'."
+        ))
       }
-      # If using vanilla R, encourage RStudio installation
-    } else {
       packageStartupMessage(paste(
         "adlgraphs requires RStudio to use Roboto fonts in the R plots window.\n   ",
         "Please install RStudio. <https://www.rstudio.com>"))
