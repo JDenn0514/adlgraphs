@@ -9,6 +9,7 @@ template:
     bg: "#fcfbf9"         # lighten springwood background
     fg: "#000000"         # contrast ratio: 15.76 for text
     primary: "#14A2FCFF"    # navy blue link text
+    headings-color: "#E84C4CFF"
 development:
   mode: auto
 reference:
