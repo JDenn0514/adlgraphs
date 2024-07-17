@@ -7,8 +7,8 @@ template:
     code_font: {google: "Overpass Mono"}
     heading_font: {google: "Roboto"}
     bg: "#fcfbf9"         # lighten springwood background
-    fg: "#e5f3f7"         # contrast ratio: 15.76 for text
-    primary: "red"    # navy blue link text
+    fg: "black"         # contrast ratio: 15.76 for text
+    primary: "e5f3f7"    # navy blue link text
     # secondary: "#97d0dc"  # blue active pill background
     # link-color: "#14A2FCFF" # brighter link color, contrast 4.52
     # info: "#BED4E2"       # version badge bg
