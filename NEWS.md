@@ -1,3 +1,18 @@
+# adlgraphs 0.2.3
+
+## This update mainly consisted of bug fixes
+
+#### `make_factor` 
+- Did not work with factor or character vectors so updated
+- With factor vectors now just returns the factor vector
+- With character vectors converts it to a factor
+
+#### `prettytable` 
+- Fixed a bug that returned the variable name instead of variable labels
+
+
+
+
 # adlgraphs 0.2.2
 
 ## New functions

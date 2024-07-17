@@ -56,8 +56,20 @@ make_factor <- function(x, ordered = FALSE) {
   value_labels <- attr_val_labels(x)
 
   if (is.null(value_labels)) {
-    # if there aren't any value_labels then return an error
-    stop("The vector provided in `x` does not have value labels")
+    # if there aren't any value labels then do the following
+
+    if (is.factor(x)) {
+      # if it is already a factor, no need to do anything
+      return(x)
+
+    } else if (is.character(x)) {
+      # if it is a character vector, convert it to a factor
+      as.factor(x)
+
+    } else if (is.numeric) {
+      # if it is  there aren't any value_labels then return an error
+      stop("The vector provided in `x` does not have value labels")
+    }
   }
 
   # ensure that all values have associated labels
