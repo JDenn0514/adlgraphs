@@ -14,9 +14,9 @@ template:
     # info: "#BED4E2"       # version badge bg
     # headings-color: "#336688"
     # navbar
-    navbar-bg: "#fcfbf9"  # match to site bg
-    navbar-light-color: "#272b30"
-    navbar-light-hover-color: "#336688"
+    navbar-bg: "#E84C4CFF"  # match to site bg
+    navbar-light-color: "#60269EFF"
+    navbar-light-hover-color: "#FFE500FF"
 development:
   mode: auto
 reference:
