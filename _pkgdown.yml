@@ -8,7 +8,7 @@ template:
     heading_font: {google: "Roboto"}
     bg: "#fcfbf9"         # lighten springwood background
     fg: "#2c2e35"         # contrast ratio: 15.76 for text
-    primary: "#0A1A50FF"    # navy blue link text
+    primary: "red"    # navy blue link text
     secondary: "#97d0dc"  # blue active pill background
     link-color: "#14A2FCFF" # brighter link color, contrast 4.52
     info: "#BED4E2"       # version badge bg
