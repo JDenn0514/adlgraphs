@@ -26,7 +26,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
   x <- accept_string_or_sym({{ x }})
 
   # set the x variable label
-  x_variable_label <- get_var_label(df[[x]], x_lab)
+  x_variable_label <- get_variable_label(df[[x]], x_lab)
 
 
   if (missing(wt)) {
@@ -60,7 +60,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
       group_cols <- get_unique_labels(df[[group]])
 
       # set the group variable label
-      group_variable_label <- get_var_label(df[[group]], group_lab)
+      group_variable_label <- get_variable_label(df[[group]], group_lab)
 
 
       if (isFALSE(show_genpop)) {
@@ -159,7 +159,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
       group_cols <- get_unique_labels(df[[group]])
 
       # set the group variable label
-      group_variable_label <- get_var_label(df[[group]], group_lab)
+      group_variable_label <- get_variable_label(df[[group]], group_lab)
 
 
       if (isFALSE(show_genpop)) {

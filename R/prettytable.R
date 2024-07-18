@@ -38,7 +38,7 @@ prettytable.adlgraphs_freqs <- function(x) {
     x_lab <- colnames(x)[1]
 
     # get the label of the main variable
-    x_variable_label <- get_var_label(x[[x_lab]], x_lab)
+    x_variable_label <- get_variable_label(x[[x_lab]], x_lab)
 
     x %>%
       dplyr::mutate(
@@ -59,14 +59,14 @@ prettytable.adlgraphs_freqs <- function(x) {
     # get the name of the main variable
     x_lab <- colnames(x)[2]
     # get the label of the main variable
-    x_variable_label <- get_var_label(x[[x_lab]], x_lab)
+    x_variable_label <- get_variable_label(x[[x_lab]], x_lab)
 
     # get the group object's name
     group_lab <- colnames(x)[1]
     # get the group column labels
     group_cols <- get_unique_labels(x[[1]])
     # set the group variable label
-    group_variable_label <- get_var_label(x[[group_lab]], group_lab)
+    group_variable_label <- get_variable_label(x[[group_lab]], group_lab)
 
     x %>%
       dplyr::mutate(
