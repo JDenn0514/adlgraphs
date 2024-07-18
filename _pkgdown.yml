@@ -72,6 +72,7 @@ reference:
 - title: Miscellaneous functions
   contents:
     - attr_var_label
+    - attr_val_labels
     - codebook
     - make_df_oxy
     - write_word_table
