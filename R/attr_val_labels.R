@@ -1,0 +1,67 @@
+#' Get variable label
+#'
+#' This function makes it easy to get the value labels from either an
+#' individual vector or a data frame. NOTE: it is not possible to set or modify
+#' the variable labels with this function.
+#'
+
+#'
+#' @param x A vector object, the name of a column in a `data.frame`, or an
+#'   an actual `data.frame` object.
+#' @param df A `data.frame` or `tibble` object. This should only be specified
+#'   when `x` is only the name of a column in a `data.frame`.
+#'
+#' @export
+
+attr_val_label <- function(x, df, unlist) {
+  UseMethod("attr_val_label")
+}
+
+#' @export
+attr_val_labels.default <- function(x, df) {
+  if (missing(df)) {
+    attr(x, "labels", exact = TRUE)
+  } else {
+    attr(df[[x]], "labels", exact = TRUE)
+  }
+}
+
+
+# Create a vector containing character strings comprised of all the variable
+# labels for each column in a data.frame or tibble.
+# write a function that will get the variable label for each column in the df
+#' @export
+attr_val_labels.data.frame <- function(x, df = NULL) {
+  # get a list of columns
+  cols <- names(df)
+
+  # write up a function that makes the string in the format we want
+  string_fun <- function(x) {
+    string <- attributes(df[[x]])$labels
+  }
+
+  # map string_fun over each of the columns laid out earlier
+  lapply(cols, string_fun) %>%
+    # add the names of the columns to the list objects
+    setNames(cols)
+
+
+}
+
+
+
+
+
+
+
+
+#' Get the value labels attribute
+#' @rdname attributes
+#' @export
+attr_val_labels <- function(x, df) {
+  if (missing(df)) {
+    attributes(x)$labels
+  } else {
+    attributes(df[[x]])$labels
+  }
+}
