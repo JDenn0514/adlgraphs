@@ -1,3 +1,35 @@
+# adlgraphs 0.3.1
+
+## A bunch of new functions
+#### attr_var_label
+
+- Get variable label for vectors and dataframes
+
+#### attr_val_label
+
+- Get value labels for vectors and dataframes
+
+#### attr_levels
+
+- Get factor levels for vectors and dataframes
+
+#### attr_note
+
+- Get note attribute for vectors and dataframes
+
+#### attr_survey_flow
+
+- Get survey_flow attribute for vectors and dataframes
+
+#### attr_question_preface
+
+- Get question_preface attribute for vectors and dataframes
+
+#### attr_transformation
+
+- get transformation attribute for vectors and dataframes
+
+
 # adlgraphs 0.2.4
 
 ## Minor addition

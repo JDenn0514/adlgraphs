@@ -69,10 +69,17 @@ reference:
     - get_freq_table
     - get_all_freqs
     - prettytable
-- title: Miscellaneous functions
+- title: Attribute helpers
   contents:
     - attr_var_label
     - attr_val_labels
+    - attr_levels
+    - attr_note
+    - attr_question_preface
+    - attr_survey_flow
+    - attr_transformation
+- title: Miscellaneous functions
+  contents:
     - codebook
     - make_df_oxy
     - write_word_table
