@@ -59,13 +59,6 @@ contains miscellaneous information about the variable.}
 \examples{
 library(adlgraphs)
 
-# get the variable labels
-attr_var_label(x = test_data$edu)
-attr_var_label(x = "edu", df =  test_data)
-
-# get the value labels
-attr_val_labels(x = test_data$edu)
-attr_val_labels(x = "edu", df = test_data)
 
 # get the levels for edu_f
 attr_levels(x = test_data$edu_f)

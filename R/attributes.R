@@ -11,9 +11,7 @@
 #' @details
 #' \describe{
 #'
-#' \item{`attr_var_label()`}{This function gets the the variable label.}
-#'
-#' \item{`attr_val_labels()`}{This function gets the value labels.}
+
 #'
 #' \item{`attr_levels()`}{This function gets the factor levels.}
 #'
@@ -39,13 +37,6 @@
 #' @examples
 #' library(adlgraphs)
 #'
-#' # get the variable labels
-#' attr_var_label(x = test_data$edu)
-#' attr_var_label(x = "edu", df =  test_data)
-#'
-#' # get the value labels
-#' attr_val_labels(x = test_data$edu)
-#' attr_val_labels(x = "edu", df = test_data)
 #'
 #' # get the levels for edu_f
 #' attr_levels(x = test_data$edu_f)
@@ -61,26 +52,8 @@
 NULL
 
 
-#' @rdname attributes
-#' @export
-attr_var_label <- function(x, df) {
-  if (missing(df)) {
-    attr(x, "label", exact = TRUE)
-  } else {
-    attr(df[[x]], "label", exact = TRUE)
-  }
-}
 
-#' Get the value labels attribute
-#' @rdname attributes
-#' @export
-attr_val_labels <- function(x, df) {
-  if (missing(df)) {
-    attributes(x)$labels
-  } else {
-    attributes(df[[x]])$labels
-  }
-}
+
 
 #' Get the factor levels attribute from a vector
 #' @rdname attributes
@@ -141,48 +114,7 @@ attr_survey_flow <- function(x, df) {
 
 
 
-# Create a vector containing character strings comprised of all the variable
-# labels for each column in a data.frame or tibble.
-# write a function that will get the variable label for each column in the df
-get_all_var_labels <- function(df, unlist = TRUE) {
-  # get a list of columns
-  cols <- names(df)
 
-  # write up a function that makes the string in the format we want
-  string_fun <- function(x) {
-    string <- attributes(df[[x]])$label
-  }
-
-  # iterate string_fun over each of the columns laid out earlier
-  var_labels <- lapply(cols, string_fun) %>%
-    # set the names of the objects in the list
-    setNames(cols)
-
-  if (isTRUE(unlist)) {
-    # map string_fun over each of the columns laid out earlier
-    var_labels %>% unlist()
-  } else {
-    var_labels
-  }
-
-}
-
-# Create a list of vectors of the value labels of each variable in a data.frame
-get_all_val_labels <- function(df) {
-  # get a list of columns
-  cols <- names(df)
-
-  # write up a function that makes the string in the format we want
-  string_fun <- function(x) {
-    string <- attributes(df[[x]])$labels
-  }
-
-  # map string_fun over each of the columns laid out earlier
-  lapply(cols, string_fun) %>%
-    # add the names of the columns to the list objects
-    setNames(cols)
-
-}
 
 # Create a list of vectors of the factor levels of each variable in a data.frame
 get_all_factor_levels <- function(df) {

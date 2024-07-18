@@ -1,4 +1,4 @@
-#' Get variable label
+#' Get value labels
 #'
 #' This function makes it easy to get the value labels from either an
 #' individual vector or a data frame. NOTE: it is not possible to set or modify
@@ -13,8 +13,8 @@
 #'
 #' @export
 
-attr_val_label <- function(x, df, unlist) {
-  UseMethod("attr_val_label")
+attr_val_labels <- function(x, df, unlist) {
+  UseMethod("attr_val_labels")
 }
 
 #' @export
