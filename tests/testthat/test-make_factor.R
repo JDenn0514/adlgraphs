@@ -38,6 +38,10 @@ test_that("all labels are preserved when using a non-haven_labelled numeric vect
   expect_equal(make_factor(s1), exp)
 })
 
+test_that("Should return same value as s1", {
+  s1 <- letters
+  expect_equal(make_factor(s1), as.factor(s1))
+})
 
 
 
@@ -60,10 +64,6 @@ test_that("return error when there aren't any value labels- numeric vector", {
   expect_error(make_factor(s1), "The vector provided in `x` does not have value labels")
 })
 
-test_that("return error when there aren't any value labels- character vector", {
-  s1 <- letters
-  expect_error(make_factor(s1), "The vector provided in `x` does not have value labels")
-})
 
 
 

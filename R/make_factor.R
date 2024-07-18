@@ -64,9 +64,10 @@ make_factor <- function(x, ordered = FALSE) {
 
     } else if (is.character(x)) {
       # if it is a character vector, convert it to a factor
-      as.factor(x)
+      x <- as.factor(x)
+      return(x)
 
-    } else if (is.numeric) {
+    } else if (is.numeric(x)) {
       # if it is  there aren't any value_labels then return an error
       stop("The vector provided in `x` does not have value labels")
     }

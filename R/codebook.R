@@ -74,14 +74,14 @@ codebook <- function(df) {
   if (!len) stop("there are no names to search in that object")
 
   # get the variable labels
-  labels <- get_all_var_labels(df)
+  labels <- attr_var_label(df)
 
   # get the factor levels
   factor_levels <- get_all_factor_levels({{ df }})
 
   levels <- get_all_factor_levels({{ df }})
   # get the value labels
-  value_labels <- get_all_val_labels({{ df }})
+  value_labels <- attr_val_labels({{ df }})
 
   # get the transformation attribute
   transformation <- get_all_transformation({{ df }})
