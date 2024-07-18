@@ -4,7 +4,9 @@
 #' This function creates the default theme that all ADL theme functions are
 #' built off of. It functions similarly to \code{\link[ggplot2]{theme_gray}},
 #' in that all of the default ggplot2 themes are built off
-#' \code{\link[ggplot2]{theme_gray}}.
+#' \code{\link[ggplot2]{theme_gray}}. It should be noted that this works best
+#' when dpi is set to 400 either in a Quarto or Rmarkdown doc or in
+#' \code{\link[ggplot2]{ggsave}}.
 #'
 #' @param base_size Base font size, given in pts. Also controls the spacing in
 #'   the graph.
@@ -478,6 +480,8 @@ theme_default <- function(
   )
 
 }
+
+
 
 #
 # theme_marquee <- function(
@@ -1055,8 +1059,6 @@ theme_v_bar <- function(
     ...
   )
 }
-
-
 
 
 

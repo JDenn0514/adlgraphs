@@ -77,23 +77,21 @@ codebook <- function(df) {
   labels <- attr_var_label(df)
 
   # get the factor levels
-  factor_levels <- get_all_factor_levels({{ df }})
-
-  levels <- get_all_factor_levels({{ df }})
+  levels <- attr_levels({{ df }})
   # get the value labels
   value_labels <- attr_val_labels({{ df }})
 
   # get the transformation attribute
-  transformation <- get_all_transformation({{ df }})
+  transformation <- attr_transformation({{ df }})
 
   # get the note attribute
-  note <- get_all_note({{ df }})
+  note <- attr_note({{ df }})
 
   # get the question_preface attribute
-  question_preface <- get_all_question_preface({{ df }})
+  question_preface <- attr_question_preface({{ df }})
 
   # get the survey_flow attribute
-  survey_flow <- get_all_survey_flow({{ df }})
+  survey_flow <- attr_survey_flow({{ df }})
 
   pos <- which(names %in% names)
 
