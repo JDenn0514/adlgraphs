@@ -4,14 +4,23 @@ template:
   bslib:
     font_scale: 1.0
     base_font: {google: "Roboto"}
-    code_font: {google: "Overpass Mono"}
+    code_font: {google: "Inter"}
     heading_font: {google: "Roboto"}
     bg: "#fcfbf9"         # lighten springwood background
     fg: "#000000"         # contrast ratio: 15.76 for text
-    primary: "#14A2FCFF"    # navy blue link text
-    navbar-background: "#e5f3f7"
+    primary: "#14A2FCFF"  # light blue link text
+    navbar-bg: "#e5f3f7"  # change nav bar background
+
 development:
   mode: auto
+
+navbar:
+  type: "light"
+  bg: "#e5f3f7"  # apparently this plus navbar-bg needs to be set to same color?
+  structure:
+    left:  [home, reference, articles, news]
+    right: [github]
+
 reference:
 - title: Graph Wrappers
   desc: These are wrapper functions around common `{ggplot2}` functions. They're
