@@ -10,6 +10,7 @@ template:
     fg: "#000000"         # contrast ratio: 15.76 for text
     primary: "#14A2FCFF"  # light blue link text
     navbar-bg: "#e5f3f7"  # change nav bar background
+    navbar-light-hover-color: "#14A2FCFF"
 
 development:
   mode: auto
@@ -17,6 +18,7 @@ development:
 navbar:
   type: "light"
   bg: "#e5f3f7"  # apparently this plus navbar-bg needs to be set to same color?
+  pill-active: "#000000"
   structure:
     left:  [home, reference, articles, news]
     right: [github]
