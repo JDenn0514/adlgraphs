@@ -1,3 +1,10 @@
+# adlgraphs 0.2.4
+
+## Minor addition
+
+#### `adl_bar_plots`
+- Added new argument that enables wrapping facet labels.
+
 # adlgraphs 0.2.3
 
 ## This update mainly consisted of bug fixes

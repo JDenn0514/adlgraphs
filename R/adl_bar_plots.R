@@ -40,7 +40,7 @@
 #'   This must be set explicitly as it affects the location of the text, labels,
 #'   and error bars.
 #' @param col_text_size The size of the text inside/on top of the columns.
-#'   Default is 3.25.
+#'   Default is 3.25. Default for web is 12.
 #' @param distance_from_col How far the labels are from the bars in freq plots
 #'   and how far they are from the bottom of the bar in the mean plots.
 #' @param freq_plot Logical. Determines if this is a frequency plot. If `TRUE`,
@@ -58,6 +58,11 @@
 #'   check out \code{\link[ggplot2]{position_dodge}}.
 #' @param dodge_reverse Reverses the order of the bars and text in a dodge plot.
 #'   For more info check out \code{\link[ggplot2]{position_dodge}}.
+#' @param wrap_facet_labels Determine number of characters per line in the
+#'   labels. Uses \link[ggplot2]{label_wrap_gen} to wrap the text across
+#'   multiple lines. If left blank, defaults to 200 so that it in essence
+#'   won't wrap the text.
+#'   text
 #' @param ... Additional arguments passed on to `theme_default`
 #'
 #' @export
@@ -78,6 +83,7 @@ adl_bar_plots <- function(
     position = NULL,
     dodge_width = 0.8,
     dodge_reverse = TRUE,
+    wrap_facet_labels = 100,
     ...
 ) {
 
@@ -363,7 +369,7 @@ adl_bar_plots <- function(
           color = "#2c2e35",
           label.padding = unit(2.5, "pt")
         ) +
-        facet_wrap(vars({{ y }}), ncol = 1, scales = "free_y") +
+        ggplot2::facet_wrap(vars({{ y }}), ncol = 1, labeller = label_wrap_gen(wrap_facet_labels), scales = "free_y") +
         theme_h_stack(...)
     }
 

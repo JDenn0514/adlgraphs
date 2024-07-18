@@ -1,7 +1,7 @@
 Type: Package
 Package: adlgraphs
 Title: Create Graphs with ADL Style and Branding
-Version: 0.2.3
+Version: 0.2.4
 Authors@R: 
     person("Jacob", "Dennen", , "jdennen@adl.org", role = c("aut", "cre"))
 Description: The goal of adlgraphs is to to help ensure that the data 

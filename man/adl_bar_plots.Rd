@@ -18,6 +18,7 @@ adl_bar_plots(
   position = NULL,
   dodge_width = 0.8,
   dodge_reverse = TRUE,
+  wrap_facet_labels = 100,
   ...
 )
 }
@@ -52,7 +53,7 @@ and error bars.
 }}
 
 \item{col_text_size}{The size of the text inside/on top of the columns.
-Default is 3.25.}
+Default is 3.25. Default for web is 12.}
 
 \item{distance_from_col}{How far the labels are from the bars in freq plots
 and how far they are from the bottom of the bar in the mean plots.}
@@ -75,6 +76,12 @@ check out \code{\link[ggplot2]{position_dodge}}.}
 
 \item{dodge_reverse}{Reverses the order of the bars and text in a dodge plot.
 For more info check out \code{\link[ggplot2]{position_dodge}}.}
+
+\item{wrap_facet_labels}{Determine number of characters per line in the
+labels. Uses \link[ggplot2]{label_wrap_gen} to wrap the text across
+multiple lines. If left blank, defaults to 200 so that it in essence
+won't wrap the text.
+text}
 
 \item{...}{Additional arguments passed on to \code{theme_default}}
 }
