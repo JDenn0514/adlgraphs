@@ -28,7 +28,7 @@ pivot_longer_values <- function(data, cols, names_to, values_to, name_label = NA
   # get the variable labels to go into names as value labels
   var_labs <- data %>%
     select({{ cols }}) %>%
-    get_all_var_labels()
+    attr_var_label()
 
   # flip the names and values of the vector
   var_labs <- setNames(names(var_labs), var_labs)

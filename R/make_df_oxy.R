@@ -67,7 +67,7 @@ make_df_oxy <- function(df, title, description, print = FALSE) {
   lbl <- gsub('"', "", lbl)
 
   # get a list of all of the variables
-  variable_labels <- get_all_var_labels(df)
+  variable_labels <- attr_var_labels(df)
 
 
   # Write individual item description templates

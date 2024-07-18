@@ -4,7 +4,6 @@
 #' individual vector or a data frame. NOTE: it is not possible to set or modify
 #' the variable labels with this function.
 #'
-
 #'
 #' @param x A vector object, the name of a column in a `data.frame`, or an
 #'   an actual `data.frame` object.
@@ -14,7 +13,6 @@
 #'   `FALSE`, returns a list. This only works when `x` is a `data.frame`
 #'
 #' @export
-
 attr_var_label <- function(x, df, unlist) {
   UseMethod("attr_var_label")
 }
