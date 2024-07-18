@@ -114,7 +114,7 @@ get_unique_labels <- function(x) {
 
 
 # get the variable label if there is one
-get_var_label <- function(x, lab) {
+get_variable_label <- function(x, lab) {
 
   # get the label for the group variable
   if (!is.null(attr_var_label(x))) {
