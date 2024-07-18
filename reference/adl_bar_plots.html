@@ -17,7 +17,7 @@ of time it takes to make these graphs."><meta property="og:image" content="https
 
     <a class="navbar-brand me-2" href="../index.html">adlgraphs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,6 +71,7 @@ of time it takes to make these graphs.</p>
 <span>  position <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dodge_width <span class="op">=</span> <span class="fl">0.8</span>,</span>
 <span>  dodge_reverse <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  wrap_facet_labels <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -122,7 +123,7 @@ and error bars.</p></li>
 
 <dt id="arg-col-text-size">col_text_size<a class="anchor" aria-label="anchor" href="#arg-col-text-size"></a></dt>
 <dd><p>The size of the text inside/on top of the columns.
-Default is 3.25.</p></dd>
+Default is 3.25. Default for web is 12.</p></dd>
 
 
 <dt id="arg-distance-from-col">distance_from_col<a class="anchor" aria-label="anchor" href="#arg-distance-from-col"></a></dt>
@@ -155,6 +156,14 @@ check out <code><a href="https://ggplot2.tidyverse.org/reference/position_dodge.
 <dt id="arg-dodge-reverse">dodge_reverse<a class="anchor" aria-label="anchor" href="#arg-dodge-reverse"></a></dt>
 <dd><p>Reverses the order of the bars and text in a dodge plot.
 For more info check out <code><a href="https://ggplot2.tidyverse.org/reference/position_dodge.html" class="external-link">position_dodge</a></code>.</p></dd>
+
+
+<dt id="arg-wrap-facet-labels">wrap_facet_labels<a class="anchor" aria-label="anchor" href="#arg-wrap-facet-labels"></a></dt>
+<dd><p>Determine number of characters per line in the
+labels. Uses <a href="https://ggplot2.tidyverse.org/reference/labellers.html" class="external-link">label_wrap_gen</a> to wrap the text across
+multiple lines. If left blank, defaults to 200 so that it in essence
+won't wrap the text.
+text</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
