@@ -105,10 +105,10 @@ variables with other functions like <code>map()</code> <code><a href="https://pu
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># it also works if x is a string</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="get_means.html">get_means</a></span><span class="op">(</span><span class="va">test_data</span>, <span class="st">"big_events"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 6</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    mean    sd     n std.error conf.low conf.high</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  2.48  1.01   250      0.06     2.35      2.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    mean    sd     n conf.low conf.high</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  2.48  1.01   250     2.35      2.61</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Let's do that again but add weights</span></span></span>
 <span class="r-in"><span><span class="fu">get_freqs</span><span class="op">(</span><span class="va">test_data</span>, <span class="va">big_events</span>, wt <span class="op">=</span> <span class="va">wts</span><span class="op">)</span></span></span>
