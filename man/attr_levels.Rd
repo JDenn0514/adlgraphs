@@ -12,9 +12,6 @@ an actual \code{data.frame} object.}
 
 \item{df}{A \code{data.frame} or \code{tibble} object. This should only be specified
 when \code{x} is only the name of a column in a \code{data.frame}.}
-
-\item{unlist}{Logical. If \code{TRUE}, the default, returns a named vector. If
-\code{FALSE}, returns a list. This only works when \code{x} is a \code{data.frame}}
 }
 \description{
 This function makes it easy to get the variable labels from either an

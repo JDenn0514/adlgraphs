@@ -70,36 +70,6 @@
 #' @param panel_spacing_y Vertical spacing between the different panels when
 #'   faceting a graph, given in pts. Default is 0.
 #'
-#' @details
-#' \describe{
-#'
-#' \item{`theme_default()`}{This function gets the the variable label.}
-#'
-#' \item{`theme_default_web()`}{This function is used for plots that will be
-#' published on the web since the }
-#'
-#' \item{`attr_levels()`}{This function gets the factor levels.}
-#'
-#' \item{`attr_transformation()`}{This function gets the "transformation"
-#' attribute which tells you what data transformation the variable underwent
-#' when it was created.}
-#'
-#' \item{`attr_question_preface()`}{This function gets the "question_preface"
-#' attribute. Some questions in surveys enable respondents to select multiple
-#' responses. Each response gets it's own variable in the data, which is labeled
-#' "label. The text stored in this attribute contains the text that respondents
-#' saw before the response options.}
-#'
-#' \item{`attr_survey_flow()`}{This function gets teh the "survey_flow"
-#' attribute. This is used to indicate if there was an experiment or some sort
-#' of branching involved in the survey flow}
-#'
-#' \item{`attr_note()`}{This function gets the  "note" attribute which
-#' contains miscellaneous information about the variable.}
-#'
-#'}
-
-#'
 #' @export
 #'
 #'
