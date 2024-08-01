@@ -13,7 +13,7 @@
 #' @importFrom labelled var_label set_variable_labels set_value_labels
 #' @import glue
 #' @importFrom utils tail
-#' @importFrom stats qt df.residual setNames weighted.mean sd
+#' @importFrom stats qt df.residual setNames weighted.mean sd symnum
 #' @importFrom tidyr pivot_wider drop_na
 #' @importFrom purrr pmap walk
 #' @importFrom stringr str_replace str_detect
@@ -32,5 +32,9 @@
 #' @importFrom vctrs vec_ptype_abbr
 #' @importFrom systemfonts register_font
 #' @importFrom rstudioapi isAvailable getVersion
+#' @importFrom graphics stars
+#' @importFrom mvtnorm qmvt pmvt
+#' @importFrom tidyselect all_of
+#' @importFrom withr with_seed
 #' @keywords internal
 "_PACKAGE"

@@ -21,7 +21,7 @@ testthat::test_that("expect outputs to be equal for mean with just x", {
       conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
       # round all of the numbers to the second decimal
       dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-    )
+    ) %>% dplyr::select(-std.error)
 
   # test without quotes
   testthat::expect_equal(
@@ -56,7 +56,7 @@ testthat::test_that("expect outputs to be equal for mean with just x and wts", {
       conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
       # round all of the numbers to the second decimal
       dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-    )
+    ) %>% dplyr::select(-std.error)
 
   # test without quotes
   testthat::expect_equal(
@@ -92,7 +92,7 @@ testthat::test_that("expect outputs to be equal for mean with a factor grouping 
       conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
       # round all of the numbers to the second decimal
       dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-    )
+    ) %>% dplyr::select(-std.error)
 
   # test without quotes
   testthat::expect_equal(
@@ -130,7 +130,8 @@ testthat::test_that("expect outputs to be equal for mean with a labelled groupin
       conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
       # round all of the numbers to the second decimal
       dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-    )
+    ) %>% dplyr::select(-std.error)
+
   # remove transformation attribute
   attr(mean_x$top, "transformation") <- NULL
 
@@ -182,7 +183,7 @@ testthat::test_that("expect outputs to be equal for mean with a factor grouping 
       conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
       # round all of the numbers to the second decimal
       dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-    )
+    ) %>% dplyr::select(-std.error)
 
   # test without quotes
   testthat::expect_equal(
@@ -219,7 +220,8 @@ testthat::test_that("expect outputs to be equal for mean with a labelled group v
       conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
       # round all of the numbers to the second decimal
       dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-    )
+    ) %>% dplyr::select(-std.error)
+
   # remove transformation attribute
   attr(mean_x$top, "transformation") <- NULL
 

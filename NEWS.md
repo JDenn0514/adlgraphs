@@ -1,3 +1,11 @@
+# adlgraphs 0.3.2
+
+## Created a new function
+
+#### dunnett
+
+- perform Dunnett's multiple comparisons test
+
 # adlgraphs 0.3.1
 
 ## A bunch of new functions
