@@ -63,6 +63,7 @@ reference:
 - title: Data analysis
   desc: These are miscellaneous functions created to help with data analysis.
   contents:
+    - dunnett
     - get_coefficients
     - get_means
     - get_freqs
@@ -84,7 +85,8 @@ reference:
     - make_df_oxy
     - write_word_table
     - clean_demos
-
+    - dunnett_pval_fun
+    - stars_pval
 - title: Data
   contents:
     - test_data

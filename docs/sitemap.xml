@@ -79,6 +79,12 @@
     <loc>https://jdenn0514.github.io/adlgraphs/reference/codebook.html</loc>
   </url>
   <url>
+    <loc>https://jdenn0514.github.io/adlgraphs/reference/dunnett.html</loc>
+  </url>
+  <url>
+    <loc>https://jdenn0514.github.io/adlgraphs/reference/dunnett_pval_fun.html</loc>
+  </url>
+  <url>
     <loc>https://jdenn0514.github.io/adlgraphs/reference/get_all_freqs.html</loc>
   </url>
   <url>
@@ -134,6 +140,9 @@
   </url>
   <url>
     <loc>https://jdenn0514.github.io/adlgraphs/reference/scale_adl.html</loc>
+  </url>
+  <url>
+    <loc>https://jdenn0514.github.io/adlgraphs/reference/stars_pval.html</loc>
   </url>
   <url>
     <loc>https://jdenn0514.github.io/adlgraphs/reference/stat_density_quant.html</loc>
