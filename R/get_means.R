@@ -158,7 +158,8 @@ get_means <- function(df, x, group, wt) {
         conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
         # round all of the numbers to the second decimal
         dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-      )
+      ) %>%
+      dplyr::select(-std.error)
 
     if (!missing(group)) {
       # if not missing group
@@ -212,7 +213,8 @@ get_means <- function(df, x, group, wt) {
         conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
         # round all of the numbers to the second decimal
         dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-      )
+      ) %>%
+      dplyr::select(-std.error)
 
     if (!missing(group)) {
       # if not missing group
