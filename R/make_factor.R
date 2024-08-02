@@ -73,6 +73,7 @@ make_factor <- function(x, ordered = FALSE) {
     }
   }
 
+
   # ensure that all values have associated labels
   if (is.numeric(x)) {
     # get the values that have labels
@@ -82,6 +83,7 @@ make_factor <- function(x, ordered = FALSE) {
       as.numeric() %>%
       # sort it from smallest to biggest
       sort()
+
     # get the unique values in
     vals <- as.numeric(x) %>%
       unique() %>%
@@ -121,16 +123,16 @@ make_factor <- function(x, ordered = FALSE) {
 
   }
 
+
   # get the values
   values <- unname(value_labels)
   # return(values)
   names <- names(value_labels)
 
   # replace the values with the names of the value labels
-  x <- replace_with(x, values, names)
+  x <- replace_with(vctrs::vec_data(x), values, names)
   # make it a factor with the levels equal to the names and determine if its ordered
-  x <- factor(x, unique(names), ordered = ordered)
-
+  x <- factor(x, levels = unique(names), ordered = ordered)
 
   if (!is.null(variable_label)) {
     structure(x,
@@ -145,24 +147,27 @@ make_factor <- function(x, ordered = FALSE) {
 }
 
 
-
 replace_with <- function(x, from, to) {
   stopifnot(length(from) == length(to))
 
   out <- x
-
-
   # First replace regular values
   matches <- match(x, from, incomparables = NA)
-  out <- to[matches]
-
   if (anyNA(matches)) {
-    cli::cli_abort("")
+    out[!is.na(matches)] <- to[matches[!is.na(matches)]]
   } else {
     out <- to[matches]
   }
-  return(out)
 
+  # Then tagged missing values
+  tagged <- haven::is_tagged_na(x)
+  if (!any(tagged)) {
+    return(out)
+  }
+
+  matches <- match(haven::na_tag(x), haven::na_tag(from), incomparables = NA)
+
+  # Could possibly be faster to use anyNA(matches)
+  out[!is.na(matches)] <- to[matches[!is.na(matches)]]
+  out
 }
-
-
