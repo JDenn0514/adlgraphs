@@ -85,7 +85,7 @@
     )
 
     # ... and check on rstudio graphics
-    if (rstudioapi::isAvailable()){
+    if (Sys.getenv("RSTUDIO") == 1){
       if(getOption("RStudioGD.backend") != "ragg"){
         options(RStudioGD.backend = "ragg")
         packageStartupMessage(paste(
