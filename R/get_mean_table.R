@@ -5,7 +5,7 @@
 #'
 #'   x <- accept_string_or_sym({{ x }})
 #'
-#'   x_variable_label <- get_var_label({{ x }})
+#'   x_variable_label <- get_variable_label({{ x }})
 #'
 #'   if (haven::is.labelled(df[[x]])) {
 #'     # if x is class haven_labelled

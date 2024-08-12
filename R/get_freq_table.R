@@ -96,13 +96,13 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
 
         group_df <- df %>%
           # convert to a factor (this even works with numeric variables)
-          mutate(x_f = make_factor(.data[[x]])) %>%
+          dplyr::mutate(x_f = make_factor(.data[[x]])) %>%
           # calculate frequencies for x_f with a group and make it cross tabs
           get_freqs(x_f, {{group}}, cross_tab = TRUE) %>%
           # remove x_f
-          select(-x_f)
+          dplyr::select(-x_f)
 
-        bind_cols(genpop_df, group_df) %>%
+        dplyr::bind_cols(genpop_df, group_df) %>%
           # convert to a gt_object
           gt::gt() %>%
           gt::tab_spanner(
@@ -195,13 +195,13 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
 
         group_df <- df %>%
           # convert to a factor (this even works with numeric variables)
-          mutate(x_f = make_factor(.data[[x]])) %>%
+          dplyr::mutate(x_f = make_factor(.data[[x]])) %>%
           # calculate frequencies for x_f with a group and make it cross tabs
           get_freqs(x_f, {{group}}, {{ wt }}, cross_tab = TRUE) %>%
           # remove x_f
-          select(-x_f)
+          dplyr::select(-x_f)
 
-        bind_cols(genpop_df, group_df) %>%
+        dplyr::bind_cols(genpop_df, group_df) %>%
           # convert to a gt_object
           gt::gt() %>%
           gt::tab_spanner(
