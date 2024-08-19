@@ -46,7 +46,7 @@ prettytable.adlgraphs_freqs <- function(x) {
         n = round(n, 2),
         x_f = make_factor(.data[[x_lab]])
       ) %>%
-      select(x_f, n, pct) %>%
+      dplyr::select(x_f, n, pct) %>%
       gt::gt() %>%
       gt::cols_label(
         x_f = x_variable_label,
