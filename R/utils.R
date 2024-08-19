@@ -225,7 +225,7 @@ facet_col <- function(facets, scales = "fixed", space = "fixed",
   params <- facet$params
 
   params$space_free <- space == 'free'
-  ggproto(NULL, FacetCol, shrink = shrink, params = params)
+  ggplot2::ggproto(NULL, FacetCol, shrink = shrink, params = params)
 }
 
 # from ggforce
