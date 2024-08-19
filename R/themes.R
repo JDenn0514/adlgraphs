@@ -139,9 +139,9 @@ theme_default <- function(
 
   # set the major grid lines
   if (grid_major == FALSE || grid == FALSE) {
-    grid_major_line <-  ggplot2::element_blank()
+    grid_major_line <- element_blank()
   } else {
-    grid_major_line <-  ggplot2::element_line(
+    grid_major_line <- element_line(
       color = "gray75",
       linetype = "dashed",
       linewidth = base_line_size,
@@ -151,9 +151,9 @@ theme_default <- function(
 
   # set the minor grid lines
   if (grid_minor == FALSE || grid == FALSE) {
-    grid_minor_line <-  ggplot2::element_blank()
+    grid_minor_line <- element_blank()
   } else {
-    grid_minor_line <-  ggplot2::element_line(
+    grid_minor_line <- element_line(
       color = "gray90",
       linetype = "dashed",
       linewidth = base_line_size / 2,
@@ -164,9 +164,9 @@ theme_default <- function(
 
   # set the major x axis grid lines
   if (grid_major_x == FALSE || grid_major == FALSE || grid == FALSE || grid_y_only == TRUE) {
-    grid_major_x_line <-  ggplot2::element_blank()
+    grid_major_x_line <- element_blank()
   } else {
-    grid_major_x_line <-  ggplot2::element_line(
+    grid_major_x_line <- element_line(
       color = "gray75",
       linetype = "dashed",
       linewidth = base_line_size,
@@ -176,9 +176,9 @@ theme_default <- function(
 
   # set the major y axis grid lines
   if (grid_major_y == FALSE || grid_major == FALSE || grid == FALSE || grid_x_only == TRUE) {
-    grid_major_y_line <-  ggplot2::element_blank()
+    grid_major_y_line <- element_blank()
   } else {
-    grid_major_y_line <-  ggplot2::element_line(
+    grid_major_y_line <- element_line(
       color = "gray75",
       linetype = "dashed",
       linewidth = base_line_size,
@@ -188,9 +188,9 @@ theme_default <- function(
 
   # set the minor x axis grid lines
   if (grid_minor_x == FALSE || grid_minor == FALSE || grid == FALSE || grid_y_only == TRUE) {
-    grid_minor_x_line <-  ggplot2::element_blank()
+    grid_minor_x_line <- element_blank()
   } else {
-    grid_minor_x_line <-  ggplot2::element_line(
+    grid_minor_x_line <- element_line(
       color = "gray90",
       linetype = "dashed",
       linewidth = base_line_size / 2,
@@ -200,9 +200,9 @@ theme_default <- function(
 
   # set the major y axis grid lines
   if (grid_minor_y == FALSE || grid_minor == FALSE || grid == FALSE || grid_x_only == TRUE) {
-    grid_minor_y_line <-  ggplot2::element_blank()
+    grid_minor_y_line <- element_blank()
   } else {
-    grid_minor_y_line <-  ggplot2::element_line(
+    grid_minor_y_line <- element_line(
       color = "gray90",
       linetype = "dashed",
       linewidth = base_line_size / 2,
@@ -212,12 +212,12 @@ theme_default <- function(
 
   # set the horizontal panel spacing
   if (!is.null(panel_spacing_x)) {
-    panel_spacing_x <- grid::unit(panel_spacing_x, "pt")
+    panel_spacing_x <- unit(panel_spacing_x, "pt")
   }
 
   # set the vertical panel spacing
   if (!is.null(panel_spacing_y)) {
-    panel_spacing_y <- grid::unit(panel_spacing_y, "pt")
+    panel_spacing_y <- unit(panel_spacing_y, "pt")
   }
 
   facet_title_margin <- ggplot2::margin(
@@ -228,10 +228,10 @@ theme_default <- function(
   )
 
   if (axis_text == FALSE) {
-    axis_text_labels <-  ggplot2::element_blank()
+    axis_text_labels <- element_blank()
   } else {
-    axis_text_labels <-  ggplot2::element_text(
-      size = ggplot2::rel(0.8),
+    axis_text_labels <- element_text(
+      size = rel(0.8),
       colour = "#595b60",
       inherit.blank = TRUE
     )
@@ -239,12 +239,12 @@ theme_default <- function(
 
   # set the x axis labels
   if (axis_text_x == FALSE || axis_text == FALSE) {
-    axis_text_x_labels <-  ggplot2::element_blank()
+    axis_text_x_labels <- element_blank()
   } else {
-    axis_text_x_labels <-  ggplot2::element_text(
-      size = ggplot2::rel(0.8),
+    axis_text_x_labels <- element_text(
+      size = rel(0.8),
       colour = "#595b60",
-      margin = ggplot2::margin(t = 0.8 * half_line / 2,
+      margin = margin(t = 0.8 * half_line / 2,
                       b = 0.8 * half_line / 2),
       vjust = 1,
       hjust = 0.5,
@@ -254,10 +254,10 @@ theme_default <- function(
 
   # set the y axis labels
   if (axis_text_y == FALSE || axis_text == FALSE) {
-    axis_text_y_labels <-  ggplot2::element_blank()
+    axis_text_y_labels <- element_blank()
   } else {
-    axis_text_y_labels <-  ggplot2::element_text(
-      size = ggplot2::rel(0.8),
+    axis_text_y_labels <- element_text(
+      size = rel(0.8),
       colour = "#595b60",
       margin = ggplot2::margin(r = 0.8 * half_line / 2,
                       l = 0.8 * half_line / 2),
@@ -284,8 +284,8 @@ theme_default <- function(
       hjust = 0.5
     )
   } else {
-    facet_title_bold <- ggplot2::element_text(
-      family = adlgraphs:::adlgraphs_global$font$regular$family,
+    facet_title_bold <- element_text(
+      family = adlgraphs_global$font$regular$family,
       face = "plain",
       colour = "grey10",
       size = facet_title_size,
@@ -328,8 +328,8 @@ theme_default <- function(
     title                            = NULL,
     aspect.ratio                     = NULL,
     axis.title                       = NULL,
-    axis.title.x                     = ggplot2::element_text(
-      margin = ggplot2::margin(t = half_line),
+    axis.title.x                     = element_text(
+      margin = margin(t = half_line),
       vjust = 1,
     ),
     axis.title.x.top                 = NULL,
@@ -546,9 +546,9 @@ theme_default <- function(
 #
 #   # set the major grid lines
 #   if (grid_major == FALSE || grid == FALSE) {
-#     grid_major_line <-  ggplot2::element_blank()
+#     grid_major_line <- element_blank()
 #   } else {
-#     grid_major_line <-  ggplot2::element_line(
+#     grid_major_line <- element_line(
 #       color = "gray75",
 #       linetype = "dashed",
 #       linewidth = base_line_size,
@@ -558,9 +558,9 @@ theme_default <- function(
 #
 #   # set the minor grid lines
 #   if (grid_minor == FALSE || grid == FALSE) {
-#     grid_minor_line <-  ggplot2::element_blank()
+#     grid_minor_line <- element_blank()
 #   } else {
-#     grid_minor_line <-  ggplot2::element_line(
+#     grid_minor_line <- element_line(
 #       color = "gray90",
 #       linetype = "dashed",
 #       linewidth = base_line_size / 2,
@@ -571,9 +571,9 @@ theme_default <- function(
 #
 #   # set the major x axis grid lines
 #   if (grid_major_x == FALSE || grid_major == FALSE || grid == FALSE || grid_y_only == TRUE) {
-#     grid_major_x_line <-  ggplot2::element_blank()
+#     grid_major_x_line <- element_blank()
 #   } else {
-#     grid_major_x_line <-  ggplot2::element_line(
+#     grid_major_x_line <- element_line(
 #       color = "gray75",
 #       linetype = "dashed",
 #       linewidth = base_line_size,
@@ -583,9 +583,9 @@ theme_default <- function(
 #
 #   # set the major y axis grid lines
 #   if (grid_major_y == FALSE || grid_major == FALSE || grid == FALSE || grid_x_only == TRUE) {
-#     grid_major_y_line <-  ggplot2::element_blank()
+#     grid_major_y_line <- element_blank()
 #   } else {
-#     grid_major_y_line <-  ggplot2::element_line(
+#     grid_major_y_line <- element_line(
 #       color = "gray75",
 #       linetype = "dashed",
 #       linewidth = base_line_size,
@@ -595,9 +595,9 @@ theme_default <- function(
 #
 #   # set the minor x axis grid lines
 #   if (grid_minor_x == FALSE || grid_minor == FALSE || grid == FALSE || grid_y_only == TRUE) {
-#     grid_minor_x_line <-  ggplot2::element_blank()
+#     grid_minor_x_line <- element_blank()
 #   } else {
-#     grid_minor_x_line <-  ggplot2::element_line(
+#     grid_minor_x_line <- element_line(
 #       color = "gray90",
 #       linetype = "dashed",
 #       linewidth = base_line_size / 2,
@@ -607,9 +607,9 @@ theme_default <- function(
 #
 #   # set the major y axis grid lines
 #   if (grid_minor_y == FALSE || grid_minor == FALSE || grid == FALSE || grid_x_only == TRUE) {
-#     grid_minor_y_line <-  ggplot2::element_blank()
+#     grid_minor_y_line <- element_blank()
 #   } else {
-#     grid_minor_y_line <-  ggplot2::element_line(
+#     grid_minor_y_line <- element_line(
 #       color = "gray90",
 #       linetype = "dashed",
 #       linewidth = base_line_size / 2,
@@ -635,10 +635,10 @@ theme_default <- function(
 #   )
 #
 #   if (axis_text == FALSE) {
-#     axis_text_labels <-  ggplot2::element_blank()
+#     axis_text_labels <- element_blank()
 #   } else {
-#     axis_text_labels <-  ggplot2::element_text(
-#       size = ggplot2::rel(0.8),
+#     axis_text_labels <- element_text(
+#       size = rel(0.8),
 #       colour = "#595b60",
 #       inherit.blank = TRUE
 #     )
@@ -646,10 +646,10 @@ theme_default <- function(
 #
 #   # set the x axis labels
 #   if (axis_text_x == FALSE || axis_text == FALSE) {
-#     axis_text_x_labels <-  ggplot2::element_blank()
+#     axis_text_x_labels <- element_blank()
 #   } else {
-#     axis_text_x_labels <-  ggplot2::element_text(
-#       size = ggplot2::rel(0.8),
+#     axis_text_x_labels <- element_text(
+#       size = rel(0.8),
 #       colour = "#595b60",
 #       margin = ggplot2::margin(t = 0.8 * half_line / 2,
 #                       b = 0.8 * half_line / 2),
@@ -661,10 +661,10 @@ theme_default <- function(
 #
 #   # set the y axis labels
 #   if (axis_text_y == FALSE || axis_text == FALSE) {
-#     axis_text_y_labels <-  ggplot2::element_blank()
+#     axis_text_y_labels <- element_blank()
 #   } else {
-#     axis_text_y_labels <-  ggplot2::element_text(
-#       size = ggplot2::rel(0.8),
+#     axis_text_y_labels <- element_text(
+#       size = rel(0.8),
 #       colour = "#595b60",
 #       margin = ggplot2::margin(r = 0.8 * half_line / 2,
 #                       l = 0.8 * half_line / 2),

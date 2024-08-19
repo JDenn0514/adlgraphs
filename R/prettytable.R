@@ -91,7 +91,44 @@ prettytable.adlgraphs_freqs <- function(x) {
 
 }
 
-
+# prettytable.adlgraphs_dunnett <- function(x) {
+#
+#   if
+#
+#   # make a gt table
+#   gt(x, groupname_col = group) %>%
+#
+#     # updat the columns
+#     cols_label(
+#       treatments = "Treatments",
+#       mean = "Mean",
+#       sd = "Standard Deviation",
+#       n = "N",
+#       std.error = "Standard Error",
+#       conf.low = "Low CI",
+#       conf.high = "High CI"
+#     ) %>%
+#     text_case_match(
+#       NA ~ "",
+#       .locations = cells_body(columns = c("ss"))
+#     ) %>%
+#     cols_hide(ss) %>%
+#     gt_highlight_rows(
+#       rows = ss == "Yes"
+#     ) %>%
+#     # add title and subtitle
+#     tab_header(
+#       # use glue and attr_var_label to use the variable labels
+#       title = glue('"{attr_var_label(eah[[dv]])}"'),
+#       subtitle = '1 = "Strongly disagree" and 4 = "Strongly agree"'
+#     ) %>%
+#     tab_source_note(source_note = "Bolded and highlighted rows indicate a statistically significant difference from Placebo") %>%
+#     # add an outline
+#     opt_table_outline() %>%
+#     # add lines for all cells
+#     opt_table_lines("all")
+#
+# }
 
 
 #prettytable.adlgraphs_means <- function() {
