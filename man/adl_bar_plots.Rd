@@ -5,7 +5,7 @@
 \title{Create bar plots in ADL's style}
 \usage{
 adl_bar_plots(
-  df,
+  data,
   x,
   y,
   col_label,
@@ -23,7 +23,7 @@ adl_bar_plots(
 )
 }
 \arguments{
-\item{df}{A dataframe or tibble. This can be piped in like with a normal
+\item{data}{A dataframe or tibble. This can be piped in like with a normal
 \code{\link[ggplot2]{ggplot}} function.}
 
 \item{x}{Variable that goes in the x-axis. This is required.}
