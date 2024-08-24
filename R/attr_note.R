@@ -7,26 +7,26 @@
 #'
 #' @param x A vector object, the name of a column in a `data.frame`, or an
 #'   an actual `data.frame` object.
-#' @param df A `data.frame` or `tibble` object. This should only be specified
+#' @param data A `data.frame` or `tibble` object. This should only be specified
 #'   when `x` is only the name of a column in a `data.frame`.
 #'
 #' @export
-attr_note <- function(x, df) {
+attr_note <- function(x, data) {
   UseMethod("attr_note")
 }
 
 #' @export
-attr_note.default <- function(x, df) {
-  if (missing(df)) {
+attr_note.default <- function(x, data) {
+  if (missing(data)) {
     attr(x, "note", exact = TRUE)
   } else {
-    attr(df[[x]], "note", exact = TRUE)
+    attr(data[[x]], "note", exact = TRUE)
   }
 }
 
-# write a function that will get the note attribute for each column in the df
+# write a function that will get the note attribute for each column in the data
 #' @export
-attr_note.data.frame <- function(x, df = NULL) {
+attr_note.data.frame <- function(x, data = NULL) {
   # get a list of columns
   cols <- names(x)
 

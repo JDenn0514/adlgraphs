@@ -4,10 +4,10 @@
 \alias{get_means}
 \title{Calculate means with confidence intervals}
 \usage{
-get_means(df, x, group, wt)
+get_means(data, x, group, wt)
 }
 \arguments{
-\item{df}{An object of type data.frame or tibble. If piping the df into the
+\item{data}{An object of type data.frame or tibble. If piping the data into the
 function, this is not required.}
 
 \item{x}{Either a character string or symbol. The variable with which you want
@@ -52,7 +52,7 @@ get_means(test_data, trad_n, edu_f, wts)
 # it also works with quotes
 get_means(test_data, "trad_n", "edu_f", "wts")
 
-# you can also pipe in the `df` argument if you want to do some data
+# you can also pipe in the `data` argument if you want to do some data
 # transformations before you calculate the means. For example, say you want
 # to compare the means of `trad_n` among people who agreed vs disagreed with
 # the variable `top`:

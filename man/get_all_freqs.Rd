@@ -4,10 +4,10 @@
 \alias{get_all_freqs}
 \title{Export frequencies for a set of variables to a word doc.}
 \usage{
-get_all_freqs(df, x, group, wt, show_genpop, file_name)
+get_all_freqs(data, x, group, wt, show_genpop, file_name)
 }
 \arguments{
-\item{df}{An object of type data.frame or tibble. If piping the df into the
+\item{data}{An object of type data.frame or tibble. If piping the data into the
 function, this is not required.}
 
 \item{x}{A vector of variables you want to get the frequencies for.}

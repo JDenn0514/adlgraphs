@@ -6,7 +6,7 @@
 #' [get_all_freqs()]`, a function that outputs the frequencies of a set of
 #' variables to a word doc.
 #'
-#' @param df An object of type data.frame or tibble. If piping the df into the
+#' @param data An object of type data.frame or tibble. If piping the data into the
 #'   function, this is not required.
 #' @param x Either a character string or symbol. The variable with which want
 #'   to get the frequencies.
@@ -17,7 +17,7 @@
 #'   for the general population
 #'
 #' @export
-get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
+get_freq_table <- function(data, x, group, wt, show_genpop = FALSE) {
 
   # get the x object's name
   x_lab <- deparse(substitute(x))
@@ -26,7 +26,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
   x <- accept_string_or_sym({{ x }})
 
   # set the x variable label
-  x_variable_label <- get_variable_label(df[[x]], x_lab)
+  x_variable_label <- get_variable_label(data[[x]], x_lab)
 
 
   if (missing(wt)) {
@@ -36,7 +36,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
       # if group is missing calculate simple freqs
 
       # get the frequencies without weights and without a grouping variable
-      df %>%
+      data %>%
         dplyr::mutate(x_f = make_factor(.data[[x]])) %>%
         get_freqs(x_f) %>%
         dplyr::mutate(pct = make_percent(pct)) %>%
@@ -57,16 +57,16 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
       group <- accept_string_or_sym({{ group }})
 
       # get the group column labels
-      group_cols <- get_unique_labels(df[[group]])
+      group_cols <- get_unique_labels(data[[group]])
 
       # set the group variable label
-      group_variable_label <- get_variable_label(df[[group]], group_lab)
+      group_variable_label <- get_variable_label(data[[group]], group_lab)
 
 
       if (isFALSE(show_genpop)) {
         # if show_genpop = FALSE don't show the overall frequencies
 
-        df %>%
+        data %>%
           dplyr::mutate(x_f = make_factor(.data[[x]])) %>%
           get_freqs(x_f, {{ group }}, cross_tab = TRUE) %>%
           gt::gt() %>%
@@ -79,7 +79,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
       } else {
         # if show_genpop = TRUE show the frequencies for the general population
 
-        genpop_df <- df %>%
+        genpop_data <- data %>%
           # convert to a factor (this even works with numeric variables)
           dplyr::mutate(x_f = make_factor(.data[[x]])) %>%
           # calculate the frequencies
@@ -94,7 +94,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
           # remove n, pct, and pct_lab
           dplyr::select(-c(n:pct_lab))
 
-        group_df <- df %>%
+        group_data <- data %>%
           # convert to a factor (this even works with numeric variables)
           dplyr::mutate(x_f = make_factor(.data[[x]])) %>%
           # calculate frequencies for x_f with a group and make it cross tabs
@@ -102,7 +102,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
           # remove x_f
           dplyr::select(-x_f)
 
-        dplyr::bind_cols(genpop_df, group_df) %>%
+        dplyr::bind_cols(genpop_data, group_data) %>%
           # convert to a gt_object
           gt::gt() %>%
           gt::tab_spanner(
@@ -135,7 +135,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
       # if group is missing calculate simple freqs
 
       # get the frequencies without weights and without a grouping variable
-      df %>%
+      data %>%
         dplyr::mutate(x_f = make_factor(.data[[x]])) %>%
         get_freqs(x_f, wt = {{ wt }}) %>%
         dplyr::mutate(pct = make_percent(pct)) %>%
@@ -156,16 +156,16 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
       group <- accept_string_or_sym({{ group }})
 
       # get the group column labels
-      group_cols <- get_unique_labels(df[[group]])
+      group_cols <- get_unique_labels(data[[group]])
 
       # set the group variable label
-      group_variable_label <- get_variable_label(df[[group]], group_lab)
+      group_variable_label <- get_variable_label(data[[group]], group_lab)
 
 
       if (isFALSE(show_genpop)) {
         # if show_genpop = FALSE don't show the overall frequencies
 
-        df %>%
+        data %>%
           dplyr::mutate(x_f = make_factor(.data[[x]])) %>%
           get_freqs(x_f, {{ group }}, {{ wt }}, cross_tab = TRUE) %>%
           gt::gt() %>%
@@ -178,7 +178,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
       } else {
         # if show_genpop = TRUE show the frequencies for the general population
 
-        genpop_df <- df %>%
+        genpop_data <- data %>%
           # convert to a factor (this even works with numeric variables)
           dplyr::mutate(x_f = make_factor(.data[[x]])) %>%
           # calculate the frequencies
@@ -193,7 +193,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
           # remove n, pct, and pct_lab
           dplyr::select(-c(n:pct_lab))
 
-        group_df <- df %>%
+        group_data <- data %>%
           # convert to a factor (this even works with numeric variables)
           dplyr::mutate(x_f = make_factor(.data[[x]])) %>%
           # calculate frequencies for x_f with a group and make it cross tabs
@@ -201,7 +201,7 @@ get_freq_table <- function(df, x, group, wt, show_genpop = FALSE) {
           # remove x_f
           dplyr::select(-x_f)
 
-        dplyr::bind_cols(genpop_df, group_df) %>%
+        dplyr::bind_cols(genpop_data, group_data) %>%
           # convert to a gt_object
           gt::gt() %>%
           gt::tab_spanner(

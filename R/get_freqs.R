@@ -10,7 +10,7 @@
 #' variables with other functions like [map()] [purrr::map()] or [walk()]
 #' [purrr::walk()] that are found in the `purrr` package.
 #'
-#' @param df An object of type data.frame or tibble. If piping the df into the
+#' @param data An object of type data.frame or tibble. If piping the data into the
 #'   function, this is not required.
 #' @param x Either a character string or symbol. The variable with which want
 #'   to get the frequencies.
@@ -47,7 +47,7 @@
 #' get_freqs(test_data, big_events, edu_f, wts, cross_tab = TRUE)
 
 #'
-#' # you can also pipe in the `df` argument if you want to do some data
+#' # you can also pipe in the `data` argument if you want to do some data
 #' # transformations before you calculate the means. For example, say you want
 #' # to compare the frequencies of `big_events` among people who agreed vs
 #' # disagreed with the variable `top`:
@@ -62,7 +62,7 @@
 #'
 #'
 
-get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
+get_freqs <- function(data, x, group, wt, cross_tab = FALSE) {
 
   # get the object's name
   x_lab <- deparse(substitute(x))
@@ -99,20 +99,20 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
 
     }
 
-    if (is.numeric(df[[group]]) && !is.null(attr_val_labels(df[[group]]))) {
+    if (is.numeric(data[[group]]) && !is.null(attr_val_labels(data[[group]]))) {
       # if group is class numeric AND DOES contain value labels
 
       # convert to a factor with sjlabelled
-      df <- df %>%
+      data <- data %>%
         # convert to a factor using make_factor
         dplyr::mutate(group_f = make_factor(.data[[group]])) %>%
         # group by group_f
         dplyr::group_by(group_f)
 
-    } else if (is.character(df[[group]]) || is.factor(df[[group]])) {
+    } else if (is.character(data[[group]]) || is.factor(data[[group]])) {
       # if group is of class character or factor return x
 
-      df <- df %>%
+      data <- data %>%
         # just make a new variable called group_f comprised of gropu
         dplyr::mutate(group_f = .data[[group]]) %>%
         # group by group_f
@@ -121,7 +121,7 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
     } else {
       # if group is anything else (ie numeric)
 
-      df <- df %>%
+      data <- data %>%
         # force to a factor
         dplyr::mutate(group_f = as.factor(group)) %>%
         # group by group_f
@@ -135,7 +135,7 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
     # if missing wt
 
     # calculate the frequencies
-    df_freq <- df %>%
+    data_freq <- data %>%
       tidyr::drop_na(dplyr::all_of(x)) %>%
       dplyr::count(.data[[x]]) %>%
       dplyr::mutate(pct = prop.table(n))
@@ -144,12 +144,12 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
       # if not missing group
 
       # rename the group_f variable with the name supplied in "group"
-      df_freq <- df_freq %>% dplyr::rename({{ group }} := group_f)
+      data_freq <- data_freq %>% dplyr::rename({{ group }} := group_f)
 
       if (isTRUE(cross_tab)) {
         # cross_tab is TRUE then pivot the table
 
-        df_freq <- df_freq %>%
+        data_freq <- data_freq %>%
           dplyr::mutate(
             pct = make_percent(pct),
             pct_lab = glue::glue("{pct} (n = {n})"),
@@ -183,7 +183,7 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
     }
 
     # calculate the frequencies
-    df_freq <- df %>%
+    data_freq <- data %>%
       tidyr::drop_na(all_of(x)) %>%
       dplyr::count(.data[[x]], wt = .data[[wt]]) %>%
       dplyr::mutate(pct = prop.table(n),
@@ -194,12 +194,12 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
       # if not missing group
 
       # rename the group_f variable with the name supplied in "group"
-      df_freq <- df_freq %>% dplyr::rename({{ group }} := group_f)
+      data_freq <- data_freq %>% dplyr::rename({{ group }} := group_f)
 
       if (isTRUE(cross_tab)) {
         # cross_tab is TRUE then pivot the table
 
-        df_freq <- df_freq %>%
+        data_freq <- data_freq %>%
           dplyr::mutate(
             n = round(n, 1),
             pct = make_percent(pct),
@@ -218,9 +218,9 @@ get_freqs <- function(df, x, group, wt, cross_tab = FALSE) {
 
   }
 
-  class_names <- class(df_freq)
+  class_names <- class(data_freq)
 
-  df_freq %>% structure(class = c("adlgraphs_freqs", class_names))
+  data_freq %>% structure(class = c("adlgraphs_freqs", class_names))
 
 }
 

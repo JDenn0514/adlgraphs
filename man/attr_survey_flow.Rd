@@ -4,13 +4,13 @@
 \alias{attr_survey_flow}
 \title{Get the survey_flow attribute}
 \usage{
-attr_survey_flow(x, df)
+attr_survey_flow(x, data)
 }
 \arguments{
 \item{x}{A vector object, the name of a column in a \code{data.frame}, or an
 an actual \code{data.frame} object.}
 
-\item{df}{A \code{data.frame} or \code{tibble} object. This should only be specified
+\item{data}{A \code{data.frame} or \code{tibble} object. This should only be specified
 when \code{x} is only the name of a column in a \code{data.frame}.}
 }
 \description{

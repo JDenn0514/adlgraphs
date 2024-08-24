@@ -4,10 +4,10 @@
 \alias{get_freq_table}
 \title{Get the frequencies as a GT table}
 \usage{
-get_freq_table(df, x, group, wt, show_genpop = FALSE)
+get_freq_table(data, x, group, wt, show_genpop = FALSE)
 }
 \arguments{
-\item{df}{An object of type data.frame or tibble. If piping the df into the
+\item{data}{An object of type data.frame or tibble. If piping the data into the
 function, this is not required.}
 
 \item{x}{Either a character string or symbol. The variable with which want

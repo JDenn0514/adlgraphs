@@ -18,7 +18,7 @@
 #' types of graphs that CAR produces, namely mean plots and frequency plots.
 #'
 #'
-#' @param df A dataframe or tibble. This can be piped in like with a normal
+#' @param data A dataframe or tibble. This can be piped in like with a normal
 #'   \code{\link[ggplot2]{ggplot}} function.
 #'
 #' @param x Variable that goes in the x-axis. This is required.
@@ -70,7 +70,7 @@
 #'
 
 adl_bar_plots <- function(
-    df,
+    data,
     x,
     y,
     col_label,
@@ -88,10 +88,10 @@ adl_bar_plots <- function(
 ) {
 
   # check to see if the user is missing some variables
-  if (missing(df)) {
+  if (missing(data)) {
     cli::cli_abort(c(
-      "{.var df} is missing",
-      "i" = "An object of type `data.frame` or `tibble` must be supplied to {.var df}"
+      "{.var data} is missing",
+      "i" = "An object of type `data.frame` or `tibble` must be supplied to {.var data}"
     ))
   } else if (missing(x)) {
     cli::cli_abort(c(
@@ -111,7 +111,7 @@ adl_bar_plots <- function(
   }
 
   # create the bar plot
-  plot <- df %>%
+  plot <- data %>%
     ggplot2::ggplot(., ggplot2::aes(x = {{ x }}, y = {{ y }}, group = {{ group }}, fill = {{ fill }}))
 
 

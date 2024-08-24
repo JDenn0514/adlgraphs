@@ -5,7 +5,7 @@
 \title{Create coefficient plots in ADL's style}
 \usage{
 adl_coef_plots(
-  df,
+  data,
   x = estimate,
   y = value_label,
   color = NULL,
@@ -23,7 +23,7 @@ adl_coef_plots(
 )
 }
 \arguments{
-\item{df}{A dataframe or tibble. This can be piped in like with a normal
+\item{data}{A dataframe or tibble. This can be piped in like with a normal
 \code{\link[ggplot2]{ggplot}} function.}
 
 \item{x}{Variable that goes in the x-axis.}
@@ -38,7 +38,7 @@ data is not grouped at all}
 \item{facet}{Set the variable for which you want the plot faceted. This
 is typically used instead of the \code{color} argument to distinguish the
 different variables and their values. Default is \code{var_label} but can be set
-to any other column in the object set in \code{df}. Must be set to \code{NULL} to
+to any other column in the object set in \code{data}. Must be set to \code{NULL} to
 remove faceting from the plot.}
 
 \item{facet_order}{A character string indicating if the order of variables

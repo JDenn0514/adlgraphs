@@ -4,10 +4,10 @@
 \alias{get_freqs}
 \title{Calculate weighted frequencies}
 \usage{
-get_freqs(df, x, group, wt, cross_tab = FALSE)
+get_freqs(data, x, group, wt, cross_tab = FALSE)
 }
 \arguments{
-\item{df}{An object of type data.frame or tibble. If piping the df into the
+\item{data}{An object of type data.frame or tibble. If piping the data into the
 function, this is not required.}
 
 \item{x}{Either a character string or symbol. The variable with which want
@@ -59,7 +59,7 @@ get_freqs(test_data, "big_events", "edu_f", "wts")
 # to set `cross_tab` to TRUE
 get_freqs(test_data, big_events, edu_f, wts, cross_tab = TRUE)
 
-# you can also pipe in the `df` argument if you want to do some data
+# you can also pipe in the `data` argument if you want to do some data
 # transformations before you calculate the means. For example, say you want
 # to compare the frequencies of `big_events` among people who agreed vs
 # disagreed with the variable `top`:

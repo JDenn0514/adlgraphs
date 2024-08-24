@@ -4,13 +4,13 @@
 \alias{attr_transformation}
 \title{Get the transformation attribute}
 \usage{
-attr_transformation(x, df)
+attr_transformation(x, data)
 }
 \arguments{
 \item{x}{A vector object, the name of a column in a \code{data.frame}, or an
 an actual \code{data.frame} object.}
 
-\item{df}{A \code{data.frame} or \code{tibble} object. This should only be specified
+\item{data}{A \code{data.frame} or \code{tibble} object. This should only be specified
 when \code{x} is only the name of a column in a \code{data.frame}.}
 }
 \description{

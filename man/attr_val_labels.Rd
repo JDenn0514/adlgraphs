@@ -4,13 +4,13 @@
 \alias{attr_val_labels}
 \title{Get value labels}
 \usage{
-attr_val_labels(x, df)
+attr_val_labels(x, data)
 }
 \arguments{
 \item{x}{A vector object, the name of a column in a \code{data.frame}, or an
 an actual \code{data.frame} object.}
 
-\item{df}{A \code{data.frame} or \code{tibble} object. This should only be specified
+\item{data}{A \code{data.frame} or \code{tibble} object. This should only be specified
 when \code{x} is only the name of a column in a \code{data.frame}.}
 }
 \description{

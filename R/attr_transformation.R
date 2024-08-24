@@ -7,29 +7,29 @@
 #'
 #' @param x A vector object, the name of a column in a `data.frame`, or an
 #'   an actual `data.frame` object.
-#' @param df A `data.frame` or `tibble` object. This should only be specified
+#' @param data A `data.frame` or `tibble` object. This should only be specified
 #'   when `x` is only the name of a column in a `data.frame`.
 #'
 #' @export
-attr_transformation <- function(x, df) {
+attr_transformation <- function(x, data) {
   UseMethod("attr_transformation")
 }
 
 #' @export
-attr_transformation.default <- function(x, df) {
-  if (missing(df)) {
+attr_transformation.default <- function(x, data) {
+  if (missing(data)) {
     attr(x, "transformation", exact = TRUE)
   } else {
-    attr(df[[x]], "transformation", exact = TRUE)
+    attr(data[[x]], "transformation", exact = TRUE)
   }
 }
 
 
 # Create a vector containing character strings comprised of all the variable
 # transformation for each column in a data.frame or tibble.
-# write a function that will get the variable label for each column in the df
+# write a function that will get the variable label for each column in the data
 #' @export
-attr_transformation.data.frame <- function(x, df = NULL) {
+attr_transformation.data.frame <- function(x, data = NULL) {
   # get a list of columns
   cols <- names(x)
 

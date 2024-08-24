@@ -18,7 +18,7 @@
 #' the estimates their values have.
 #'
 #'
-#' @param df A dataframe or tibble. This can be piped in like with a normal
+#' @param data A dataframe or tibble. This can be piped in like with a normal
 #'   \code{\link[ggplot2]{ggplot}} function.
 #' @param x Variable that goes in the x-axis.
 #' @param y Variable that goes in the y-axis.
@@ -29,7 +29,7 @@
 #' @param facet Set the variable for which you want the plot faceted. This
 #'   is typically used instead of the `color` argument to distinguish the
 #'   different variables and their values. Default is `var_label` but can be set
-#'   to any other column in the object set in `df`. Must be set to `NULL` to
+#'   to any other column in the object set in `data`. Must be set to `NULL` to
 #'   remove faceting from the plot.
 #' @param facet_order A character string indicating if the order of variables
 #'   with which the graph is faceted should be reversed or not. There are two
@@ -66,7 +66,7 @@
 
 
 adl_coef_plots <- function(
-    df,
+    data,
     x = estimate,
     y = value_label,
     color = NULL,
@@ -83,7 +83,7 @@ adl_coef_plots <- function(
     ...
 ) {
 
-  plot <- df %>%
+  plot <- data %>%
     ggplot2::ggplot(ggplot2::aes(x = {{ x }}, y = {{ y }}, color = {{ color }}))
 
   if (is.null(position)) {

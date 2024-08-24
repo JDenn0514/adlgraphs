@@ -7,31 +7,31 @@
 #'
 #' @param x A vector object, the name of a column in a `data.frame`, or an
 #'   an actual `data.frame` object.
-#' @param df A `data.frame` or `tibble` object. This should only be specified
+#' @param data A `data.frame` or `tibble` object. This should only be specified
 #'   when `x` is only the name of a column in a `data.frame`.
 #' @param unlist Logical. If `TRUE`, the default, returns a named vector. If
 #'   `FALSE`, returns a list. This only works when `x` is a `data.frame`
 #'
 #' @export
-attr_var_label <- function(x, df, unlist) {
+attr_var_label <- function(x, data, unlist) {
   UseMethod("attr_var_label")
 }
 
 #' @export
-attr_var_label.default <- function(x, df, unlist = NULL) {
-  if (missing(df)) {
+attr_var_label.default <- function(x, data, unlist = NULL) {
+  if (missing(data)) {
     attr(x, "label", exact = TRUE)
   } else {
-    attr(df[[x]], "label", exact = TRUE)
+    attr(data[[x]], "label", exact = TRUE)
   }
 }
 
 
 # Create a vector containing character strings comprised of all the variable
 # labels for each column in a data.frame or tibble.
-# write a function that will get the variable label for each column in the df
+# write a function that will get the variable label for each column in the data
 #' @export
-attr_var_label.data.frame <- function(x, df = NULL, unlist = TRUE) {
+attr_var_label.data.frame <- function(x, data = NULL, unlist = TRUE) {
   # get a list of columns
   cols <- names(x)
 
