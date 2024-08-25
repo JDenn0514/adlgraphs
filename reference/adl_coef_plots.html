@@ -49,7 +49,7 @@ graphs.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">adl_coef_plots</span><span class="op">(</span></span>
-<span>  <span class="va">df</span>,</span>
+<span>  <span class="va">data</span>,</span>
 <span>  x <span class="op">=</span> <span class="va">estimate</span>,</span>
 <span>  y <span class="op">=</span> <span class="va">value_label</span>,</span>
 <span>  color <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -71,7 +71,7 @@ graphs.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-df">df<a class="anchor" aria-label="anchor" href="#arg-df"></a></dt>
+<dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>A dataframe or tibble. This can be piped in like with a normal
 <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></code> function.</p></dd>
 
@@ -95,7 +95,7 @@ data is not grouped at all</p></dd>
 <dd><p>Set the variable for which you want the plot faceted. This
 is typically used instead of the <code>color</code> argument to distinguish the
 different variables and their values. Default is <code>var_label</code> but can be set
-to any other column in the object set in <code>df</code>. Must be set to <code>NULL</code> to
+to any other column in the object set in <code>data</code>. Must be set to <code>NULL</code> to
 remove faceting from the plot.</p></dd>
 
 
