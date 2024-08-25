@@ -69,7 +69,9 @@ reference:
     - get_freqs
     - get_freq_table
     - get_all_freqs
+    - get_corr
     - prettytable
+    - wtd_corr
 - title: Attribute helpers
   contents:
     - attr_var_label
@@ -87,6 +89,7 @@ reference:
     - clean_demos
     - dunnett_pval_fun
     - stars_pval
+    - wtd_sd
 - title: Data
   contents:
     - test_data

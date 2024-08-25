@@ -115,6 +115,6 @@ utils::globalVariables(
     "hispanic", "white_b", "black_b", "aapi_b", "native_b", "other_b", "race_f",
     "sex", "edu", "income", "age", "ideology", "partyid8", "partyid7",
     "progressive", "religpew", "religpew_f", "religpew_evan_f", "born_again",
-    "jewish", "reltrad_f"
+    "jewish", "reltrad_f", "std.err", "t.value", "var_label"
   )
 )

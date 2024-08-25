@@ -1,3 +1,11 @@
+# adlgraphs 0.3.3
+
+## Created a new function
+
+#### get_corr
+
+- Calculate weighted correlations among each level of a group
+
 # adlgraphs 0.3.2
 
 ## Created a new function
