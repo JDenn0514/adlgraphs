@@ -28,6 +28,7 @@
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/dunnett_pval_fun.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_all_freqs.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_coefficients.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_corr.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_freq_table.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_freqs.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_means.html</loc></url>
@@ -54,5 +55,7 @@
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/theme_h_stack.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/theme_v_bar.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/write_word_table.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/wtd_corr.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/wtd_sd.html</loc></url>
 </urlset>
 
