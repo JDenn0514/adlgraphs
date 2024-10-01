@@ -141,7 +141,7 @@ dunnett <- function(
 
     }
 
-    attr(out[[group]], "label") <- attr_var_label(data[[group]])
+    # attr(out[[group]], "label") <- attr_var_label(data[[group]])
 
   } else {
     # calculat the pvalues
