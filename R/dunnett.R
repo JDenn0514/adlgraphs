@@ -89,7 +89,7 @@ dunnett <- function(
     df <- split(data, data[[group]])
 
     # set the names of the df with the levels in group
-    df <- stats::setNames(df, forcats::fct_unique(make_factor(data[[group]])))
+    # df <- stats::setNames(df, forcats::fct_unique(make_factor(data[[group]])))
 
     # get the group variable name
     group_name <- deparse(substitute(group)) %>%
