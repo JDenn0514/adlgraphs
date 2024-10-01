@@ -80,7 +80,7 @@ get_corr.default <- function(data, x, y, group, wt) {
       dplyr::bind_rows()
 
     # combine the columns of the grouping variable with the correlation
-    out <- bind_cols(just_groups, corr_df)
+    out <- dplyr::bind_cols(just_groups, corr_df)
     # sort the first two columns
     out <- out %>% 
       dplyr::arrange(.by_group = TRUE)
