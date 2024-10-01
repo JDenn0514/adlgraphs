@@ -178,7 +178,8 @@ clean_demos <- function(df) {
     df <- df %>%
       dplyr::mutate(
         # age, adding 17 so the ages start at 18
-        age_n = 17 + age,
+        age_n = 17 + age %>% 
+          structure(label = "Age"),
         # make a new age variable to be used in survey weighting
         age_f6 = adlgraphs::case_when_fct(
           age_n %in% c(18:24) ~ "18-24",
@@ -187,29 +188,56 @@ clean_demos <- function(df) {
           age_n %in% c(45:54) ~ "45-54",
           age_n %in% c(55:64) ~ "55-64",
           age_n > 64 ~ "65+"
-        ),
+        ) %>% 
+          # set the label
+          structure(label = "Age Cohort"),
         # create a nw four group age variable
         age_f4 = adlgraphs::case_when_fct(
           age_n < 31 ~ "18-30",
           age_n %in% c(31:49) ~ "31-49",
           age_n %in% c(50:64) ~ "50-64",
           age_n > 64 ~ "65+"
-        ),
-        # generations
-        gens_f = adlgraphs::case_when_fct(
-          age_n < 27 ~ "Gen Z",
-          age_n %in% c(27:43) ~ "Millennials",
-          age_n %in% c(44:59) ~ "Gen X",
-          age_n > 59 ~ "Baby Boomers/ Silent Generation"
-        )
-      ) %>%
-      labelled::set_variable_labels(
-        age_n = "Age",
-        age_f6 = "Age Cohorts",
-        age_f4 = "Age Cohorts",
-        gens_f = "Age Cohort/Generation"
+        ) %>% 
+          # set the label
+          structure(label = "Age Cohort")
       )
-  }
+    if ("start_date" %in% colnames(df)) {
+      df <- df %>% 
+        dplyr::mutate(
+          # set the current year using lubridate
+          current_year = lubridate::year(start_date) %>% 
+            # set the label
+            structure(label = "Year study was conducted"),
+          # set the birth year based on their age and the current year
+          birth_year = current_year - age_n %>% 
+            # set the label
+            structure(label = "Birth Year"),
+          # set teh generations using birth year
+          gens_f = adlgraphs::case_when_fct(
+            birth_year > 1996 ~ "Gen Z",
+            birth_year %in% c(1981:1996) ~ "Millennial",
+            birth_year %in% c(1965:1980) ~ "Gen X",
+            birth_year < 1965 ~ "Baby Boomers/ Silent Generation"
+          ) %>% 
+            # set the label
+            structure(label = "Age Cohort/Generation")
+        )
+        
+      } else {
+      # use the age variable to set the generations
+      df <- df %>% 
+        dplyr::mutate(
+          gens_f = adlgraphs::case_when_fct(
+            age_n < 27 ~ "Gen Z",
+            age_n %in% c(27:43) ~ "Millennials",
+            age_n %in% c(44:59) ~ "Gen X",
+            age_n > 59 ~ "Baby Boomers/ Silent Generation"
+          ) %>% 
+            structure(label = "Age Cohort/Generation")
+        )
+      }
+    }
+
 
   if ("ideology" %in% colnames(df)) {
     df <- df %>%
