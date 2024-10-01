@@ -49,6 +49,12 @@ clean_demos <- function(df) {
 
     df <- clean_race(df, "race_6")
 
+  } 
+
+  if ("race_7" %in% colnames(df)) {
+    
+    df <- clean_race(df, "race_7")
+
   }
 
   if ("asian_b" %in% colnames(df) && "hawaiian_b" %in% colnames(df)) {
@@ -77,7 +83,7 @@ clean_demos <- function(df) {
     "black_b" %in% colnames(df) &&
     "aapi_b" %in% colnames(df) &&
     "native_b" %in% colnames(df) &&
-    "other_b" %in% colnames(df)
+    "other_b" %in% colnames(df) 
   ) {
 
     df <- df %>%
@@ -97,6 +103,29 @@ clean_demos <- function(df) {
       ) %>%
       labelled::set_variable_labels(race_f = "Race/Ethnicity")
 
+  } else if (
+    "white_b" %in% colnames(df) &&
+    "black_b" %in% colnames(df) &&
+    "aapi_b" %in% colnames(df) &&
+    "native_b" %in% colnames(df) &&
+    "mena_b" %in% colnames(df)
+  ) {
+    df <- df %>%
+      dplyr::mutate(
+        # get people of multiple races
+        race_mult_n = white_b + black_b + aapi_b + native_b + mena_b,
+        # create the racial gropus
+        race_f = adlgraphs::case_when_fct(
+          race_mult_n > 1 | mena_b == 1 | native_b == 1 ~ "Multi/Other",
+          hispanic_b == 1 ~ "Hispanic",
+          black_b == 1 ~ "Black",
+          aapi_b == 1 ~ "AAPI",
+          white_b == 1 ~ "White"
+        ),
+        # reorder the levels
+        race_f = refactor(race_f, c("White", "Black", "Hispanic", "AAPI", "Multi/Other"))
+      ) %>%
+      labelled::set_variable_labels(race_f = "Race/Ethnicity")
   }
 
   if ("sex" %in% colnames(df)) {
