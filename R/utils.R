@@ -7,7 +7,7 @@
 clean_race <- function(df, x) {
 
   # get the label
-  label <- attributes(df[[x]])$labels
+  label <- attr(df[[x]], "labels", exact = TRUE)
   # get the value label so we
   label <- stats::setNames(names(label), label)
 
@@ -23,6 +23,12 @@ clean_race <- function(df, x) {
     name <- "hawaiian_b"
   } else if (label == "Some other race or origin") {
     name <- "other_b"
+  } else if (label == "Asian") {
+    name <- "asian_b"
+  } else if (label == "Hispanic or Latino") {
+    name <- "hispanic_b"
+  } else if (label == "Middle Eastern or North African") {
+    name <- "mena_b"
   }
 
   df %>%
