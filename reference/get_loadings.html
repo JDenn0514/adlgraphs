@@ -155,6 +155,20 @@ GPArotation.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> controlled  0.718     0.516        0.484</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> small       0.595     0.354        0.646</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> run         0.682     0.465        0.535</span>
+<span class="r-in"><span><span class="co"># get the loadings with the variable labels based on data object</span></span></span>
+<span class="r-in"><span><span class="fu">get_loadings</span><span class="op">(</span><span class="va">model</span>, <span class="va">data</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   variables  labels                                   PA1 communality uniqueness</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> top        <span style="color: #949494;">"</span>An ideal society requires some grou… <span style="color: #BB0000;">NA</span>         0.151        0.849</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> inferior   <span style="color: #949494;">"</span>Some groups of people are simply in…  0.484     0.235        0.765</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> dominate   <span style="color: #949494;">"</span>No one group should dominate in soc… <span style="color: #BB0000;">NA</span>         0.005<span style="text-decoration: underline;">78</span>      0.994</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> deserving  <span style="color: #949494;">"</span>Groups at the bottom are just as de… <span style="color: #BB0000;">NA</span>         0.030<span style="text-decoration: underline;">9</span>       0.969</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> special    <span style="color: #949494;">"</span>It is unfair for some groups in soc… <span style="color: #BB0000;">NA</span>         0.074<span style="text-decoration: underline;">7</span>       0.925</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> harder     <span style="color: #949494;">"</span>I have a harder time succeeding tha… <span style="color: #BB0000;">NA</span>         0.046<span style="text-decoration: underline;">7</span>       0.953</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> controlled <span style="color: #949494;">"</span>Much of our lives are being control…  0.718     0.516        0.484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> small      <span style="color: #949494;">"</span>Even though we live in a democracy,…  0.595     0.354        0.646</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> run        <span style="color: #949494;">"</span>The people who really \"run\" the c…  0.682     0.465        0.535</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># we can do all of this in one step with pipes</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
@@ -177,26 +191,26 @@ GPArotation.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> small       0.595     0.354        0.646</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> run         0.682     0.465        0.535</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Now let's remove the threshold for the loadings</span></span></span>
+<span class="r-in"><span><span class="co"># Now let's remove the threshold for the loadings and include labels</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="co"># select only the variables we want in the factor analysis</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">top</span><span class="op">:</span><span class="va">run</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="co"># run the factor analysis</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/psych/man/fa.html" class="external-link">fa</a></span><span class="op">(</span><span class="va">.</span>, nfactors <span class="op">=</span> <span class="fl">1</span>, fm <span class="op">=</span> <span class="st">"pa"</span>, rotate <span class="op">=</span> <span class="st">"oblimin"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="co"># specify threshold is 0</span></span></span>
-<span class="r-in"><span>  <span class="fu">get_loadings</span><span class="op">(</span>threshold <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   variables      PA1 communality uniqueness</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> top         0.388      0.151        0.849</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> inferior    0.484      0.235        0.765</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> dominate   -<span style="color: #BB0000;">0.076</span><span style="color: #BB0000; text-decoration: underline;">0</span>     0.005<span style="text-decoration: underline;">78</span>      0.994</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> deserving  -<span style="color: #BB0000;">0.176</span>      0.030<span style="text-decoration: underline;">9</span>       0.969</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> special     0.273      0.074<span style="text-decoration: underline;">7</span>       0.925</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> harder      0.216      0.046<span style="text-decoration: underline;">7</span>       0.953</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> controlled  0.718      0.516        0.484</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> small       0.595      0.354        0.646</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> run         0.682      0.465        0.535</span>
+<span class="r-in"><span>  <span class="fu">get_loadings</span><span class="op">(</span>threshold <span class="op">=</span> <span class="fl">0</span>, labels <span class="op">=</span> <span class="va">data</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   variables  labels                                   PA1 communality uniqueness</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> top        <span style="color: #949494;">"</span>An ideal society requires some gro…  0.388      0.151        0.849</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> inferior   <span style="color: #949494;">"</span>Some groups of people are simply i…  0.484      0.235        0.765</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> dominate   <span style="color: #949494;">"</span>No one group should dominate in so… -<span style="color: #BB0000;">0.076</span><span style="color: #BB0000; text-decoration: underline;">0</span>     0.005<span style="text-decoration: underline;">78</span>      0.994</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> deserving  <span style="color: #949494;">"</span>Groups at the bottom are just as d… -<span style="color: #BB0000;">0.176</span>      0.030<span style="text-decoration: underline;">9</span>       0.969</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> special    <span style="color: #949494;">"</span>It is unfair for some groups in so…  0.273      0.074<span style="text-decoration: underline;">7</span>       0.925</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> harder     <span style="color: #949494;">"</span>I have a harder time succeeding th…  0.216      0.046<span style="text-decoration: underline;">7</span>       0.953</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> controlled <span style="color: #949494;">"</span>Much of our lives are being contro…  0.718      0.516        0.484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> small      <span style="color: #949494;">"</span>Even though we live in a democracy…  0.595      0.354        0.646</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> run        <span style="color: #949494;">"</span>The people who really \"run\" the …  0.682      0.465        0.535</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># alternatively, we could skip the fa step entirely like so</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
