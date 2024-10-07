@@ -158,8 +158,11 @@ GPArotation.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># we can do all of this in one step with pipes</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="co"># select only the variables we want in the factor analysis</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">top</span><span class="op">:</span><span class="va">run</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="co"># run the factor analysis</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/psych/man/fa.html" class="external-link">fa</a></span><span class="op">(</span><span class="va">.</span>, nfactors <span class="op">=</span> <span class="fl">1</span>, fm <span class="op">=</span> <span class="st">"pa"</span>, rotate <span class="op">=</span> <span class="st">"oblimin"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="co"># get the loadings</span></span></span>
 <span class="r-in"><span>  <span class="fu">get_loadings</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 4</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   variables     PA1 communality uniqueness</span>
@@ -176,8 +179,11 @@ GPArotation.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Now let's remove the threshold for the loadings</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="co"># select only the variables we want in the factor analysis</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">top</span><span class="op">:</span><span class="va">run</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="co"># run the factor analysis</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/psych/man/fa.html" class="external-link">fa</a></span><span class="op">(</span><span class="va">.</span>, nfactors <span class="op">=</span> <span class="fl">1</span>, fm <span class="op">=</span> <span class="st">"pa"</span>, rotate <span class="op">=</span> <span class="st">"oblimin"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="co"># specify threshold is 0</span></span></span>
 <span class="r-in"><span>  <span class="fu">get_loadings</span><span class="op">(</span>threshold <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 4</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   variables      PA1 communality uniqueness</span>
@@ -194,7 +200,9 @@ GPArotation.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># alternatively, we could skip the fa step entirely like so</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="co"># select only the variables we want in the factor analysis</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">top</span><span class="op">:</span><span class="va">run</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="co"># specify number of factors, rotation, and factor method</span></span></span>
 <span class="r-in"><span>  <span class="fu">get_loadings</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 4</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   variables     PA1 communality uniqueness</span>
@@ -211,16 +219,18 @@ GPArotation.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># we can also specify the number of factors, rotation, and factoring method</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="co"># select only the variables we want in the factor analysis</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">top</span><span class="op">:</span><span class="va">run</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
-<span class="r-in"><span>  <span class="fu">get_loadings</span><span class="op">(</span>nfactors <span class="op">=</span> <span class="fl">2</span>, rotate <span class="op">=</span> <span class="st">"varimax"</span>, fm <span class="op">=</span> <span class="st">"minres"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="co"># specify number of factors, rotation, factor method, and threshold</span></span></span>
+<span class="r-in"><span>  <span class="fu">get_loadings</span><span class="op">(</span>nfactors <span class="op">=</span> <span class="fl">2</span>, rotate <span class="op">=</span> <span class="st">"varimax"</span>, fm <span class="op">=</span> <span class="st">"minres"</span>, threshold <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> </span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   variables     MR1    MR2 communality uniqueness</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> top        <span style="color: #BB0000;">NA</span>      0.531      0.332       0.668</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> inferior   <span style="color: #BB0000;">NA</span>      0.508      0.370       0.630</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> top         0.223  0.531      0.332       0.668</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> inferior    0.335  0.508      0.370       0.630</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> dominate   <span style="color: #BB0000;">NA</span>     -<span style="color: #BB0000;">0.545</span>      0.317       0.683</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> deserving  <span style="color: #BB0000;">NA</span>     -<span style="color: #BB0000;">0.549</span>      0.303       0.697</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> special    <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>          0.082<span style="text-decoration: underline;">3</span>      0.918</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> special     0.286 <span style="color: #BB0000;">NA</span>          0.082<span style="text-decoration: underline;">3</span>      0.918</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> harder     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>          0.052<span style="text-decoration: underline;">5</span>      0.947</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> controlled  0.716 <span style="color: #BB0000;">NA</span>          0.531       0.469</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> small       0.711 <span style="color: #BB0000;">NA</span>          0.508       0.492</span>
@@ -228,11 +238,33 @@ GPArotation.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># we can also calculate the factor loadings by a grouping variable</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">top</span><span class="op">:</span><span class="va">run</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="co"># select the grouping variable and the variables to be used in factor analysis</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">edu_f2</span>, <span class="va">top</span><span class="op">:</span><span class="va">run</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="co"># group the data</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">edu_f2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
-<span class="r-in"><span>  <span class="fu">get_loadings</span><span class="op">(</span>nfactors <span class="op">=</span> <span class="fl">2</span>, rotate <span class="op">=</span> <span class="st">"varimax"</span>, fm <span class="op">=</span> <span class="st">"minres"</span><span class="op">)</span> </span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in group_by(., edu_f2):</span> Must group by variables found in `.data`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> Column `edu_f2` is not found.</span>
+<span class="r-in"><span>  <span class="co"># specify number of factors, rotation, factor method, and threshold</span></span></span>
+<span class="r-in"><span>  <span class="fu">get_loadings</span><span class="op">(</span>nfactors <span class="op">=</span> <span class="fl">2</span>, rotate <span class="op">=</span> <span class="st">"varimax"</span>, fm <span class="op">=</span> <span class="st">"minres"</span>, threshold <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> </span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 18 × 6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    groups                       variables     MR1    MR2 communality uniqueness</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> At Least a Bachelor's Degree top        <span style="color: #BB0000;">NA</span>     -<span style="color: #BB0000;">0.511</span>     0.269        0.731</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> At Least a Bachelor's Degree inferior    0.208 -<span style="color: #BB0000;">0.431</span>     0.229        0.771</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> At Least a Bachelor's Degree dominate   <span style="color: #BB0000;">NA</span>      0.729     0.536        0.464</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> At Least a Bachelor's Degree deserving  <span style="color: #BB0000;">NA</span>      0.752     0.574        0.426</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> At Least a Bachelor's Degree special    <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>         0.039<span style="text-decoration: underline;">9</span>       0.960</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> At Least a Bachelor's Degree harder     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>         0.006<span style="text-decoration: underline;">18</span>      0.994</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> At Least a Bachelor's Degree controlled  0.658 -<span style="color: #BB0000;">0.208</span>     0.476        0.524</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> At Least a Bachelor's Degree small       0.768 <span style="color: #BB0000;">NA</span>         0.591        0.409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> At Least a Bachelor's Degree run         0.719 <span style="color: #BB0000;">NA</span>         0.548        0.452</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> No College Degree            top        <span style="color: #BB0000;">NA</span>      0.659     0.455        0.545</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> No College Degree            inferior    0.299  0.617     0.470        0.530</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> No College Degree            dominate    0.221 -<span style="color: #BB0000;">0.329</span>     0.157        0.843</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> No College Degree            deserving  <span style="color: #BB0000;">NA</span>     -<span style="color: #BB0000;">0.373</span>     0.153        0.847</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> No College Degree            special     0.301 <span style="color: #BB0000;">NA</span>         0.092<span style="text-decoration: underline;">5</span>       0.907</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> No College Degree            harder     <span style="color: #BB0000;">NA</span>      0.325     0.129        0.871</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> No College Degree            controlled  0.712 <span style="color: #BB0000;">NA</span>         0.517        0.483</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">17</span> No College Degree            small       0.679 <span style="color: #BB0000;">NA</span>         0.465        0.535</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">18</span> No College Degree            run         0.636 <span style="color: #BB0000;">NA</span>         0.411        0.589</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
