@@ -78,6 +78,8 @@ data <- test_data \%>\%
 model <- fa(data, nfactors = 1, fm = "pa", rotate = "oblimin")
 # get just the loadings
 get_loadings(model)
+# get the loadings with the variable labels based on data object
+get_loadings(model, data)
 
 # we can do all of this in one step with pipes
 test_data \%>\% 
@@ -88,14 +90,14 @@ test_data \%>\%
   # get the loadings
   get_loadings()
 
-# Now let's remove the threshold for the loadings
+# Now let's remove the threshold for the loadings and include labels
 test_data \%>\% 
   # select only the variables we want in the factor analysis
   select(top:run) \%>\% 
   # run the factor analysis
   fa(., nfactors = 1, fm = "pa", rotate = "oblimin") \%>\% 
   # specify threshold is 0
-  get_loadings(threshold = 0)
+  get_loadings(threshold = 0, labels = data)
 
 # alternatively, we could skip the fa step entirely like so
 test_data \%>\% 
