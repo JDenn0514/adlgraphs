@@ -21,13 +21,14 @@
 #' @importFrom marquee classic_style element_marquee
 #' @importFrom mvtnorm qmvt pmvt
 #' @importFrom officer body_add_par
+#' @importFrom PMCMRplus dunnettTest
 #' @importFrom prismatic color
 #' @importFrom purrr map pmap walk
 #' @importFrom rlang set_names sym := .data caller_arg caller_env
 #' @importFrom rstudioapi isAvailable getVersion
 #' @importFrom sjlabelled as_label get_labels
 #' @importFrom stats qt df.residual setNames weighted.mean sd symnum
-#'   na.omit lm coef 
+#'   na.omit lm coef quantile
 #' @importFrom stringr str_replace str_detect
 #' @importFrom systemfonts register_font
 #' @importFrom tibble as_tibble enframe

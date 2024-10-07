@@ -41,6 +41,7 @@
 #'   Kaiser normalization before doing Promax, this is done here by the 
 #'   call to "promax" which does the normalization before calling Promax in 
 #'   GPArotation.
+#' @export
 
 get_loadings <- function(
   model,
@@ -54,11 +55,15 @@ get_loadings <- function(
   UseMethod("get_loadings")
 }
 
+#' @export
 get_loadings.default <- function(
-  model, 
+  model,
   labels = NULL, 
   threshold = 0.4, 
-  print = "short"
+  print = "short",
+  nfactors = 1,
+  fm = "pa",
+  rotate = "oblimin"
 ) {
 
   n <- model$factors
@@ -96,8 +101,9 @@ get_loadings.default <- function(
 
 }
 
+#' @export
 get_loadings.data.frame <- function(
-  model, 
+  model,
   labels = NULL, 
   threshold = 0.4, 
   print = "short",
@@ -118,8 +124,9 @@ get_loadings.data.frame <- function(
   
 }
 
+#' @export
 get_loadings.grouped_df <- function(
-  model, 
+  model,
   labels = NULL, 
   threshold = 0.4, 
   print = "short",

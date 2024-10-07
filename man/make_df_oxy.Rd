@@ -23,8 +23,11 @@ dataset documentation}
 which writes a new R script beginning with the value of \code{df}}
 }
 \description{
+{dataset_description},
+}
+\details{
 Creates a new R script that comes pre-filled with roxygen2
-comments. The new file is named "{df}_documentation" and is located in the
+comments. The new file is named "df_documentation" and is located in the
 "R/" folder in your package.
 
 This function is based off of \link[sinew]{makeOxygen} but is far more
@@ -39,12 +42,9 @@ console or as a new script.
 
 It should be noted that if a variable does not have a variable label, then
 it will not show up in the new R script.
-
-{dataset_description},
 }
 \examples{
-\dontrun{
-#' # Add variable labels to iris dataset
+# Add variable labels to iris dataset
 library(labelled)
 library(dplyr)
 
@@ -60,5 +60,4 @@ iris_labelled <- iris \%>\%
 # if you want to print to the console instead of creating a new script
 # just add print = TRUE to the function
 make_df_oxy(iris_labelled, print = TRUE)
-}
 }
