@@ -64,3 +64,48 @@ data frame, it will run it on all columns in the data frame. Also
 works on grouped data frame if you want to check how the factor
 loadings may change along the different levels of a group.
 }
+\examples{
+
+library(adlgraphs)
+library(dplyr)
+library(psych)
+
+# first lets get our data set
+data <- test_data \%>\% 
+  select(top:run)
+
+# now create the fa object
+model <- fa(data, nfactors = 1, fm = "pa", rotate = "oblimin")
+# get just the loadings
+get_loadings(model)
+
+# we can do all of this in one step with pipes
+test_data \%>\% 
+  select(top:run) \%>\% 
+  fa(., nfactors = 1, fm = "pa", rotate = "oblimin") \%>\% 
+  get_loadings()
+
+# Now let's remove the threshold for the loadings
+test_data \%>\% 
+  select(top:run) \%>\% 
+  fa(., nfactors = 1, fm = "pa", rotate = "oblimin") \%>\% 
+  get_loadings(threshold = 0)
+
+# alternatively, we could skip the fa step entirely like so
+test_data \%>\% 
+  select(top:run) \%>\% 
+  get_loadings()
+
+# we can also specify the number of factors, rotation, and factoring method
+test_data \%>\% 
+  select(top:run) \%>\% 
+  get_loadings(nfactors = 2, rotation = "varimax", fm = "minres")
+
+# we can also calculate the factor loadings by a grouping variable
+test_data \%>\% 
+  select(top:run) \%>\% 
+  group_by(edu_f2) \%>\% 
+  get_loadings(nfactors = 2, rotation = "varimax", fm = "minres") 
+
+
+}

@@ -41,6 +41,51 @@
 #'   Kaiser normalization before doing Promax, this is done here by the 
 #'   call to "promax" which does the normalization before calling Promax in 
 #'   GPArotation.
+#' 
+#' @examples
+#' 
+#' library(adlgraphs)
+#' library(dplyr)
+#' library(psych)
+#' 
+#' # first lets get our data set
+#' data <- test_data %>% 
+#'   select(top:run)
+#' 
+#' # now create the fa object
+#' model <- fa(data, nfactors = 1, fm = "pa", rotate = "oblimin")
+#' # get just the loadings
+#' get_loadings(model)
+#' 
+#' # we can do all of this in one step with pipes
+#' test_data %>% 
+#'   select(top:run) %>% 
+#'   fa(., nfactors = 1, fm = "pa", rotate = "oblimin") %>% 
+#'   get_loadings()
+#' 
+#' # Now let's remove the threshold for the loadings
+#' test_data %>% 
+#'   select(top:run) %>% 
+#'   fa(., nfactors = 1, fm = "pa", rotate = "oblimin") %>% 
+#'   get_loadings(threshold = 0)
+#' 
+#' # alternatively, we could skip the fa step entirely like so
+#' test_data %>% 
+#'   select(top:run) %>% 
+#'   get_loadings()
+#' 
+#' # we can also specify the number of factors, rotation, and factoring method
+#' test_data %>% 
+#'   select(top:run) %>% 
+#'   get_loadings(nfactors = 2, rotation = "varimax", fm = "minres")
+#' 
+#' # we can also calculate the factor loadings by a grouping variable
+#' test_data %>% 
+#'   select(top:run) %>% 
+#'   group_by(edu_f2) %>% 
+#'   get_loadings(nfactors = 2, rotation = "varimax", fm = "minres") 
+#' 
+#' 
 #' @export
 
 get_loadings <- function(
@@ -91,8 +136,15 @@ get_loadings.default <- function(
     }
       
   }
-  # get the columns with loadings in them
-  loading_cols <- 3:(n + 2)
+
+  if (is.null(labels)) {
+    # get the columns with loadings in them
+    loading_cols <- 2:(n + 1)
+  } else {
+    # get the columns with loadings in them
+    loading_cols <- 3:(n + 2)
+  }
+  
  
   # 
   loadings[, loading_cols][abs(loadings[, loading_cols]) < threshold] <- NA
