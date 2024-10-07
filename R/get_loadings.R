@@ -77,13 +77,13 @@
 #' # we can also specify the number of factors, rotation, and factoring method
 #' test_data %>% 
 #'   select(top:run) %>% 
-#'   get_loadings(nfactors = 2, rotation = "varimax", fm = "minres")
+#'   get_loadings(nfactors = 2, rotate = "varimax", fm = "minres")
 #' 
 #' # we can also calculate the factor loadings by a grouping variable
 #' test_data %>% 
 #'   select(top:run) %>% 
 #'   group_by(edu_f2) %>% 
-#'   get_loadings(nfactors = 2, rotation = "varimax", fm = "minres") 
+#'   get_loadings(nfactors = 2, rotate = "varimax", fm = "minres") 
 #' 
 #' 
 #' @export
