@@ -81,31 +81,44 @@ get_loadings(model)
 
 # we can do all of this in one step with pipes
 test_data \%>\% 
+  # select only the variables we want in the factor analysis
   select(top:run) \%>\% 
+  # run the factor analysis
   fa(., nfactors = 1, fm = "pa", rotate = "oblimin") \%>\% 
+  # get the loadings
   get_loadings()
 
 # Now let's remove the threshold for the loadings
 test_data \%>\% 
+  # select only the variables we want in the factor analysis
   select(top:run) \%>\% 
+  # run the factor analysis
   fa(., nfactors = 1, fm = "pa", rotate = "oblimin") \%>\% 
+  # specify threshold is 0
   get_loadings(threshold = 0)
 
 # alternatively, we could skip the fa step entirely like so
 test_data \%>\% 
+  # select only the variables we want in the factor analysis
   select(top:run) \%>\% 
+  # specify number of factors, rotation, and factor method
   get_loadings()
 
 # we can also specify the number of factors, rotation, and factoring method
 test_data \%>\% 
+  # select only the variables we want in the factor analysis
   select(top:run) \%>\% 
-  get_loadings(nfactors = 2, rotate = "varimax", fm = "minres")
+  # specify number of factors, rotation, factor method, and threshold
+  get_loadings(nfactors = 2, rotate = "varimax", fm = "minres", threshold = 0.2) 
 
 # we can also calculate the factor loadings by a grouping variable
 test_data \%>\% 
-  select(top:run) \%>\% 
+  # select the grouping variable and the variables to be used in factor analysis
+  select(edu_f2, top:run) \%>\% 
+  # group the data
   group_by(edu_f2) \%>\% 
-  get_loadings(nfactors = 2, rotate = "varimax", fm = "minres") 
+  # specify number of factors, rotation, factor method, and threshold
+  get_loadings(nfactors = 2, rotate = "varimax", fm = "minres", threshold = 0.2) 
 
 
 }
