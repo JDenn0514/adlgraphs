@@ -67,21 +67,21 @@
 #' dunnett(test_data, "acts_avg", "edu_f", "pid_f3", show_means = TRUE)
 #'
 #' @export
+
 dunnett <- function(
-    data,
-    x,
-    treats = NULL,
-    group = NULL,
-    wt = NULL,
-    control = NULL,
-    conf.level = 0.95,
-    show_means = FALSE
+  data,
+  x,
+  treats = NULL,
+  group = NULL,
+  wt = NULL,
+  control = NULL,
+  conf.level = 0.95,
+  show_means = FALSE
 ) {
 
   ## get the variable names for treats and group but remove the quotation mark
   treats_name <- deparse(substitute(treats)) %>%
     gsub('[\"]', "", .)
-
 
   if (!is.null(group)) {
     # if group is not null, create a list object where the data is split by the
@@ -92,9 +92,9 @@ dunnett <- function(
     # df <- stats::setNames(df, forcats::fct_unique(make_factor(data[[group]])))
 
     # get the group variable name
-    group_name <- deparse(substitute(group)) %>%
-      # remove the quotation marks
+    group_name <- rlang::enexpr(group) %>% 
       gsub('[\"]', "", .)
+    
 
     # get the number of groups in the data
     leng <- length(df)
@@ -109,6 +109,7 @@ dunnett <- function(
         {{ treats_name }} := treats
       )
 
+    
     if (isTRUE(show_means)) {
       # now we need to calculate the means
       mean_table <- data %>%
@@ -117,10 +118,14 @@ dunnett <- function(
         # group the data by group and treats
         dplyr::group_by(.data[[group]], .data[[treats]]) %>%
         # calculate the means
-        get_means({{ x }})
+        get_means({{ x }}) %>% 
+        dplyr::ungroup()
 
+      
       # only keep the group, the treats, and pval
-      diffs <- out %>% dplyr::select(tidyselect::all_of(treats), tidyselect::all_of(group), p.value, stars)
+      diffs <- out %>% 
+        dplyr::ungroup() %>% 
+        dplyr::select(tidyselect::all_of(treats), tidyselect::all_of(group), p.value, stars)
 
       # join the means with the pvals from the differences
       out <- dplyr::full_join(mean_table, diffs)
@@ -145,7 +150,6 @@ dunnett <- function(
       attr(out[[group]], "label") <- attr_var_label(data[[group]])
     }
 
-
   } else {
     # calculat the pvalues
     out <- dunnett_pval_fun(data, x = x, treats = treats, control = control, wt = wt, conf.level = conf.level, show_means = show_means)  %>%
@@ -156,10 +160,13 @@ dunnett <- function(
       mean_table <- data %>%
         tidyr::drop_na(tidyselect::all_of(treats)) %>%
         dplyr::group_by(.data[[treats]]) %>%
-        get_means({{ x }})
+        get_means({{ x }}) %>% 
+        dplyr::ungroup()
 
       # only keep the group, the treats, and pval
-      diffs <- out %>% dplyr::select(tidyselect::all_of(treats), p.value, stars)
+      diffs <- out %>% 
+        dplyr::ungroup() %>% 
+        dplyr::select(tidyselect::all_of(treats), p.value, stars)
 
       # join the means with the pvals from the differences
       out <- dplyr::full_join(mean_table, diffs)
@@ -179,8 +186,8 @@ dunnett <- function(
 
     }
 
-
   }
+  
 
   control <- levels(make_factor(data[[treats]]))[1]
 
@@ -201,6 +208,9 @@ dunnett <- function(
   return(out)
 
 }
+
+
+
 
 
 #' Perform Dunnett's test (mostly internal function)
