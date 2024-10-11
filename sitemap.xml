@@ -26,7 +26,9 @@
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/codebook.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/dunnett.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/dunnett_pval_fun.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/export_bot_dupe.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_all_freqs.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_bot_dupe.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_coefficients.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_corr.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_freq_table.html</loc></url>
@@ -46,6 +48,7 @@
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/pivot_longer_values.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/prettytable.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/refactor.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/remove_bot_dupe.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/scale_adl.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/stars_pval.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/stat_density_quant.html</loc></url>
