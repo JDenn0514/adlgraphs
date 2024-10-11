@@ -14,7 +14,7 @@
 #' @importFrom grDevices colorRampPalette rgb
 #' @importFrom gt gt tab_spanner fmt_markdown tab_style
 #' @importFrom gto body_add_gt
-#' @importFrom haven as_factor is.labelled
+#' @importFrom haven as_factor is.labelled write_sav
 #' @importFrom highcharter hc_theme hc_theme_merge
 #' @importFrom jtools scale_mod
 #' @importFrom labelled set_variable_labels set_value_labels
@@ -24,7 +24,8 @@
 #' @importFrom PMCMRplus dunnettTest
 #' @importFrom prismatic color
 #' @importFrom purrr map pmap walk
-#' @importFrom rlang set_names sym := .data caller_arg caller_env
+#' @importFrom readr write_csv
+#' @importFrom rlang set_names sym := .data caller_arg caller_env enexpr
 #' @importFrom rstudioapi isAvailable getVersion
 #' @importFrom sjlabelled as_label get_labels
 #' @importFrom stats qt df.residual setNames weighted.mean sd symnum
@@ -38,5 +39,6 @@
 #' @importFrom vctrs vec_ptype_abbr
 #' @importFrom waldo compare
 #' @importFrom withr with_seed
+#' @importFrom writexl write_xlsx
 #' @keywords internal
 "_PACKAGE"

@@ -38,6 +38,7 @@ Imports:
     prismatic,
     psych,
     purrr,
+    readr,
     rlang,
     rstudioapi,
     sjlabelled,
@@ -49,6 +50,7 @@ Imports:
     tidyselect,
     waldo,
     withr,
+    writexl,
     vctrs
 Suggests: 
     knitr,

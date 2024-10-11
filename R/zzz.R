@@ -117,6 +117,8 @@ utils::globalVariables(
     "progressive", "religpew", "religpew_f", "religpew_evan_f", "born_again",
     "jewish", "reltrad_f", "std.err", "t.value", "var_label", "mena_b", 
     "start_date", "current_year", "age_n", ".rows", "data", "groups_combined", 
-    "groups"
+    "groups", "DistributionChannel", "distribution_channel", "Q_RecaptchaScore",
+    "q_recaptcha_score", "Q_RelevantIDDuplicate", "q_relevant_id_duplicate", 
+    "bot", "duplicate"
   )
 )

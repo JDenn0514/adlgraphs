@@ -84,12 +84,15 @@ reference:
     - attr_transformation
 - title: Miscellaneous functions
   contents:
+    - remove_bot_dupe
+    - get_bot_dupe
+    - export_bot_dupe
     - codebook
-    - make_df_oxy
-    - write_word_table
     - clean_demos
     - dunnett_pval_fun
+    - make_df_oxy
     - stars_pval
+    - write_word_table
     - wtd_sd
 - title: Data
   contents:

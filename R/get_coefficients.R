@@ -98,7 +98,7 @@ get_coefficients <- function(
     # remove the unnecessary columns if we are not adding the labels
     model_results <- model_results %>%
       broom.helpers::tidy_add_reference_rows() %>%
-      select(-c(var_class:contrasts_type))
+      dplyr::select(-c(var_class:contrasts_type))
 
   } else if (add_labels == TRUE) {
 
@@ -166,8 +166,8 @@ get_coefficients <- function(
       # add value labels
       broom.helpers::tidy_add_variable_labels() %>%
       broom.helpers::tidy_add_term_labels() %>%
-      select(-c(var_class:contrasts_type)) %>%
-      rename(value_label = label)
+      dplyr::select(-c(var_class:contrasts_type)) %>%
+      dplyr::rename(value_label = label)
 
   } else if (add_labels == FALSE) {
     # if add_labels is set to FALSE
