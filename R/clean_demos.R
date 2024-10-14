@@ -392,15 +392,12 @@ clean_demos <- function(
             "Other Faith",
             "Something Else (Please specify)"
           )
-        ),
+        ) %>% 
+          structure(label = "Religious Identity"),
 
         # make a dichotomous born_again variable
-        born_again_f2 = make_factor(born_again),
-      ) %>%
-      labelled::set_variable_labels(
-        reltrad_f = "Religious Identity",
-        born_again = "Evangelical/Born Again Christian",
-      )
+        born_again_f2 = make_factor(born_again)
+      ) 
 
   }
 
