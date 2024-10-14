@@ -213,7 +213,7 @@ clean_demos <- function(
           age_n = 17 + age %>% 
             structure(label = "Age")
         )
-    } else if (is.null(df$age)) {
+    } else if (is.null(attr_val_labels(df$age))) {
       df <- df %>% 
         dplyr::mutate(
           age_n = age %>% structure(label = "Age")
