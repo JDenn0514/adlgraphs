@@ -13,7 +13,9 @@
 
 
 
-clean_demos <- function(df) {
+clean_demos <- function(
+  df
+) {
 
   if ("race_1" %in% colnames(df)) {
 
@@ -204,32 +206,46 @@ clean_demos <- function(df) {
   }
 
   if ("age" %in% colnames(df)) {
-    df <- df %>%
-      dplyr::mutate(
-        # age, adding 17 so the ages start at 18
-        age_n = 17 + age %>% 
-          structure(label = "Age"),
-        # make a new age variable to be used in survey weighting
-        age_f6 = adlgraphs::case_when_fct(
-          age_n %in% c(18:24) ~ "18-24",
-          age_n %in% c(25:34) ~ "25-34",
-          age_n %in% c(35:44) ~ "35-44",
-          age_n %in% c(45:54) ~ "45-54",
-          age_n %in% c(55:64) ~ "55-64",
-          age_n > 64 ~ "65+"
-        ) %>% 
-          # set the label
-          structure(label = "Age Cohort"),
-        # create a nw four group age variable
-        age_f4 = adlgraphs::case_when_fct(
-          age_n < 31 ~ "18-30",
-          age_n %in% c(31:49) ~ "31-49",
-          age_n %in% c(50:64) ~ "50-64",
-          age_n > 64 ~ "65+"
-        ) %>% 
-          # set the label
-          structure(label = "Age Cohort")
+    if (attr_val_labels(df$age)) {
+      df <- df %>%
+        dplyr::mutate(
+          # age, adding 17 so the ages start at 18
+          age_n = 17 + age %>% 
+            structure(label = "Age")
+        )
+    } else if (is.null(df$age)) {
+      df <- df %>% 
+        dplyr::mutate(
+          age_n = age %>% structure(label = "Age")
+          # make a new age variable to be used in survey weighting
+          age_f6 = adlgraphs::case_when_fct(
+            age_n %in% c(18:24) ~ "18-24",
+            age_n %in% c(25:34) ~ "25-34",
+            age_n %in% c(35:44) ~ "35-44",
+            age_n %in% c(45:54) ~ "45-54",
+            age_n %in% c(55:64) ~ "55-64",
+            age_n > 64 ~ "65+"
+          ) %>% 
+            # set the label
+            structure(
+              label = "Age Cohort",
+              note = "Six Categories"
+            ),
+          # create a nw four group age variable
+          age_f4 = adlgraphs::case_when_fct(
+            age_n < 31 ~ "18-30",
+            age_n %in% c(31:49) ~ "31-49",
+            age_n %in% c(50:64) ~ "50-64",
+            age_n > 64 ~ "65+"
+          ) %>% 
+            # set the label
+            structure(
+              label = "Age Cohort",
+              note = "Four Categories"
+            )
       )
+        
+    }
     if ("start_date" %in% colnames(df)) {
       df <- df %>% 
         dplyr::mutate(
