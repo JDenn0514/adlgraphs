@@ -19,8 +19,27 @@ remove_bot_dupe <- function(data) {
 
   # get the people who are above 18
   if ("age" %in% colnames(data)) {
-    data <- data %>% dplyr::filter(age > 17)
+
+    if (!is.null(attr_val_labels(df$age))) {
+
+      df <- df %>%
+        dplyr::mutate(
+          # age, adding 17 so the ages start at 18
+          age_n = 17 + age %>% 
+            structure(label = "Age")
+        ) %>% 
+        dplyr::filter(age_n > 17)
+
+    } else if (is.null(attr_val_labels(df$age))) {
+
+      df <- df %>% 
+
+        dplyr::filter(age > 17)
+    }
+
   } 
+
+  
 
   # remove bots
   if ("Q_RecaptchaScore" %in% colnames(data)) {
@@ -81,47 +100,12 @@ get_bot_dupe <- function(data) {
 #' @param filename The name of the file you want to create
 #' @param export_raw_data Logical. If TRUE, the default, exports the raw data. If FALSE,
 #'   exports only three columns: the ID, duplicate, and bot
-#' @param id The unique ID variable. Only relevant when `export_raw_data` is TRUE.
+#' @param id The unique ID variable. Only relevant when `export_raw_data` is FALSE.
 #' 
 #' @export
 export_bot_dupe <- function(data, filename, export_raw_data = TRUE, id = NULL) {
 
-  if ("Q_RecaptchaScore" %in% colnames(data)) {
-    data <- data %>% 
-      dplyr::mutate(
-        bot = dplyr::case_when(
-          Q_RecaptchaScore < 0.5 ~ "yes",
-          .default = "no"
-        )
-      )
-  } else if ("q_recaptcha_score" %in% colnames(data)) {
-    data <- data %>% 
-      dplyr::mutate(
-        bot = dplyr::case_when(
-          q_recaptcha_score < 0.5 ~ "yes",
-          .default = "no"
-        )
-      )
-  }
-
-  # remove duplicates
-  if ("Q_RelevantIDDuplicate" %in% colnames(data)) {
-    data <- data %>% 
-      dplyr::mutate(
-        duplicate = dplyr::case_when(
-          Q_RelevantIDDuplicate == "true" ~ "yes",
-          .default = "no"
-        )
-      )
-  } else if ("q_relevant_id_duplicate" %in% colnames(data)) {
-    data <- data %>% 
-      dplyr::mutate(
-        duplicate = dplyr::case_when(
-          q_relevant_id_duplicate == "true" ~ "yes",
-          .default = "no"
-        )
-      )
-  }
+  data <- get_bot_dupe(data)
   
   if (isFALSE(export_raw_data)) {
     data <- data %>% 

@@ -14,7 +14,7 @@ export_bot_dupe(data, filename, export_raw_data = TRUE, id = NULL)
 \item{export_raw_data}{Logical. If TRUE, the default, exports the raw data. If FALSE,
 exports only three columns: the ID, duplicate, and bot}
 
-\item{id}{The unique ID variable. Only relevant when \code{export_raw_data} is TRUE.}
+\item{id}{The unique ID variable. Only relevant when \code{export_raw_data} is FALSE.}
 }
 \description{
 This function creates a file containing all responses suspected of being bots and/or
