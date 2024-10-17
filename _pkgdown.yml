@@ -82,6 +82,7 @@ reference:
     - attr_question_preface
     - attr_survey_flow
     - attr_transformation
+    - flatten_labelled_vec
 - title: Miscellaneous functions
   contents:
     - remove_bot_dupe

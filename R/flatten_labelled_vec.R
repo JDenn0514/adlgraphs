@@ -42,9 +42,9 @@ flatten_labelled_vec.default <- function(x, data) {
     }
   }
 
-  nar <- purrr::pmap_chr(list(values, names, seq_along(leng)), internal_fun)
+  string <- purrr::pmap_chr(list(values, names, seq_along(leng)), internal_fun)
 
-  paste(nar, collapse = ", ")
+  paste(string, collapse = ", ")
 
 }
 

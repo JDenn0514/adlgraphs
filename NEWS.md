@@ -1,5 +1,17 @@
 # adlgraphs 0.3.3
 
+## created two new functions
+
+#### flatten_labelled_vec
+
+- Flatten a labelled vector. or example if a vector has values 1 and 0 where 1 is "Yes" and 0 is "No", it will output a string that reads: `1 = "Yes", 0 = "No"`.
+
+#### remove_bot_dupe, get_bot_dupe, and export_bot_dupe
+
+- These three functions make it easy to remove bots and duplicates, remove all non-bots and duplicates, and export all bots and duplicates.
+
+# adlgraphs 0.3.3
+
 ## Created a new function
 
 #### get_corr
@@ -12,7 +24,7 @@
 
 #### dunnett
 
-- perform Dunnett's multiple comparisons test
+- Perform Dunnett's multiple comparisons test
 
 # adlgraphs 0.3.1
 
