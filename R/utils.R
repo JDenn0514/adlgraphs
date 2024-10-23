@@ -1,6 +1,75 @@
 
 # my own functions --------------------------------------------------------
 
+# helper function for doing grouped data analysis
+group_analysis_helper <- function(data, cols) {
+  # extract the df in the "groups" attribute
+  group_labs <- attr(data, "groups") %>% 
+    # remove the .rows column
+    dplyr::select(-`.rows`)
+  # get the column names, these are the grouping variables
+  group_labs <- colnames(group_labs)
+  leng_groups <- length(group_labs)
+
+  if (!missing(cols)) {
+
+    # get a data set with only the grouping variables
+    data_groups <- data %>% dplyr::select(group_labs)
+
+    # use enquo to defuse the argument
+    expr <- rlang::enquo(cols)
+    # resume evaluation using eval_select to get the positions of the variables
+    pos <- tidyselect::eval_select(expr, data = data)
+    # Use the vector of locations returned by eval_select() to subset 
+    # and rename the input data.
+    data_cols <- rlang::set_names(data[pos], names(pos)) 
+
+    # combine the two
+    data <- dplyr::bind_cols(data_groups, data_cols)
+  }
+
+  # make it a nested data set
+  nest_data <- data %>% 
+    tidyr::nest() %>% 
+    tidyr::drop_na(everything())
+
+  if (leng_groups > 1) {
+
+    for (n in c(1:leng_groups)) {
+      if (n == 1) {
+        string <- paste('.data[[group_labs[1]]]')
+      } else {
+        string <- paste0(string, ', " - ", .data[[group_labs[', n, ']]]')
+      }
+      new_string = paste0("paste0(", string, ")")
+    }
+
+    # get the groups 
+    # we will combine this with the correlations
+    just_groups <- nest_data %>% 
+      # remove the data column so it's just the groups
+      dplyr::select(-data) %>% 
+      # combined the grouping variabels
+      dplyr::mutate(groups_combined = eval(parse(text = new_string))) %>% 
+      # extract it as a vector
+      dplyr::pull(groups_combined)
+    
+  } else {
+
+    # get the groups 
+    # we will combine this with the correlations
+    just_groups <- nest_data %>% 
+      dplyr::pull(-data) 
+  
+  }
+
+  out <- list(nest_data, just_groups, group_labs)
+  names(out) <- c("nest_data", "just_groups", "group_labs")
+  
+  return(out)
+  
+}
+
 
 
 # clean the racial groups

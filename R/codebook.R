@@ -1,4 +1,4 @@
-#' Create a df codebook
+#' Create a data codebook
 #'
 #' This function takes a `data.frame` and creates a codebook. The new
 #' object is a `data.frame` where each row contains different metadata info
@@ -26,7 +26,7 @@
 #'  * question_preface - This contains the question preface. To elaborate, some
 #'    questions in surveys enable respondents to select multiple responses. Each
 #'    response gets it's own variable in the data. The value listed here is
-#'    supposed to contain that text that prefaced the response options. The
+#'    supposed to contain the text that prefaced the response options. The
 #'    actual response option is listed under 'label'.
 #'
 #'  * survey flow - This is used to indicate if there was an experiment or some
@@ -39,11 +39,11 @@
 #'
 #'  * type - The type of the variable.
 #'
-#'  * missing - Indicaets how many missing values there are.
+#'  * missing - Indicates how many missing values there are.
 #'
 #'  * range - If a numeric variable, shows the range of the values.
 #'
-#' @param df An object of class `data.frame` or `tibble`
+#' @param data An object of class `data.frame` or `tibble`
 #'
 #' @examples
 #' # create the codebook
@@ -55,43 +55,43 @@
 #' @export
 
 
-codebook <- function(df) {
+codebook <- function(data) {
 
-  df_lab <- deparse(substitute(df))
+  data_lab <- deparse(substitute(data))
 
-  if (!is.data.frame(df) || !tibble::is_tibble(df)) {
+  if (!is.data.frame(data) || !tibble::is_tibble(data)) {
     cli::cli_abort(c(
-      "{.var df} must be of class {.cls tbl_df}, {.cls tbl}, or {.cls df.frame}",
-      "x" = "You've supplied an object of class {.cls {class(df)}}"
+      "{.var data} must be of class {.cls tbl_df}, {.cls tbl}, or {.cls data.frame}",
+      "x" = "You've supplied an object of class {.cls {class(data)}}"
     ))
   }
 
   # attr the variable names
-  names <- names(df)
+  names <- names(data)
   # get the number of variables
   len <- length(names)
 
   if (!len) stop("there are no names to search in that object")
 
   # get the variable labels
-  labels <- attr_var_label(df)
+  labels <- attr_var_label(data)
 
   # get the factor levels
-  levels <- attr_levels({{ df }})
+  levels <- attr_levels({{ data }})
   # get the value labels
-  value_labels <- attr_val_labels({{ df }})
+  value_labels <- flatten_labelled_vec({{ data }})
 
   # get the transformation attribute
-  transformation <- attr_transformation({{ df }})
+  transformation <- attr_transformation({{ data }})
 
   # get the note attribute
-  note <- attr_note({{ df }})
+  note <- attr_note({{ data }})
 
   # get the question_preface attribute
-  question_preface <- attr_question_preface({{ df }})
+  question_preface <- attr_question_preface({{ data }})
 
   # get the survey_flow attribute
-  survey_flow <- attr_survey_flow({{ df }})
+  survey_flow <- attr_survey_flow({{ data }})
 
   pos <- which(names %in% names)
 
@@ -130,13 +130,15 @@ codebook <- function(df) {
       question_preface = question_preface,
       survey_flow = survey_flow,
       note = note,
-      col_type = unlist(lapply(df, vctrs::vec_ptype_abbr)),
-      class = lapply(df, class),
-      type = unlist(lapply(df, typeof)),
-      missing = unlist(lapply(df, n_missing)), # retrocompatibility
-      unique_values = unlist(lapply(df, unique_values)),
-      range = lapply(df, generic_range)
-    )
+      col_type = unlist(lapply(data, vctrs::vec_ptype_abbr)),
+      class = lapply(data, class),
+      type = unlist(lapply(data, typeof)),
+      missing = unlist(lapply(data, n_missing)), # retrocompatibility
+      unique_values = unlist(lapply(data, unique_values)),
+      range = lapply(data, generic_range)
+    ) %>% 
+    tidyr::unnest(value_labels, keep_empty = TRUE) %>% 
+    tidyr::unnest(question_preface, keep_empty = TRUE)
 
   return(res)
 

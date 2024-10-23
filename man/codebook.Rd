@@ -2,12 +2,12 @@
 % Please edit documentation in R/codebook.R
 \name{codebook}
 \alias{codebook}
-\title{Create a df codebook}
+\title{Create a data codebook}
 \usage{
-codebook(df)
+codebook(data)
 }
 \arguments{
-\item{df}{An object of class \code{data.frame} or \code{tibble}}
+\item{data}{An object of class \code{data.frame} or \code{tibble}}
 }
 \description{
 This function takes a \code{data.frame} and creates a codebook. The new
@@ -31,7 +31,7 @@ a variable was created without going back to the cleaning script.
 \item question_preface - This contains the question preface. To elaborate, some
 questions in surveys enable respondents to select multiple responses. Each
 response gets it's own variable in the data. The value listed here is
-supposed to contain that text that prefaced the response options. The
+supposed to contain the text that prefaced the response options. The
 actual response option is listed under 'label'.
 \item survey flow - This is used to indicate if there was an experiment or some
 sort of branching involved in the survey flow.
@@ -39,7 +39,7 @@ sort of branching involved in the survey flow.
 about the variable that doesn't fit in the other attributes.
 \item class - The class attribute of the variable.
 \item type - The type of the variable.
-\item missing - Indicaets how many missing values there are.
+\item missing - Indicates how many missing values there are.
 \item range - If a numeric variable, shows the range of the values.
 }
 }

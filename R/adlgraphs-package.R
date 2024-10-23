@@ -3,7 +3,7 @@
 #'   tidy_add_variable_labels tidy_add_term_labels tidy_add_n
 #' @importFrom cli cli_abort
 #' @importFrom dplyr %>% across all_of arrange bind_cols bind_rows count
-#'   everything group_by mutate rename select where
+#'   everything group_by mutate rename select where anti_join ungroup
 #' @importFrom forcats as_factor fct_relevel
 #' @importFrom ggplot2 theme element_line element_blank element_text theme_minimal
 #'   margin guide_legend geom_errorbar ggplot aes geom_col geom_text geom_label
@@ -23,7 +23,7 @@
 #' @importFrom officer body_add_par
 #' @importFrom PMCMRplus dunnettTest
 #' @importFrom prismatic color
-#' @importFrom purrr map pmap walk
+#' @importFrom purrr map pmap pmap_chr walk
 #' @importFrom readr write_csv
 #' @importFrom rlang set_names sym := .data caller_arg caller_env enexpr
 #' @importFrom rstudioapi isAvailable getVersion
@@ -33,8 +33,8 @@
 #' @importFrom stringr str_replace str_detect
 #' @importFrom systemfonts register_font
 #' @importFrom tibble as_tibble enframe
-#' @importFrom tidyr pivot_wider drop_na nest
-#' @importFrom tidyselect all_of
+#' @importFrom tidyr pivot_wider drop_na nest unnest separate_wider_delim
+#' @importFrom tidyselect all_of eval_select where
 #' @importFrom utils tail
 #' @importFrom vctrs vec_ptype_abbr
 #' @importFrom waldo compare

@@ -38,7 +38,7 @@ flatten_labelled_vec.default <- function(x, data) {
     if (is.null(name)) {
       return(NULL)
     } else {
-      return(glue::glue('{value} = "{name}"'))
+      return(glue::glue("{value} = '{name}'"))
     }
   }
 

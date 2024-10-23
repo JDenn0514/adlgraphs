@@ -148,12 +148,24 @@ get_corr.grouped_df <- function(data, x, y, group, wt) {
 #' 
 #' @return A one row tibble showing correlations (`correlation`), number of 
 #'   observations (`n`), low and high confidence intervals (`conf.low`, `conf.high`), 
-#'   the p-value (p.value), and stars indicating it's statistical significance.
+#'   the p-value (`p.value`), and stars indicating it's statistical significance.
 #' 
 #' @export
 wtd_corr <- function(data, x, y,  wt) {
   x <- accept_string_or_sym({{ x }})
   y <- accept_string_or_sym({{ y }})
+
+  # get variable labels
+  x_lab <- attr_var_label(data[[x]])
+  y_lab <- attr_var_label(data[[y]])
+
+  # get variable names
+  x_name <- rlang::enexpr(x)
+  y_name <- rlang::enexpr(y)
+
+  # create the named vectors
+  x_name_vec <- stats::setNames(x_name, x_lab)
+  y_name_vec <- stats::setNames(y_name, y_lab)
 
   if (!missing(wt)) {
     # if not missing wt
@@ -177,16 +189,20 @@ wtd_corr <- function(data, x, y,  wt) {
     tidyr::pivot_wider(names_from = "name", values_from = "value") %>% 
     # add a bunch of variables and clean up data
     dplyr::mutate(
+      # calculate the lower CI
       conf.low = correlation - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.err,
       # calculate the higher CI
       conf.high = correlation + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.err,
-      stars = stars_pval(p.value)
+      # create the stars column based on p-value
+      stars = stars_pval(p.value),
+      # create the x variable and add value labels based on original variable label
+      x = x_name %>% haven::labelled(labels = x_name_vec),
+      # create the x variable and add value labels based on original variable label
+      y = y_name %>% haven::labelled(labels = y_name_vec)
     ) %>% 
-    dplyr::select(-c(t.value, std.err))
+    # reorder the columns and drop some
+    dplyr::select(c(x, y, correlation, n, conf.low, conf.high, p.value, stars))
 
-  # reorder the 
-  out <- out[,c(1, 3, 4, 5, 2, 6)]
-  
   attr(out$correlation, "label") <- "Correlation"
   attr(out$n, "label") <- "N"
   attr(out$conf.low, "label") <- "Low CI"
@@ -196,6 +212,7 @@ wtd_corr <- function(data, x, y,  wt) {
   return(out)
 
 }
+
 
 # Calculate the weighted correlations as a matrix
 onecor.wtd <- function(x, y, wt = NULL){
