@@ -62,7 +62,8 @@ significant.</p>
 <span>  wt <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  control <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  conf.level <span class="op">=</span> <span class="fl">0.95</span>,</span>
-<span>  show_means <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  show_means <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  show_diffs <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -75,18 +76,21 @@ significant.</p>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>A numeric vector that will be used to calculate the means.</p></dd>
+<dd><p>A numeric vector that will be used to calculate the means.
+This can be a string or symbol.</p></dd>
 
 
 <dt id="arg-treats">treats<a class="anchor" aria-label="anchor" href="#arg-treats"></a></dt>
 <dd><p>A variable whose values are used to determine if the means
-are statistically significantly different from each other.</p></dd>
+are statistically significantly different from each other. Should be
+a factor or character vector. This can be a string or symbol.</p></dd>
 
 
 <dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
-<dd><p>A character or factor vector. It is a second level grouping
-variable. If specified, the function checks to see if the values in
-<code>treats</code> are statistically significant  within each level of this variable.</p></dd>
+<dd><p>&lt;<code><a href="https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html" class="external-link">tidy-select</a></code>&gt; A selection of columns to
+group the data by in addition to <code>treats</code>. This operates very similarly
+to <code>.by</code> from dplyr (for more info on that see <a href="https://dplyr.tidyverse.org/reference/dplyr_by.html" class="external-link">?dplyr_by</a>).
+See examples to see how it operates.</p></dd>
 
 
 <dt id="arg-wt">wt<a class="anchor" aria-label="anchor" href="#arg-wt"></a></dt>
@@ -106,9 +110,13 @@ confidence interval.</p></dd>
 
 
 <dt id="arg-show-means">show_means<a class="anchor" aria-label="anchor" href="#arg-show-means"></a></dt>
-<dd><p>Logical. Determines if the output should contain the mean
-differences between the levels and the reference level or if it should show
-the means of each level. Default is <code>FALSE</code></p></dd>
+<dd><p>Logical. Determines if the output should contain the means
+of each level. Default is <code>FALSE</code></p></dd>
+
+
+<dt id="arg-show-diffs">show_diffs<a class="anchor" aria-label="anchor" href="#arg-show-diffs"></a></dt>
+<dd><p>Logical. Determines if the output should contain the
+difference in means</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -119,95 +127,148 @@ there are a few key differences between this function and those. Firstly,
 this function takes in a data frame or tibble. This was done so that it can
 either be piped in or specified in the argument. See more in the example
 section below.</p>
-<p>Another important difference, is the addition of the <code>group</code> variable.
-When <code>group</code> is specified, the function still performs the Dunnett test between
-the variable in <code>x</code> and the variable in <code>treats</code>, but it does so along each
-level of whatever variable is specified in <code>group</code>. You can see this in
-action in the examples section below.</p>
-<p>A third key difference is the output. This function outputs a tibble object
-with a special class that enables it to be used with <code><a href="prettytable.html">prettytable()</a></code>.
-Furthermore, there are two distinct outputs. The default output shows the
-difference in means between each level and the control level and the
-confidence intervals are based on this difference. However, if
-<code>show_means = TRUE</code>, then the output shows the mean values for each level in
-<code>treats</code> while still indicating the p-value.</p>
+<p>Another important difference, is the addition of the <code>group</code> variable
+and the ability to pipe in a grouped data frame. When <code>group</code> is specified or
+a grouped data frame is piped in, the function still performs the Dunnett test
+between the variable in <code>x</code> and the variable in <code>treats</code>, but it does so
+along each level of whatever variable(s) are/is specified in <code>group</code> or that
+the data is grouped by. You can see this in action in the examples section
+below.</p>
+<p>A third key difference (<strong>WHICH HAS NOT BEEN IMPLEMENTED YET</strong>) is the
+output. This function outputs a tibble object with a special class that
+enables it to be used with <code><a href="prettytable.html">prettytable()</a></code>. Furthermore, there are two
+distinct outputs: one with the means and one just the difference in means.</p>
 <p>Lastly, this function allows you to add weights to calculate weighted means.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Check to see if any of the education groups are significantly different</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># load dply for the pipe: %&gt;% </span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JDenn0514/adlgraphs" class="external-link">adlgraphs</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Check to see if any of the education groups are significantly different</span></span></span>
 <span class="r-in"><span><span class="co"># from the control group (in this case "High School or Less") for conspiracy</span></span></span>
 <span class="r-in"><span><span class="co"># theory belief</span></span></span>
-<span class="r-in"><span><span class="fu">dunnett</span><span class="op">(</span><span class="va">test_data</span>, <span class="st">"acts_avg"</span>, <span class="st">"edu_f"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   edu_f               diff     n conf.low conf.high p.value stars</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Some College      -<span style="color: #BB0000;">0.234</span>    79   -<span style="color: #BB0000;">0.528</span>     0.06    0.154 <span style="color: #949494;">""</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Bachelor's Degree -<span style="color: #BB0000;">0.547</span>    57   -<span style="color: #BB0000;">0.868</span>    -<span style="color: #BB0000;">0.227</span>   0     <span style="color: #949494;">"</span>***<span style="color: #949494;">"</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Graduate Degree   -<span style="color: #BB0000;">0.609</span>    38   -<span style="color: #BB0000;">0.972</span>    -<span style="color: #BB0000;">0.245</span>   0     <span style="color: #949494;">"</span>***<span style="color: #949494;">"</span></span>
+<span class="r-in"><span><span class="fu">dunnett</span><span class="op">(</span><span class="va">test_data</span>, <span class="st">"acts_avg"</span>, <span class="st">"pid_f3"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   pid_f3       diff     n conf.low conf.high p.value stars</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Independent 0.262    57   -<span style="color: #BB0000;">0.017</span>     0.542   0.07  <span style="color: #949494;">"</span>.<span style="color: #949494;">"</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Republican  0.175    95   -<span style="color: #BB0000;">0.066</span>     0.417   0.191 <span style="color: #949494;">""</span>   </span>
 <span class="r-in"><span><span class="co"># now let's do the same but have it show the means</span></span></span>
-<span class="r-in"><span><span class="fu">dunnett</span><span class="op">(</span><span class="va">test_data</span>, <span class="st">"acts_avg"</span>, <span class="st">"edu_f"</span>, show_means <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Joining with `by = join_by(edu_f)`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 8</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   edu_f                mean    sd     n conf.low conf.high p.value stars</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> High School or Less  2.99  0.72    76     2.82      3.16  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Some College         2.76  0.72    79     2.6       2.92   0.154 <span style="color: #949494;">""</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Bachelor's Degree    2.44  0.88    57     2.21      2.68   0     <span style="color: #949494;">"</span>***<span style="color: #949494;">"</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Graduate Degree      2.38  0.79    38     2.12      2.64   0     <span style="color: #949494;">"</span>***<span style="color: #949494;">"</span></span>
+<span class="r-in"><span><span class="fu">dunnett</span><span class="op">(</span><span class="va">test_data</span>, <span class="st">"acts_avg"</span>, <span class="st">"pid_f3"</span>, show_means <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Joining with `by = join_by(pid_f3)`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   pid_f3       mean  diff    sd     n conf.low conf.high p.value stars</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Democrat     2.63 0      0.75    98     2.48      2.78  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Independent  2.89 0.262  0.81    57     2.68      3.11   0.07  <span style="color: #949494;">"</span>.<span style="color: #949494;">"</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Republican   2.81 0.175  0.72    95     2.66      2.95   0.191 <span style="color: #949494;">""</span>   </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># now do the same as above but make "Graduate Degree" the control group</span></span></span>
-<span class="r-in"><span><span class="fu">dunnett</span><span class="op">(</span><span class="va">test_data</span>, <span class="st">"acts_avg"</span>, <span class="st">"edu_f"</span>, control <span class="op">=</span> <span class="st">"Graduate Degree"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   edu_f                diff     n conf.low conf.high p.value stars</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> High School or Less 0.609    76    0.252     0.965   0     <span style="color: #949494;">"</span>***<span style="color: #949494;">"</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Some College        0.375    79    0.021     0.729   0.035 <span style="color: #949494;">"</span>*<span style="color: #949494;">"</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Bachelor's Degree   0.061    57   -<span style="color: #BB0000;">0.314</span>     0.437   0.954 <span style="color: #949494;">""</span>   </span>
-<span class="r-in"><span><span class="fu">dunnett</span><span class="op">(</span><span class="va">test_data</span>, <span class="st">"acts_avg"</span>, <span class="st">"edu_f"</span>, control <span class="op">=</span> <span class="st">"Graduate Degree"</span>, show_means <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">dunnett</span><span class="op">(</span><span class="va">test_data</span>, <span class="st">"acts_avg"</span>, <span class="st">"pid_f3"</span>, control <span class="op">=</span> <span class="st">"Independent"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   pid_f3       diff     n conf.low conf.high p.value stars</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Democrat   -<span style="color: #BB0000;">0.262</span>    98   -<span style="color: #BB0000;">0.538</span>     0.014   0.065 <span style="color: #949494;">"</span>.<span style="color: #949494;">"</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Republican -<span style="color: #BB0000;">0.087</span>    95   -<span style="color: #BB0000;">0.365</span>     0.191   0.694 <span style="color: #949494;">""</span>   </span>
+<span class="r-in"><span><span class="fu">dunnett</span><span class="op">(</span><span class="va">test_data</span>, <span class="st">"acts_avg"</span>, <span class="st">"pid_f3"</span>, control <span class="op">=</span> <span class="st">"Independent"</span>, show_means <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Joining with `by = join_by(pid_f3)`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   pid_f3       mean   diff    sd     n conf.low conf.high p.value stars</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Democrat     2.63 -<span style="color: #BB0000;">0.262</span>  0.75    98     2.48      2.78   0.065 <span style="color: #949494;">"</span>.<span style="color: #949494;">"</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Independent  2.89  0      0.81    57     2.68      3.11  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Republican   2.81 -<span style="color: #BB0000;">0.087</span>  0.72    95     2.66      2.95   0.694 <span style="color: #949494;">""</span>   </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># now let's add in partisanship (`edu_f2`) as the `group` variable. This let's us</span></span></span>
+<span class="r-in"><span><span class="co"># compare education levels within each level of `edu_f2`. Note how the arguments</span></span></span>
+<span class="r-in"><span><span class="co"># don't have to be strings</span></span></span>
+<span class="r-in"><span><span class="fu">dunnett</span><span class="op">(</span><span class="va">test_data</span>, <span class="va">acts_avg</span>, <span class="va">pid_f3</span>, <span class="va">edu_f2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   edu_f2                     pid_f3  diff     n conf.low conf.high p.value stars</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> No College Degree          Indep… 0.168    40   -<span style="color: #BB0000;">0.174</span>     0.511   0.445 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> No College Degree          Repub… 0.156    50   -<span style="color: #BB0000;">0.167</span>     0.478   0.457 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> At Least a Bachelor's Deg… Indep… 0.316    17   -<span style="color: #BB0000;">0.177</span>     0.809   0.268 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> At Least a Bachelor's Deg… Repub… 0.2      45   -<span style="color: #BB0000;">0.165</span>     0.564   0.376 <span style="color: #949494;">""</span>   </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># we can also group by multiple variables. Due to a small n, I'm going to use </span></span></span>
+<span class="r-in"><span><span class="co"># `edu_f2` instead of `edu_f`. </span></span></span>
+<span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>values_f2 <span class="op">=</span> <span class="fu"><a href="make_dicho.html">make_dicho</a></span><span class="op">(</span><span class="va">values</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="fu">dunnett</span><span class="op">(</span><span class="va">acts_avg</span>, treats <span class="op">=</span> <span class="va">pid_f3</span>, group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">edu_f2</span>, <span class="va">values_f2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 8 × 9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Groups:   edu_f2, values_f2 [4]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   edu_f2          values_f2 pid_f3   diff     n conf.low conf.high p.value stars</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> At Least a Bac… False     Indep…  0.49      6   -<span style="color: #BB0000;">0.117</span>     1.10    0.127 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> At Least a Bac… False     Repub…  0.586    17    0.133     1.04    0.01  <span style="color: #949494;">"</span>**<span style="color: #949494;">"</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> At Least a Bac… True      Indep…  0.235    11   -<span style="color: #BB0000;">0.442</span>     0.912   0.664 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> At Least a Bac… True      Repub… -<span style="color: #BB0000;">0.015</span>    28   -<span style="color: #BB0000;">0.515</span>     0.485   0.997 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> No College Deg… False     Indep…  0.081    22   -<span style="color: #BB0000;">0.44</span>      0.602   0.914 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> No College Deg… False     Repub…  0.369    15   -<span style="color: #BB0000;">0.204</span>     0.943   0.254 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> No College Deg… True      Indep…  0.163    18   -<span style="color: #BB0000;">0.304</span>     0.631   0.656 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> No College Deg… True      Repub…  0.08     35   -<span style="color: #BB0000;">0.306</span>     0.467   0.858 <span style="color: #949494;">""</span>   </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># now let's do those previous two calculations but using `dplyr::group_by()`</span></span></span>
+<span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">pid_f3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="fu">dunnett</span><span class="op">(</span><span class="va">acts_avg</span>, <span class="va">edu_f</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   pid_f3      edu_f               diff     n conf.low conf.high p.value stars</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Independent Some College      -<span style="color: #BB0000;">0.096</span>    14   -<span style="color: #BB0000;">0.767</span>     0.575   0.977 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Independent Bachelor's Degree -<span style="color: #BB0000;">0.054</span>    12   -<span style="color: #BB0000;">0.761</span>     0.652   0.996 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Independent Graduate Degree   -<span style="color: #BB0000;">0.471</span>     5   -<span style="color: #BB0000;">1.46</span>      0.518   0.553 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Democrat    Some College      -<span style="color: #BB0000;">0.111</span>    32   -<span style="color: #BB0000;">0.615</span>     0.394   0.909 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> Democrat    Bachelor's Degree -<span style="color: #BB0000;">0.346</span>    28   -<span style="color: #BB0000;">0.865</span>     0.172   0.259 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> Democrat    Graduate Degree   -<span style="color: #BB0000;">0.379</span>    18   -<span style="color: #BB0000;">0.954</span>     0.196   0.269 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> Republican  Some College      -<span style="color: #BB0000;">0.074</span>    32   -<span style="color: #BB0000;">0.57</span>      0.423   0.967 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> Republican  Bachelor's Degree -<span style="color: #BB0000;">0.204</span>    28   -<span style="color: #BB0000;">0.714</span>     0.305   0.639 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> Republican  Graduate Degree   -<span style="color: #BB0000;">0.443</span>    17   -<span style="color: #BB0000;">1.01</span>      0.127   0.16  <span style="color: #949494;">""</span>   </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># we can also group by multiple</span></span></span>
+<span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>values_f2 <span class="op">=</span> <span class="fu"><a href="make_dicho.html">make_dicho</a></span><span class="op">(</span><span class="va">values</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">pid_f3</span>, <span class="va">values_f2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="fu">dunnett</span><span class="op">(</span><span class="va">acts_avg</span>, <span class="va">edu_f2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Groups:   pid_f3, values_f2 [6]</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   pid_f3      values_f2 edu_f2       diff     n conf.low conf.high p.value stars</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Democrat    False     At Least … -<span style="color: #BB0000;">0.546</span>    13   -<span style="color: #BB0000;">1.04</span>     -<span style="color: #BB0000;">0.056</span>   0.03  <span style="color: #949494;">"</span>*<span style="color: #949494;">"</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Democrat    True      At Least … -<span style="color: #BB0000;">0.169</span>    33   -<span style="color: #BB0000;">0.546</span>     0.209   0.376 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Independent False     At Least … -<span style="color: #BB0000;">0.136</span>     6   -<span style="color: #BB0000;">0.81</span>      0.537   0.681 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Independent True      At Least … -<span style="color: #BB0000;">0.097</span>    11   -<span style="color: #BB0000;">0.828</span>     0.634   0.787 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> Republican  False     At Least … -<span style="color: #BB0000;">0.329</span>    17   -<span style="color: #BB0000;">0.76</span>      0.101   0.129 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> Republican  True      At Least … -<span style="color: #BB0000;">0.264</span>    28   -<span style="color: #BB0000;">0.623</span>     0.095   0.146 <span style="color: #949494;">""</span>   </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># If we want to show means and differences, set show_means to TRUE</span></span></span>
+<span class="r-in"><span><span class="co"># we don't need to set show_diffs to TRUE since that is the default</span></span></span>
+<span class="r-in"><span><span class="fu">dunnett</span><span class="op">(</span><span class="va">test_data</span>, <span class="va">acts_avg</span>, <span class="va">edu_f</span>, show_means <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Joining with `by = join_by(edu_f)`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   edu_f                mean   diff    sd     n conf.low conf.high p.value stars</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> High School or Less  2.93  0      0.7     64     2.75      3.11  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Some College         2.82 -<span style="color: #BB0000;">0.106</span>  0.75    78     2.66      2.99   0.738 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Bachelor's Degree    2.68 -<span style="color: #BB0000;">0.25</span>   0.8     68     2.49      2.87   0.14  <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Graduate Degree      2.49 -<span style="color: #BB0000;">0.436</span>  0.73    40     2.26      2.73   0.011 <span style="color: #949494;">"</span>*<span style="color: #949494;">"</span>  </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># if we want to show means without differences, set `show_diffs = FALSE`</span></span></span>
+<span class="r-in"><span><span class="fu">dunnett</span><span class="op">(</span><span class="va">test_data</span>, <span class="va">acts_avg</span>, <span class="va">edu_f</span>, show_means <span class="op">=</span> <span class="cn">TRUE</span>, show_diffs <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Joining with `by = join_by(edu_f)`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 8</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   edu_f                mean    sd     n conf.low conf.high p.value stars</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> High School or Less  2.99  0.72    76     2.82      3.16   0     <span style="color: #949494;">"</span>***<span style="color: #949494;">"</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Some College         2.76  0.72    79     2.6       2.92   0.035 <span style="color: #949494;">"</span>*<span style="color: #949494;">"</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Bachelor's Degree    2.44  0.88    57     2.21      2.68   0.954 <span style="color: #949494;">""</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Graduate Degree      2.38  0.79    38     2.12      2.64  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> High School or Less  2.93  0.7     64     2.75      3.11  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Some College         2.82  0.75    78     2.66      2.99   0.738 <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Bachelor's Degree    2.68  0.8     68     2.49      2.87   0.14  <span style="color: #949494;">""</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Graduate Degree      2.49  0.73    40     2.26      2.73   0.012 <span style="color: #949494;">"</span>*<span style="color: #949494;">"</span>  </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># now let's add in partisanship (`pid_f3`) as the `group` variable. This let's us</span></span></span>
-<span class="r-in"><span><span class="co"># compare education levels within each level of `pid_f3`.</span></span></span>
-<span class="r-in"><span><span class="fu">dunnett</span><span class="op">(</span><span class="va">test_data</span>, <span class="st">"acts_avg"</span>, <span class="st">"edu_f"</span>, <span class="st">"pid_f3"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 8</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   pid_f3          edu_f              diff     n conf.low conf.high p.value stars</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 1<span style="color: #949494;"> [Democrat]</span>    Some College     -<span style="color: #BB0000;">0.276</span>    32   -<span style="color: #BB0000;">0.766</span>     0.215   0.396 <span style="color: #949494;">""</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 1<span style="color: #949494;"> [Democrat]</span>    Bachelor's Degr… -<span style="color: #BB0000;">0.385</span>    28   -<span style="color: #BB0000;">0.891</span>     0.121   0.174 <span style="color: #949494;">""</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 1<span style="color: #949494;"> [Democrat]</span>    Graduate Degree  -<span style="color: #BB0000;">0.577</span>    26   -<span style="color: #BB0000;">1.09</span>     -<span style="color: #BB0000;">0.062</span>   0.024 <span style="color: #949494;">"</span>*<span style="color: #949494;">"</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 2<span style="color: #949494;"> [Independent]</span> Some College     -<span style="color: #BB0000;">0.203</span>    22   -<span style="color: #BB0000;">0.652</span>     0.246   0.599 <span style="color: #949494;">""</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> 2<span style="color: #949494;"> [Independent]</span> Bachelor's Degr… -<span style="color: #BB0000;">0.426</span>     6   -<span style="color: #BB0000;">1.13</span>      0.276   0.355 <span style="color: #949494;">""</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> 2<span style="color: #949494;"> [Independent]</span> Graduate Degree  -<span style="color: #BB0000;">0.218</span>     3   -<span style="color: #BB0000;">1.16</span>      0.728   0.916 <span style="color: #949494;">""</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> 3<span style="color: #949494;"> [Republican]</span>  Some College     -<span style="color: #BB0000;">0.12</span>     25   -<span style="color: #BB0000;">0.669</span>     0.429   0.921 <span style="color: #949494;">""</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> 3<span style="color: #949494;"> [Republican]</span>  Bachelor's Degr… -<span style="color: #BB0000;">0.613</span>    23   -<span style="color: #BB0000;">1.17</span>     -<span style="color: #BB0000;">0.053</span>   0.028 <span style="color: #949494;">"</span>*<span style="color: #949494;">"</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> 3<span style="color: #949494;"> [Republican]</span>  Graduate Degree  -<span style="color: #BB0000;">0.292</span>     9   -<span style="color: #BB0000;">1.05</span>      0.462   0.691 <span style="color: #949494;">""</span>   </span>
-<span class="r-in"><span><span class="co"># and repeat that but showing the means</span></span></span>
-<span class="r-in"><span><span class="fu">dunnett</span><span class="op">(</span><span class="va">test_data</span>, <span class="st">"acts_avg"</span>, <span class="st">"edu_f"</span>, <span class="st">"pid_f3"</span>, show_means <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Joining with `by = join_by(pid_f3, edu_f)`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 12 × 9</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    pid_f3          edu_f       mean    sd     n conf.low conf.high p.value stars</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 1<span style="color: #949494;"> [Democrat]</span>    High Scho…  2.76  0.82    25     2.42      3.1   <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 1<span style="color: #949494;"> [Democrat]</span>    Some Coll…  2.48  0.73    32     2.22      2.75   0.396 <span style="color: #949494;">""</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 1<span style="color: #949494;"> [Democrat]</span>    Bachelor'…  2.38  0.78    28     2.07      2.68   0.175 <span style="color: #949494;">""</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 1<span style="color: #949494;"> [Democrat]</span>    Graduate …  2.18  0.78    26     1.87      2.5    0.024 <span style="color: #949494;">"</span>*<span style="color: #949494;">"</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 2<span style="color: #949494;"> [Independent]</span> High Scho…  3.13  0.53    26     2.92      3.35  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 2<span style="color: #949494;"> [Independent]</span> Some Coll…  2.93  0.54    22     2.69      3.17   0.599 <span style="color: #949494;">""</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 2<span style="color: #949494;"> [Independent]</span> Bachelor'…  2.71  0.98     6     1.68      3.74   0.355 <span style="color: #949494;">""</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 2<span style="color: #949494;"> [Independent]</span> Graduate …  2.92  1.28     3    -<span style="color: #BB0000;">0.27</span>      6.1    0.916 <span style="color: #949494;">""</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 3<span style="color: #949494;"> [Republican]</span>  High Scho…  3.07  0.77    25     2.75      3.39  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 3<span style="color: #949494;"> [Republican]</span>  Some Coll…  2.95  0.75    25     2.64      3.26   0.921 <span style="color: #949494;">""</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> 3<span style="color: #949494;"> [Republican]</span>  Bachelor'…  2.46  0.98    23     2.03      2.88   0.028 <span style="color: #949494;">"</span>*<span style="color: #949494;">"</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> 3<span style="color: #949494;"> [Republican]</span>  Graduate …  2.78  0.44     9     2.44      3.12   0.691 <span style="color: #949494;">""</span>   </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
