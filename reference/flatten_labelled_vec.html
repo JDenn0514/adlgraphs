@@ -80,7 +80,7 @@ when <code>x</code> is only the name of a column in a <code>data.frame</code>.</
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JDenn0514/adlgraphs" class="external-link">adlgraphs</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># run on a single vector</span></span></span>
 <span class="r-in"><span><span class="fu">flatten_labelled_vec</span><span class="op">(</span><span class="va">test_data</span><span class="op">$</span><span class="va">inferior</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly agree\", 2 = \"Somewhat agree\", 3 = \"Somewhat disagree\", 4 = \"Strongly disagree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly agree', 2 = 'Somewhat agree', 3 = 'Somewhat disagree', 4 = 'Strongly disagree'"</span>
 <span class="r-in"><span><span class="co"># run on a data frame</span></span></span>
 <span class="r-in"><span><span class="fu">flatten_labelled_vec</span><span class="op">(</span><span class="va">test_data</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $resp_id</span>
@@ -90,10 +90,10 @@ when <code>x</code> is only the name of a column in a <code>data.frame</code>.</
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $edu</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Less than High School\", 2 = \"High School or GED\", 3 = \"Some College\", 4 = \"Bachelor's Degree\", 5 = \"Graduate Degree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Less than High School', 2 = 'High School or GED', 3 = 'Some College', 4 = 'Bachelor's Degree', 5 = 'Graduate Degree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $pid_f3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Democrat\", 2 = \"Independent\", 3 = \"Republican\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Democrat', 2 = 'Independent', 3 = 'Republican'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $pol_part_rally</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
@@ -117,61 +117,61 @@ when <code>x</code> is only the name of a column in a <code>data.frame</code>.</
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $top</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly agree\", 2 = \"Somewhat agree\", 3 = \"Somewhat disagree\", 4 = \"Strongly disagree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly agree', 2 = 'Somewhat agree', 3 = 'Somewhat disagree', 4 = 'Strongly disagree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $inferior</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly agree\", 2 = \"Somewhat agree\", 3 = \"Somewhat disagree\", 4 = \"Strongly disagree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly agree', 2 = 'Somewhat agree', 3 = 'Somewhat disagree', 4 = 'Strongly disagree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dominate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly agree\", 2 = \"Somewhat agree\", 3 = \"Somewhat disagree\", 4 = \"Strongly disagree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly agree', 2 = 'Somewhat agree', 3 = 'Somewhat disagree', 4 = 'Strongly disagree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $deserving</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly agree\", 2 = \"Somewhat agree\", 3 = \"Somewhat disagree\", 4 = \"Strongly disagree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly agree', 2 = 'Somewhat agree', 3 = 'Somewhat disagree', 4 = 'Strongly disagree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $special</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly agree\", 2 = \"Somewhat agree\", 3 = \"Somewhat disagree\", 4 = \"Strongly disagree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly agree', 2 = 'Somewhat agree', 3 = 'Somewhat disagree', 4 = 'Strongly disagree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $harder</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly agree\", 2 = \"Somewhat agree\", 3 = \"Somewhat disagree\", 4 = \"Strongly disagree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly agree', 2 = 'Somewhat agree', 3 = 'Somewhat disagree', 4 = 'Strongly disagree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $controlled</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly agree\", 2 = \"Somewhat agree\", 3 = \"Somewhat disagree\", 4 = \"Strongly disagree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly agree', 2 = 'Somewhat agree', 3 = 'Somewhat disagree', 4 = 'Strongly disagree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $small</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly agree\", 2 = \"Somewhat agree\", 3 = \"Somewhat disagree\", 4 = \"Strongly disagree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly agree', 2 = 'Somewhat agree', 3 = 'Somewhat disagree', 4 = 'Strongly disagree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $run</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly agree\", 2 = \"Somewhat agree\", 3 = \"Somewhat disagree\", 4 = \"Strongly disagree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly agree', 2 = 'Somewhat agree', 3 = 'Somewhat disagree', 4 = 'Strongly disagree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $big_events</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly agree\", 2 = \"Somewhat agree\", 3 = \"Somewhat disagree\", 4 = \"Strongly disagree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly agree', 2 = 'Somewhat agree', 3 = 'Somewhat disagree', 4 = 'Strongly disagree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $accept_hamas</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Totally acceptable\", 2 = \"Somewhat acceptable\", 3 = \"Somewhat unacceptable\", 4 = \"Totally unacceptable\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Totally acceptable', 2 = 'Somewhat acceptable', 3 = 'Somewhat unacceptable', 4 = 'Totally unacceptable'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $accept_isr</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Totally acceptable\", 2 = \"Somewhat acceptable\", 3 = \"Somewhat unacceptable\", 4 = \"Totally unacceptable\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Totally acceptable', 2 = 'Somewhat acceptable', 3 = 'Somewhat unacceptable', 4 = 'Totally unacceptable'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dislike_jews</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"None\", 2 = \"A few\", 3 = \"Some\", 4 = \"Many\", 5 = \"All\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'None', 2 = 'A few', 3 = 'Some', 4 = 'Many', 5 = 'All'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $stick_together</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Mostly true\", 2 = \"Somewhat true\", 3 = \"Somewhat false\", 4 = \"Mostly false\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Mostly true', 2 = 'Somewhat true', 3 = 'Somewhat false', 4 = 'Mostly false'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $values</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Mostly true\", 2 = \"Somewhat true\", 3 = \"Somewhat false\", 4 = \"Mostly false\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Mostly true', 2 = 'Somewhat true', 3 = 'Somewhat false', 4 = 'Mostly false'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $head</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Mostly true\", 2 = \"Somewhat true\", 3 = \"Somewhat false\", 4 = \"Mostly false\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Mostly true', 2 = 'Somewhat true', 3 = 'Somewhat false', 4 = 'Mostly false'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $loyal</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Mostly true\", 2 = \"Somewhat true\", 3 = \"Somewhat false\", 4 = \"Mostly false\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Mostly true', 2 = 'Somewhat true', 3 = 'Somewhat false', 4 = 'Mostly false'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $business_power</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Mostly true\", 2 = \"Somewhat true\", 3 = \"Somewhat false\", 4 = \"Mostly false\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Mostly true', 2 = 'Somewhat true', 3 = 'Somewhat false', 4 = 'Mostly false'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $wall_street</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Mostly true\", 2 = \"Somewhat true\", 3 = \"Somewhat false\", 4 = \"Mostly false\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Mostly true', 2 = 'Somewhat true', 3 = 'Somewhat false', 4 = 'Mostly false'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $trad_n</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
@@ -183,16 +183,16 @@ when <code>x</code> is only the name of a column in a <code>data.frame</code>.</
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $top_rev</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly disagree\", 2 = \"Somewhat disagree\", 3 = \"Somewhat agree\", 4 = \"Strongly agree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly disagree', 2 = 'Somewhat disagree', 3 = 'Somewhat agree', 4 = 'Strongly agree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $inferior_rev</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly disagree\", 2 = \"Somewhat disagree\", 3 = \"Somewhat agree\", 4 = \"Strongly agree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly disagree', 2 = 'Somewhat disagree', 3 = 'Somewhat agree', 4 = 'Strongly agree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $dominate_flip</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly disagree\", 2 = \"Somewhat disagree\", 3 = \"Somewhat agree\", 4 = \"Strongly agree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly disagree', 2 = 'Somewhat disagree', 3 = 'Somewhat agree', 4 = 'Strongly agree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $deserving_flip</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly disagree\", 2 = \"Somewhat disagree\", 3 = \"Somewhat agree\", 4 = \"Strongly agree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly disagree', 2 = 'Somewhat disagree', 3 = 'Somewhat agree', 4 = 'Strongly agree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $sdo_sum</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
@@ -204,16 +204,16 @@ when <code>x</code> is only the name of a column in a <code>data.frame</code>.</
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $controlled_rev</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly disagree\", 2 = \"Somewhat disagree\", 3 = \"Somewhat agree\", 4 = \"Strongly agree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly disagree', 2 = 'Somewhat disagree', 3 = 'Somewhat agree', 4 = 'Strongly agree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $small_rev</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly disagree\", 2 = \"Somewhat disagree\", 3 = \"Somewhat agree\", 4 = \"Strongly agree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly disagree', 2 = 'Somewhat disagree', 3 = 'Somewhat agree', 4 = 'Strongly agree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $run_rev</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly disagree\", 2 = \"Somewhat disagree\", 3 = \"Somewhat agree\", 4 = \"Strongly agree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly disagree', 2 = 'Somewhat disagree', 3 = 'Somewhat agree', 4 = 'Strongly agree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $big_events_rev</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = \"Strongly disagree\", 2 = \"Somewhat disagree\", 3 = \"Somewhat agree\", 4 = \"Strongly agree\""</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1 = 'Strongly disagree', 2 = 'Somewhat disagree', 3 = 'Somewhat agree', 4 = 'Strongly agree'"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $acts_sum</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
