@@ -1,3 +1,15 @@
+# adlgraphs 0.3.4
+
+## created a new functin and updated another
+
+#### get_all corr
+
+- This function makes it easy to get the correlations for all variables in a data set.
+
+#### Decently big changes to `dunnet`
+
+- Added new functionality so that data can be grouped before performing `dunnet()` and improved the group argument to include functionality for grouping by multiple variables.
+
 # adlgraphs 0.3.3
 
 ## created two new functions
