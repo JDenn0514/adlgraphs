@@ -91,7 +91,7 @@ reference:
     - export_bot_dupe
     - codebook
     - clean_demos
-    - dunnett_pval_fun
+    - dunnett_helper
     - make_df_oxy
     - stars_pval
     - write_word_table
