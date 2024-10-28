@@ -215,6 +215,22 @@ get_variable_label <- function(x, lab) {
 
 # functions from other packages -------------------------------------------
 
+# from dplyr
+eval_select_by <- function(
+  by,
+  data,
+  error_call = rlang::caller_env()
+) {
+  # this works with 
+  out <- tidyselect::eval_select(
+    expr = by,
+    data = data,
+    allow_rename = FALSE,
+    error_call = error_call
+  )
+  names(out)
+}
+
 #
 check_factor <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
   if (is.character(x)) {
