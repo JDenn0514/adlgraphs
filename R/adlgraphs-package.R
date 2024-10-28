@@ -26,6 +26,7 @@
 #' @importFrom purrr map pmap pmap_chr walk
 #' @importFrom readr write_csv
 #' @importFrom rlang set_names sym := .data caller_arg caller_env enexpr
+#'   sym quo_is_missing
 #' @importFrom rstudioapi isAvailable getVersion
 #' @importFrom sjlabelled as_label get_labels
 #' @importFrom stats qt df.residual setNames weighted.mean sd symnum

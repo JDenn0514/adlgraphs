@@ -119,6 +119,6 @@ utils::globalVariables(
     "start_date", "current_year", "age_n", ".rows", "data", "groups_combined", 
     "groups", "DistributionChannel", "distribution_channel", "Q_RecaptchaScore",
     "q_recaptcha_score", "Q_RelevantIDDuplicate", "q_relevant_id_duplicate", 
-    "bot", "duplicate"
+    "bot", "duplicate", "Var1", "Var2", "error_call"
   )
 )

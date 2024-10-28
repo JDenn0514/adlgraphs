@@ -19,6 +19,7 @@ test_data <- haven::read_sav("data-raw/test_data.sav") %>%
         label = "Unique ID for each Respondent",
         note = "Just the row number"
       ),
+    pid_f3 = make_factor(pid_f3),
 
     ### social dominance orientation
     # reverse code them so that higher number means agreement with negative statement

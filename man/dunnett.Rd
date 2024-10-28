@@ -12,20 +12,24 @@ dunnett(
   wt = NULL,
   control = NULL,
   conf.level = 0.95,
-  show_means = FALSE
+  show_means = FALSE,
+  show_diffs = TRUE
 )
 }
 \arguments{
 \item{data}{A data frame or tibble.}
 
-\item{x}{A numeric vector that will be used to calculate the means.}
+\item{x}{A numeric vector that will be used to calculate the means.
+This can be a string or symbol.}
 
 \item{treats}{A variable whose values are used to determine if the means
-are statistically significantly different from each other.}
+are statistically significantly different from each other. Should be
+a factor or character vector. This can be a string or symbol.}
 
-\item{group}{A character or factor vector. It is a second level grouping
-variable. If specified, the function checks to see if the values in
-\code{treats} are statistically significant  within each level of this variable.}
+\item{group}{<\code{\link[=dplyr_tidy_select]{tidy-select}}> A selection of columns to
+group the data by in addition to \code{treats}. This operates very similarly
+to \code{.by} from dplyr (for more info on that see \link[=dplyr_by]{?dplyr_by}).
+See examples to see how it operates.}
 
 \item{wt}{Weights. Add if you have a weighting variable and want to perform
 Dunnett's test with weighted means,}
@@ -37,9 +41,11 @@ through which the others will be tested.}
 desired confidence interval. Default is 0.95, which corresponds to a 95\%
 confidence interval.}
 
-\item{show_means}{Logical. Determines if the output should contain the mean
-differences between the levels and the reference level or if it should show
-the means of each level. Default is \code{FALSE}}
+\item{show_means}{Logical. Determines if the output should contain the means
+of each level. Default is \code{FALSE}}
+
+\item{show_diffs}{Logical. Determines if the output should contain the
+difference in means}
 }
 \description{
 \code{dunnett()} calculates Dunnett's post hoc pairwise multiple comparisons
@@ -56,38 +62,66 @@ this function takes in a data frame or tibble. This was done so that it can
 either be piped in or specified in the argument. See more in the example
 section below.
 
-Another important difference, is the addition of the \code{group} variable.
-When \code{group} is specified, the function still performs the Dunnett test between
-the variable in \code{x} and the variable in \code{treats}, but it does so along each
-level of whatever variable is specified in \code{group}. You can see this in
-action in the examples section below.
+Another important difference, is the addition of the \code{group} variable
+and the ability to pipe in a grouped data frame. When \code{group} is specified or
+a grouped data frame is piped in, the function still performs the Dunnett test
+between the variable in \code{x} and the variable in \code{treats}, but it does so
+along each level of whatever variable(s) are/is specified in \code{group} or that
+the data is grouped by. You can see this in action in the examples section
+below.
 
-A third key difference is the output. This function outputs a tibble object
-with a special class that enables it to be used with \code{prettytable()}.
-Furthermore, there are two distinct outputs. The default output shows the
-difference in means between each level and the control level and the
-confidence intervals are based on this difference. However, if
-\code{show_means = TRUE}, then the output shows the mean values for each level in
-\code{treats} while still indicating the p-value.
+A third key difference (\strong{WHICH HAS NOT BEEN IMPLEMENTED YET}) is the
+output. This function outputs a tibble object with a special class that
+enables it to be used with \code{prettytable()}. Furthermore, there are two
+distinct outputs: one with the means and one just the difference in means.
 
 Lastly, this function allows you to add weights to calculate weighted means.
 }
 \examples{
+
+# load dply for the pipe: \%>\% 
+library(dplyr)
+library(adlgraphs)
+
 # Check to see if any of the education groups are significantly different
 # from the control group (in this case "High School or Less") for conspiracy
 # theory belief
-dunnett(test_data, "acts_avg", "edu_f")
+dunnett(test_data, "acts_avg", "pid_f3")
 # now let's do the same but have it show the means
-dunnett(test_data, "acts_avg", "edu_f", show_means = TRUE)
+dunnett(test_data, "acts_avg", "pid_f3", show_means = TRUE)
 
 # now do the same as above but make "Graduate Degree" the control group
-dunnett(test_data, "acts_avg", "edu_f", control = "Graduate Degree")
-dunnett(test_data, "acts_avg", "edu_f", control = "Graduate Degree", show_means = TRUE)
+dunnett(test_data, "acts_avg", "pid_f3", control = "Independent")
+dunnett(test_data, "acts_avg", "pid_f3", control = "Independent", show_means = TRUE)
 
-# now let's add in partisanship (`pid_f3`) as the `group` variable. This let's us
-# compare education levels within each level of `pid_f3`.
-dunnett(test_data, "acts_avg", "edu_f", "pid_f3")
-# and repeat that but showing the means
-dunnett(test_data, "acts_avg", "edu_f", "pid_f3", show_means = TRUE)
+# now let's add in partisanship (`edu_f2`) as the `group` variable. This let's us
+# compare education levels within each level of `edu_f2`. Note how the arguments
+# don't have to be strings
+dunnett(test_data, acts_avg, pid_f3, edu_f2)
+
+# we can also group by multiple variables. Due to a small n, I'm going to use 
+# `edu_f2` instead of `edu_f`. 
+test_data \%>\% 
+  dplyr::mutate(values_f2 = make_dicho(values)) \%>\% 
+  dunnett(acts_avg, treats = pid_f3, group = c(edu_f2, values_f2))
+
+# now let's do those previous two calculations but using `dplyr::group_by()`
+test_data \%>\% 
+  dplyr::group_by(pid_f3) \%>\% 
+  dunnett(acts_avg, edu_f)
+
+# we can also group by multiple
+test_data \%>\% 
+  dplyr::mutate(values_f2 = make_dicho(values)) \%>\% 
+  dplyr::group_by(pid_f3, values_f2) \%>\% 
+  dunnett(acts_avg, edu_f2)
+
+# If we want to show means and differences, set show_means to TRUE
+# we don't need to set show_diffs to TRUE since that is the default
+dunnett(test_data, acts_avg, edu_f, show_means = TRUE)
+
+# if we want to show means without differences, set `show_diffs = FALSE`
+dunnett(test_data, acts_avg, edu_f, show_means = TRUE, show_diffs = FALSE)
+
 
 }
