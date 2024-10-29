@@ -20,9 +20,9 @@ remove_bot_dupe <- function(data) {
   # get the people who are above 18
   if ("age" %in% colnames(data)) {
 
-    if (!is.null(attr_val_labels(df$age))) {
+    if (!is.null(attr_val_labels(data$age))) {
 
-      df <- df %>%
+      data <- data %>%
         dplyr::mutate(
           # age, adding 17 so the ages start at 18
           age_n = 17 + age %>% 
@@ -30,9 +30,9 @@ remove_bot_dupe <- function(data) {
         ) %>% 
         dplyr::filter(age_n > 17)
 
-    } else if (is.null(attr_val_labels(df$age))) {
+    } else if (is.null(attr_val_labels(data$age))) {
 
-      df <- df %>% 
+      data <- data %>% 
 
         dplyr::filter(age > 17)
     }
