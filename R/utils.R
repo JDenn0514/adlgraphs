@@ -158,7 +158,7 @@ accept_string_or_sym <- function(x) {
 # individual numbers
 get_unique_labels <- function(x) {
 
-  if (is.numeric(x) && attr_val_labels(x)) {
+  if (is.numeric(x) && !is.null(attr_val_labels(x))) {
     # if group is haven_labelled
 
     # convert to a factor
