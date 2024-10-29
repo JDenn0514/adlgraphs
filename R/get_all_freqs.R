@@ -27,7 +27,7 @@ get_all_freqs <- function(data, x, group, wt, show_genpop, file_name) {
       # create a list of the dataframes
       data_list <- rep(list(data), leng)
       # get the frequencies
-      freqs <- purrr::pmap(list(data = data_list, x = x, show_genpop = show_genpop), get_freq_table)
+      freqs <- purrr::map2(data_list, x, get_freq_table)
 
     } else {
 
@@ -53,7 +53,7 @@ get_all_freqs <- function(data, x, group, wt, show_genpop, file_name) {
       # create a vector of the weights
       wt_list <- replicate(leng, wt)
       # get the frequencies
-      freqs <- purrr::pmap(list(data = data_list, x = x, wt = wt_list, show_genpop = show_genpop), get_freq_table)
+      freqs <- purrr::pmap(list(data = data_list, x = x, wt = wt_list), get_freq_table)
 
     } else {
 
