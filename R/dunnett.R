@@ -250,7 +250,7 @@ dunnett.data.frame <- function(
 
     attr(out$diff, "label") <- paste("Difference relative to", control)
 
-    if (!is.null(levels(data[[treats]]))) {
+    if (!is.null(levels(data[[treats]])) && isFALSE(show_means)) {
 
       # get the treatment levels
       treat_levels <- levels(data[[treats]])[-1]
@@ -394,7 +394,7 @@ dunnett.grouped_df <- function(
 
     attr(out$diff, "label") <- paste("Difference relative to", control)
 
-    if (!is.null(levels(data[[treats]]))) {
+    if (!is.null(levels(data[[treats]])) && isFALSE(show_means)) {
 
       # get the treatment levels
       treat_levels <- levels(data[[treats]])[-1]
