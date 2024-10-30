@@ -147,13 +147,9 @@ dunnett.data.frame <- function(
   group <- rlang::enquo(group)
 
   if (!rlang::quo_is_null(group)) {
-
     group_expr <- rlang::enexpr(group)
-  
     group_enquo <- eval_select_by(group, data)
-  
     data <- data %>% dplyr::group_by(dplyr::across(dplyr::all_of(group_enquo)))
-
     group_helpers <- group_analysis_helper(data = data)
   
     # make the correlation dataframe
@@ -185,22 +181,36 @@ dunnett.data.frame <- function(
         # split up the string by the - and use the group_labs vector as the names
         tidyr::separate_wider_delim(groups, delim = " - ", names = c(group_helpers$group_labs)) %>% 
         # group the data by the vector group variables
-        dplyr::group_by(dplyr::across(tidyselect::all_of(group_helpers$group_labs))) %>% 
-        # arrange by the groups
-        dplyr::arrange(.by_group = TRUE)
-      
+        dplyr::group_by(dplyr::across(tidyselect::all_of(group_helpers$group_labs))) 
+
+      # set the factor levels for the group variables
+      for (i in seq_along(group_helpers$group_labs)) {
+        out[[group_helpers$group_labs[i]]] <- factor(
+          out[[group_helpers$group_labs[i]]],
+          levels = levels(group_helpers$nest_data[[group_helpers$group_labs[i]]])
+        )
+      }
+
+      # arrange by the groups
+      out <- out %>% dplyr::arrange(.by_group = TRUE) 
+
     } else {
-    
+
       # create the output data frame
       # combine the list objects and make a new variable 
       # called "groups" containing the names of each list
-      out <- dplyr::bind_rows(dunn_df, .id = group_helpers$group_labs) %>% 
-        # arrange by the groups
-        dplyr::arrange(.by_group = TRUE) 
-    
+      out <- dplyr::bind_rows(dunn_df, .id = group_helpers$group_labs) 
+
+      # set the factor levels
+      out[[group_helpers$group_labs]] <- factor(
+        out[[group_helpers$group_labs]],
+        levels = group_helpers$nest_data[[group_helpers$group_labs]]
+      )
+
+      # arrange by the groups
+      out <- out %>% dplyr::arrange(.by_group = TRUE) 
     }
   
-
   } else {
 
     out <- dunnett_helper(
@@ -218,12 +228,41 @@ dunnett.data.frame <- function(
     
 
   if ("mean" %in% colnames(out)) {
+
     attr(out$mean, "label") <- "Mean"
     attr(out$sd, "label") <- "SD"
+
+    if (!is.null(levels(data[[treats]]))) {
+
+      # get the treatment levels
+      treat_levels <- levels(data[[treats]])
+
+      # set the treats variable as a factor and set the levels
+      out[[treats]] <- factor(
+        out[[treats]],
+        levels = treat_levels
+      )
+    }
+
   } 
 
   if ("diff" %in% colnames(out)) {
+
     attr(out$diff, "label") <- paste("Difference relative to", control)
+
+    if (!is.null(levels(data[[treats]]))) {
+
+      # get the treatment levels
+      treat_levels <- levels(data[[treats]])[-1]
+
+      # set the treats variable as a factor and set the levels
+      out[[treats]] <- factor(
+        out[[treats]],
+        levels = treat_levels
+      )
+
+    }
+
   }
 
   # set the variable labels
@@ -237,7 +276,6 @@ dunnett.data.frame <- function(
   attr(out, "variable_name") <- x_name
 
   return(out)
-
 
 }
 
@@ -301,29 +339,74 @@ dunnett.grouped_df <- function(
       # split up the string by the - and use the group_labs vector as the names
       tidyr::separate_wider_delim(groups, delim = " - ", names = c(group_helpers$group_labs)) %>% 
       # group the data by the vector group variables
-      dplyr::group_by(dplyr::across(tidyselect::all_of(group_helpers$group_labs))) %>% 
+      dplyr::group_by(dplyr::across(tidyselect::all_of(group_helpers$group_labs)))
+
+      # set the factor levels for the group variables
+      for (i in seq_along(group_helpers$group_labs)) {
+        out[[group_helpers$group_labs[i]]] <- factor(
+          out[[group_helpers$group_labs[i]]],
+          levels = levels(group_helpers$nest_data[[group_helpers$group_labs[i]]])
+        )
+      }
+
       # arrange by the groups
-      dplyr::arrange(.by_group = TRUE)
-    
-  } else {
+      out <- out %>% dplyr::arrange(.by_group = TRUE) 
+      
+    } else {
   
     # create the output data frame
     # combine the list objects and make a new variable 
     # called "groups" containing the names of each list
-    out <- dplyr::bind_rows(dunn_df, .id = group_helpers$group_labs) %>% 
-      # arrange by the groups
-      dplyr::arrange(.by_group = TRUE) 
-  
+    out <- dplyr::bind_rows(dunn_df, .id = group_helpers$group_labs) 
+
+    # set the factor levels
+    out[[group_helpers$group_labs]] <- factor(
+      out[[group_helpers$group_labs]],
+      levels = group_helpers$nest_data[[group_helpers$group_labs]]
+    )
+
+    # arrange by the groups
+    out <- out %>% dplyr::arrange(.by_group = TRUE) 
+
   }
     
 
   if ("mean" %in% colnames(out)) {
+    
     attr(out$mean, "label") <- "Mean"
     attr(out$sd, "label") <- "SD"
+
+    if (!is.null(levels(data[[treats]]))) {
+
+      # get the treatment levels
+      treat_levels <- levels(data[[treats]])
+
+      # set the treats variable as a factor and set the levels
+      out[[treats]] <- factor(
+        out[[treats]],
+        levels = treat_levels
+      )
+    }
+
   } 
 
   if ("diff" %in% colnames(out)) {
+
     attr(out$diff, "label") <- paste("Difference relative to", control)
+
+    if (!is.null(levels(data[[treats]]))) {
+
+      # get the treatment levels
+      treat_levels <- levels(data[[treats]])[-1]
+
+      # set the treats variable as a factor and set the levels
+      out[[treats]] <- factor(
+        out[[treats]],
+        levels = treat_levels
+      )
+
+    }
+    
   }
 
   # set the variable labels
