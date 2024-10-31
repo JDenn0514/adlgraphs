@@ -13,7 +13,8 @@ dunnett(
   control = NULL,
   conf.level = 0.95,
   show_means = FALSE,
-  show_diffs = TRUE
+  show_diffs = TRUE,
+  na.rm = TRUE
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ of each level. Default is \code{FALSE}}
 
 \item{show_diffs}{Logical. Determines if the output should contain the
 difference in means}
+
+\item{na.rm}{Logical. Determines if NAs should be removed}
 }
 \description{
 \code{dunnett()} calculates Dunnett's post hoc pairwise multiple comparisons
@@ -91,7 +94,7 @@ dunnett(test_data, "acts_avg", "pid_f3")
 dunnett(test_data, "acts_avg", "pid_f3", show_means = TRUE)
 
 # now do the same as above but make "Graduate Degree" the control group
-dunnett(test_data, "acts_avg", "pid_f3", control = "Independent")
+dunnett_helper(test_data, "acts_avg", "pid_f3", control = "Independent")
 dunnett(test_data, "acts_avg", "pid_f3", control = "Independent", show_means = TRUE)
 
 # now let's add in partisanship (`edu_f2`) as the `group` variable. This let's us

@@ -50,6 +50,7 @@
 #'   of each level. Default is `FALSE`
 #' @param show_diffs Logical. Determines if the output should contain the 
 #'   difference in means
+#' @param na.rm Logical. Determines if NAs should be removed
 #'
 #' @examples
 #' 
@@ -65,7 +66,7 @@
 #' dunnett(test_data, "acts_avg", "pid_f3", show_means = TRUE)
 #'
 #' # now do the same as above but make "Graduate Degree" the control group
-#' dunnett(test_data, "acts_avg", "pid_f3", control = "Independent")
+#' dunnett_helper(test_data, "acts_avg", "pid_f3", control = "Independent")
 #' dunnett(test_data, "acts_avg", "pid_f3", control = "Independent", show_means = TRUE)
 #'
 #' # now let's add in partisanship (`edu_f2`) as the `group` variable. This let's us
@@ -110,7 +111,8 @@ dunnett <- function(
   control = NULL,
   conf.level = 0.95,
   show_means = FALSE,
-  show_diffs = TRUE
+  show_diffs = TRUE,
+  na.rm = TRUE
 ) {
   UseMethod("dunnett")
 }
@@ -125,9 +127,10 @@ dunnett.data.frame <- function(
   control = NULL,
   conf.level = 0.95,
   show_means = FALSE,
-  show_diffs = TRUE
+  show_diffs = TRUE,
+  na.rm = TRUE
 ) {
-  
+
   treats <- accept_string_or_sym({{ treats }})
   x <- accept_string_or_sym({{ x }})
 
@@ -147,13 +150,25 @@ dunnett.data.frame <- function(
   group <- rlang::enquo(group)
 
   if (!rlang::quo_is_null(group)) {
+
     group_expr <- rlang::enexpr(group)
+    # create a vector of the grouping variables
     group_enquo <- eval_select_by(group, data)
-    data <- data %>% dplyr::group_by(dplyr::across(dplyr::all_of(group_enquo)))
+
+    # group the data
+    data <- data %>% dplyr::group_by(dplyr::across(tidyselect::all_of(group_enquo))) %>% 
+      # remove unnecessary columns
+      dplyr::select(tidyselect::all_of(group_enquo), {{ x }}, {{ treats }})
+ 
+    if (isTRUE(na.rm)) {
+      data <- na.omit(data)
+    }
+
+    # get the group helpers (nest_data, group_labs, and just_groups)
     group_helpers <- group_analysis_helper(data = data)
   
     # make the correlation dataframe
-    dunn_df <- purrr::map(
+    dunn_df <- furrr::future_map(
       # we are iterating over the data column
       group_helpers$nest_data$data, 
       # use get_all_corr.data.frame to get the individuals loadings
@@ -161,12 +176,13 @@ dunnett.data.frame <- function(
         .x,
         x = {{ x }},
         treats = {{ treats }},
-        wt = wt,
-        control = control,
-        conf.level = conf.level,
+        wt = {{ wt }},
+        control = {{ control }},
+        conf.level = {{ conf.level }},
         show_means = show_means,
         show_diffs = show_diffs
-      )
+      ),
+      .options = furrr::furrr_options(seed = NULL)
     ) 
     # name the objects in the list
     names(dunn_df) <- group_helpers$just_groups
@@ -177,34 +193,37 @@ dunnett.data.frame <- function(
       # create the output data frame
       # combine the list objects and make a new variable 
       # called "groups" containing the names of each list
-      out <- dplyr::bind_rows(dunn_df, .id = "groups") %>% 
+      out <- data.table::rbindlist(dunn_df, idcol = "groups") %>% 
+        # convert to a tibble
+        tibble::as_tibble() %>% 
         # split up the string by the - and use the group_labs vector as the names
         tidyr::separate_wider_delim(groups, delim = " - ", names = c(group_helpers$group_labs)) %>% 
         # group the data by the vector group variables
         dplyr::group_by(dplyr::across(tidyselect::all_of(group_helpers$group_labs))) 
 
-      # set the factor levels for the group variables
-      for (i in seq_along(group_helpers$group_labs)) {
-        out[[group_helpers$group_labs[i]]] <- factor(
-          out[[group_helpers$group_labs[i]]],
-          levels = levels(group_helpers$nest_data[[group_helpers$group_labs[i]]])
-        )
-      }
-
+      # make the grouping variables factors
+      out[group_helpers$group_labs] <- lapply(
+        group_helpers$group_labs, 
+        function(lab) {
+          factor(out[[lab]], levels = levels(group_helpers$nest_data[[lab]]))
+        }
+      )
+  
       # arrange by the groups
       out <- out %>% dplyr::arrange(.by_group = TRUE) 
 
     } else {
-
       # create the output data frame
       # combine the list objects and make a new variable 
       # called "groups" containing the names of each list
-      out <- dplyr::bind_rows(dunn_df, .id = group_helpers$group_labs) 
+      out <- data.table::rbindlist(dunn_df, idcol = group_helpers$group_labs) %>%
+        # force it to a tibble
+        tibble::as_tibble()
 
       # set the factor levels
       out[[group_helpers$group_labs]] <- factor(
         out[[group_helpers$group_labs]],
-        levels = group_helpers$nest_data[[group_helpers$group_labs]]
+        levels = levels(group_helpers$nest_data[[group_helpers$group_labs]])
       )
 
       # arrange by the groups
@@ -218,14 +237,14 @@ dunnett.data.frame <- function(
       x = {{ x }},
       treats = {{ treats }},
       wt = {{ wt }},
-      control = control,
-      conf.level = conf.level,
+      control = {{ control }},
+      conf.level = {{ conf.level }},
       show_means = show_means,
       show_diffs = show_diffs
     )
-  }
+    return(out)
 
-    
+  }
 
   if ("mean" %in% colnames(out)) {
 
@@ -233,10 +252,8 @@ dunnett.data.frame <- function(
     attr(out$sd, "label") <- "SD"
 
     if (!is.null(levels(data[[treats]]))) {
-
-      # get the treatment levels
+      # get teh treatment levels
       treat_levels <- levels(data[[treats]])
-
       # set the treats variable as a factor and set the levels
       out[[treats]] <- factor(
         out[[treats]],
@@ -250,17 +267,19 @@ dunnett.data.frame <- function(
 
     attr(out$diff, "label") <- paste("Difference relative to", control)
 
-    if (!is.null(levels(data[[treats]])) && isFALSE(show_means)) {
-
-      # get the treatment levels
+    if (isFALSE(show_means) && !is.null(levels(data[[treats]]))) {
+      
+      if (!is.null(control)) {
+        data[[treats]] <- forcats::fct_relevel(data[[treats]], control)
+      }
+      # get teh treatment levels
       treat_levels <- levels(data[[treats]])[-1]
-
       # set the treats variable as a factor and set the levels
       out[[treats]] <- factor(
         out[[treats]],
         levels = treat_levels
       )
-
+       
     }
 
   }
@@ -275,7 +294,14 @@ dunnett.data.frame <- function(
   attr(out, "variable_label") <- attr_var_label(data[[x]])
   attr(out, "variable_name") <- x_name
 
-  return(out)
+  ### add a special class to this df so that it can have a unique 
+  ### prettytable appearance and function
+  # get the class names
+  class_names <- class(out)
+  # add a special class to this function
+  out %>% structure(class = c("adlgraphs_dunnett", class_names))
+
+  
 
 }
 
@@ -289,7 +315,8 @@ dunnett.grouped_df <- function(
   control = NULL,
   conf.level = 0.95,
   show_means = FALSE,
-  show_diffs = TRUE
+  show_diffs = TRUE,
+  na.rm = TRUE
 ) {
 
   treats <- accept_string_or_sym({{ treats }})
@@ -308,10 +335,17 @@ dunnett.grouped_df <- function(
     x_name <- rlang::enexpr(x)
   }
 
+  # keep only relevant variables
+  data <- dplyr::select(data, tidyselect::all_of(dplyr::group_vars(data)), {{ x }}, {{ treats }})
+
+  if (isTRUE(na.rm)) {
+    data <- na.omit(data)
+  }
+
   group_helpers <- group_analysis_helper(data = data)
   
   # make the correlation dataframe
-  dunn_df <- purrr::map(
+  dunn_df <- furrr::future_map(
     # we are iterating over the data column
     group_helpers$nest_data$data, 
     # use get_all_corr.data.frame to get the individuals loadings
@@ -324,7 +358,8 @@ dunnett.grouped_df <- function(
       conf.level = conf.level,
       show_means = show_means,
       show_diffs = show_diffs
-    )
+    ),
+    .options = furrr::furrr_options(seed = NULL)
   ) 
   # name the objects in the list
   names(dunn_df) <- group_helpers$just_groups
@@ -335,58 +370,50 @@ dunnett.grouped_df <- function(
     # create the output data frame
     # combine the list objects and make a new variable 
     # called "groups" containing the names of each list
-    out <- dplyr::bind_rows(dunn_df, .id = "groups") %>% 
+    out <- data.table::rbindlist(dunn_df, idcol = "groups") %>% 
+      # force as a tibble
+      tibble::as_tibble() %>% 
       # split up the string by the - and use the group_labs vector as the names
       tidyr::separate_wider_delim(groups, delim = " - ", names = c(group_helpers$group_labs)) %>% 
       # group the data by the vector group variables
       dplyr::group_by(dplyr::across(tidyselect::all_of(group_helpers$group_labs)))
 
-      # set the factor levels for the group variables
-      for (i in seq_along(group_helpers$group_labs)) {
-        out[[group_helpers$group_labs[i]]] <- factor(
-          out[[group_helpers$group_labs[i]]],
-          levels = levels(group_helpers$nest_data[[group_helpers$group_labs[i]]])
-        )
-      }
-
+      # make the grouping variables factors
+      out[group_helpers$group_labs] <- lapply(
+        group_helpers$group_labs, 
+        function(lab) {
+          factor(out[[lab]], levels = levels(group_helpers$nest_data[[lab]]))
+        }
+      )
+  
       # arrange by the groups
       out <- out %>% dplyr::arrange(.by_group = TRUE) 
-      
-    } else {
+    
+  } else {
   
     # create the output data frame
     # combine the list objects and make a new variable 
     # called "groups" containing the names of each list
-    out <- dplyr::bind_rows(dunn_df, .id = group_helpers$group_labs) 
+    out <- data.table::rbindlist(dunn_df, idcol = group_helpers$group_labs) %>% 
+      # force as tibble
+      tibble::as_tibble() 
 
-    # set the factor levels
-    out[[group_helpers$group_labs]] <- factor(
-      out[[group_helpers$group_labs]],
-      levels = group_helpers$nest_data[[group_helpers$group_labs]]
-    )
+      # set the factor levels
+      out[[group_helpers$group_labs]] <- factor(
+        out[[group_helpers$group_labs]],
+        levels = levels(group_helpers$nest_data[[group_helpers$group_labs]])
+      )
 
-    # arrange by the groups
-    out <- out %>% dplyr::arrange(.by_group = TRUE) 
-
+      # arrange by the groups
+      out <- out %>% dplyr::arrange(.by_group = TRUE) 
+  
   }
     
 
   if ("mean" %in% colnames(out)) {
-    
+
     attr(out$mean, "label") <- "Mean"
     attr(out$sd, "label") <- "SD"
-
-    if (!is.null(levels(data[[treats]]))) {
-
-      # get the treatment levels
-      treat_levels <- levels(data[[treats]])
-
-      # set the treats variable as a factor and set the levels
-      out[[treats]] <- factor(
-        out[[treats]],
-        levels = treat_levels
-      )
-    }
 
   } 
 
@@ -394,19 +421,6 @@ dunnett.grouped_df <- function(
 
     attr(out$diff, "label") <- paste("Difference relative to", control)
 
-    if (!is.null(levels(data[[treats]])) && isFALSE(show_means)) {
-
-      # get the treatment levels
-      treat_levels <- levels(data[[treats]])[-1]
-
-      # set the treats variable as a factor and set the levels
-      out[[treats]] <- factor(
-        out[[treats]],
-        levels = treat_levels
-      )
-
-    }
-    
   }
 
   # set the variable labels
@@ -419,7 +433,12 @@ dunnett.grouped_df <- function(
   attr(out, "variable_label") <- attr_var_label(data[[x]])
   attr(out, "variable_name") <- x_name
 
-  return(out)
+  ### add a special class to this df so that it can have a unique 
+  ### prettytable appearance and function
+  # get the class names
+  class_names <- class(out)
+  # add a special class to this function
+  out %>% structure(class = c("adlgraphs_dunnett", class_names))
 
 }
 
@@ -459,6 +478,10 @@ dunnett_helper <- function(
   x <- accept_string_or_sym({{ x }})
   # ensure that strings or symbols for treats work
   treats <- accept_string_or_sym({{ treats }})
+  if (!is.null(control)) {
+    control <- accept_string_or_sym({{ control }})
+  }
+  
 
   # get the variable name for treats but remove the quotation mark
   if (is.character(treats)) {
@@ -467,14 +490,6 @@ dunnett_helper <- function(
     treats_name <- rlang::enexpr(treats)
   }
 
-  if (is.character(x)) {
-    x_name <- rlang::sym(x)
-  } else {
-    x_name <- rlang::enexpr(x)
-  }
-
-  # drop NAs, use all_of() for data-masking (changed in tidy-select 1.2)
-  data <- data %>% tidyr::drop_na(.data[[x]], .data[[treats]])
   # extract the vector for x
   x_vec <- data[[x]]
   # extract the vector of treats
@@ -488,6 +503,7 @@ dunnett_helper <- function(
   obs <- unique(treats_vec)
   # get the levels in treats_vec
   lvls <- levels(treats_vec)
+
   # keep only the levels that are also observations
   new_lvls <- intersect(lvls, obs)
 
@@ -552,16 +568,16 @@ dunnett_helper <- function(
   conf.high <- meandiffs + s * sqrt((1/fittedn) + (1/controln)) * qvt
 
 
-  p.value <- c()
-  for (i in 1:(k - 1)){
-    p.value[i] <- 1 - mvtnorm::pmvt(
+  p.value <- sapply(seq_len(k - 1), function(i) {
+    1 - mvtnorm::pmvt(
       lower = -abs(Dj[i]),
       upper = abs(Dj[i]),
       corr = R,
       delta=rep(0, k-1),
       df = N - k
     )[1]
-  }
+  })
+  
 
   #### create the final output -------------------------------------------------
 
@@ -595,102 +611,62 @@ dunnett_helper <- function(
 
     # calculate the means
     means <- data %>%
-      # drop NAs, use all_of() for data-masking (changed in tidy-select 1.2)
-      tidyr::drop_na(.data[[treats]]) %>%
       # group the data by treats
       dplyr::group_by(.data[[treats]]) %>%
       # calculate the means
       get_means({{ x }})
 
-    # update the diffs tibble so that it includes the control group
-    diffs <- diffs %>%
-      # add a row to the tibble
-      tibble::add_row(
-        # wrap `treats_name` in {} and use := to interpolate the name
-        # the value in the treatments column is set to whatever the control is
-        "{ treats_name }" := control,
-        # set difference to zero
-        diff = 0,
-        # add the number observations in control and coerce to a vector
-        n = as.vector(controln),
-        # set low CI to NA
-        conf.low = NA,
-        # set high CI to NA
-        conf.high = NA,
-        # set p.value to NA
-        p.value = NA,
-        # set stars to NA
-        stars = NA
-      )%>% 
-      # rename the treatments column 
-        dplyr::rename("{ treats_name }" := treats)
+    control_df <- data.frame(
+      # the value in the treatments column is set to whatever the control is
+      treats = control,
+      # set difference to zero
+      diff = 0,
+      # add the number observations in control and coerce to a vector
+      n = as.vector(controln),
+      # set low CI to NA
+      conf.low = NA,
+      # set high CI to NA
+      conf.high = NA,
+      # set p.value to NA
+      p.value = NA,
+      # set stars to NA
+      stars = NA
+    ) %>% 
+    # rename the treatments column 
+      dplyr::rename("{ treats_name }" := treats)
+    
+    diffs <- rbind(control_df, diffs)
+    
 
     if (isTRUE(show_diffs)) {
       ### do the calculations if we want to see the differences and means
 
       # keep only the relevant variables: treatments, differencs, p.value and stars
-      diffs <- diffs %>% dplyr::select(tidyselect::all_of(treats), diff, p.value, stars) 
+      diffs <- diffs %>% dplyr::select(diff, p.value, stars) 
       
       # join the diffs df with the means dfs 
-      out <- dplyr::full_join(means, diffs) %>% 
+      cbind(means, diffs) %>% 
         # move the diff column so that it appears after mean
-        dplyr::relocate(diff, .after = mean)
+        dplyr::relocate(diff, .after = mean) %>% 
+        dplyr::as_tibble()
       
     } else {
       ### if we don't want to see the differences then just do the folllowing:
 
       # keep only the relevant variables: treatments, p.value, and stars
       # we don't want the diffs so remove them
-      diffs <- diffs %>% dplyr::select(tidyselect::all_of(treats), p.value, stars) 
+      diffs <- diffs %>% dplyr::select( p.value, stars) 
       # join the means and diffs dfs together for the final df
-      out <- dplyr::full_join(means, diffs)
+      dplyr::as_tibble(cbind(means, diffs))
     }
-
-    ### add a special class to this df so that it can have a unique 
-    ### prettytable appearance and function
-
-    # get the class names
-    class_names <- class(out)
-
-    # add a special class to this function
-    out <- out %>% structure(class = c("adlgraphs_dunnett_means", class_names))
-    
 
   } else {
     # if we don't want the means then 
-    out <- diffs
+    dplyr::as_tibble(diffs)
 
-    # get the class names
-    class_names <- class(out)
-
-    # add a special class to this function
-    out <- out %>% structure(class = c("adlgraphs_dunnett_diffs", class_names))
   }
-
-  if ("mean" %in% colnames(out)) {
-    attr(out$mean, "label") <- "Mean"
-    attr(out$sd, "label") <- "SD"
-  } 
-
-  if ("diff" %in% colnames(out)) {
-    attr(out$diff, "label") <- paste("Difference relative to", control)
-  }
-
-  # set the variable labels
-  attr(out[[treats]], "label") <- attr_var_label(data[[treats]])
-  attr(out$n, "label") <- "N"
-  attr(out$conf.low, "label") <- "Low CI"
-  attr(out$conf.high, "label") <- "High CI"
-  attr(out$p.value, "label") <- "P-Value"
-
-  attr(out, "variable_label") <- attr_var_label(data[[x]])
-  attr(out, "variable_name") <- x_name
-
-  return(out)
 
 }
-
-
 
 
 

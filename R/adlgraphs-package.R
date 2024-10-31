@@ -2,9 +2,11 @@
 #' @importFrom broom.helpers tidy_attach_model tidy_add_reference_rows
 #'   tidy_add_variable_labels tidy_add_term_labels tidy_add_n
 #' @importFrom cli cli_abort
+#' @importFrom data.table rbindlist
 #' @importFrom dplyr %>% across all_of arrange bind_cols bind_rows count
 #'   everything group_by mutate rename select where anti_join ungroup
 #' @importFrom forcats as_factor fct_relevel
+#' @importFrom furrr future_map furrr_options
 #' @importFrom ggplot2 theme element_line element_blank element_text theme_minimal
 #'   margin guide_legend geom_errorbar ggplot aes geom_col geom_text geom_label
 #'   position_dodge2 position_dodge rel unit waiver element_rect position_stack

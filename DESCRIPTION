@@ -19,8 +19,10 @@ Depends:
 Imports: 
     broom.helpers,
     cli,
+    data.table,
     dplyr,
     forcats,
+    furrr,
     ggplot2,
     glue,
     grDevices,
