@@ -201,16 +201,12 @@ dunnett.data.frame <- function(
         # group the data by the vector group variables
         dplyr::group_by(dplyr::across(tidyselect::all_of(group_helpers$group_labs))) 
 
-      # make the grouping variables factors
-      out[group_helpers$group_labs] <- lapply(
-        group_helpers$group_labs, 
-        function(lab) {
-          factor(out[[lab]], levels = levels(group_helpers$nest_data[[lab]]))
-        }
-      )
-  
+      # convert the grouping variables to factors
+      out[group_helpers$group_labs] <- character_to_factor(out, group_helpers$nest_data, group_helpers$group_labs)
+      
       # arrange by the groups
       out <- out %>% dplyr::arrange(.by_group = TRUE) 
+       
 
     } else {
       # create the output data frame
@@ -220,14 +216,12 @@ dunnett.data.frame <- function(
         # force it to a tibble
         tibble::as_tibble()
 
-      # set the factor levels
-      out[[group_helpers$group_labs]] <- factor(
-        out[[group_helpers$group_labs]],
-        levels = levels(group_helpers$nest_data[[group_helpers$group_labs]])
-      )
-
+      # convert the grouping variables to factors
+      out[group_helpers$group_labs] <- character_to_factor(out, group_helpers$nest_data, group_helpers$group_labs)
+  
       # arrange by the groups
       out <- out %>% dplyr::arrange(.by_group = TRUE) 
+       
     }
   
   } else {
@@ -272,7 +266,7 @@ dunnett.data.frame <- function(
       if (!is.null(control)) {
         data[[treats]] <- forcats::fct_relevel(data[[treats]], control)
       }
-      # get teh treatment levels
+      # get the treatment levels
       treat_levels <- levels(data[[treats]])[-1]
       # set the treats variable as a factor and set the levels
       out[[treats]] <- factor(
@@ -378,13 +372,8 @@ dunnett.grouped_df <- function(
       # group the data by the vector group variables
       dplyr::group_by(dplyr::across(tidyselect::all_of(group_helpers$group_labs)))
 
-      # make the grouping variables factors
-      out[group_helpers$group_labs] <- lapply(
-        group_helpers$group_labs, 
-        function(lab) {
-          factor(out[[lab]], levels = levels(group_helpers$nest_data[[lab]]))
-        }
-      )
+      # convert the grouping variables to factors
+      out[group_helpers$group_labs] <- character_to_factor(out, group_helpers$nest_data, group_helpers$group_labs)
   
       # arrange by the groups
       out <- out %>% dplyr::arrange(.by_group = TRUE) 
@@ -398,11 +387,8 @@ dunnett.grouped_df <- function(
       # force as tibble
       tibble::as_tibble() 
 
-      # set the factor levels
-      out[[group_helpers$group_labs]] <- factor(
-        out[[group_helpers$group_labs]],
-        levels = levels(group_helpers$nest_data[[group_helpers$group_labs]])
-      )
+      # convert the grouping variables to factors
+      out[group_helpers$group_labs] <- character_to_factor(out, group_helpers$nest_data, group_helpers$group_labs)
 
       # arrange by the groups
       out <- out %>% dplyr::arrange(.by_group = TRUE) 
@@ -684,3 +670,27 @@ stars_pval <- function(p.value) {
     )
   )
 }
+
+#' @param new New data.frame we want to update
+#' @param old Old data.frame we are using to update new
+#' @param cols A vector of columns common to both new and old 
+#'   we want to iterate over
+character_to_factor <- function(new, old, cols) {
+  # convert character vectors to factors
+  lapply(
+    # perform the function only over the common data frames
+    cols |> setNames(nm = _), 
+    # write the anonymous function
+    \(y) {
+      if (!is.null(levels(old[[y]]))) {
+        # if old[[y]] has levels
+        # set new[[y]] as factor with levels from old[[y]]
+        factor(new[[y]], levels(old[[y]]))
+      } else {
+        # if old[[y]] does not have levels coerce to factor
+        as.factor(new[[y]])
+      }
+    }
+  )
+}
+
