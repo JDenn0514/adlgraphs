@@ -156,10 +156,18 @@ dunnett.data.frame <- function(
     group_enquo <- eval_select_by(group, data)
 
     # group the data
-    data <- data %>% dplyr::group_by(dplyr::across(tidyselect::all_of(group_enquo))) %>% 
-      # remove unnecessary columns
-      dplyr::select(tidyselect::all_of(group_enquo), {{ x }}, {{ treats }})
+    data <- data %>% dplyr::group_by(dplyr::across(tidyselect::all_of(group_enquo)))
+
+    # keep only relevant variables
+    if (!is.null(wt)) {
+      # keep only the grouping variables, x, treats, and wt
+      data <- dplyr::select(data, tidyselect::all_of(group_enquo), {{ x }}, {{ treats }}, {{ wt }})
+    } else {
+      # keep only the grouping variables, x, treats, and wt
+      data <- dplyr::select(data, tidyselect::all_of(group_enquo), {{ x }}, {{ treats }})
+    }
  
+    # if na.rm is TRUE, remove NAs
     if (isTRUE(na.rm)) {
       data <- na.omit(data)
     }
@@ -225,6 +233,23 @@ dunnett.data.frame <- function(
     }
   
   } else {
+    # if the data is not grouped
+
+    if (!is.null(wt)) {
+      # if wt is not NULL
+      # select only x, treats, and wt
+      data <- dplyr::select(data, {{ x }}, {{ treats }}, {{ wt }})
+    } else {
+      # if wt is NULL
+      # select only x, treats
+      data <- dplyr::select(data, {{ x }}, {{ treats }}, {{ wt }})
+    }
+
+
+    if (isTRUE(na.rm)) {
+      # if na.rm is TRUE, remove all NAs
+      data <- na.omit(data)
+    }
 
     out <- dunnett_helper(
       data = data,
