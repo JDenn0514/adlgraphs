@@ -236,7 +236,6 @@ dunnett.data.frame <- function(
       show_means = show_means,
       show_diffs = show_diffs
     )
-    return(out)
 
   }
 
