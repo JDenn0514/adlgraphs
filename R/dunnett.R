@@ -670,10 +670,7 @@ stars_pval <- function(p.value) {
   )
 }
 
-#' @param new New data.frame we want to update
-#' @param old Old data.frame we are using to update new
-#' @param cols A vector of columns common to both new and old 
-#'   we want to iterate over
+
 character_to_factor <- function(new, old, cols) {
   # convert character vectors to factors
   lapply(
