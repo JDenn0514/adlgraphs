@@ -45,7 +45,7 @@ intervals or weighted grouped means.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_means</span><span class="op">(</span><span class="va">data</span>, <span class="va">x</span>, <span class="va">group</span>, <span class="va">wt</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_means</span><span class="op">(</span><span class="va">data</span>, <span class="va">x</span>, <span class="va">group</span>, <span class="va">wt</span>, decimals <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -71,6 +71,10 @@ means to be grouped by.</p></dd>
 <dd><p>Weights. Add if you have a weighting variable and want to get
 weighted means</p></dd>
 
+
+<dt id="arg-decimals">decimals<a class="anchor" aria-label="anchor" href="#arg-decimals"></a></dt>
+<dd><p>Number of decimals to round the results to. Default is 3.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -91,14 +95,14 @@ variables with other functions like <code>map()</code> <code><a href="https://pu
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    mean    sd     n conf.low conf.high</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  4.22  3.88   250     3.74       4.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  4.22  3.88   250     3.74      4.70</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># it also works if x is a string</span></span></span>
 <span class="r-in"><span><span class="fu">get_means</span><span class="op">(</span><span class="va">test_data</span>, <span class="st">"trad_n"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    mean    sd     n conf.low conf.high</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  4.22  3.88   250     3.74       4.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  4.22  3.88   250     3.74      4.70</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Let's do that again but add weights</span></span></span>
 <span class="r-in"><span><span class="fu">get_means</span><span class="op">(</span><span class="va">test_data</span>, <span class="va">trad_n</span>, wt <span class="op">=</span> <span class="va">wts</span><span class="op">)</span></span></span>
@@ -120,7 +124,7 @@ variables with other functions like <code>map()</code> <code><a href="https://pu
 <span class="r-out co"><span class="r-pr">#&gt;</span>   edu_f                mean    sd     n conf.low conf.high</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> High School or Less  4.14  3.91    64     3.17      5.12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Some College         3.93  4.1     78     3         4.85</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Some College         3.93  4.1     78     3.00      4.85</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Bachelor's Degree    4.23  3.82    68     3.31      5.16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Graduate Degree      3.45  3.49    40     2.33      4.56</span>
 <span class="r-in"><span></span></span>
@@ -130,7 +134,7 @@ variables with other functions like <code>map()</code> <code><a href="https://pu
 <span class="r-out co"><span class="r-pr">#&gt;</span>   edu_f                mean    sd     n conf.low conf.high</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> High School or Less  4.14  3.91    64     3.17      5.12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Some College         3.93  4.1     78     3         4.85</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Some College         3.93  4.1     78     3.00      4.85</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Bachelor's Degree    4.23  3.82    68     3.31      5.16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Graduate Degree      3.45  3.49    40     2.33      4.56</span>
 <span class="r-in"><span></span></span>
