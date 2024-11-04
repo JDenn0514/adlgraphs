@@ -12,7 +12,8 @@ dunnett_helper(
   control = NULL,
   conf.level = 0.95,
   show_means = FALSE,
-  show_diffs = TRUE
+  show_diffs = TRUE,
+  decimals = 3
 )
 }
 \arguments{
@@ -40,6 +41,8 @@ of each level. Default is \code{FALSE}}
 
 \item{show_diffs}{Logical. Determines if the output should contain the
 difference in means}
+
+\item{decimals}{Number of decimals each number should be rounded to. Default is 3.}
 }
 \description{
 This function was created to mostly serve as an internal function for

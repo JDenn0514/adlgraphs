@@ -17,6 +17,7 @@
 #'   means to be grouped by.
 #' @param wt Weights. Add if you have a weighting variable and want to get
 #'   weighted means
+#' @param decimals Number of decimals to round the results to. Default is 3.
 #'
 #' @examples
 #' # load the package
@@ -55,7 +56,7 @@
 #'
 #'
 
-get_means <- function(data, x, group, wt) {
+get_means <- function(data, x, group, wt, decimals = 3) {
 
   # get the object's name
   x_lab <- deparse(substitute(x))
@@ -156,8 +157,8 @@ get_means <- function(data, x, group, wt) {
         conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
         # calculate the higher CI
         conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-        # round all of the numbers to the second decimal
-        dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
+        # round all of the numbers
+        dplyr::across(dplyr::where(is.numeric), ~round(.x, decimals))
       ) %>%
       dplyr::select(-std.error)
 
@@ -212,7 +213,7 @@ get_means <- function(data, x, group, wt) {
         # calculate the higher CI
         conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
         # round all of the numbers to the second decimal
-        dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
+        dplyr::across(dplyr::where(is.numeric), ~round(.x, decimals))
       ) %>%
       dplyr::select(-std.error)
 

@@ -49,6 +49,8 @@ of each level. Default is \code{FALSE}}
 difference in means}
 
 \item{na.rm}{Logical. Determines if NAs should be removed}
+
+\item{decimals}{Number of decimals each number should be rounded to. Default is 3.}
 }
 \description{
 \code{dunnett()} calculates Dunnett's post hoc pairwise multiple comparisons

@@ -50,6 +50,7 @@
 #'   of each level. Default is `FALSE`
 #' @param show_diffs Logical. Determines if the output should contain the 
 #'   difference in means
+#' @param decimals Number of decimals each number should be rounded to. Default is 3.
 #' @param na.rm Logical. Determines if NAs should be removed
 #'
 #' @examples
@@ -128,6 +129,7 @@ dunnett.data.frame <- function(
   conf.level = 0.95,
   show_means = FALSE,
   show_diffs = TRUE,
+  decimals = 3,
   na.rm = TRUE
 ) {
 
@@ -188,7 +190,8 @@ dunnett.data.frame <- function(
         control = {{ control }},
         conf.level = {{ conf.level }},
         show_means = show_means,
-        show_diffs = show_diffs
+        show_diffs = show_diffs,
+        decimals = decimals
       ),
       .options = furrr::furrr_options(seed = NULL)
     ) 
@@ -259,7 +262,8 @@ dunnett.data.frame <- function(
       control = {{ control }},
       conf.level = {{ conf.level }},
       show_means = show_means,
-      show_diffs = show_diffs
+      show_diffs = show_diffs,
+      decimals = decimals
     )
 
   }
@@ -334,6 +338,7 @@ dunnett.grouped_df <- function(
   conf.level = 0.95,
   show_means = FALSE,
   show_diffs = TRUE,
+  decimals = 3,
   na.rm = TRUE
 ) {
 
@@ -375,7 +380,8 @@ dunnett.grouped_df <- function(
       control = control,
       conf.level = conf.level,
       show_means = show_means,
-      show_diffs = show_diffs
+      show_diffs = show_diffs,
+      decimals = decimals
     ),
     .options = furrr::furrr_options(seed = NULL)
   ) 
@@ -474,7 +480,8 @@ dunnett_helper <- function(
     control = NULL,
     conf.level = 0.95,
     show_means = FALSE,
-    show_diffs = TRUE
+    show_diffs = TRUE,
+    decimals = 3
 ) {
 
   if (isFALSE(show_means) && isFALSE(show_diffs)) {
@@ -608,23 +615,32 @@ dunnett_helper <- function(
     # add the stars based on p-value
     stars = stars_pval(p.value)
   ) %>%
-    # round all numeric variables to the third decimal
+    # round all numeric variables
     dplyr::mutate(
       dplyr::across(
         dplyr::where(is.numeric),
-        ~round(.x, 3)
+        ~round(.x, decimals)
       )
     )
 
   if (isTRUE(show_means)) {
     ### calculate the means if show_means is TRUE
 
-    # calculate the means
-    means <- data %>%
-      # group the data by treats
-      dplyr::group_by(.data[[treats]]) %>%
+    if (is.null(wt)) {
       # calculate the means
-      get_means({{ x }})
+      means <- data %>%
+        # group the data by treats
+        dplyr::group_by(.data[[treats]]) %>%
+        # calculate the means
+        get_means({{ x }}, decimals = decimals)
+    } else {
+      # calculate the means
+      means <- data %>%
+        # group the data by treats
+        dplyr::group_by(.data[[treats]]) %>%
+        # calculate the means
+        get_means({{ x }}, wt = {{ wt }}, decimals = decimals)
+    }
 
     control_df <- data.frame(
       # the value in the treatments column is set to whatever the control is
