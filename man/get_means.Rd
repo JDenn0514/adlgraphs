@@ -4,7 +4,7 @@
 \alias{get_means}
 \title{Calculate means with confidence intervals}
 \usage{
-get_means(data, x, group, wt, decimals = 3)
+get_means(data, x, group, wt, decimals = 2)
 }
 \arguments{
 \item{data}{An object of type data.frame or tibble. If piping the data into the
@@ -19,7 +19,7 @@ means to be grouped by.}
 \item{wt}{Weights. Add if you have a weighting variable and want to get
 weighted means}
 
-\item{decimals}{Number of decimals to round the results to. Default is 3.}
+\item{decimals}{Number of decimals to round the results to. Default is 2.}
 }
 \description{
 Use this function to calculate simple weighted means with 95\% confidence

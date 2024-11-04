@@ -17,7 +17,7 @@
 #'   means to be grouped by.
 #' @param wt Weights. Add if you have a weighting variable and want to get
 #'   weighted means
-#' @param decimals Number of decimals to round the results to. Default is 3.
+#' @param decimals Number of decimals to round the results to. Default is 2.
 #'
 #' @examples
 #' # load the package
@@ -56,7 +56,7 @@
 #'
 #'
 
-get_means <- function(data, x, group, wt, decimals = 3) {
+get_means <- function(data, x, group, wt, decimals = 2) {
 
   # get the object's name
   x_lab <- deparse(substitute(x))

@@ -42,7 +42,7 @@ of each level. Default is \code{FALSE}}
 \item{show_diffs}{Logical. Determines if the output should contain the
 difference in means}
 
-\item{decimals}{Number of decimals each number should be rounded to. Default is 3.}
+\item{decimals}{Number of decimals each number should be rounded to. Default is 2.}
 }
 \description{
 This function was created to mostly serve as an internal function for

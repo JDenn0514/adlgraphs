@@ -50,7 +50,7 @@
 #'   of each level. Default is `FALSE`
 #' @param show_diffs Logical. Determines if the output should contain the 
 #'   difference in means
-#' @param decimals Number of decimals each number should be rounded to. Default is 3.
+#' @param decimals Number of decimals each number should be rounded to. Default is 2.
 #' @param na.rm Logical. Determines if NAs should be removed
 #'
 #' @examples
@@ -113,6 +113,7 @@ dunnett <- function(
   conf.level = 0.95,
   show_means = FALSE,
   show_diffs = TRUE,
+  decimals = 2,
   na.rm = TRUE
 ) {
   UseMethod("dunnett")

@@ -14,6 +14,7 @@ dunnett(
   conf.level = 0.95,
   show_means = FALSE,
   show_diffs = TRUE,
+  decimals = 2,
   na.rm = TRUE
 )
 }
@@ -48,9 +49,9 @@ of each level. Default is \code{FALSE}}
 \item{show_diffs}{Logical. Determines if the output should contain the
 difference in means}
 
-\item{na.rm}{Logical. Determines if NAs should be removed}
+\item{decimals}{Number of decimals each number should be rounded to. Default is 2.}
 
-\item{decimals}{Number of decimals each number should be rounded to. Default is 3.}
+\item{na.rm}{Logical. Determines if NAs should be removed}
 }
 \description{
 \code{dunnett()} calculates Dunnett's post hoc pairwise multiple comparisons
