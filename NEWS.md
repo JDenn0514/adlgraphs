@@ -1,6 +1,18 @@
+# adlgraphs 0.3.41
+
+## created an experimental function and updated another
+
+#### funky_freqs
+
+- This is an experimental function that will hopefully become the basis for get_freqs as it is three times as fast.
+
+#### get_loadings
+
+- Adding an argument that sorts the data
+
 # adlgraphs 0.3.4
 
-## created a new functin and updated another
+## created a new function and updated another
 
 #### get_all corr
 

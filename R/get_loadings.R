@@ -1,3 +1,4 @@
+
 #' Calculate the loadings in factor analysis 
 #' 
 #' This function creates a data frame of factor loadings from 
@@ -41,6 +42,8 @@
 #'   Kaiser normalization before doing Promax, this is done here by the 
 #'   call to "promax" which does the normalization before calling Promax in 
 #'   GPArotation.
+#' @param sort Logical. If `TRUE`, the default, the loadings are sorted 
+#'   largest to smallest. If `FALSE`, no sorting occurs.
 #' 
 #' @examples
 #' 
@@ -110,7 +113,8 @@ get_loadings <- function(
   print = "short",
   nfactors = 1,
   fm = "pa",
-  rotate = "oblimin"
+  rotate = "oblimin",
+  sort = TRUE
 ) {
   UseMethod("get_loadings")
 }
@@ -123,7 +127,8 @@ get_loadings.default <- function(
   print = "short",
   nfactors = 1,
   fm = "pa",
-  rotate = "oblimin"
+  rotate = "oblimin",
+  sort = TRUE
 ) {
 
   n <- model$factors
@@ -154,17 +159,29 @@ get_loadings.default <- function(
 
   if (is.null(labels)) {
     # get the columns with loadings in them
-    loading_cols <- 2:(n + 1)
+    loading_cols <- seq(from = 2, to = n + 1)
+    # loading_cols <- 2:(n + 1)
   } else {
     # get the columns with loadings in them
-    loading_cols <- 3:(n + 2)
+    loading_cols <- seq(from = 3, to = n +2)
   }
-  
- 
-  # 
-  loadings[, loading_cols][abs(loadings[, loading_cols]) < threshold] <- NA
 
-  loadings 
+  attr(loadings, "loadings_columns") <- loading_cols
+
+  loadings[, loading_cols][abs(loadings[, loading_cols]) < threshold] <- NA
+  
+  if (isTRUE(sort)) {
+    # get the names of the columns with the loadings and reverse the order
+    load_names <- rev(names(loadings[,loading_cols]))
+
+    # use a for loop to reorder the columns
+    for (x in load_names) {
+      loadings <- loadings %>% 
+      dplyr::arrange(dplyr::desc(abs(.data[[x]])))
+    }
+  }
+
+  return(loadings)
 
 }
 
@@ -176,9 +193,19 @@ get_loadings.data.frame <- function(
   print = "short",
   nfactors = 1,
   fm = "pa",
-  rotate = "oblimin"
+  rotate = "oblimin",
+  sort = TRUE
 ) {
 
+  # remove all non-numeric columns
+  model <- model %>% 
+    dplyr::select(dplyr::where(is.numeric))
+
+  # get the variable labels from the model
+  var_labels <- attr_var_label(model)
+  # switch the names with the values in var_labels
+  var_labels <- stats::setNames(names(var_labels), var_labels)
+  
   model <- model %>% 
     psych::fa(
       nfactors = nfactors,
@@ -186,8 +213,15 @@ get_loadings.data.frame <- function(
       rotate = rotate
     )
   
-  get_loadings.default(model, labels = labels, threshold = threshold)
+  loadings <- get_loadings.default(model, labels = labels, threshold = threshold, sort = sort)
   
+  if (is.null(labels)) {
+    loadings$variables <- haven::labelled(
+      loadings$variables,
+      labels = var_labels
+    )
+  }
+  return(loadings)
   
 }
 
@@ -199,7 +233,8 @@ get_loadings.grouped_df <- function(
   print = "short",
   nfactors = 1,
   fm = "pa",
-  rotate = "oblimin"
+  rotate = "oblimin",
+  sort = TRUE
 ) {
   # extract the df in the "groups" attribute
   group_labs <- attr(model, "groups") %>% 
@@ -236,8 +271,6 @@ get_loadings.grouped_df <- function(
       dplyr::mutate(groups_combined = eval(parse(text = new_string))) %>% 
       # extract it as a vector
       dplyr::pull(groups_combined)
-    
-    
 
     # make the correlation dataframe
     load_df <- purrr::map(
@@ -250,7 +283,9 @@ get_loadings.grouped_df <- function(
         threshold = threshold,
         nfactors = nfactors, 
         fm = fm, 
-        rotate = rotate)
+        rotate = rotate,
+        sort = sort
+      )
     ) 
 
     if (print == "short") {
@@ -301,7 +336,9 @@ get_loadings.grouped_df <- function(
         threshold = threshold,
         nfactors = nfactors, 
         fm = fm, 
-        rotate = rotate)
+        rotate = rotate,
+        sort = sort
+      )
     ) 
 
     if (print == "short") {
@@ -325,17 +362,5 @@ get_loadings.grouped_df <- function(
 
   }
 
-  
-
 }
-
-
-
-
-
-
-
-
-
-
 

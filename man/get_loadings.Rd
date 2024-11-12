@@ -11,7 +11,8 @@ get_loadings(
   print = "short",
   nfactors = 1,
   fm = "pa",
-  rotate = "oblimin"
+  rotate = "oblimin",
+  sort = TRUE
 )
 }
 \arguments{
@@ -55,6 +56,9 @@ versions prior to 2009 defaulted to varimax. SPSS seems to do a
 Kaiser normalization before doing Promax, this is done here by the
 call to "promax" which does the normalization before calling Promax in
 GPArotation.}
+
+\item{sort}{Logical. If \code{TRUE}, the default, the loadings are sorted
+largest to smallest. If \code{FALSE}, no sorting occurs.}
 }
 \description{
 This function creates a data frame of factor loadings from

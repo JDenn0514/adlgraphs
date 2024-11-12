@@ -32,7 +32,7 @@
 #' @importFrom rstudioapi isAvailable getVersion
 #' @importFrom sjlabelled as_label get_labels
 #' @importFrom stats qt df.residual setNames weighted.mean sd symnum
-#'   na.omit lm coef quantile
+#'   na.omit lm coef quantile xtabs reformulate complete.cases
 #' @importFrom stringr str_replace str_detect
 #' @importFrom systemfonts register_font
 #' @importFrom tibble as_tibble enframe
