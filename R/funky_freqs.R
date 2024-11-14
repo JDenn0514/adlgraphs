@@ -27,7 +27,7 @@
 #'   `TRUE`.
 
 
-
+#' @export
 funky_freqs <- function(
   data, 
   x, 
