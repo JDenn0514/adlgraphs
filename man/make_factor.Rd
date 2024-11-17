@@ -4,12 +4,16 @@
 \alias{make_factor}
 \title{Convert a labelled vector into a factor}
 \usage{
-make_factor(x, ordered = FALSE)
+make_factor(x, ordered = FALSE, keep_all_levels = FALSE)
 }
 \arguments{
 \item{x}{A vector with value labels. Can be numeric, character, or a factor}
 
 \item{ordered}{Logical. Determines if the factor be ordered. Defaults to TRUE.}
+
+\item{keep_all_levels}{Logical. Determines if all original levels should be kept
+(TRUE) or if only the ones that appear in the data should appear (FALSE). FALSE
+is the default.}
 }
 \description{
 \code{make_factor()} takes a labelled vector and converts it to a factor variable

@@ -25,6 +25,9 @@
 #'
 #' @param x A vector with value labels. Can be numeric, character, or a factor
 #' @param ordered Logical. Determines if the factor be ordered. Defaults to TRUE.
+#' @param keep_all_levels Logical. Determines if all original levels should be kept
+#'   (TRUE) or if only the ones that appear in the data should appear (FALSE). FALSE
+#'   is the default. 
 #'
 #' @examples
 #'
@@ -44,111 +47,96 @@
 #'
 #' @export
 
-
-
-make_factor <- function(x, ordered = FALSE) {
-  # get the object's name
+make_factor <- function(x, ordered = FALSE, keep_all_levels = FALSE) {
+  # get the variable's name as a string
   x_lab <- deparse(substitute(x))
 
-  # get the variable lable
+  # Get the variable label (assumes attr_var_label function exists)
   variable_label <- attr_var_label(x)
-  # get the value labels
+
+  # Get the value labels (assumes attr_val_labels function exists)
   value_labels <- attr_val_labels(x)
 
+  # If no value labels, handle accordingly
   if (is.null(value_labels)) {
-    # if there aren't any value labels then do the following
-
     if (is.factor(x)) {
-      # if it is already a factor, no need to do anything
-      return(x)
-
+      return(x)  # Return the factor if it's already a factor
     } else if (is.character(x)) {
-      # if it is a character vector, convert it to a factor
-      x <- as.factor(x)
-      return(x)
-
+      return(factor(x))  # Convert character to factor
     } else if (is.numeric(x)) {
-      # if it is  there aren't any value_labels then return an error
       stop("The vector provided in `x` does not have value labels")
     }
   }
 
-
-  # ensure that all values have associated labels
+  # Ensure all values have associated labels
   if (is.numeric(x)) {
-    # get the values that have labels
-    # get the value labels and their values
-    labs <- attr_val_labels(x) %>%
-      # convert it to numeric, this removes the labels
-      as.numeric() %>%
-      # sort it from smallest to biggest
-      sort()
+    # Get sorted labels and unique values
+    labs <- sort(as.numeric(value_labels))
+    vals <- sort(unique(as.numeric(x)))
 
-    # get the unique values in
-    vals <- as.numeric(x) %>%
-      unique() %>%
-      sort()
-
-    # if vals are not found in labs return a error
-    if (!grepl(paste(vals, collapse=".*"), paste(labs, collapse=""))) {
+    # If the values don't match the labels, throw an error
+    if (!all(vals %in% labs)) {
       stop("Each value in `x` must have value labels")
-      # cli::cli_abort(c(
-      #   "Each value in {.var x} must have value labels",
-      #   "i" = "Check the values to ensure that each one has a label associated with it"
-      # ))
     }
   } else {
+    # Get sorted labels and unique values
+    labs <- sort(as.character(value_labels))
+    vals <- sort(unique(as.character(x)))
 
-    # get the values that have labels
-    # get the value labels and their values
-    labs <- attr_val_labels(x) %>%
-      # convert it to numeric, this removes the labels
-      as.character() %>%
-      # sort it from smallest to biggest
-      sort()
-
-    # get the unique values in
-    vals <- as.character(x) %>%
-      unique() %>%
-      sort()
-
-    # if vals are not found in labs return an error
-    if (!grepl(paste(vals, collapse=".*"), paste(labs, collapse=""))) {
+    # If the values don't match the labels, throw an error
+    if (!all(vals %in% labs)) {
       stop("Each value in `x` must have value labels")
-      # cli::cli_abort(c(
-      #   "no Each value in {.var x} must have value labels",
-      #   "i" = "Check the values to ensure that each one has a label associated with it"
-      # ))
     }
-
   }
 
-
-  # get the values
-  values <- unname(value_labels)
-  # return(values)
+  # Get the names of the value labels
   names <- names(value_labels)
+  values <- unname(value_labels)
 
-  # replace the values with the names of the value labels
-  x <- replace_with(vctrs::vec_data(x), values, names)
-  # make it a factor with the levels equal to the names and determine if its ordered
-  x <- factor(x, levels = unique(names), ordered = ordered)
 
-  if (!is.null(variable_label)) {
-    structure(x,
-              label = variable_label,
-              transformation = glue::glue("Converted '{x_lab}' into a factor based on its value labels"))
+  # # Decide which levels to keep (either all levels or only levels in the data)
+  # if (keep_all_levels) {
+  #   # Keep all levels from the value labels
+  #   levels <- unique(names)
+  # } else {
+  #   # Only keep levels that appear in the data
+  #   levels <- unique(names[values %in% unique(x)])
+  # }
 
-  } else {
-    structure(x,
-              transformation = glue::glue("Converted '{x_lab}' into a factor based on its value labels"))
+  
+  # Replace the values with the names of the value labels
+  x <- replace_with(x, values, names)
 
+  x_levels <- unique(names)
+
+  if (isFALSE(keep_all_levels)) {
+    x_levels <- x_levels[x_levels %in% unique(x)]
   }
+
+
+  # Convert to factor with the specified order
+  x <- factor(x, levels = x_levels, ordered = ordered)
+
+  # If a variable label exists, preserve it in the factor
+  if (!is.null(variable_label)) {
+    attr(x, "label") <- variable_label
+    attr(x, "transformation") <- paste("Converted '", x_lab, "' into a factor based on its value labels", sep = "")
+  } else {
+    attr(x, "transformation") <- paste("Converted '", x_lab, "' into a factor based on its value labels", sep = "")
+  }
+
+  return(x)
 }
 
 
 replace_with <- function(x, from, to) {
   stopifnot(length(from) == length(to))
+
+  if (is.numeric(x)) {
+    x <- as.numeric(x)
+  } else if (is.character(x)) {
+    x <- as.character(x)
+  }
 
   out <- x
   # First replace regular values
