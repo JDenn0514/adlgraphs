@@ -24,10 +24,13 @@
 #' labels, this function returns an error.
 #'
 #' @param x A vector with value labels. Can be numeric, character, or a factor
-#' @param ordered Logical. Determines if the factor be ordered. Defaults to TRUE.
-#' @param keep_all_levels Logical. Determines if all original levels should be kept
-#'   (TRUE) or if only the ones that appear in the data should appear (FALSE). FALSE
-#'   is the default. 
+#' @param ordered Logical. Determines if the factor be ordered. Defaults to `TRUE.`
+#' @param drop_levels Logical. Determines if unused factor levels should be dropped.
+#'   Defaults to `TRUE.`
+#' @param force. Logical. Determines if `x` should be forced to a vector even
+#'   if there are no value labels. Defaults to `TRUE.`
+#' @param na.rm Logical. Determines if tags should be removed from NAs. Defaults
+#'   to `FALSE`.
 #'
 #' @examples
 #'
@@ -47,7 +50,10 @@
 #'
 #' @export
 
-make_factor <- function(x, ordered = FALSE, keep_all_levels = FALSE) {
+
+
+
+make_factor <- function(x, ordered = FALSE, drop_levels = TRUE, force = TRUE, na.rm = FALSE) {
   # get the variable's name as a string
   x_lab <- deparse(substitute(x))
 
@@ -59,12 +65,24 @@ make_factor <- function(x, ordered = FALSE, keep_all_levels = FALSE) {
 
   # If no value labels, handle accordingly
   if (is.null(value_labels)) {
+    # if there aren't any value labels:
+
     if (is.factor(x)) {
-      return(x)  # Return the factor if it's already a factor
+      # Return x if it's already a factor
+      return(x)  
     } else if (is.character(x)) {
-      return(factor(x))  # Convert character to factor
-    } else if (is.numeric(x)) {
-      stop("The vector provided in `x` does not have value labels")
+      # if x is a character vector convert to a factor
+      return(factor(x)) 
+    } else if (is.numeric(x) && isTRUE(force)) {
+      # if x is numeric and force = TRUE, force to a factor and return warning
+      warning("`x` has no value labels so forcing to a factor with `as.factor()`")
+      return(as.factor(x))
+    } else if (is.numeric(x) && isFALSE(force)) {
+      # if x is numeric and force = false, return an error 
+      stop(
+        "The vector provided in `x` does not have value labels.
+        If you want to force it to a factor, set `force = TRUE`."
+      )
     }
   }
 
@@ -89,33 +107,26 @@ make_factor <- function(x, ordered = FALSE, keep_all_levels = FALSE) {
     }
   }
 
+  # if na.rm is TRUE remove NAs
+  if (na.rm) x[is.na(x)] <- NA
+
   # Get the names of the value labels
   names <- names(value_labels)
   values <- unname(value_labels)
-
-
-  # # Decide which levels to keep (either all levels or only levels in the data)
-  # if (keep_all_levels) {
-  #   # Keep all levels from the value labels
-  #   levels <- unique(names)
-  # } else {
-  #   # Only keep levels that appear in the data
-  #   levels <- unique(names[values %in% unique(x)])
-  # }
 
   
   # Replace the values with the names of the value labels
   x <- replace_with(x, values, names)
 
+  # get the levels that 
   x_levels <- unique(names)
 
-  if (isFALSE(keep_all_levels)) {
-    x_levels <- x_levels[x_levels %in% unique(x)]
-  }
-
+  # if keep_all_levels = FALSE, keep only the levels that appear in the data
+  if (drop_levels) x_levels <- x_levels[x_levels %in% unique(x)]
 
   # Convert to factor with the specified order
   x <- factor(x, levels = x_levels, ordered = ordered)
+
 
   # If a variable label exists, preserve it in the factor
   if (!is.null(variable_label)) {
@@ -127,6 +138,7 @@ make_factor <- function(x, ordered = FALSE, keep_all_levels = FALSE) {
 
   return(x)
 }
+
 
 
 replace_with <- function(x, from, to) {

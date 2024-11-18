@@ -4,16 +4,27 @@
 \alias{make_factor}
 \title{Convert a labelled vector into a factor}
 \usage{
-make_factor(x, ordered = FALSE, keep_all_levels = FALSE)
+make_factor(
+  x,
+  ordered = FALSE,
+  drop_levels = TRUE,
+  force = TRUE,
+  na.rm = FALSE
+)
 }
 \arguments{
 \item{x}{A vector with value labels. Can be numeric, character, or a factor}
 
-\item{ordered}{Logical. Determines if the factor be ordered. Defaults to TRUE.}
+\item{ordered}{Logical. Determines if the factor be ordered. Defaults to \code{TRUE.}}
 
-\item{keep_all_levels}{Logical. Determines if all original levels should be kept
-(TRUE) or if only the ones that appear in the data should appear (FALSE). FALSE
-is the default.}
+\item{drop_levels}{Logical. Determines if unused factor levels should be dropped.
+Defaults to \code{TRUE.}}
+
+\item{na.rm}{Logical. Determines if tags should be removed from NAs. Defaults
+to \code{FALSE}.}
+
+\item{force.}{Logical. Determines if \code{x} should be forced to a vector even
+if there are no value labels. Defaults to \code{TRUE.}}
 }
 \description{
 \code{make_factor()} takes a labelled vector and converts it to a factor variable
