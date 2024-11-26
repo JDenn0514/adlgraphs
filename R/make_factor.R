@@ -27,7 +27,7 @@
 #' @param ordered Logical. Determines if the factor be ordered. Defaults to `TRUE.`
 #' @param drop_levels Logical. Determines if unused factor levels should be dropped.
 #'   Defaults to `TRUE.`
-#' @param force. Logical. Determines if `x` should be forced to a vector even
+#' @param force Logical. Determines if `x` should be forced to a vector even
 #'   if there are no value labels. Defaults to `TRUE.`
 #' @param na.rm Logical. Determines if tags should be removed from NAs. Defaults
 #'   to `FALSE`.

@@ -27,7 +27,7 @@ Default is \code{FALSE}.}
 \code{TRUE}.}
 }
 \description{
-\strong{THIS FUNCTION IS EXPERIMENTAL}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}\cr
 }
 \details{
 Use this function to calculate simple weighted frequencies weighted grouped.

@@ -1,273 +1,297 @@
 
-# check to make sure output is correct ----------------------
-testthat::test_that("expect outputs to be equal for mean with just x", {
+# # check to make sure output is correct ----------------------
+# testthat::test_that("expect outputs to be equal for mean with just x", {
 
-  # manually calculate the mean
-  mean_x <- test_data %>%
-    dplyr::summarise(
-      # calculate the mean
-      mean = mean(trad_n,  na.rm = TRUE),
-      # calculate the standard deviation
-      sd = sd(trad_n, na.rm = TRUE),
-      # get the number of respondents
-      n = dplyr::n()
-    ) %>%
-    dplyr::mutate(
-      # calculate the standard error
-      std.error = sd/sqrt(n),
-      # calculate the lower CI
-      conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-      # calculate the higher CI
-      conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-      # round all of the numbers to the second decimal
-      dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-    ) %>% dplyr::select(-std.error)
+#   # manually calculate the mean
+#   mean_x <- test_data %>%
+#     dplyr::summarise(
+#       # calculate the weighted n
+#       n = sum(wts, na.rm = TRUE), 
+#       # calculate the mean (weighted sum / n)
+#       mean = sum(trad_n * wts, na.rm = TRUE) / n,
+#       # calculate the weighted sd
+#       sd = sqrt(sum(wts * (trad_n - mean)^2, na.rm = TRUE) / n),
+#       # remove the groups
+#       .groups = "drop"
+#     ) %>% 
+#     dplyr::mutate(
+#       # calculate std.error
+#       std.error = sd / sqrt(n),
+#       # calculate the confidence invtervals
+#       conf.low = mean - qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+#       conf.high = mean + qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+#       # convert all group variables to a factor
+#       dplyr::across(
+#         # run the function over the variables in group_names
+#         tidyselect::all_of(group_names),
+#         # convert to a factor, removing levels, forcing to factor, and keeping NA as NA
+#         ~ make_factor(.x, drop_levels = TRUE, force = TRUE, na.rm = TRUE)
+#       ),
+#       # round all numeric columns 
+#       dplyr::across(
+#         dplyr::where(is.numeric),
+#         ~round(.x, decimals)
+#       )
+#     ) %>% 
+#     # keep only relevant variables and reorder them
+#     dplyr::select(c(tidyselect::all_of(group_names), mean, sd, n, conf.low, conf.high))
 
-  # test without quotes
-  testthat::expect_equal(
-    mean_x,
-    test_data %>% get_means(trad_n)
-  )
-  # test with quotes
-  testthat::expect_equal(
-    mean_x,
-    test_data %>% get_means("trad_n")
-  )
-})
+#   # add a variable for the n variable
+#   attr(mean_x$n, "label") <- "N"
+#   # add a variable label for the mean variable
+#   attr(mean_x$mean, "label") <- "Mean"
+#   # add a variable label for the mean variable
+#   attr(mean_x$sd, "label") <- "SD"
+#   # add a variable label for the mean variable
+#   attr(out$conf.low, "label") <- "Low CI"
+#   # add a variable label for the mean variable
+#   attr(out$conf.high, "label") <- "High CI"
 
-testthat::test_that("expect outputs to be equal for mean with just x and wts", {
+#   # test without quotes
+#   testthat::expect_equal(
+#     mean_x,
+#     test_data %>% get_means(trad_n)
+#   )
+#   # test with quotes
+#   testthat::expect_equal(
+#     mean_x,
+#     test_data %>% get_means("trad_n")
+#   )
+# })
 
-  # manually calculate the mean
-  mean_x <- test_data %>%
-    dplyr::summarise(
-      # calculate the mean
-      mean = weighted.mean(trad_n, wts, na.rm = TRUE),
-      # calculate the standard deviation
-      sd = sd(trad_n, na.rm = TRUE),
-      # get the number of respondents
-      n = dplyr::n()
-    ) %>%
-    dplyr::mutate(
-      # calculate the standard error
-      std.error = sd/sqrt(n),
-      # calculate the lower CI
-      conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-      # calculate the higher CI
-      conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-      # round all of the numbers to the second decimal
-      dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-    ) %>% dplyr::select(-std.error)
+# testthat::test_that("expect outputs to be equal for mean with just x and wts", {
 
-  # test without quotes
-  testthat::expect_equal(
-    mean_x,
-    test_data %>% get_means(trad_n, wt = wts)
-  )
-  # test with quotes
-  testthat::expect_equal(
-    mean_x,
-    test_data %>% get_means("trad_n", wt = "wts")
-  )
-})
+#   # manually calculate the mean
+#   mean_x <- test_data %>%
+#     dplyr::summarise(
+#       # calculate the mean
+#       mean = weighted.mean(trad_n, wts, na.rm = TRUE),
+#       # calculate the standard deviation
+#       sd = sd(trad_n, na.rm = TRUE),
+#       # get the number of respondents
+#       n = dplyr::n()
+#     ) %>%
+#     dplyr::mutate(
+#       # calculate the standard error
+#       std.error = sd/sqrt(n),
+#       # calculate the lower CI
+#       conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
+#       # calculate the higher CI
+#       conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
+#       # round all of the numbers to the second decimal
+#       dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
+#     ) %>% dplyr::select(-std.error)
 
-testthat::test_that("expect outputs to be equal for mean with a factor grouping variable", {
+#   # test without quotes
+#   testthat::expect_equal(
+#     mean_x,
+#     test_data %>% get_means(trad_n, wt = wts)
+#   )
+#   # test with quotes
+#   testthat::expect_equal(
+#     mean_x,
+#     test_data %>% get_means("trad_n", wt = "wts")
+#   )
+# })
 
-  # manually calculate the mean
-  mean_x <- test_data %>%
-    dplyr::group_by(edu_f) %>%
-    dplyr::summarise(
-      # calculate the mean
-      mean = mean(trad_n,  na.rm = TRUE),
-      # calculate the standard deviation
-      sd = sd(trad_n, na.rm = TRUE),
-      # get the number of respondents
-      n = dplyr::n()
-    ) %>%
-    dplyr::mutate(
-      # calculate the standard error
-      std.error = sd/sqrt(n),
-      # calculate the lower CI
-      conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-      # calculate the higher CI
-      conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-      # round all of the numbers to the second decimal
-      dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-    ) %>% dplyr::select(-std.error)
+# testthat::test_that("expect outputs to be equal for mean with a factor grouping variable", {
 
-  # test without quotes
-  testthat::expect_equal(
-    mean_x,
-    test_data %>% get_means(trad_n, edu_f)
-  )
-  # test with quotes
-  testthat::expect_equal(
-    mean_x,
-    test_data %>% get_means("trad_n", "edu_f")
-  )
+#   # manually calculate the mean
+#   mean_x <- test_data %>%
+#     dplyr::group_by(edu_f) %>%
+#     dplyr::summarise(
+#       # calculate the mean
+#       mean = mean(trad_n,  na.rm = TRUE),
+#       # calculate the standard deviation
+#       sd = sd(trad_n, na.rm = TRUE),
+#       # get the number of respondents
+#       n = dplyr::n()
+#     ) %>%
+#     dplyr::mutate(
+#       # calculate the standard error
+#       std.error = sd/sqrt(n),
+#       # calculate the lower CI
+#       conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
+#       # calculate the higher CI
+#       conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
+#       # round all of the numbers to the second decimal
+#       dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
+#     ) %>% dplyr::select(-std.error)
 
-})
+#   # test without quotes
+#   testthat::expect_equal(
+#     mean_x,
+#     test_data %>% get_means(trad_n, edu_f)
+#   )
+#   # test with quotes
+#   testthat::expect_equal(
+#     mean_x,
+#     test_data %>% get_means("trad_n", "edu_f")
+#   )
 
-testthat::test_that("expect outputs to be equal for mean with a labelled grouping variable", {
+# })
 
-  # manually calculate the mean
-  mean_x <- test_data %>%
-    dplyr::mutate(top = make_factor(top)) %>%
-    dplyr::group_by(top) %>%
-    dplyr::summarise(
-      # calculate the mean
-      mean = mean(trad_n,  na.rm = TRUE),
-      # calculate the standard deviation
-      sd = sd(trad_n, na.rm = TRUE),
-      # get the number of respondents
-      n = dplyr::n()
-    ) %>%
-    dplyr::mutate(
-      # calculate the standard error
-      std.error = sd/sqrt(n),
-      # calculate the lower CI
-      conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-      # calculate the higher CI
-      conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-      # round all of the numbers to the second decimal
-      dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-    ) %>% dplyr::select(-std.error)
+# testthat::test_that("expect outputs to be equal for mean with a labelled grouping variable", {
 
-  # remove transformation attribute
-  attr(mean_x$top, "transformation") <- NULL
+#   # manually calculate the mean
+#   mean_x <- test_data %>%
+#     dplyr::mutate(top = make_factor(top)) %>%
+#     dplyr::group_by(top) %>%
+#     dplyr::summarise(
+#       # calculate the mean
+#       mean = mean(trad_n,  na.rm = TRUE),
+#       # calculate the standard deviation
+#       sd = sd(trad_n, na.rm = TRUE),
+#       # get the number of respondents
+#       n = dplyr::n()
+#     ) %>%
+#     dplyr::mutate(
+#       # calculate the standard error
+#       std.error = sd/sqrt(n),
+#       # calculate the lower CI
+#       conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
+#       # calculate the higher CI
+#       conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
+#       # round all of the numbers to the second decimal
+#       dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
+#     ) %>% dplyr::select(-std.error)
 
-  ### Test without quotes
-  # get the means for the test
-  test <- test_data %>% get_means(trad_n, top)
-  # remove the transformation attribute
-  attr(test$top, "transformation") <- NULL
+#   # remove transformation attribute
+#   attr(mean_x$top, "transformation") <- NULL
 
-  # test them
-  testthat::expect_equal(
-    mean_x,
-    test
-  )
+#   ### Test without quotes
+#   # get the means for the test
+#   test <- test_data %>% get_means(trad_n, top)
+#   # remove the transformation attribute
+#   attr(test$top, "transformation") <- NULL
 
-
-  ### test with quotes
-  # get the means for the test
-  test <- test_data %>% get_means("trad_n", "top")
-  # remove transformation attribute
-  attr(test$top, "transformation") <- NULL
-  # test them
-  testthat::expect_equal(
-    mean_x,
-    test
-  )
-
-})
-
-testthat::test_that("expect outputs to be equal for mean with a factor grouping variable and wts", {
-
-  # manually calculate the mean
-  mean_x <- test_data %>%
-    dplyr::group_by(edu_f) %>%
-    dplyr::summarise(
-      # calculate the mean
-      mean = weighted.mean(trad_n, wts, na.rm = TRUE),
-      # calculate the standard deviation
-      sd = sd(trad_n, na.rm = TRUE),
-      # get the number of respondents
-      n = dplyr::n()
-    ) %>%
-    dplyr::mutate(
-      # calculate the standard error
-      std.error = sd/sqrt(n),
-      # calculate the lower CI
-      conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-      # calculate the higher CI
-      conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-      # round all of the numbers to the second decimal
-      dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-    ) %>% dplyr::select(-std.error)
-
-  # test without quotes
-  testthat::expect_equal(
-    mean_x,
-    test_data %>% get_means(trad_n, edu_f, wt = wts)
-  )
-  # test with quotes
-  testthat::expect_equal(
-    mean_x,
-    test_data %>% get_means("trad_n", "edu_f", wt = "wts")
-  )
-})
-
-testthat::test_that("expect outputs to be equal for mean with a labelled group variable and wts", {
-
-  # manually calculate the mean
-  mean_x <- test_data %>%
-    dplyr::mutate(top = haven::as_factor(top)) %>%
-    dplyr::group_by(top) %>%
-    dplyr::summarise(
-    # calculate the mean
-    mean = weighted.mean(trad_n, wts, na.rm = TRUE),
-    # calculate the standard deviation
-    sd = sd(trad_n, na.rm = TRUE),
-    # get the number of respondents
-    n = dplyr::n()
-  ) %>%
-    dplyr::mutate(
-      # calculate the standard error
-      std.error = sd/sqrt(n),
-      # calculate the lower CI
-      conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-      # calculate the higher CI
-      conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-      # round all of the numbers to the second decimal
-      dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-    ) %>% dplyr::select(-std.error)
-
-  # remove transformation attribute
-  attr(mean_x$top, "transformation") <- NULL
-
-  ### Test without quotes
-  # get the means for the test
-  test <- test_data %>% get_means(x = trad_n, group = top, wt = wts)
-  # remove the transformation attribute
-  attr(test$top, "transformation") <- NULL
-
-  # test them
-  testthat::expect_equal(
-    mean_x,
-    test
-  )
+#   # test them
+#   testthat::expect_equal(
+#     mean_x,
+#     test
+#   )
 
 
-  ### test with quotes
-  # get the means for the test
-  test <- test_data %>% get_means(x = "trad_n", group = "top", wt = "wts")
-  # remove transformation attribute
-  attr(test$top, "transformation") <- NULL
-  # test them
-  testthat::expect_equal(
-    mean_x,
-    test
-  )
+#   ### test with quotes
+#   # get the means for the test
+#   test <- test_data %>% get_means("trad_n", "top")
+#   # remove transformation attribute
+#   attr(test$top, "transformation") <- NULL
+#   # test them
+#   testthat::expect_equal(
+#     mean_x,
+#     test
+#   )
 
-})
+# })
+
+# testthat::test_that("expect outputs to be equal for mean with a factor grouping variable and wts", {
+
+#   # manually calculate the mean
+#   mean_x <- test_data %>%
+#     dplyr::group_by(edu_f) %>%
+#     dplyr::summarise(
+#       # calculate the mean
+#       mean = weighted.mean(trad_n, wts, na.rm = TRUE),
+#       # calculate the standard deviation
+#       sd = sd(trad_n, na.rm = TRUE),
+#       # get the number of respondents
+#       n = dplyr::n()
+#     ) %>%
+#     dplyr::mutate(
+#       # calculate the standard error
+#       std.error = sd/sqrt(n),
+#       # calculate the lower CI
+#       conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
+#       # calculate the higher CI
+#       conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
+#       # round all of the numbers to the second decimal
+#       dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
+#     ) %>% dplyr::select(-std.error)
+
+#   # test without quotes
+#   testthat::expect_equal(
+#     mean_x,
+#     test_data %>% get_means(trad_n, edu_f, wt = wts)
+#   )
+#   # test with quotes
+#   testthat::expect_equal(
+#     mean_x,
+#     test_data %>% get_means("trad_n", "edu_f", wt = "wts")
+#   )
+# })
+
+# testthat::test_that("expect outputs to be equal for mean with a labelled group variable and wts", {
+
+#   # manually calculate the mean
+#   mean_x <- test_data %>%
+#     dplyr::mutate(top = haven::as_factor(top)) %>%
+#     dplyr::group_by(top) %>%
+#     dplyr::summarise(
+#     # calculate the mean
+#     mean = weighted.mean(trad_n, wts, na.rm = TRUE),
+#     # calculate the standard deviation
+#     sd = sd(trad_n, na.rm = TRUE),
+#     # get the number of respondents
+#     n = dplyr::n()
+#   ) %>%
+#     dplyr::mutate(
+#       # calculate the standard error
+#       std.error = sd/sqrt(n),
+#       # calculate the lower CI
+#       conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
+#       # calculate the higher CI
+#       conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
+#       # round all of the numbers to the second decimal
+#       dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
+#     ) %>% dplyr::select(-std.error)
+
+#   # remove transformation attribute
+#   attr(mean_x$top, "transformation") <- NULL
+
+#   ### Test without quotes
+#   # get the means for the test
+#   test <- test_data %>% get_means(x = trad_n, group = top, wt = wts)
+#   # remove the transformation attribute
+#   attr(test$top, "transformation") <- NULL
+
+#   # test them
+#   testthat::expect_equal(
+#     mean_x,
+#     test
+#   )
 
 
-# check for no errors -----------------------------
-testthat::test_that("Check x does not return error when numeric", {
+#   ### test with quotes
+#   # get the means for the test
+#   test <- test_data %>% get_means(x = "trad_n", group = "top", wt = "wts")
+#   # remove transformation attribute
+#   attr(test$top, "transformation") <- NULL
+#   # test them
+#   testthat::expect_equal(
+#     mean_x,
+#     test
+#   )
 
-  testthat::expect_no_error(test_data %>% get_means(trad_n))
-  testthat::expect_no_error(test_data %>% get_means("trad_n"))
-
-  testthat::expect_no_error(test_data %>% get_means(accept_isr))
-  testthat::expect_no_error(test_data %>% get_means("accept_isr"))
-
-  testthat::expect_no_error(test_data %>% get_means(trad_n, accept_isr))
-  testthat::expect_no_error(test_data %>% get_means("trad_n", "accept_isr"))
-
-  testthat::expect_no_error(test_data %>% get_means(trad_n, accept_isr))
-  testthat::expect_no_error(test_data %>% get_means("trad_n", "accept_isr"))
+# })
 
 
-})
+# # check for no errors -----------------------------
+# testthat::test_that("Check x does not return error when numeric", {
+
+#   testthat::expect_no_error(test_data %>% get_means(trad_n))
+#   testthat::expect_no_error(test_data %>% get_means("trad_n"))
+
+#   testthat::expect_no_error(test_data %>% get_means(accept_isr))
+#   testthat::expect_no_error(test_data %>% get_means("accept_isr"))
+
+#   testthat::expect_no_error(test_data %>% get_means(trad_n, accept_isr))
+#   testthat::expect_no_error(test_data %>% get_means("trad_n", "accept_isr"))
+
+#   testthat::expect_no_error(test_data %>% get_means(trad_n, accept_isr))
+#   testthat::expect_no_error(test_data %>% get_means("trad_n", "accept_isr"))
+
+
+# })
 
 

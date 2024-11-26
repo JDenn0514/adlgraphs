@@ -20,11 +20,11 @@ make_factor(
 \item{drop_levels}{Logical. Determines if unused factor levels should be dropped.
 Defaults to \code{TRUE.}}
 
+\item{force}{Logical. Determines if \code{x} should be forced to a vector even
+if there are no value labels. Defaults to \code{TRUE.}}
+
 \item{na.rm}{Logical. Determines if tags should be removed from NAs. Defaults
 to \code{FALSE}.}
-
-\item{force.}{Logical. Determines if \code{x} should be forced to a vector even
-if there are no value labels. Defaults to \code{TRUE.}}
 }
 \description{
 \code{make_factor()} takes a labelled vector and converts it to a factor variable
