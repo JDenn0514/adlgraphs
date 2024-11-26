@@ -213,6 +213,8 @@ get_variable_label <- function(x, lab) {
 #' Select variables from the group variable
 #' @param group `tidy_select` columns to group the data by
 #' @param data The data set that the columns are from (this to make sure they exist)
+#' 
+#' @keywords internal
 select_groups <- function(group, data) {
 
   group_vars <- as.character(rlang::quo_squash(rlang::enexpr(group)))
