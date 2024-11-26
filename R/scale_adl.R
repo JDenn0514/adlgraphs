@@ -16,7 +16,6 @@
 #'   name(s) of the aesthetic(s) that this scale works with. This can be useful,
 #'   for example, to apply colour settings to the `colour` and `fill` aesthetics
 #'   at the same time, via `aesthetic = c("colour", "fill")`
-#' @param n The number of colors.
 #' @param direction A character string indicating if the order of the colors
 #'   should be reversed. There are two values:
 #'   1. "original" keep the original order of colors
@@ -37,20 +36,22 @@
 #'   labels. Uses \link[scales]{label_wrap} to wrap the text across
 #'   multiple lines. If left blank, defaults to `NULL` which does not wrap the
 #'   labels at all.
-#' @param ... additional arguments to pass to \code{\link[ggplot2]{scale_fill_manual}}
+#' @param ... additional arguments to pass to \code{\link[ggplot2]{discrete_scale}}
 #'
 #'
 #' @export
+scale_adl <- function(
+  type = "categorical",
+  palette = "base",
+  aesthetic = c("fill", "color"),
+  n,
+  direction = "original",
+  legend_order = "original",
+  legend_title = NULL,
+  wrap_legend_labels = NULL,
+  ...
+) {
 
-scale_adl <- function(type = "categorical",
-                      palette = "base",
-                      aesthetic = c("fill", "color"),
-                      n,
-                      direction = "original",
-                      legend_order = "original",
-                      legend_title = NULL,
-                      wrap_legend_labels = NULL,
-                      ...) {
 
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
     stop('ggplot2 is required for this functionality', call. = FALSE)
@@ -60,60 +61,6 @@ scale_adl <- function(type = "categorical",
     stop('direction must be "original" or "reverse"')
   }
 
-
-
-
-  # create the "sequential" palettes
-  if (type == "sequential") {
-
-    if (missing(n)) {
-      stop("n must be supplied when calculating a sequential color palette")
-    }
-
-    ### get the palettes
-    # interpolate the palettes using colorRampPalette()
-    # get the bluescale colors
-    if (palette == "base" || palette == "bluescale") {
-      bluescale <- adl_palettes[["bluescale"]]
-      pal <- colorRampPalette(bluescale)(n)
-    }
-    # get the grayscale colors
-    else if(palette == "grayscale") {
-      grayscale <- adl_palettes[["grayscale"]]
-      pal <- colorRampPalette(grayscale)(n)
-    }
-
-  }
-
-  # create the discrete palettes
-  else if (type == "categorical") {
-    # calculate the n if it is not supplied
-    if (missing(n)) {
-      n <- length(adl_palettes[[palette]])
-    } else {
-      n <- n
-    }
-
-    # get the palettes
-    if (palette == "base") {
-      pal <- adl_palettes[["categorical"]][1:n]
-    } else if (palette == "pid3") {
-      # this should give us three colors if n is provided, if it is provided
-      # it will interpolate the other colors
-      pid3 <- adl_palettes[["pid3"]]
-      pal <- colorRampPalette(pid3)(n)
-    } else {
-      # need the
-      pal <- adl_palettes[[palette]][1:n]
-    }
-
-  }
-
-
-  # if order = "reverse" reverse the color palette order
-  if (direction == "reverse") {
-    pal <- rev(pal)
-  }
 
   # set the legend_title to waiver() if legend_title is missing
   if (is.null(legend_title)) {
@@ -136,10 +83,10 @@ scale_adl <- function(type = "categorical",
   # reverse the legend o
   if (legend_order == "reverse") {
     return(
-      ggplot2::scale_fill_manual(
-        values = pal,
-        labels = wrap_legend_labels,
+      ggplot2::discrete_scale(
         aesthetics = aesthetic,
+        palette = palette_gen(type, palette, direction),
+        labels = wrap_legend_labels,
         name = legend_title,
         guide = guide_legend(reverse = TRUE),
         ...
@@ -147,24 +94,64 @@ scale_adl <- function(type = "categorical",
     )
   } else {
     return(
-      ggplot2::scale_fill_manual(
-        values = pal,
-        labels = wrap_legend_labels,
+      ggplot2::discrete_scale(
         aesthetics = aesthetic,
+        palette = palette_gen(type, palette, direction),
+        labels = wrap_legend_labels,
         name = legend_title,
         ...
       )
     )
   }
-
 }
 
 
 
+palette_gen <- function(
+  type = "categorical", 
+  palette = "base", 
+  direction = "original"
+) {
 
+  if (palette == "base" && type == "sequential") {
+    palette <- "bluescale"
+  } else if (palette == "base" && type == "categorical") {
+    palette <- "categorical"
+  } else if (palette == "pid_f3" && type == "categorical") {
+    palette <- "pid3"
+  }
 
+  function(n) {
 
+    # get the list of colors from the palette 
+    all_colors <- adl_palettes[[palette]]
+    # convert it to a character vector
+    all_colors <- as.character(all_colors)
+    
+    if (palette == "pid3" && n > 3) {
+      # if the palette is pid3 and n is greater than 3
 
+      # interpolate the colors until needed
+      color_list <- colorRampPalette(all_colors)(n)
+
+    } else if (palette == "bluescale") {
+      # if the palette is bluescale, 
+      
+      # interpolate the colors until needed 
+      color_list <- colorRampPalette(all_colors)(n)
+
+    } else {
+      # for all other colors, just do it from 1 to n
+      color_list <- all_colors[1:n]
+    }
+
+    # get the list of colors 
+    # color_list <- all_colors[1:n]
+    color_list <- if (direction == "original") color_list else rev(color_list)
+    
+  }
+
+}
 
 
 

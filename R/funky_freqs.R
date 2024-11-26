@@ -1,6 +1,8 @@
 #' Calculate weighted frequencies
 #' 
-#' **THIS FUNCTION IS EXPERIMENTAL**
+#' @description
+#' 
+#' `r lifecycle::badge("experimental")`
 #'
 #' Use this function to calculate simple weighted frequencies weighted grouped.
 #' You can also specify a grouping variable by which you want to calculate the
@@ -36,14 +38,16 @@ funky_freqs <- function(
   drop_zero = FALSE,
   na.rm = TRUE
 ) {
-  x_str <- accept_string_or_sym({{ x }})
+
+  # ensure that string or symbol are accepted in x
+  x_str <- rlang::as_name(rlang::ensym(x))
 
   if (is.null(substitute(wt))) {
     wt_str <- "wts"
     warning("no weights argument given, using uniform weights of 1")
     data[[wt_str]] <- rep(1, length(data[[x_str]]))  
   } else {
-    wt_str <- accept_string_or_sym({{ wt }})
+    wt_str <- rlang::as_name(rlang::ensym(wt))
     # set NAs in wt variable to zero
     data[[wt_str]][is.na(data[[wt_str]])] <- 0
   }
@@ -183,7 +187,6 @@ funky_freqs <- function(
   
 
   out %>% structure(class = c("adlgraphs_freqs", class_names))
-
 
 }
 

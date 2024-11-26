@@ -33,8 +33,6 @@ name(s) of the aesthetic(s) that this scale works with. This can be useful,
 for example, to apply colour settings to the \code{colour} and \code{fill} aesthetics
 at the same time, via \code{aesthetic = c("colour", "fill")}}
 
-\item{n}{The number of colors.}
-
 \item{direction}{A character string indicating if the order of the colors
 should be reversed. There are two values:
 \enumerate{
@@ -65,7 +63,7 @@ labels. Uses \link[scales]{label_wrap} to wrap the text across
 multiple lines. If left blank, defaults to \code{NULL} which does not wrap the
 labels at all.}
 
-\item{...}{additional arguments to pass to \code{\link[ggplot2]{scale_fill_manual}}}
+\item{...}{additional arguments to pass to \code{\link[ggplot2]{discrete_scale}}}
 }
 \description{
 Create sequential, diverging, and categorical color scales using official ADL
