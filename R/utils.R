@@ -210,7 +210,24 @@ get_variable_label <- function(x, lab) {
 
 }
 
+#' @param group `tidy_select` columns to group the data by
+#' @param data The data set that the columns are from (this to make sure they exist)
+select_groups <- function(group, data) {
 
+  group_vars <- as.character(rlang::quo_squash(rlang::enexpr(group)))
+  group_vars <- group_vars[group_vars != "c"]
+
+  if (!all(group_vars %in% colnames(data))) {
+    data_name <- substitute(data)
+    group_vars <- group_vars[c(!group_vars %in% colnames(data))]
+    cli::cli_abort(c(
+      "Column `{group_vars}` is not found in `{data_name}`",
+      "i" = "Make sure all variables supplied to {.var group} are present in {.var data}"
+    ))
+    
+  }
+  return(group_vars)
+}
 
 
 # functions from other packages -------------------------------------------
