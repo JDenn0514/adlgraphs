@@ -4,7 +4,15 @@
 \alias{get_means}
 \title{Calculate means with confidence intervals}
 \usage{
-get_means(data, x, group, wt, decimals = 2)
+get_means(
+  data,
+  x,
+  group = NULL,
+  wt = NULL,
+  decimals = 3,
+  na.rm = TRUE,
+  conf_level = 0.95
+)
 }
 \arguments{
 \item{data}{An object of type data.frame or tibble. If piping the data into the
@@ -13,13 +21,21 @@ function, this is not required.}
 \item{x}{Either a character string or symbol. The variable with which you want
 to get the mean.}
 
-\item{group}{Either a character string or a symbol. The variable you want the
-means to be grouped by.}
+\item{group}{<\code{\link[=dplyr_tidy_select]{tidy-select}}> A selection of columns to
+group the data by in addition to \code{treats}. This operates very similarly
+to \code{.by} from dplyr (for more info on that see \link[=dplyr_by]{?dplyr_by}). It can
+also be a character vector, but it can't be an external vector.}
 
 \item{wt}{Weights. Add if you have a weighting variable and want to get
-weighted means}
+weighted means.}
 
-\item{decimals}{Number of decimals to round the results to. Default is 2.}
+\item{decimals}{Number of decimals to round the results to. Default is 3.}
+
+\item{na.rm}{Logical. Determines if NAs should be removed from the grouping
+variables prior to analysis. Default is TRUE.}
+
+\item{conf_level}{What should the confidence level be when calculating
+confidence intervals. Defaults to 0.95}
 }
 \description{
 Use this function to calculate simple weighted means with 95\% confidence
@@ -28,7 +44,7 @@ intervals or weighted grouped means.
 \details{
 The \code{x}, \code{group}, and \code{wt} arguments can either be strings or symbols
 (meaning they can have quotes or no quotes). The benefit of this is that it
-makes it really easy to iterate this function over a list or vector of
+makes it easy to iterate this function over a list or vector of
 variables with other functions like \code{\link[=map]{map()}} \code{\link[purrr:map]{purrr::map()}} or \code{\link[=walk]{walk()}}
 \code{\link[purrr:map]{purrr::walk()}} that are found in the \code{purrr} package.
 }
@@ -61,8 +77,5 @@ get_means(test_data, "trad_n", "edu_f", "wts")
 test_data \%>\%
   mutate(top_f2 = make_dicho(top)) \%>\%
   get_means(trad_n, top_f2, wts)
-
-
-
 
 }
