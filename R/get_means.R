@@ -140,60 +140,60 @@ get_means <- function(
         dplyr::where(is.numeric),
         ~round(.x, decimals)
       )
-    ) %>% 
-    # keep only relevant variables and reorder them
-    dplyr::select(c(tidyselect::all_of(group_names), mean, sd, n, conf.low, conf.high))
+    )
   
-    if (!is.null(group_names)) {
-      # if there are groups add the value labels
-  
-      # get the variable labels as a named list
-      group_labels <- attr_var_label(data[,group_names])
-      # for each value in names(group_labels) add the variable label from group_labels
-      for (y in names(group_labels)) attr(out[[y]], "label") <- group_labels[[y]]
-  
-    }
-  
-    if (!is.null(attr_var_label(data[[x]]))) {
-      # if there is a variable label in the x variable
-  
-      # add the variable label of x as an attribute called 
-      # variable_label to the output dataframe
-      attr(out, "variable_label") <- attr_var_label(data[[x]])
-      # add the variable name of x as an attribute called
-      # variable_name to the output dataframe
-      attr(out, "variable_name") <- x
-  
-    } else {
-      # if x does not have a variable label
-  
-      # add the variable name of x as an attribute called
-      # variable_label to the output dataframe
-      attr(out, "variable_label") <- x_name
-      # add the variable name of x as an attribute called
-      # variable_name to the output dataframe    
-      attr(out, "variable_name") <- x_name
-  
-    }
-  
-    # add an attribute containing the names of the grouping variables
-    attr(out, "group_names") <- group_names
-  
-    # add a variable for the n variable
-    attr(out$n, "label") <- "N"
-    # add a variable label for the mean variable
-    attr(out$mean, "label") <- "Mean"
-    # add a variable label for the mean variable
-    attr(out$sd, "label") <- "SD"
-    # add a variable label for the mean variable
-    attr(out$conf.low, "label") <- "Low CI"
-    # add a variable label for the mean variable
-    attr(out$conf.high, "label") <- "High CI"
-  
-    # get the classes of the data.frame
-    class_names <- class(out)
-    # add adlgraphs_freqs to the classes
-    attr(out, "class") <- c("adlgraphs_means", class_names)
+  out <- out[c(group_names, "mean", "sd", "n", "conf.low", "conf.high")]
+      
+  if (!is.null(group_names)) {
+    # if there are groups add the value labels
+
+    # get the variable labels as a named list
+    group_labels <- attr_var_label(data[,group_names])
+    # for each value in names(group_labels) add the variable label from group_labels
+    for (y in names(group_labels)) attr(out[[y]], "label") <- group_labels[[y]]
+
+  }
+
+  if (!is.null(attr_var_label(data[[x]]))) {
+    # if there is a variable label in the x variable
+
+    # add the variable label of x as an attribute called 
+    # variable_label to the output dataframe
+    attr(out, "variable_label") <- attr_var_label(data[[x]])
+    # add the variable name of x as an attribute called
+    # variable_name to the output dataframe
+    attr(out, "variable_name") <- x
+
+  } else {
+    # if x does not have a variable label
+
+    # add the variable name of x as an attribute called
+    # variable_label to the output dataframe
+    attr(out, "variable_label") <- x_name
+    # add the variable name of x as an attribute called
+    # variable_name to the output dataframe    
+    attr(out, "variable_name") <- x_name
+
+  }
+
+  # add an attribute containing the names of the grouping variables
+  attr(out, "group_names") <- group_names
+
+  # add a variable for the n variable
+  attr(out$n, "label") <- "N"
+  # add a variable label for the mean variable
+  attr(out$mean, "label") <- "Mean"
+  # add a variable label for the mean variable
+  attr(out$sd, "label") <- "SD"
+  # add a variable label for the mean variable
+  attr(out$conf.low, "label") <- "Low CI"
+  # add a variable label for the mean variable
+  attr(out$conf.high, "label") <- "High CI"
+
+  # get the classes of the data.frame
+  class_names <- class(out)
+  # add adlgraphs_freqs to the classes
+  attr(out, "class") <- c("adlgraphs_means", class_names)
   
   out
 }
