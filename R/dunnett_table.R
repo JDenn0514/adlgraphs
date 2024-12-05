@@ -16,4 +16,3 @@
 #' @param show_genpop Logical. Should there be a column showing the frequencies
 #'   for the general population
 #'
-#' @export
