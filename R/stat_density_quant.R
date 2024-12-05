@@ -108,7 +108,6 @@
 #'   `quantiles` is an integer then the data will be cut into that many equal
 #'   quantiles. If it is a vector of probabilities then the data will cut by them.
 #' @export
-
 stat_density_quant <- function(mapping = NULL, data = NULL,
                                geom = geom, position = "stack",
                                ...,

@@ -16,6 +16,7 @@
 #'   name(s) of the aesthetic(s) that this scale works with. This can be useful,
 #'   for example, to apply colour settings to the `colour` and `fill` aesthetics
 #'   at the same time, via `aesthetic = c("colour", "fill")`
+#' @param n `lifecycle::deprecated()`
 #' @param direction A character string indicating if the order of the colors
 #'   should be reversed. There are two values:
 #'   1. "original" keep the original order of colors
@@ -52,6 +53,9 @@ scale_adl <- function(
   ...
 ) {
 
+  warning(
+    "`n` has been deprecated as the function now automatically detects number of colors needed."
+  )
 
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
     stop('ggplot2 is required for this functionality', call. = FALSE)

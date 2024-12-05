@@ -33,6 +33,8 @@ name(s) of the aesthetic(s) that this scale works with. This can be useful,
 for example, to apply colour settings to the \code{colour} and \code{fill} aesthetics
 at the same time, via \code{aesthetic = c("colour", "fill")}}
 
+\item{n}{\code{lifecycle::deprecated()}}
+
 \item{direction}{A character string indicating if the order of the colors
 should be reversed. There are two values:
 \enumerate{

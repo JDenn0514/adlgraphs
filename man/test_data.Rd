@@ -5,7 +5,7 @@
 \alias{test_data}
 \title{{dataset_title},}
 \format{
-A data frame with {nrow(df)} rows and {ncol(df)} variables:
+A data frame with 250 rows and 46 variables:
 \describe{
 \item{resp_id}{Unique ID for each Respondent}
 \item{wts}{Survey weighting variable}

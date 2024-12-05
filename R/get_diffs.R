@@ -75,14 +75,6 @@
 #'   dplyr::group_by(pid_f3, values_f2) %>% 
 #'   get_diffs(acts_avg, edu_f2)
 #' 
-#' # If we want to show means and differences, set show_means to TRUE
-#' # we don't need to set show_diffs to TRUE since that is the default
-#' get_diffs(test_data, acts_avg, edu_f, show_means = TRUE)
-#' 
-#' # if we want to show means without differences, set `show_diffs = FALSE`
-#' get_diffs(test_data, acts_avg, edu_f, show_means = TRUE, show_diffs = FALSE)
-#' 
-#' 
 #' @export
 get_diffs <- function(
   data, 
@@ -95,6 +87,8 @@ get_diffs <- function(
   conf.level = 0.95,
   na.rm = TRUE
 ) {
+
+ 
 
   # Ensure inputs are symbols or strings
   x_name <- deparse(substitute(x))
@@ -166,7 +160,7 @@ get_diffs <- function(
         treats = {{ treats }},
         wt = {{ wt }}, 
         ref_level = ref_level, 
-        conf_level = conf_level
+        conf.level = conf.level
       )
     ) %>% 
       stats::setNames(nest_data$name) 
@@ -182,7 +176,7 @@ get_diffs <- function(
       treats = {{ treats }},
       wt = {{ wt }}, 
       ref_level = ref_level, 
-      conf_level = conf_level
+      conf.level = conf.level
     )
   }
 
@@ -221,7 +215,7 @@ get_diffs <- function(
 }
 
 
-bivariate_reg <- function(data, x, treats, wt, ref_level, conf_level = 0.95, decimals = 3) {
+bivariate_reg <- function(data, x, treats, wt, ref_level, conf.level = 0.95, decimals = 3) {
   
   data[[treats]] <- make_factor(data[[treats]])
 
@@ -248,7 +242,7 @@ bivariate_reg <- function(data, x, treats, wt, ref_level, conf_level = 0.95, dec
   # remove the intercept row
   out <- coefs[!grepl("(Intercept)", coefs$term, fixed = TRUE),] 
   # calculate z
-  z <- stats::qt(1 - ((1 - conf_level) / 2), df = model$df.residual)
+  z <- stats::qt(1 - ((1 - conf.level) / 2), df = model$df.residual)
   # calculate the margin of error
   out$moe <- z * out$`Std. Error`
   out$conf.low <- out$Estimate - out$moe

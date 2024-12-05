@@ -100,12 +100,4 @@ test_data \%>\%
   dplyr::group_by(pid_f3, values_f2) \%>\% 
   get_diffs(acts_avg, edu_f2)
 
-# If we want to show means and differences, set show_means to TRUE
-# we don't need to set show_diffs to TRUE since that is the default
-get_diffs(test_data, acts_avg, edu_f, show_means = TRUE)
-
-# if we want to show means without differences, set `show_diffs = FALSE`
-get_diffs(test_data, acts_avg, edu_f, show_means = TRUE, show_diffs = FALSE)
-
-
 }
