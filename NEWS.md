@@ -1,3 +1,9 @@
+# adlgraphs 0.3.42
+
+## added an additional argument to `make_factor()`
+
+- I added a new argument that allows you to specify the levels. This is not fully implemented yet, however.
+
 # adlgraphs 0.3.41
 
 ## created an experimental function and updated another
