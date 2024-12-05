@@ -221,6 +221,9 @@ it relates to wrapping the text, use your judgement. Make sure the text
 is easy to read, doesn’t overlap with each other, and the relative sizes
 of the bars is easy to see.</p></li>
 </ul>
+<pre><code><span><span class="co">#&gt; Warning in scale_adl(palette = "binary", wrap_legend_labels = 25, legend_title</span></span>
+<span><span class="co">#&gt; = "none"): `n` has been deprecated as the function now automatically detects</span></span>
+<span><span class="co">#&gt; number of colors needed.</span></span></code></pre>
 <p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-3-1.png" width="100%" height="100%"></p>
 <p>Occasionally, we also do vertically dodged bar plots. As I mentioned
 above, we’ll use these when the axis labels are not large. For example,
@@ -230,6 +233,9 @@ non-college graduates. Another example, comparing the average score for
 two measures, like conspiracy belief and social dominance orientation,
 across a group, like education level. I’ll demonstrate both examples
 below.</p>
+<pre><code><span><span class="co">#&gt; Warning in scale_adl(palette = "binary", wrap_legend_labels = 20, legend_title</span></span>
+<span><span class="co">#&gt; = "Average Score:"): `n` has been deprecated as the function now automatically</span></span>
+<span><span class="co">#&gt; detects number of colors needed.</span></span></code></pre>
 <p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-4-1.png" width="100%" height="100%"></p>
 </div>
 <div class="section level3">
@@ -256,6 +262,9 @@ a negative statement is true or agree with it.</p></li>
 <li><p>The order of the statements should go from highest (on the top)
 to lowest (on the bottom)</p></li>
 </ul>
+<pre><code><span><span class="co">#&gt; Warning in scale_adl(palette = "likert_4", n = 4, wrap_legend_labels = 10, :</span></span>
+<span><span class="co">#&gt; `n` has been deprecated as the function now automatically detects number of</span></span>
+<span><span class="co">#&gt; colors needed.</span></span></code></pre>
 <p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-5-1.png" width="100%" height="100%"></p>
 </div>
 </div>
@@ -294,7 +303,7 @@ convert the variable <code>top</code> into a factor variable named
 <code>top_f</code> by leveraging the the underlying metadata with the
 <code><a href="../reference/make_factor.html">make_factor()</a></code> function. Then, we use
 <code><a href="../reference/get_freqs.html">get_freqs()</a></code> to calculate the frequencies.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># use the test data set</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="co"># convert top_f into a factor variable based on the underlying labels</span></span>
@@ -315,7 +324,7 @@ a new variable a factor with the correct response options using
 [<code><a href="../reference/case_match_fct.html">case_match_fct()</a></code>], like what’s below. We can see that the
 results are the exact same, but the example below requires a lot more
 code (This is why metadata is so valuable!).</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="co"># make top_f and set the factor levels using case_match_fct()</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>top_f <span class="op">=</span> <span class="fu"><a href="../reference/case_match_fct.html">case_match_fct</a></span><span class="op">(</span></span>
@@ -339,7 +348,7 @@ graph with the <code><a href="../reference/pct_conv.html">pct_conv()</a></code> 
 <code>pct</code> variable multiplies it by 100 and then takes that value
 and adds the % symbol in a new variable called <code>pct_lab</code>. We
 can see this below.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="co"># clean up the data</span></span>
@@ -363,7 +372,7 @@ graph is vertical and the response options are on the x-axis. We set
 percentage. Moreover, we need <code>y</code> to be a numeric value.
 <code>col_label</code> is set to “pct_lab” and is the label that goes
 outside the bars.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/adl_bar_plots.html">adl_bar_plots</a></span><span class="op">(</span></span>
 <span>    <span class="co"># set the x-axis to top_f so it is vertical</span></span>
@@ -381,7 +390,7 @@ outside the bars.</p>
 <code>y = NULL</code>. We are going to use <code><a href="../reference/attr_var_label.html">attr_var_label()</a></code>
 to get the variable label, so set
 <code>x = attr_var_label(test_data$top)</code>.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="va">plot</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
 <span>    y <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -398,7 +407,7 @@ occurs after 55 characters. The plot title is also too long so we need
 to fix that as well. One way to do this is to use <a href="https://stringr.tidyverse.org/reference/str_wrap.html" class="external-link"><code>stringr::str_wrap()</code></a>
 again, or we can manually set it by adding <code>\n</code> to the title.
 <code>\n</code> indicates where the line break should occur.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="va">plot</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
 <span>    y <span class="op">=</span> <span class="cn">NULL</span>,</span>
