@@ -63,9 +63,9 @@ reference:
 - title: Data analysis
   desc: These are miscellaneous functions created to help with data analysis.
   contents:
-    - dunnett
     - get_coefficients
     - get_means
+    - get_diffs
     - get_freqs
     - get_freq_table
     - get_all_freqs
@@ -86,6 +86,7 @@ reference:
     - flatten_labelled_vec
 - title: Miscellaneous functions
   contents:
+  ` - dunnett
     - remove_bot_dupe
     - get_bot_dupe
     - export_bot_dupe

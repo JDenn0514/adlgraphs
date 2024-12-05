@@ -66,11 +66,10 @@
 #' # now let's do the same but have it show the means
 #' dunnett(test_data, "acts_avg", "pid_f3", show_means = TRUE)
 #'
-#' # now do the same as above but make "Graduate Degree" the control group
-#' dunnett_helper(test_data, "acts_avg", "pid_f3", control = "Independent")
+#' # now do the same as above but make "Independent" the control group
 #' dunnett(test_data, "acts_avg", "pid_f3", control = "Independent", show_means = TRUE)
 #'
-#' # now let's add in partisanship (`edu_f2`) as the `group` variable. This let's us
+#' # now let's add in education (`edu_f2`) as the `group` variable. This let's us
 #' # compare education levels within each level of `edu_f2`. Note how the arguments
 #' # don't have to be strings
 #' dunnett(test_data, acts_avg, pid_f3, edu_f2)

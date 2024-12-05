@@ -63,10 +63,6 @@
 #' attributes(new_df$top_f)
 #'
 #' @export
-
-
-
-
 make_factor <- function(x, levels = NULL, ordered = FALSE, drop_levels = TRUE, force = TRUE, na.rm = FALSE) {
   # get the variable's name as a string
   x_name <- deparse(substitute(x))

@@ -23,7 +23,6 @@
 #' @importFrom marquee classic_style element_marquee
 #' @importFrom mvtnorm qmvt pmvt
 #' @importFrom officer body_add_par
-#' @importFrom PMCMRplus dunnettTest
 #' @importFrom prismatic color
 #' @importFrom purrr map pmap pmap_chr walk
 #' @importFrom readr write_csv
@@ -32,14 +31,15 @@
 #' @importFrom rstudioapi isAvailable getVersion
 #' @importFrom sjlabelled as_label get_labels
 #' @importFrom stats qt df.residual setNames weighted.mean sd symnum
-#'   na.omit lm coef quantile xtabs reformulate complete.cases
+#'   na.omit lm coef quantile xtabs reformulate complete.cases 
+#'   model.matrix lm relevel
 #' @importFrom stringr str_replace str_detect
 #' @importFrom systemfonts register_font
-#' @importFrom tibble as_tibble enframe
+#' @importFrom tibble as_tibble enframe new_tibble
 #' @importFrom tidyr pivot_wider drop_na nest unnest separate_wider_delim
 #' @importFrom tidyselect all_of eval_select where
 #' @importFrom utils tail
-#' @importFrom vctrs vec_ptype_abbr
+#' @importFrom vctrs vec_ptype_abbr vec_rbind vec_cbind vec_split 
 #' @importFrom waldo compare
 #' @importFrom withr with_seed
 #' @importFrom writexl write_xlsx

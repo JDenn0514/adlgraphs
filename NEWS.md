@@ -1,3 +1,11 @@
+# adlgraphs 0.3.5
+
+## Create a new function
+
+#### get_diffs
+
+- This function calculates the difference in means. 
+
 # adlgraphs 0.3.42
 
 ## added an additional argument to `make_factor()`

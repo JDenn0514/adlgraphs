@@ -298,7 +298,7 @@ get_loadings.grouped_df <- function(
         # split up the string by the - and use the group_labs vector as the names
         tidyr::separate_wider_delim(groups, delim = " - ", names = c(group_labs)) %>% 
         # group the data by the vector group variables
-        dplyr::group_by(across(all_of(group_labs))) %>% 
+        dplyr::group_by(dplyr::across(tidyselect::all_of(group_labs))) %>% 
         # arrange by the groups
         dplyr::arrange(.by_group = TRUE)
 
