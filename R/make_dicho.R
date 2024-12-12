@@ -28,7 +28,7 @@
 #'   kept the same. If `TRUE`, the factor levels are flipped. Only specify this
 #'   if you want to change the order of the factor level.
 #'
-#' @export
+#' @return A factor vector with two levels of same length as `x`.
 #'
 #' @examples
 #' # load the libraries
@@ -89,7 +89,6 @@
 #' attributes(new_df$top_f2)
 #' attributes(new_df$top_f2_flip)
 #'
-
 #' # ----------------------------------------------------------------------------
 #' # function also works inside dplyr::across()
 #'
@@ -122,8 +121,7 @@
 #' levels(new_df$top_f2)
 #' levels(new_df$top_f2_flip)
 #'
-#'
-
+#' @export
 make_dicho <- function(x, flip_levels = FALSE) {
 
   # get the object's name

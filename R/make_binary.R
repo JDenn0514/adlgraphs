@@ -30,8 +30,9 @@
 #' @param flip_values Logical. If `FALSE`, the default, the values are kept the
 #'   same. If `TRUE`, the values associated with 1 and 0 are flipped. See third
 #'   example for more information.
+#' 
+#' @return A numeric vector of same length as `x`.
 #'
-#' @export
 #'
 #' @examples
 #' library(tibble)
@@ -142,7 +143,7 @@
 #' levels(binary_df$binary_x)
 #' levels(binary_df$binary_flipped_x)
 #'
-
+#' @export
 make_binary <- function(x, flip_values = FALSE) {
 
   # get the object's name

@@ -2,8 +2,8 @@
 #' 
 #' @description
 #' This function calculates the difference in means using a 
-#' bivariate regression, as well the p-value indicating
-#' how significant each difference is. The main function doing the
+#' bivariate regression, as well the p-value indicating how
+#' significant each difference is. The main function doing the
 #' calculations `lm()`.
 #' 
 #' NOTE: This function does not perform an actual Dunnet Test as it 
@@ -31,17 +31,17 @@
 #' @param conf.level A number between 0 and 1 that signifies the width of the
 #'   desired confidence interval. Default is 0.95, which corresponds to a 95%
 #'   confidence interval.
-#' @param decimals Number of decimals each number should be rounded to. Default is 2.
-#' @param na.rm Logical. Determines if NAs should be removed
+#' @param decimals Number of decimals each number should be rounded to. Default
+#'   is 3.
 #' 
-#' @return 
-#' A `data.frame` with columns for the grouping variables, the 
-#' treatment variable, the difference in means (`diffs`), 
-#' number of observations (`n`), low CI (`conf.low`), high CI 
-#' (`conf.high`), and p-value (`p_value`).
+#' @return A tibble with one row if no `group` is provided and `data` 
+#'   is not of class `"grouped_df"`. If data is of class `"grouped_df"` or 
+#'   `group` is provided, it will return one row for each unique observation 
+#'   if one group is provides and one row per unique combination of observations
+#'   if multiple groups are used.
 #' 
 #' @examples
-#' # load dply for the pipe: %>% 
+#' # load dplyr for the pipe: %>% 
 #' library(dplyr)
 #' library(adlgraphs)
 #' 
@@ -69,20 +69,22 @@
 #'   dplyr::group_by(pid_f3) %>% 
 #'   get_diffs(acts_avg, edu_f)
 #' 
-#' # we can also group by multiple
+#' # we can also group by multiple variables
 #' test_data %>% 
 #'   dplyr::mutate(values_f2 = make_dicho(values)) %>% 
 #'   dplyr::group_by(pid_f3, values_f2) %>% 
 #'   get_diffs(acts_avg, edu_f2)
 #' 
 #' @export
-get_diffs <- function(
+get_diffs_new <- function(
   data, 
   x, 
   treats, 
   group = NULL, 
   wt = NULL, 
   ref_level,
+  show_means = FALSE,
+  show_pct_change = FALSE,
   decimals = 3, 
   conf.level = 0.95,
   na.rm = TRUE
@@ -125,7 +127,6 @@ get_diffs <- function(
 
   # if rev_level is missing, set it to the first level in the treats variable
   if (missing(ref_level)) ref_level <- levels(data[[treats]])[1]
-  
 
   data <- data[c(x, treats, group_names, wt)]
   if (na.rm) data <- data[stats::complete.cases(data), ]
@@ -159,6 +160,8 @@ get_diffs <- function(
         x = {{ x }}, 
         treats = {{ treats }},
         wt = {{ wt }}, 
+        show_means = show_means,
+        show_pct_change = show_pct_change,
         ref_level = ref_level, 
         conf.level = conf.level
       )
@@ -175,21 +178,49 @@ get_diffs <- function(
       x = {{ x }}, 
       treats = {{ treats }},
       wt = {{ wt }}, 
+      show_means = show_means,
+      show_pct_change = show_pct_change,
       ref_level = ref_level, 
       conf.level = conf.level
     )
   }
 
+  # clean up the treats variable by removing it from the string in the term col
   out[[treats]] <- gsub(pattern = treats, replacement = "", x = out$term, fixed = TRUE)
   
-  out <- out[c(group_names, treats, "Estimate", "n", "conf.low", "conf.high", "Pr(>|t|)")]
-  colnames(out) <- c(group_names, treats, "diffs", "n", "conf.low", "conf.high", "p_value")
+  # keep only the relevant columns and reorder them
+  out <- out[c(group_names, treats, "Estimate", "pct_change", "mean",  "n", "conf.low", "conf.high", "Pr(>|t|)")]
+  # rename the columns
+  colnames(out) <- c(group_names, treats, "diffs", "pct_change", "mean", "n", "conf.low", "conf.high", "p_value")
 
-  # set the grouping columns to factors
+  if (!show_means) {
+    # if show_means is false, remove it
+    out <- out[, !names(out) == "mean"]
+  } else {
+    # otherwise, round it
+    out$mean <- round(out$mean, decimals)
+    # also add label
+    attr(out$mean, "label") <- "Mean"
+  }
+
+  if (!show_pct_change) {
+    # if show_pct_change is false, remove it
+    out <- out[, !names(out) == "pct_change"]
+  } else {
+    # otherwise, round it
+    out$pct_change <- round(out$pct_change, decimals + 2)
+    # also add label
+    attr(out$pct_change, "label") <- paste("Percent change from", ref_level)
+  }
+
+
+  # set the grouping columns to factors using levels from original data set
   out[group_cols] <- purrr::map(
     group_cols %>% setNames(nm = .),
-    ~ make_factor(out[[.x]], levels = levels(data[[.x]]))
+    ~ factor(out[[.x]], levels = levels(data[[.x]]))
   )  
+  
+  # reorder the columns in teh grouping variables
   out <- dplyr::arrange(out, dplyr::across(tidyselect::all_of(group_cols)))
 
   # round the numeric columns to decimals places
@@ -198,7 +229,15 @@ get_diffs <- function(
   out$conf.high <- round(out$conf.high, decimals)
   out$p_value <- round(out$p_value, decimals)
 
+  if (!is.null(group_names)) {
+    # if there are groups add the value labels
 
+    # get the variable labels as a named list
+    group_labels <- attr_var_label(data[,group_names])
+    # for each value in names(group_labels) add the variable label from group_labels
+    for (y in names(group_labels)) attr(out[[y]], "label") <- group_labels[[y]]
+
+  }
  
   # Add labels
   attr(out[[treats]], "label") <- attr(data[[treats]], "label")
@@ -207,21 +246,56 @@ get_diffs <- function(
   attr(out$conf.low, "label") <- "Low CI"
   attr(out$conf.high, "label") <- "High CI"
   attr(out$p_value, "label") <- "P-Value"
-  attr(out, "variable_label") <- attr(data[[x]], "label")
-  attr(out, "variable_name") <- x_name
+
+  if (!is.null(attr_var_label(data[[x]]))) {
+    # if there is a variable label in the x variable
+
+    # add the variable label of x as an attribute called 
+    # variable_label to the output dataframe
+    attr(out, "variable_label") <- attr_var_label(data[[x]])
+    # add the variable name of x as an attribute called
+    # variable_name to the output dataframe
+    attr(out, "variable_name") <- x_name
+
+  } else {
+    # if x does not have a variable label
+
+    # add the variable name of x as an attribute called
+    # variable_label to the output dataframe
+    attr(out, "variable_label") <- x_name
+    # add the variable name of x as an attribute called
+    # variable_name to the output dataframe    
+    attr(out, "variable_name") <- x_name
+
+  }
+
+  # add an attribute containing the names of the grouping variables
+  attr(out, "group_names") <- group_names
   
   # Return results and set the class
   structure(out, class = c("adlgraphs_mean_diffs", class(out)))
 }
 
-
-bivariate_reg <- function(data, x, treats, wt, ref_level, conf.level = 0.95, decimals = 3) {
+bivariate_reg <- function(
+  data, 
+  x, 
+  treats, 
+  wt, 
+  show_means = FALSE,
+  show_pct_change = FALSE,
+  ref_level, 
+  conf.level = 0.95, 
+  decimals = 3
+) {
   
-  data[[treats]] <- make_factor(data[[treats]])
+  data[[treats]] <- make_factor(data[[treats]], drop_levels = TRUE, force = TRUE)
+
+  if (missing(ref_level)) ref_level <- levels(data[[treats]])[1]
 
   if (!missing(ref_level) && ref_level != levels(data[[treats]])[1]) {
     data[[treats]] <- stats::relevel(data[[treats]], ref_level)
-  }
+  } 
+  
   
   # create the model
   model <- stats::lm(
@@ -230,25 +304,95 @@ bivariate_reg <- function(data, x, treats, wt, ref_level, conf.level = 0.95, dec
     data = data,
     weights = data[[wt]]
   )
-  
-  # calculate the number of observations per level
-  n <- colSums(stats::model.matrix(model))[-1]
 
+  # calculate the number of observations per level
+  n <- colSums(stats::model.matrix(model))
+  
   # get the coefficients
   coefs <- summary(model)$coefficients %>%
     # make the rownames a column called "term"
     tibble::as_tibble(rownames = "term")
-
-  # remove the intercept row
-  out <- coefs[!grepl("(Intercept)", coefs$term, fixed = TRUE),] 
+  
   # calculate z
   z <- stats::qt(1 - ((1 - conf.level) / 2), df = model$df.residual)
   # calculate the margin of error
-  out$moe <- z * out$`Std. Error`
-  out$conf.low <- out$Estimate - out$moe
-  out$conf.high <- out$Estimate + out$moe
-  out$n <- n
-  return(out)
+  coefs$moe <- z * coefs$`Std. Error`
+  coefs$conf.low <- coefs$Estimate - coefs$moe
+  coefs$conf.high <- coefs$Estimate + coefs$moe
+  
+  # get the reference stats
+  # use grepl() to return only rows with "(Intercept)" in term col
+  ref <- coefs[grepl("(Intercept)", coefs$term, fixed = TRUE),]
+  # Get non-reference stats 
+  # Use !grepl() to return any rows without "(Intercept)" in term col
+  non_ref <- coefs[!grepl("(Intercept)", coefs$term, fixed = TRUE),] 
+
+
+  if (show_pct_change) {
+    # if show_pct_change = TRUE, calculate percent change
+
+    ref$pct_change <- NA
+    # add the percent change from the ref group to the non-ref groups
+    non_ref$pct_change <- non_ref$Estimate / ref$Estimate
+    
+  } else {
+    ref$pct_change <- NA
+    non_ref$pct_change <- NA
+  }
+  # return(non_ref)
+
+  if (show_means) {
+    # if show_means = TRUE, calculate the means
+
+    # clean up the ref stats row
+    # create a new column called "mean" with the value of the estimate
+    ref$term <- ref_level
+    ref$mean <- ref$Estimate
+    # convert the estimate to 0
+    ref$Estimate <- 0
+    # convert the SE to NA
+    ref$`Std. Error` <- NA
+    # convert the t-value to NA
+    ref$`t value` <- NA
+    # convert the p-value to NA
+    ref$`Pr(>|t|)` <- NA
+    # add NA to the margin of error
+    ref$moe <- NA
+    # add NA to the low CI
+    ref$conf.low <- NA
+    # add NA to the high CI
+    ref$conf.high <- NA
+    # add the number of observations
+    # n[1] is the total number of observations in the data
+    # n[-1] is the number of observations in each level
+    # subtract the sum of n[-1] from n[1] to get the number  
+    #   of observations in the reference group
+    ref$n <- n[1] - sum(n[-1])
+
+
+    # clean up the non-reference stats
+
+    # add a new column called "mean" by adding the value in the reference
+    #   mean (ref$mean) to the each value in the non-reference estimate (non-ref$Estimate) 
+    non_ref$mean <- ref$mean + non_ref$Estimate
+    # add the number of observations
+    non_ref$n <- n[-1]
+
+    ### combine reference and non-reference stats
+    # combine the two objects in a list
+    list_out <- list(ref, non_ref)
+    # use vec_rbind to combine the list a df by splicing (!!!)
+    #   each element of list_out
+    out <- vctrs::vec_rbind(!!!list_out)
+
+    
+  } else {
+    non_ref$mean <- NA
+    out <- non_ref
+    out$n <- n[-1]
+
+  }
+  out
 
 }
 

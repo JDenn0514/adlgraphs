@@ -1,5 +1,6 @@
 #' Calculate means with confidence intervals
 #'
+#' @description
 #' Use this function to calculate simple weighted means with 95% confidence
 #' intervals or weighted grouped means.
 #'
@@ -25,6 +26,13 @@
 #' @param conf_level What should the confidence level be when calculating
 #'   confidence intervals. Defaults to 0.95 
 #'
+#' @return A tibble with one row if no `group` is provided and `data` 
+#'   is not of class `"grouped_df"`. If data is of class `"grouped_df"` or `group`
+#'   is provided, it will return a row for each unique observation or combination 
+#'   of observations.
+#' 
+#' 
+#' 
 #' @examples
 #' # load the package
 #' library(dplyr)

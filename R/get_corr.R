@@ -16,10 +16,10 @@
 #'
 #' @return A tibble showing correlations (`correlation`), number of observations 
 #'   (`n`), low and high confidence intervals (`conf.low`, `conf.high`), 
-#'   the p-value (p.value), and stars indicating it's statistical significance.
-#'   If the data is grouped, then it will also include a column, or multiple, 
-#'   for each group. Similarly, if the data is grouped, the tibble will have 
-#'   a row for each unique combination of grouping variables.
+#'   the p-value (`p.value`), and stars indicating it's statistical significance.
+#'   If data is of class `"grouped_df"` it will return one row for each unique 
+#'   observation if one group is provided and one row per unique combination of 
+#'   observations if multiple groups are used.
 #' 
 #' @examples
 #' # load the dplyr for piping and grouping
@@ -145,10 +145,6 @@ get_corr.grouped_df <- function(data, x, y, group, wt) {
 #'   in the data you want to calculate the correlation between. 
 #' @param wt Can be either character strings or symbols. Weights. Add if 
 #'   you have a weighting variable and want to get weighted correlations
-#' 
-#' @return A one row tibble showing correlations (`correlation`), number of 
-#'   observations (`n`), low and high confidence intervals (`conf.low`, `conf.high`), 
-#'   the p-value (`p.value`), and stars indicating it's statistical significance.
 #' 
 #' @export
 wtd_corr <- function(data, x, y,  wt) {

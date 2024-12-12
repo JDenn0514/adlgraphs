@@ -1,15 +1,18 @@
 #' Assign or reorder factor levels manually
 #'
 #' This is a low level function that allows you to convert a character vector
-#' into a factor and manuall assign the levels, or to manually reassign the
-#' levels of a factor vector
+#' into a factor and manually assign the levels, or to manually reassign the
+#' levels of a factor vector. While very similar to `factor()` a key difference
+#' is that this keeps the original attributes of `x`.
 #'
-#' @param f A factor or character vector
+#' @param x A factor or character vector
 #' @param new_levels A list of the new levels of the factor
 #' @param ordered Logical. Specifies if the factor is ordered. Default is NA,
 #'   which checks to see if the factor is ordered and then uses that to determine
 #'   if it should be ordered
 #'
+#' @return A factor variable of the same length as `x`
+#' 
 #' @examples
 #' # load the dplyr library so we can use `mutate()`
 #' library(dplyr)
@@ -37,39 +40,39 @@
 #' levels(test_data$edu_f)
 #' @export
 
-refactor <- function(f, new_levels, ordered = NA) {
+refactor <- function(x, new_levels, ordered = NA) {
 
   # get the argument name
-  f_lab <- deparse(substitute(f))
+  x_name <- deparse(substitute(x))
 
   # convert character vector to
-  if (is.character(f)) {
+  if (is.character(x)) {
     # if f is a character vector make it a factor
-    f <- factor(f)
-  } else if (is.factor(f)) {
+    x <- factor(x)
+  } else if (is.factor(x)) {
     # if it is factor just leave it
-    f
+    x
   } else {
     # if it is not character vector or factor return an error
     cli::cli_abort(
-      "{.arg {f_lab}} must be a factor or character vector, not {.obj_type_friendly {f}}.",
+      "{.arg {x_name}} must be a factor or character vector, not {.obj_type_friendly {x}}.",
     )
   }
 
   if (is.na(ordered)) {
     # if ordered = NA, make it ordered or not based on the original factor
-    ordered <- is.ordered(f)
+    ordered <- is.ordered(x)
   }
 
   # make the new factor
-  new_f <- factor(f, levels = new_levels, exclude = NULL, ordered = ordered)
+  new_x <- factor(x, levels = new_levels, exclude = NULL, ordered = ordered)
 
   # update the attributes in f
   # this function uses the attributes from new_f and keeps the ones in f that
   # are not in new_f
-  attributes(new_f) <- utils::modifyList(as.list(attributes(f)), attributes(new_f))
+  attributes(new_x) <- utils::modifyList(as.list(attributes(x)), attributes(new_x))
   # return the vector
-  new_f
+  new_x
 
 }
 

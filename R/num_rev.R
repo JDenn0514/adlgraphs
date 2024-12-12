@@ -5,10 +5,10 @@
 #' original variable underwent. Please check the vignette to have a better
 #' understanding of exactly what this function does.
 #'
-#' @export
-#'
 #' @param x A vector of class `haven_labelled` or `numeric`
 #'
+#' @return A numeric vector of the same length as `x`
+#' 
 #' @examples
 #'
 #' library(dplyr)
@@ -18,8 +18,7 @@
 #'   mutate(accept_isr_rev = num_rev(accept_isr)) %>%
 #'   select(starts_with("accept"))
 #'
-#'
-
+#' @export
 num_rev <- function(x) {
 
   # get the object's name

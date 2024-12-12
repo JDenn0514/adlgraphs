@@ -20,7 +20,11 @@
 #' @param .default The value used when values in `.x` aren't matched by any of
 #'   the LHS inputs. If `NULL`, the default, a `NA` will be used.
 #'
-#' @export
+#' @return  A factor vector with the same size as `.x` and the same type as the
+#'   common type of the RHS inputs and `.default` and levels as defined by the 
+#'   order of the RHS inputs.
+#' 
+#' @seealso [case_when_fct()]
 #'
 #' @examples
 #' # import dplyr so we can use their starwars dataset
@@ -67,11 +71,8 @@
 #'     )
 #'   ) %>%
 #'   dplyr::count(new_species)
-#'
-
-
-
-
+#' 
+#' @export
 case_match_fct <- function(.x, ..., .default = NULL) {
 
   # get the object's name

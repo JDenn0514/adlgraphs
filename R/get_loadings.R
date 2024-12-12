@@ -45,6 +45,8 @@
 #' @param sort Logical. If `TRUE`, the default, the loadings are sorted 
 #'   largest to smallest. If `FALSE`, no sorting occurs.
 #' 
+#' @return A data.frame showing factor loadings. 
+#' 
 #' @examples
 #' 
 #' library(adlgraphs)

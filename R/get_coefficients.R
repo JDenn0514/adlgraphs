@@ -36,11 +36,10 @@
 #'
 #'   This is useful if you are comparing multiple models with similar variable
 #'   and need to clarify which estimates are associated with which model.
+#' 
+#' @return A data.frame summarizing the results of an `lm()` or `glm()` object.
 #'
 #' @export
-
-
-
 get_coefficients <- function(
     model,
     conf.level = 0.95,
@@ -70,7 +69,7 @@ get_coefficients <- function(
 
   # add confidence intervals
   model_results <- model_results %>%
-    mutate(
+    dplyr::mutate(
       # get low confidence intervals
       conf.low = estimate + (std.error * qt(p = (1 - conf.level) / 2,
                                             df = df.residual(model))),
@@ -78,7 +77,7 @@ get_coefficients <- function(
       conf.high = estimate - (std.error * qt(p = (1 - conf.level) / 2,
                                              df = df.residual(model))),
       # round the confidence intervals to the nearest thousandth
-      across(where(is.numeric), ~round(.x, 3))
+      dplyr::across(dplyr::where(is.numeric), ~round(.x, 3))
     )
 
   # attach the model to the tidy tibble

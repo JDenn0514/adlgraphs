@@ -8,6 +8,8 @@
 #' @param df A dataframe or tibble. This can be piped in like with a normal
 #'   \code{\link[ggplot2]{ggplot}} function.
 #'
+#' @return A data.frame object
+#' 
 #' @export
 #'
 

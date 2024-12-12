@@ -21,6 +21,12 @@
 #' @param .default A string. The value used when all of the LHS inputs return either
 #'   `FALSE` or `NA`. If `NULL`, the default, a `NA` will be used.
 #'
+#' @return A vector with the same size as the common size computed from the
+#'   inputs in `...` and the same type as the common type of the RHS inputs
+#'   in `...`.
+#' 
+#' @seealso [case_match_fct()]
+#' 
 #' @examples
 #' # load the dplyr library so we can use `mutate()`
 #' library(dplyr)
@@ -69,8 +75,6 @@
 #' str(new_data$edu_f2)
 #'
 #' @export
-
-
 case_when_fct <- function(..., .default = NULL) {
   # get the arguments from ...
   args <- rlang::list2(...)

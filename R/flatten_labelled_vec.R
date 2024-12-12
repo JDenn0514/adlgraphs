@@ -12,12 +12,18 @@
 #' @param data A `data.frame` or `tibble` object. This should only be specified
 #'   when `x` is only the name of a column in a `data.frame`.
 #' 
+#' 
+#' @return A string if `x` is a vector or column, a named vector if `x` is a 
+#'   data.frame.
+#' 
 #' @examples
 #' library(adlgraphs)
 #' # run on a single vector
 #' flatten_labelled_vec(test_data$inferior)
 #' # run on a data frame
 #' flatten_labelled_vec(test_data)
+#' 
+
 #' 
 #' @export
 flatten_labelled_vec <- function(x, data) {

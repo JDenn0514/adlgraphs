@@ -44,6 +44,8 @@
 #'  * range - If a numeric variable, shows the range of the values.
 #'
 #' @param data An object of class `data.frame` or `tibble`
+#' 
+#' @return A tibble with with the number of rows as columns in `data`
 #'
 #' @examples
 #' # create the codebook

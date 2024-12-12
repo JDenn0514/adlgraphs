@@ -46,6 +46,8 @@
 #' @param na.rm Logical. Determines if tags should be removed from NAs. Defaults
 #'   to `FALSE`.
 #'
+#' @return A factor vector of same length as `x`.
+#' 
 #' @examples
 #'
 #' library(adlgraphs)

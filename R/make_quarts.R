@@ -4,6 +4,8 @@
 #' a factor vector with labels indicating which quartile it is in.
 #'
 #' @param x A numeric vector.
+#' 
+#' @return A factor vector with four levels the same length as `x`.
 #' @export
 
 make_quarts <- function(x) {

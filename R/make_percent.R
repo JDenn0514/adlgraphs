@@ -6,6 +6,8 @@
 #' @param scale A scaling factor: `x` will be multiplied by `scale` before
 #'   formatting. This is useful if the underlying data is very small or very
 #'   large. Default is 100.
+#' 
+#' @return A character vector of the same length as `x`.
 #'
 #' @examples
 #' # here's the default scale of 100
@@ -26,12 +28,12 @@
 
 make_percent <- function(x, digits = 2, scale = 100) {
 
-  x_lab <- deparse(substitute(x))
+  x_name <- deparse(substitute(x))
 
   if (!is.numeric(x)) {
     cli::cli_abort(
       c(
-        "`{x_lab}` must be a vector of class {.cls numeric}",
+        "`{x_name}` must be a vector of class {.cls numeric}",
         x = "You've supplied a {.cls {class(x)}} vector"
 
       )
