@@ -35,10 +35,8 @@ to \code{FALSE}.}
 A factor vector of same length as \code{x}.
 }
 \description{
-#' @description
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-}
-\details{
+
 \code{make_factor()} takes a labelled vector and converts it to a factor variable
 using the value labels. This works with numeric, character, and factor vectors.
 

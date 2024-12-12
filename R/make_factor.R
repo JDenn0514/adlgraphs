@@ -1,6 +1,6 @@
 #' Convert a labelled vector into a factor
 #' 
-#' #' @description
+#' @description
 #' `r lifecycle::badge("experimental")`
 #'
 #' `make_factor()` takes a labelled vector and converts it to a factor variable
