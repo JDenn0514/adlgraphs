@@ -28,7 +28,7 @@
 #'   kept the same. If `TRUE`, the factor levels are flipped. Only specify this
 #'   if you want to change the order of the factor level.
 #'
-#' @return A factor vector with two levels of same length as `x`.
+#' @returns A factor vector with two levels of same length as `x`.
 #'
 #' @examples
 #' # load the libraries

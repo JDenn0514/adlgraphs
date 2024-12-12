@@ -50,6 +50,9 @@ column is created.
 This is useful if you are comparing multiple models with similar variable
 and need to clarify which estimates are associated with which model.}
 }
+\value{
+A data.frame summarizing the results of an \code{lm()} or \code{glm()} object.
+}
 \description{
 This function was created to produce results very similar to what you'll find
 at broom.helpers, with a few changes. Most notably, and the main reason for

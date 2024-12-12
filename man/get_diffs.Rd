@@ -11,6 +11,8 @@ get_diffs(
   group = NULL,
   wt = NULL,
   ref_level,
+  show_means = FALSE,
+  show_pct_change = FALSE,
   decimals = 3,
   conf.level = 0.95,
   na.rm = TRUE
@@ -37,24 +39,35 @@ Dunnett's test with weighted means.}
 \item{ref_level}{A string that specifies the level of the reference group
 through which the others will be tested.}
 
-\item{decimals}{Number of decimals each number should be rounded to. Default is 2.}
+\item{show_means}{Logical. Default is \code{FALSE} which does not show the mean
+values for the levels. If \code{TRUE}, will add a column called \code{mean} that
+contains the means.}
+
+\item{show_pct_change}{Logical. Default is \code{FALSE} which does not show the
+percent change from the reference category to the other categories. If
+\code{TRUE}, will show the percent change.}
+
+\item{decimals}{Number of decimals each number should be rounded to. Default
+is 3.}
 
 \item{conf.level}{A number between 0 and 1 that signifies the width of the
 desired confidence interval. Default is 0.95, which corresponds to a 95\%
 confidence interval.}
 
-\item{na.rm}{Logical. Determines if NAs should be removed}
+\item{na.rm}{Logical. Default is \code{TRUE} which removes NAs prior to
+calculation.}
 }
 \value{
-A \code{data.frame} with columns for the grouping variables, the
-treatment variable, the difference in means (\code{diffs}),
-number of observations (\code{n}), low CI (\code{conf.low}), high CI
-(\code{conf.high}), and p-value (\code{p_value}).
+A tibble with one row if no \code{group} is provided and \code{data}
+is not of class \code{"grouped_df"}. If data is of class \code{"grouped_df"} or
+\code{group} is provided, it will return one row for each unique observation
+if one group is provides and one row per unique combination of observations
+if multiple groups are used.
 }
 \description{
 This function calculates the difference in means using a
-bivariate regression, as well the p-value indicating
-how significant each difference is. The main function doing the
+bivariate regression, as well the p-value indicating how
+significant each difference is. The main function doing the
 calculations \code{lm()}.
 
 NOTE: This function does not perform an actual Dunnet Test as it
@@ -66,7 +79,7 @@ there are many comparison groups due to the nature of
 \code{mvtnorm::qmvt()} and high dimensional data.
 }
 \examples{
-# load dply for the pipe: \%>\% 
+# load dplyr for the pipe: \%>\% 
 library(dplyr)
 library(adlgraphs)
 
@@ -94,7 +107,7 @@ test_data \%>\%
   dplyr::group_by(pid_f3) \%>\% 
   get_diffs(acts_avg, edu_f)
 
-# we can also group by multiple
+# we can also group by multiple variables
 test_data \%>\% 
   dplyr::mutate(values_f2 = make_dicho(values)) \%>\% 
   dplyr::group_by(pid_f3, values_f2) \%>\% 

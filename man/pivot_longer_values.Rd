@@ -40,6 +40,9 @@ existing column names.}
 \item{name_label}{Add a variable label to the new column with the names of
 the columns}
 }
+\value{
+A longer data.frame.
+}
 \description{
 This function is a wrapper around \code{\link[tidyr]{pivot_longer}}. This
 function operates in pretty much the exact same way but uses the variable

@@ -16,6 +16,9 @@ make_percent(x, digits = 2, scale = 100)
 formatting. This is useful if the underlying data is very small or very
 large. Default is 100.}
 }
+\value{
+A character vector of the same length as \code{x}.
+}
 \description{
 Convert a numeric vector to a percent
 }

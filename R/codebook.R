@@ -45,7 +45,7 @@
 #'
 #' @param data An object of class `data.frame` or `tibble`
 #' 
-#' @return A tibble with with the number of rows as columns in `data`
+#' @returns A tibble with with the number of rows as columns in `data`
 #'
 #' @examples
 #' # create the codebook

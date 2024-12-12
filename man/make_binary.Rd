@@ -13,6 +13,9 @@ make_binary(x, flip_values = FALSE)
 same. If \code{TRUE}, the values associated with 1 and 0 are flipped. See third
 example for more information.}
 }
+\value{
+A numeric vector of same length as \code{x}.
+}
 \description{
 Convert a vector of class \code{factor} or
 \href{https://haven.tidyverse.org/reference/labelled.html}{\code{haven_labelled}}

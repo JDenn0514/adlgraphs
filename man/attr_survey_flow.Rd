@@ -13,6 +13,11 @@ an actual \code{data.frame} object.}
 \item{data}{A \code{data.frame} or \code{tibble} object. This should only be specified
 when \code{x} is only the name of a column in a \code{data.frame}.}
 }
+\value{
+If \code{x} is a variable or vector, a string containing the "survey_flow"
+attribute, if one is present, is returned. If \code{x} is a \code{data.frame} then a
+named vector with the "survey_flow" attribute from each variable is returned.
+}
 \description{
 This function makes it easy to get the survey_flow from either an
 individual vector or a data frame. NOTE: it is not possible to set or modify

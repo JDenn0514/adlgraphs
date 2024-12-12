@@ -13,7 +13,7 @@
 #'   when `x` is only the name of a column in a `data.frame`.
 #' 
 #' 
-#' @return A string if `x` is a vector or column, a named vector if `x` is a 
+#' @returns A string if `x` is a vector or column, a named vector if `x` is a 
 #'   data.frame.
 #' 
 #' @examples

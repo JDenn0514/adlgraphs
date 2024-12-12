@@ -62,7 +62,7 @@
 # #'@param ... Pass additional arguments to ggplot2's \code{\link[ggplot2]{theme}}
 # #'  function to override any elements of the plot's theme when drawing.
 # #'
-# #'@return This function invisibly returns the finished graphic as a gTree
+# #'@returns This function invisibly returns the finished graphic as a gTree
 # #'  object. If stored (e.g. \code{g <- finalize_plot(...)}), the gTree can be
 # #'  drawn later with \code{grid} (e.g. \code{grid::grid.draw(g)}).
 # #'

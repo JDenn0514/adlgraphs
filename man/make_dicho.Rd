@@ -13,6 +13,9 @@ make_dicho(x, flip_levels = FALSE)
 kept the same. If \code{TRUE}, the factor levels are flipped. Only specify this
 if you want to change the order of the factor level.}
 }
+\value{
+A factor vector with two levels of same length as \code{x}.
+}
 \description{
 Convert a vector of class \code{factor} or \code{numeric} with value labels (e.g.,
 \href{https://haven.tidyverse.org/reference/labelled.html}{\code{haven_labelled}})
@@ -127,6 +130,5 @@ str(new_df)
 # show how the levels are flipped when "flip_levels = TRUE"
 levels(new_df$top_f2)
 levels(new_df$top_f2_flip)
-
 
 }

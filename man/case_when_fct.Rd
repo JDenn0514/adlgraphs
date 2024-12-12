@@ -25,6 +25,11 @@ size of the LHS inputs.
 \item{.default}{A string. The value used when all of the LHS inputs return either
 \code{FALSE} or \code{NA}. If \code{NULL}, the default, a \code{NA} will be used.}
 }
+\value{
+A vector with the same size as the common size computed from the
+inputs in \code{...} and the same type as the common type of the RHS inputs
+in \code{...}.
+}
 \description{
 Recode a variable using the \code{dplyr::case_when()} syntax
 }
@@ -75,4 +80,7 @@ new_data <- test_data \%>\%
 # let's check it again
 str(new_data$edu_f2)
 
+}
+\seealso{
+\code{\link[=case_match_fct]{case_match_fct()}}
 }

@@ -31,6 +31,9 @@ if there are no value labels. Defaults to \code{TRUE.}}
 \item{na.rm}{Logical. Determines if tags should be removed from NAs. Defaults
 to \code{FALSE}.}
 }
+\value{
+A factor vector of same length as \code{x}.
+}
 \description{
 #' @description
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

@@ -22,10 +22,10 @@ you have a weighting variable and want to get weighted correlations}
 \value{
 A tibble showing correlations (\code{correlation}), number of observations
 (\code{n}), low and high confidence intervals (\code{conf.low}, \code{conf.high}),
-the p-value (p.value), and stars indicating it's statistical significance.
-If the data is grouped, then it will also include a column, or multiple,
-for each group. Similarly, if the data is grouped, the tibble will have
-a row for each unique combination of grouping variables.
+the p-value (\code{p.value}), and stars indicating it's statistical significance.
+If data is of class \code{"grouped_df"} it will return one row for each unique
+observation if one group is provided and one row per unique combination of
+observations if multiple groups are used.
 }
 \description{
 This function calculates weighted Pearson correlations between two variables.

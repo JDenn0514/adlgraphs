@@ -252,7 +252,7 @@
 #'   with the `data` argument.
 #'
 #'
-#' @return The functions returns a \code{ggplot} object, which can be treated
+#' @returns The functions returns a \code{ggplot} object, which can be treated
 #'   like a user-created plot and expanded upon as such.
 #'
 #' @author Jacob Long \email{jacob.long@@sc.edu}

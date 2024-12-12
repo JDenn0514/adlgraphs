@@ -16,6 +16,11 @@ when \code{x} is only the name of a column in a \code{data.frame}.}
 \item{unlist}{Logical. If \code{TRUE}, the default, returns a named vector. If
 \code{FALSE}, returns a list. This only works when \code{x} is a \code{data.frame}}
 }
+\value{
+If \code{x} is a variable or vector, a string containing the "label"
+attribute, if one is present, is returned. If \code{x} is a \code{data.frame} then a
+named vector with the "label" attribute from each variable is returned.
+}
 \description{
 This function makes it easy to get the variable labels from either an
 individual vector or a data frame. NOTE: it is not possible to set or modify

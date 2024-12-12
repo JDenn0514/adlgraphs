@@ -12,7 +12,7 @@
 #' @param unlist Logical. If `TRUE`, the default, returns a named vector. If
 #'   `FALSE`, returns a list. This only works when `x` is a `data.frame`
 #'
-#' @return If `x` is a variable or vector, a string containing the "label" 
+#' @returns If `x` is a variable or vector, a string containing the "label" 
 #'   attribute, if one is present, is returned. If `x` is a `data.frame` then a
 #'   named vector with the "label" attribute from each variable is returned.
 #' 

@@ -34,7 +34,7 @@
 #' @param decimals Number of decimals each number should be rounded to. Default
 #'   is 3.
 #' 
-#' @return A tibble with one row if no `group` is provided and `data` 
+#' @returns A tibble with one row if no `group` is provided and `data` 
 #'   is not of class `"grouped_df"`. If data is of class `"grouped_df"` or 
 #'   `group` is provided, it will return one row for each unique observation 
 #'   if one group is provides and one row per unique combination of observations

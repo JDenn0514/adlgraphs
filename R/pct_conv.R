@@ -8,7 +8,7 @@
 #'   by default and should always be pct.
 #' @param digits Number of decimal places the percent should be rounded to
 #'
-#' @return The original data.frame found in `data` with two changes. The column
+#' @returns The original data.frame found in `data` with two changes. The column
 #'   called "pct" is multiplied by 100 and a new column is created called "pct_lab"
 #'   that is the same as pct but with a "%" symbol at the end of it.
 #' 

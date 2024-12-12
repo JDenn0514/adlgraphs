@@ -31,7 +31,7 @@
 #'   same. If `TRUE`, the values associated with 1 and 0 are flipped. See third
 #'   example for more information.
 #' 
-#' @return A numeric vector of same length as `x`.
+#' @returns A numeric vector of same length as `x`.
 #'
 #'
 #' @examples

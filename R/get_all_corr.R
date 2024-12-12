@@ -12,7 +12,7 @@
 #' @param remove_redundant Should rows where the two variables are the same be 
 #'   kept or removed? If `TRUE`, the default, they are removed. 
 #' 
-#' @return A data.frame with the correlations between every combination of 
+#' @returns A data.frame with the correlations between every combination of 
 #'   columns in `data`.
 #' 
 #' @examples

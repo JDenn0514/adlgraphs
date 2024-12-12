@@ -5,7 +5,7 @@
 #'
 #' @param x A numeric vector.
 #' 
-#' @return A factor vector with four levels the same length as `x`.
+#' @returns A factor vector with four levels the same length as `x`.
 #' @export
 
 make_quarts <- function(x) {

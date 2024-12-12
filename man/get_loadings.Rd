@@ -60,6 +60,9 @@ GPArotation.}
 \item{sort}{Logical. If \code{TRUE}, the default, the loadings are sorted
 largest to smallest. If \code{FALSE}, no sorting occurs.}
 }
+\value{
+A data.frame showing factor loadings.
+}
 \description{
 This function creates a data frame of factor loadings from
 a factor analysis. It can be on an object that was created with

@@ -16,11 +16,6 @@ in the data you want to calculate the correlation between.}
 \item{wt}{Can be either character strings or symbols. Weights. Add if
 you have a weighting variable and want to get weighted correlations}
 }
-\value{
-A one row tibble showing correlations (\code{correlation}), number of
-observations (\code{n}), low and high confidence intervals (\code{conf.low}, \code{conf.high}),
-the p-value (\code{p.value}), and stars indicating it's statistical significance.
-}
 \description{
 This is one of the main worker functions behind \code{\link[=get_corr]{get_corr()}}. It calculates
 weighted correlations and outputs the data as a one row tibble.

@@ -13,6 +13,9 @@ wtd_sd(x, wt = NULL, na.rm = TRUE)
 
 \item{na.rm}{Logical. Indicates if NAs should be removed or not}
 }
+\value{
+A number indicating the weighted SD of \code{x}
+}
 \description{
 While this is mainly an
 internal function, it is available for everyone since I could not find

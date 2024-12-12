@@ -20,7 +20,7 @@
 #' @param .default The value used when values in `.x` aren't matched by any of
 #'   the LHS inputs. If `NULL`, the default, a `NA` will be used.
 #'
-#' @return  A factor vector with the same size as `.x` and the same type as the
+#' @returns  A factor vector with the same size as `.x` and the same type as the
 #'   common type of the RHS inputs and `.default` and levels as defined by the 
 #'   order of the RHS inputs.
 #' 

@@ -10,7 +10,7 @@
 #' @param data A `data.frame` or `tibble` object. This should only be specified
 #'   when `x` is only the name of a column in a `data.frame`.
 #'
-#' @return If `x` is a variable or vector, a named vector containing the "labels" 
+#' @returns If `x` is a variable or vector, a named vector containing the "labels" 
 #'   attribute, if one is present, is returned. If `x` is a `data.frame` then a
 #'   named list comprised of the "labels" attribute from each variable is returned.
 #' 

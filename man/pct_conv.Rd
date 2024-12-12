@@ -14,6 +14,11 @@ by default and should always be pct.}
 
 \item{digits}{Number of decimal places the percent should be rounded to}
 }
+\value{
+The original data.frame found in \code{data} with two changes. The column
+called "pct" is multiplied by 100 and a new column is created called "pct_lab"
+that is the same as pct but with a "\%" symbol at the end of it.
+}
 \description{
 This function is a wrapper around a very common data transformation that is
 done every time we make a frequency plot
@@ -40,6 +45,5 @@ df \%>\%
   count(x) \%>\%
   mutate(pct = prop.table(n)) \%>\%
   pct_conv()
-
 
 }

@@ -7,7 +7,7 @@
 #'   formatting. This is useful if the underlying data is very small or very
 #'   large. Default is 100.
 #' 
-#' @return A character vector of the same length as `x`.
+#' @returns A character vector of the same length as `x`.
 #'
 #' @examples
 #' # here's the default scale of 100

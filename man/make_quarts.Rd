@@ -9,6 +9,9 @@ make_quarts(x)
 \arguments{
 \item{x}{A numeric vector.}
 }
+\value{
+A factor vector with four levels the same length as \code{x}.
+}
 \description{
 This is a simple function that takes a numeric vector as the input and returns
 a factor vector with labels indicating which quartile it is in.

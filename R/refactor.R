@@ -11,7 +11,7 @@
 #'   which checks to see if the factor is ordered and then uses that to determine
 #'   if it should be ordered
 #'
-#' @return A factor variable of the same length as `x`
+#' @returns A factor variable of the same length as `x`
 #' 
 #' @examples
 #' # load the dplyr library so we can use `mutate()`

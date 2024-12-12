@@ -25,6 +25,11 @@ The RHS inputs will be coerced to their common type. Each RHS input will be
 \item{.default}{The value used when values in \code{.x} aren't matched by any of
 the LHS inputs. If \code{NULL}, the default, a \code{NA} will be used.}
 }
+\value{
+A factor vector with the same size as \code{.x} and the same type as the
+common type of the RHS inputs and \code{.default} and levels as defined by the
+order of the RHS inputs.
+}
 \description{
 Recode a variable using the \code{dplyr::case_match()} syntax
 }
@@ -74,4 +79,7 @@ starwars \%>\%
   ) \%>\%
   dplyr::count(new_species)
 
+}
+\seealso{
+\code{\link[=case_when_fct]{case_when_fct()}}
 }

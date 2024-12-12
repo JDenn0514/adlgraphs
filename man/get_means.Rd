@@ -37,11 +37,16 @@ variables prior to analysis. Default is TRUE.}
 \item{conf_level}{What should the confidence level be when calculating
 confidence intervals. Defaults to 0.95}
 }
+\value{
+A tibble with one row if no \code{group} is provided and \code{data}
+is not of class \code{"grouped_df"}. If data is of class \code{"grouped_df"} or \code{group}
+is provided, it will return a row for each unique observation or combination
+of observations.
+}
 \description{
 Use this function to calculate simple weighted means with 95\% confidence
 intervals or weighted grouped means.
-}
-\details{
+
 The \code{x}, \code{group}, and \code{wt} arguments can either be strings or symbols
 (meaning they can have quotes or no quotes). The benefit of this is that it
 makes it easy to iterate this function over a list or vector of

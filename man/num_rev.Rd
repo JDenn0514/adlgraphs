@@ -9,6 +9,9 @@ num_rev(x)
 \arguments{
 \item{x}{A vector of class \code{haven_labelled} or \code{numeric}}
 }
+\value{
+A numeric vector of the same length as \code{x}
+}
 \description{
 Reverse a numeric variable while maintaining variable and value labels
 if available. Also adds an attribute describing the transformation the
@@ -23,6 +26,5 @@ test_data \%>\%
   # reverse the variable accept_isr
   mutate(accept_isr_rev = num_rev(accept_isr)) \%>\%
   select(starts_with("accept"))
-
 
 }

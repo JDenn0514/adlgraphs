@@ -37,7 +37,7 @@
 #'   This is useful if you are comparing multiple models with similar variable
 #'   and need to clarify which estimates are associated with which model.
 #' 
-#' @return A data.frame summarizing the results of an `lm()` or `glm()` object.
+#' @returns A data.frame summarizing the results of an `lm()` or `glm()` object.
 #'
 #' @export
 get_coefficients <- function(

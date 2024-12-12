@@ -9,7 +9,7 @@
 #' @param name_label Add a variable label to the new column with the names of
 #'   the columns
 #'
-#' @return A longer data.frame.
+#' @returns A longer data.frame.
 #' 
 #' @export
 

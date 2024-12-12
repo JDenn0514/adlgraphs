@@ -14,7 +14,7 @@
 #' @param wt Can be either character strings or symbols. Weights. Add if 
 #'   you have a weighting variable and want to get weighted correlations
 #'
-#' @return A tibble showing correlations (`correlation`), number of observations 
+#' @returns A tibble showing correlations (`correlation`), number of observations 
 #'   (`n`), low and high confidence intervals (`conf.low`, `conf.high`), 
 #'   the p-value (`p.value`), and stars indicating it's statistical significance.
 #'   If data is of class `"grouped_df"` it will return one row for each unique 

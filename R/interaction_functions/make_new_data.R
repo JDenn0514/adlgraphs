@@ -29,7 +29,7 @@
 #' @param num.preds The number of predictions to generate. Default is 100. 
 #'   Ignored if `pred.values` is not `NULL`.
 #' @param ... Extra arguments passed to `get_formula()`
-#' @return A data frame.
+#' @returns A data frame.
 #' @details 
 #' 
 #' Please bear in mind that this does not generate the predictions. You will
@@ -210,7 +210,7 @@ get_weights <- function(model, data) {
 #' @param formula The formula for `model`, if desired. Otherwise `get_formula()`
 #'  is called.
 #' @param ... Arguments passed to `get_formula()`
-#' @return 
+#' @returns 
 #' 
 #' * `get_data()`: The data used to fit the model.
 #' * `get_response_name()`: The name of the response variable.
@@ -334,7 +334,7 @@ get_response_name <- function(model, ...) {
 #'   default.
 #' @param ... Ignored.
 #' 
-#' @return A `formula` object.
+#' @returns A `formula` object.
 #' @examples 
 #' 
 #' data(mtcars)

@@ -13,6 +13,10 @@ an actual \code{data.frame} object.}
 \item{data}{A \code{data.frame} or \code{tibble} object. This should only be specified
 when \code{x} is only the name of a column in a \code{data.frame}.}
 }
+\value{
+A string if \code{x} is a vector or column, a named vector if \code{x} is a
+data.frame.
+}
 \description{
 This function "flattens" a labelled vector into a string, where each
 label is equal to the value. For example if a vector has values 1 and 0
@@ -27,5 +31,6 @@ library(adlgraphs)
 flatten_labelled_vec(test_data$inferior)
 # run on a data frame
 flatten_labelled_vec(test_data)
+
 
 }

@@ -17,6 +17,10 @@ to get the correlations for.}
 \item{remove_redundant}{Should rows where the two variables are the same be
 kept or removed? If \code{TRUE}, the default, they are removed.}
 }
+\value{
+A data.frame with the correlations between every combination of
+columns in \code{data}.
+}
 \description{
 \code{get_all_corr} makes it easy to calculate correlations across
 every variable in a data frame or select set of variables. It also

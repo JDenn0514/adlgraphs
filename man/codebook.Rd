@@ -9,6 +9,9 @@ codebook(data)
 \arguments{
 \item{data}{An object of class \code{data.frame} or \code{tibble}}
 }
+\value{
+A tibble with with the number of rows as columns in \code{data}
+}
 \description{
 This function takes a \code{data.frame} and creates a codebook. The new
 object is a \code{data.frame} where each row contains different metadata info

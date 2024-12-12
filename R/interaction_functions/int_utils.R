@@ -30,7 +30,7 @@
 #' support providing different arguments to each function. If that is needed,
 #' use \code{sim_slopes} and \code{interact_plot} directly.
 #'
-#' @return
+#' @returns
 #'
 #' \item{simslopes}{The \code{sim_slopes} object created.}
 #' \item{interactplot}{The \code{ggplot} object created by

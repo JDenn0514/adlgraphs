@@ -4,10 +4,10 @@
 \alias{refactor}
 \title{Assign or reorder factor levels manually}
 \usage{
-refactor(f, new_levels, ordered = NA)
+refactor(x, new_levels, ordered = NA)
 }
 \arguments{
-\item{f}{A factor or character vector}
+\item{x}{A factor or character vector}
 
 \item{new_levels}{A list of the new levels of the factor}
 
@@ -15,10 +15,14 @@ refactor(f, new_levels, ordered = NA)
 which checks to see if the factor is ordered and then uses that to determine
 if it should be ordered}
 }
+\value{
+A factor variable of the same length as \code{x}
+}
 \description{
 This is a low level function that allows you to convert a character vector
-into a factor and manuall assign the levels, or to manually reassign the
-levels of a factor vector
+into a factor and manually assign the levels, or to manually reassign the
+levels of a factor vector. While very similar to \code{factor()} a key difference
+is that this keeps the original attributes of \code{x}.
 }
 \examples{
 # load the dplyr library so we can use `mutate()`
@@ -31,7 +35,7 @@ test_data <- test_data \%>\%
     # make the new reordered variable
     edu_f_reordered = refactor(
       # specify we are reordering the `edu_f` variable
-      f = edu_f,
+      x = edu_f,
       new_levels = c(
         "Bachelor's Degree",
         "Graduate Degree",

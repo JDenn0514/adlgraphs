@@ -10,6 +10,9 @@ clean_demos(df)
 \item{df}{A dataframe or tibble. This can be piped in like with a normal
 \code{\link[ggplot2]{ggplot}} function.}
 }
+\value{
+A data.frame object
+}
 \description{
 This function makes it easier to clean demographic data but it really only
 works when the data is set up in a very specific way. This is designed to

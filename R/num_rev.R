@@ -7,7 +7,7 @@
 #'
 #' @param x A vector of class `haven_labelled` or `numeric`
 #'
-#' @return A numeric vector of the same length as `x`
+#' @returns A numeric vector of the same length as `x`
 #' 
 #' @examples
 #'

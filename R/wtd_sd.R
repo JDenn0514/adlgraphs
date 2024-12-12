@@ -12,7 +12,7 @@
 #' @param wt A numeric vector indicating the weights used in the calculation
 #' @param na.rm Logical. Indicates if NAs should be removed or not
 #' 
-#' @return A number indicating the weighted SD of `x`
+#' @returns A number indicating the weighted SD of `x`
 #' 
 #' @export
 wtd_sd <- function(x, wt = NULL, na.rm = TRUE) {
