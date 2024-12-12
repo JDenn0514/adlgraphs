@@ -26,6 +26,12 @@
 #'   See examples to see how it operates.
 #' @param wt Weights. Add if you have a weighting variable and want to perform
 #'   Dunnett's test with weighted means.
+#' @param show_means Logical. Default is `FALSE` which does not show the mean
+#'   values for the levels. If `TRUE`, will add a column called `mean` that
+#'   contains the means.
+#' @param show_pct_change Logical. Default is `FALSE` which does not show the
+#'   percent change from the reference category to the other categories. If 
+#'   `TRUE`, will show the percent change.
 #' @param ref_level A string that specifies the level of the reference group
 #'   through which the others will be tested.
 #' @param conf.level A number between 0 and 1 that signifies the width of the
@@ -33,6 +39,8 @@
 #'   confidence interval.
 #' @param decimals Number of decimals each number should be rounded to. Default
 #'   is 3.
+#' @param na.rm Logical. Default is `TRUE` which removes NAs prior to 
+#'   calculation.
 #' 
 #' @returns A tibble with one row if no `group` is provided and `data` 
 #'   is not of class `"grouped_df"`. If data is of class `"grouped_df"` or 
@@ -76,7 +84,7 @@
 #'   get_diffs(acts_avg, edu_f2)
 #' 
 #' @export
-get_diffs_new <- function(
+get_diffs <- function(
   data, 
   x, 
   treats, 
@@ -89,8 +97,6 @@ get_diffs_new <- function(
   conf.level = 0.95,
   na.rm = TRUE
 ) {
-
- 
 
   # Ensure inputs are symbols or strings
   x_name <- deparse(substitute(x))
@@ -136,7 +142,7 @@ get_diffs_new <- function(
     # split up the data frame using vec_split 
     res <- vctrs::vec_split(
       # the data frame to split, use setdiff to get the columns not in group_names
-      x = data[setdiff(colnames(data), group_names)],
+      x = data[!names(data) %in% c(group_names)],
       # split the data by the grouping variables
       by = data[group_names]
     )

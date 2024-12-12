@@ -1,3 +1,15 @@
+# adlgraphs 0.3.51
+
+## Updated an existing function
+
+#### get_diffs
+
+- Added two new arguments, show_means, and show_pct_change.
+
+## Updated the documentation for most function
+
+- Added a return value for most functions
+
 # adlgraphs 0.3.5
 
 ## Create a new function

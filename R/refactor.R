@@ -24,7 +24,7 @@
 #'     # make the new reordered variable
 #'     edu_f_reordered = refactor(
 #'       # specify we are reordering the `edu_f` variable
-#'       f = edu_f,
+#'       x = edu_f,
 #'       new_levels = c(
 #'         "Bachelor's Degree",
 #'         "Graduate Degree",
