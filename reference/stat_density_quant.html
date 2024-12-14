@@ -27,7 +27,7 @@ stat_density_ridges."><meta property="og:image" content="https://jdenn0514.githu
 
     <a class="navbar-brand me-2" href="../index.html">adlgraphs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.51</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.52</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -107,10 +107,10 @@ plot mapping.</p></dd>
 <dd><p>The data to be displayed in this layer. There are three
 options:</p>
 <p>If <code>NULL</code>, the default, the data is inherited from the plot
-data as specified in the call to <code>ggplot()</code>.</p>
+data as specified in the call to <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot2::ggplot()</a></code>.</p>
 <p>A <code>data.frame</code>, or other object, will override the plot
 data. All objects will be fortified to produce a data frame. See
-<code>fortify()</code> for which variables will be created.</p>
+<code><a href="https://ggplot2.tidyverse.org/reference/fortify.html" class="external-link">ggplot2::fortify()</a></code> for which variables will be created.</p>
 <p>A <code>function</code> will be called with a single argument,
 the plot data. The return value must be a <code>data.frame</code>, and
 will be used as the layer data. A <code>function</code> can be created
@@ -118,7 +118,7 @@ from a <code>formula</code> (e.g. <code>~ head(.x, 10)</code>).</p></dd>
 
 
 <dt id="arg-geom">geom<a class="anchor" aria-label="anchor" href="#arg-geom"></a></dt>
-<dd><p>The geometric object to use to display the data. <code>geom_density</code>
+<dd><p>The geometric object to use to display the data. <code><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">ggplot2::geom_density</a></code>
 is the default.</p></dd>
 
 
@@ -131,12 +131,12 @@ This method allows for passing extra arguments to the position.</p></li>
 string, strip the function name of the <code>position_</code> prefix. For example,
 to use <code>position_jitter()</code>, give the position as <code>"jitter"</code>.</p></li>
 <li><p>For more information and other ways to specify the position, see the
-layer position documentation.</p></li>
+<a href="https://ggplot2.tidyverse.org/reference/layer_positions.html" class="external-link">layer position</a> documentation.</p></li>
 </ul></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Other arguments passed on to <code>layer()</code>'s <code>params</code> argument. These
+<dd><p>Other arguments passed on to <code><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">ggplot2::layer()</a></code>'s <code>params</code> argument. These
 arguments broadly fall into one of 4 categories below. Notably, further
 arguments to the <code>position</code> argument, or aesthetics that are required
 can <em>not</em> be passed through <code>...</code>. Unknown arguments that are not part
@@ -157,9 +157,9 @@ documentation lists which parameters it can accept.</p></li>
 to the <code>stat</code> part of the layer. An example of this is
 <code>geom_area(stat = "density", adjust = 0.5)</code>. The stat's documentation
 lists which parameters it can accept.</p></li>
-<li><p>The <code>key_glyph</code> argument of <code>layer()</code> may also be passed on through
+<li><p>The <code>key_glyph</code> argument of <code><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">ggplot2::layer()</a></code> may also be passed on through
 <code>...</code>. This can be one of the functions described as
-key glyphs, to change the display of the layer in the legend.</p></li>
+<a href="https://ggplot2.tidyverse.org/reference/draw_key.html" class="external-link">key glyphs</a>, to change the display of the layer in the legend.</p></li>
 </ul></dd>
 
 
@@ -212,7 +212,7 @@ display.</p></dd>
 <dd><p>If <code>FALSE</code>, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
-the default plot specification, e.g. <code>borders()</code>.</p></dd>
+the default plot specification, e.g. <code><a href="https://ggplot2.tidyverse.org/reference/borders.html" class="external-link">ggplot2::borders()</a></code>.</p></dd>
 
 
 <dt id="arg-quantile-lines">quantile_lines<a class="anchor" aria-label="anchor" href="#arg-quantile-lines"></a></dt>
