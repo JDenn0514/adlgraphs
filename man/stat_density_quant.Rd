@@ -33,18 +33,18 @@ plot mapping.}
 options:
 
 If \code{NULL}, the default, the data is inherited from the plot
-data as specified in the call to \code{\link[=ggplot]{ggplot()}}.
+data as specified in the call to \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}}.
 
 A \code{data.frame}, or other object, will override the plot
 data. All objects will be fortified to produce a data frame. See
-\code{\link[=fortify]{fortify()}} for which variables will be created.
+\code{\link[ggplot2:fortify]{ggplot2::fortify()}} for which variables will be created.
 
 A \code{function} will be called with a single argument,
 the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
-\item{geom}{The geometric object to use to display the data. \code{\link{geom_density}}
+\item{geom}{The geometric object to use to display the data. \code{\link[ggplot2:geom_density]{ggplot2::geom_density}}
 is the default.}
 
 \item{position}{A position adjustment to use on the data for this layer. This
@@ -57,10 +57,10 @@ This method allows for passing extra arguments to the position.
 string, strip the function name of the \code{position_} prefix. For example,
 to use \code{position_jitter()}, give the position as \code{"jitter"}.
 \item For more information and other ways to specify the position, see the
-\link[=layer_positions]{layer position} documentation.
+\link[ggplot2:layer_positions]{layer position} documentation.
 }}
 
-\item{...}{Other arguments passed on to \code{\link[=layer]{layer()}}'s \code{params} argument. These
+\item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{ggplot2::layer()}}'s \code{params} argument. These
 arguments broadly fall into one of 4 categories below. Notably, further
 arguments to the \code{position} argument, or aesthetics that are required
 can \emph{not} be passed through \code{...}. Unknown arguments that are not part
@@ -83,9 +83,9 @@ documentation lists which parameters it can accept.
 to the \code{stat} part of the layer. An example of this is
 \code{geom_area(stat = "density", adjust = 0.5)}. The stat's documentation
 lists which parameters it can accept.
-\item The \code{key_glyph} argument of \code{\link[=layer]{layer()}} may also be passed on through
+\item The \code{key_glyph} argument of \code{\link[ggplot2:layer]{ggplot2::layer()}} may also be passed on through
 \code{...}. This can be one of the functions described as
-\link[=draw_key]{key glyphs}, to change the display of the layer in the legend.
+\link[ggplot2:draw_key]{key glyphs}, to change the display of the layer in the legend.
 }}
 
 \item{bw}{The smoothing bandwidth to be used.
@@ -122,7 +122,7 @@ display.}
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
-the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
+the default plot specification, e.g. \code{\link[ggplot2:borders]{ggplot2::borders()}}.}
 
 \item{quantile_lines}{Logical. Determines if quantile lines should be drawn
 or not. FALSE is default.}

@@ -9,7 +9,7 @@ get_all_corr(data, cols, wt = NULL, remove_redundant = TRUE)
 \arguments{
 \item{data}{A data frame or tibble object}
 
-\item{cols}{<\code{\link[=dplyr_tidy_select]{tidy-select}}> The variables you want
+\item{cols}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> The variables you want
 to get the correlations for.}
 
 \item{wt}{A variable to use as the weights for weighted correlations}

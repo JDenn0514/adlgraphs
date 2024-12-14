@@ -28,9 +28,9 @@ This can be a string or symbol.}
 are statistically significantly different from each other. Should be
 a factor or character vector. This can be a string or symbol.}
 
-\item{group}{<\code{\link[=dplyr_tidy_select]{tidy-select}}> A selection of columns to
+\item{group}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> A selection of columns to
 group the data by in addition to \code{treats}. This operates very similarly
-to \code{.by} from dplyr (for more info on that see \link[=dplyr_by]{?dplyr_by}).
+to \code{.by} from dplyr (for more info on that see \link[dplyr:dplyr_by]{?dplyr_by}).
 See examples to see how it operates.}
 
 \item{wt}{Weights. Add if you have a weighting variable and want to perform

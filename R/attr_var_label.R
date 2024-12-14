@@ -16,6 +16,52 @@
 #'   attribute, if one is present, is returned. If `x` is a `data.frame` then a
 #'   named vector with the "label" attribute from each variable is returned.
 #' 
+#' @examples 
+#' library(adlgraphs)
+#' # create a random vector
+#' x <- sample(c(0, 1), replace = TRUE, size = 10)
+#' # add a question preface attribute
+#' attr(x, "question_preface") <- "This is a question preface"
+#' # check to see that there is a new attribute called `question_preface`
+#' attributes(x)
+#' # now get the question_preface
+#' attr_question_preface(x)
+#' 
+#' # now let's create a realistic workflow with a data.frame --------
+#' # create a fake dataset
+#' df <- data.frame(
+#'   x_1 = sample(c(0, 1), replace = TRUE, size = 10),
+#'   x_2 = sample(c(0, 1), replace = TRUE, size = 10),
+#'   x_3 = sample(c(0, 1), replace = TRUE, size = 10),
+#'   x_4 = sample(c(0, 1), replace = TRUE, size = 10)
+#' ) 
+#' 
+#' # set the variable labels
+#' attr(df$x_1, "label") <- "Which of the following colors do you like? Blue"
+#' attr(df$x_2, "label") <- "Which of the following colors do you like? Red"
+#' attr(df$x_3, "label") <- "Which of the following colors do you like? Yellow"
+#' attr(df$x_4, "label") <- "Which of the following colors do you like? Purple" 
+#' 
+#' # now let's check the variable labels
+#' attr_var_label(df)
+#' 
+#' # this isn't an ideal variable label if we want to show how many people
+#' # like each of the colors, so let's fix that 
+#' 
+#' # set the value labels (most survey data should have this)
+#' attr(df$x_1, "labels") <- c("Blue" = 1)
+#' attr(df$x_2, "labels") <- c("Red" = 1)
+#' attr(df$x_3, "labels") <- c("Yellow" = 1)
+#' attr(df$x_4, "labels") <- c("Purple" = 1)
+#' 
+#' # add the question prefaces and update the variable labels for each column in df
+#' for(x in names(df)) {
+#'   df[[x]] <- set_question_preface(x, df)
+#' }
+#' 
+#' # now let's check the updated variable labels
+#' attr_var_label(df)
+#' 
 #' @export
 attr_var_label <- function(x, data, unlist) {
   UseMethod("attr_var_label")

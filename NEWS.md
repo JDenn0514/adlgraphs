@@ -1,3 +1,8 @@
+# adlgraphs 0.3.52
+## Added a new function `set_question_preface()`
+
+- Allows you to set the question preface and update the variable label
+
 # adlgraphs 0.3.51
 
 ## Updated an existing function

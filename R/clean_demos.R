@@ -22,42 +22,49 @@ clean_demos <- function(
   if ("race_1" %in% colnames(df)) {
 
     df <- clean_race(df, "race_1")
+    df$race_1 <- set_question_preface(df$race_1)
 
   }
 
   if ("race_2" %in% colnames(df)) {
 
     df <- clean_race(df, "race_2")
+    df$race_2 <- set_question_preface(df$race_2)
 
   }
 
   if ("race_3" %in% colnames(df)) {
 
     df <- clean_race(df, "race_3")
+    df$race_3 <- set_question_preface(df$race_3)
 
   }
 
   if ("race_4" %in% colnames(df)) {
 
     df <- clean_race(df, "race_4")
+    df$race_4 <- set_question_preface(df$race_4)
 
   }
 
   if ("race_5" %in% colnames(df)) {
 
     df <- clean_race(df, "race_5")
+    df$race_5 <- set_question_preface(df$race_5)
 
   }
 
   if ("race_6" %in% colnames(df)) {
 
     df <- clean_race(df, "race_6")
+    df$race_6 <- set_question_preface(df$race_6)
 
   } 
 
   if ("race_7" %in% colnames(df)) {
     
     df <- clean_race(df, "race_7")
+    df$race_7 <- set_question_preface(df$race_7)
 
   }
 

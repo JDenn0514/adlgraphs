@@ -30,7 +30,7 @@ frequencies
 The \code{x}, \code{group}, and \code{wt} arguments can either be strings or symbols
 (meaning they can have quotes or no quotes). The benefit of this is that it
 makes it really easy to iterate this function over a list or vector of
-variables with other functions like \code{\link[=map]{map()}} \code{\link[purrr:map]{purrr::map()}} or \code{\link[=walk]{walk()}}
+variables with other functions like \code{\link[purrr:map]{purrr::map()}} \code{\link[purrr:map]{purrr::map()}} or \code{\link[purrr:map]{purrr::walk()}}
 \code{\link[purrr:map]{purrr::walk()}} that are found in the \code{purrr} package.
 }
 \examples{

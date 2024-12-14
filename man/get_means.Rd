@@ -21,9 +21,9 @@ function, this is not required.}
 \item{x}{Either a character string or symbol. The variable with which you want
 to get the mean.}
 
-\item{group}{<\code{\link[=dplyr_tidy_select]{tidy-select}}> A selection of columns to
+\item{group}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> A selection of columns to
 group the data by in addition to \code{treats}. This operates very similarly
-to \code{.by} from dplyr (for more info on that see \link[=dplyr_by]{?dplyr_by}). It can
+to \code{.by} from dplyr (for more info on that see \link[dplyr:dplyr_by]{?dplyr_by}). It can
 also be a character vector, but it can't be an external vector.}
 
 \item{wt}{Weights. Add if you have a weighting variable and want to get
@@ -50,7 +50,7 @@ intervals or weighted grouped means.
 The \code{x}, \code{group}, and \code{wt} arguments can either be strings or symbols
 (meaning they can have quotes or no quotes). The benefit of this is that it
 makes it easy to iterate this function over a list or vector of
-variables with other functions like \code{\link[=map]{map()}} \code{\link[purrr:map]{purrr::map()}} or \code{\link[=walk]{walk()}}
+variables with other functions like \code{\link[purrr:map]{purrr::map()}} \code{\link[purrr:map]{purrr::map()}} or \code{\link[purrr:map]{purrr::walk()}}
 \code{\link[purrr:map]{purrr::walk()}} that are found in the \code{purrr} package.
 }
 \examples{
