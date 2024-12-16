@@ -90,6 +90,7 @@ reference:
   contents:
     - remove_bot_dupe
     - get_bot_dupe
+    - get_col_names
     - export_bot_dupe
     - codebook
     - clean_demos
