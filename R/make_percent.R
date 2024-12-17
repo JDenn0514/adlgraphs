@@ -40,10 +40,14 @@ make_percent <- function(x, digits = 2, scale = 100) {
     )
   }
 
-  x <- x * scale
-  x <- round(x, digits = digits)
-  x <- paste0(x, "%")
-  return(x)
+  new_x <- x * scale
+  new_x <- round(new_x, digits = digits)
+  new_x <- paste0(new_x, "%")
+
+  attributes(new_x) <- utils::modifyList(as.list(attributes(new_x)), attributes(x))
+  attr(new_x, "transformation") <- paste0("A % symbol to `", x_name, "`")
+
+  return(new_x)
 }
 
 
