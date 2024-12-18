@@ -42,7 +42,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">make_percent</span><span class="op">(</span><span class="va">x</span>, digits <span class="op">=</span> <span class="fl">2</span>, scale <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">make_percent</span><span class="op">(</span><span class="va">x</span>, decimals <span class="op">=</span> <span class="fl">2</span>, scale <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -53,7 +53,7 @@
 <dd><p>A numeric vector you want to convert to percentages</p></dd>
 
 
-<dt id="arg-digits">digits<a class="anchor" aria-label="anchor" href="#arg-digits"></a></dt>
+<dt id="arg-decimals">decimals<a class="anchor" aria-label="anchor" href="#arg-decimals"></a></dt>
 <dd><p>How many decimals should the value be rounded to. Default is
 2 which means it will show two decimal places, or the hundredth decimal.</p></dd>
 
@@ -75,17 +75,23 @@ large. Default is 100.</p></dd>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.0163</span>, <span class="fl">0.95</span>, <span class="fl">0.0008</span>, <span class="fl">0.002</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">make_percent</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.63%" "95%"   "0.08%" "0.2%" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"transformation")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Added a `%` symbol to `x`"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># if the values have already been multiplied by 100 and you don't need to</span></span></span>
 <span class="r-in"><span><span class="co"># transform them, then make the scale 1</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.63</span>, <span class="fl">95</span>, <span class="fl">0.08</span>, <span class="fl">0.2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">make_percent</span><span class="op">(</span><span class="va">x</span>, scale <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "1.63%" "95%"   "0.08%" "0.2%" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"transformation")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Added a `%` symbol to `x`"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># And if we want to round to the closest whole number set the digits to 0</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.0163</span>, <span class="fl">0.95</span>, <span class="fl">0.0008</span>, <span class="fl">0.002</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">make_percent</span><span class="op">(</span><span class="va">x</span>, digits <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">make_percent</span><span class="op">(</span><span class="va">x</span>, decimals <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2%"  "95%" "0%"  "0%" </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"transformation")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Added a `%` symbol to `x`"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
