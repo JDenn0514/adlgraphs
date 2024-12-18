@@ -21,7 +21,7 @@
 #'
 #' # And if we want to round to the closest whole number set the digits to 0
 #' x <- c(0.0163, 0.95, 0.0008, 0.002)
-#' make_percent(x, digits = 0)
+#' make_percent(x, decimals = 0)
 #'
 #'
 #' @export
@@ -41,15 +41,19 @@ make_percent <- function(x, decimals = 2, scale = 100) {
   }
 
   new_x <- x * scale
-  new_x <- round(new_x, digits = digits)
+  new_x <- round(new_x, decimals)
   new_x <- paste0(new_x, "%")
 
-  attributes(new_x) <- utils::modifyList(as.list(attributes(new_x)), attributes(x))
-  attr(new_x, "transformation") <- paste0("A % symbol to `", x_name, "`")
+
+  if (!is.null(attributes(x))) {
+    attributes(new_x) <- utils::modifyList(as.list(attributes(new_x)), attributes(x))
+  }
+  
+  attr(new_x, "transformation") <- paste0("Added a `%` symbol to `", x_name, "`")
 
   return(new_x)
 }
 
-
+is.null(attributes(x))
 
 

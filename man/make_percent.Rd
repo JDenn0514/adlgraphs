@@ -34,7 +34,7 @@ make_percent(x, scale = 1)
 
 # And if we want to round to the closest whole number set the digits to 0
 x <- c(0.0163, 0.95, 0.0008, 0.002)
-make_percent(x, digits = 0)
+make_percent(x, decimals = 0)
 
 
 }

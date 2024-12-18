@@ -4,7 +4,7 @@
 \alias{pct_conv}
 \title{Make proper percent labels}
 \usage{
-pct_conv(data, x = pct, digits = 1)
+pct_conv(data, x = pct, decimals = 1)
 }
 \arguments{
 \item{data}{A data frame or vector. Can be left blank if used during piping}
@@ -12,7 +12,7 @@ pct_conv(data, x = pct, digits = 1)
 \item{x}{a variable we want to convert to a percentage. The value is \code{pct}
 by default and should always be pct.}
 
-\item{digits}{Number of decimal places the percent should be rounded to}
+\item{decimals}{Number of decimal places the percent should be rounded to}
 }
 \value{
 The original data.frame found in \code{data} with two changes. The column
