@@ -54,6 +54,6 @@ make_percent <- function(x, decimals = 2, scale = 100) {
   return(new_x)
 }
 
-is.null(attributes(x))
+
 
 
