@@ -99,7 +99,7 @@ get_diffs <- function(
 ) {
 
   # Ensure inputs are symbols or strings
-  x_name <- deparse(substitute(x))
+  x_name <- rlang::enexpr(x)
   x <- rlang::as_name(rlang::ensym(x))
   treats <- rlang::as_name(rlang::ensym(treats))
   
