@@ -25,7 +25,6 @@
 #'
 #'
 #' @export
-
 make_percent <- function(x, decimals = 2, scale = 100) {
 
   x_name <- deparse(substitute(x))

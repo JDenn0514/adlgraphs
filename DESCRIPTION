@@ -24,7 +24,6 @@ Imports:
     forcats,
     furrr,
     ggplot2,
-    ggridges,
     glue,
     grDevices,
     gt,
