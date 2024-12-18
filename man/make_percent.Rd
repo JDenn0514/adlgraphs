@@ -4,12 +4,12 @@
 \alias{make_percent}
 \title{Convert a numeric vector to a percent}
 \usage{
-make_percent(x, digits = 2, scale = 100)
+make_percent(x, decimals = 2, scale = 100)
 }
 \arguments{
 \item{x}{A numeric vector you want to convert to percentages}
 
-\item{digits}{How many decimals should the value be rounded to. Default is
+\item{decimals}{How many decimals should the value be rounded to. Default is
 2 which means it will show two decimal places, or the hundredth decimal.}
 
 \item{scale}{A scaling factor: \code{x} will be multiplied by \code{scale} before

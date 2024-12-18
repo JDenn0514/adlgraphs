@@ -25,211 +25,131 @@
 #'   weighted frequencies.
 #' @param drop_zero Logical. Determines if rows with 0 should be removed 
 #'   Default is `FALSE`.
+#' @param decimals Number of decimals each number should be rounded to. Default
+#'   is 3.
 #' @param na.rm Logical. Determines if NAs should be kept or removed Default is
 #'   `TRUE`.
-
-
+#' 
 #' @export
 funky_freqs <- function(
   data, 
   x, 
-  group = NULL, 
-  wt = NULL, 
+  group, 
+  wt, 
   drop_zero = FALSE,
+  decimals = 3,
   na.rm = TRUE
 ) {
+  
+
+  # get the object's name
+  x_name <- deparse(substitute(x))
 
   # ensure that string or symbol are accepted in x
-  x_str <- rlang::as_name(rlang::ensym(x))
+  x <- rlang::as_name(rlang::ensym(x))
 
-  if (is.null(substitute(wt))) {
-    wt_str <- "wts"
-    warning("no weights argument given, using uniform weights of 1")
-    data[[wt_str]] <- rep(1, length(data[[x_str]]))  
+  # Prepare group variables
+  # if the data is grouped, use dplyr::group_vars to get them, else set to NULL
+  group_names <- if(inherits(data, "grouped_df")) dplyr::group_vars(data) else NULL
+  # if group arg is missing set to NULL, else use as.character(substitute()) to capture it
+  group_vars <- if (missing(group)) NULL else adlgraphs:::select_groups({{ group }}, data)
+  # remove the "c" from the group_vars vector if it is there
+  group_vars <- group_vars[group_vars != "c"]
+  # combine group_names and group_vars for the final vector of group names
+  # use unique to make sure there aren't any duplicates
+  group_names <- unique(c(group_names, group_vars))
+
+  # Prepare weights
+  if (missing(wt)) {
+    wt <- "wts"
+    data[[wt]] <- rep(1, length(data[[x]]))  
   } else {
-    wt_str <- rlang::as_name(rlang::ensym(wt))
-    # set NAs in wt variable to zero
-    data[[wt_str]][is.na(data[[wt_str]])] <- 0
+    # ensure that string or symbol are accepted in wt
+    wt <- rlang::as_name(rlang::ensym(wt))
+    data[[wt]][is.na(data[[wt]])] <- 0
   }
-  
-  group_sub <- substitute(group)
+  # subset the data with only relevant variables
+  # this is so that when we remove NAs we are only doing it over the right variables
+  data <- data[c(x, group_names, wt)]
 
-  if (is.null(group_sub)) {
-    ### if there is no grouping variable
+  # if na.rm is TRUE remove NAs from all columns in data
+  if (na.rm) data <- data[stats::complete.cases(data),]
 
-    # get the variable name
-    x_name <- rlang::enexpr(x)
-    # set data to only include x and wt, but use string version
-    data <- data[c(x_str, wt_str)]
+  # convert the x and group_names to factors before the analysis to preserve NA tags
+  data[,c(x, group_names)] <- lapply(
+    data[,c(x, group_names)], 
+    \(y) make_factor(y, drop_levels = TRUE, force = TRUE, na.rm = na.rm)
+  )
 
-    if (isTRUE(na.rm)) {
-      # if na.rm is true remove NAs 
-      data <- data[stats::complete.cases(data),]
-      # get the unique observations after removing NAs
-      x_vals <- sort(unique(data[[x_str]]), na.last = TRUE)
-    } else {
-      # get the unique observations (this includes NA)
-      x_vals <- sort(unique(data[[x_str]]), na.last = TRUE)
-      # convert data[[x]] into a factor and add NA as a new factor level
-      data[[x_str]] <- addNA(data[[x_str]])
-    }
+  if (!missing(group) && !is.null(group_names)) {
+    # if the group arg is not missing, apply grouping based on group_names
+    data <- data %>% 
+      dplyr::group_by(dplyr::across(tidyselect::all_of(group_names)))
+  } 
 
-    # get the total number of observations
-    len <- length(data[[x_str]])
-    # get the number of observations per level (frequencies)
-    freqs <- tapply(data[[wt_str]], data[[x_str]], sum, simplify = TRUE)
-    # get the names from the freq array
-    freq_names <- names(freqs)
-    # convert freqs to a vector
-    freqs <- as.vector(freqs)
-    # add names to freqs
-    names(freqs) <- freq_names
-
-    if (length(x_vals) != length(freqs)) {
-      # if the length of x_vals is different from the length of freqs
-      # use the values in x_vals to keep certain values in freqs
-      freqs <- freqs[names(freqs) %in% x_vals]
-    } 
-
-    # get pct
-    pct <- sapply(freqs, \(y) y / len)
-    
-    # create the output tibble
-    out <- tibble::tibble(
-      "{ x_name }" := x_vals,
-      n = freqs,
-      pct = pct
-    )
-
-    if (!is.null(attr_val_labels(out[[x_str]]))) {
-      # if x has value labels convert to a factor
-      out[[x_str]] <- make_factor(out[[x_str]])
-    }
-
-  } else if (!is.null(group_sub)) {
-    # get the group labels
-    group_labs <- eval_select_by({{ group_sub }}, data)
-    # get a vector of all relevant variables
-    vars <- c(x_str, group_labs, wt_str)
-    # keep only the relevant variables
-    data <- data[c(vars)]
-
-    if (isTRUE(na.rm)) {
-      # if na.rm = TRUE remove all NAs
-      data <- data[stats::complete.cases(data),]
-    }
-    # remove the weights variable from the vector of variables
-    vars <- vars[vars != wt_str]
-
-    # get the columns that are numeric
-    vars_num <- colnames(data[vars][sapply(data[vars], is.numeric)])
-    
-    # get the number of observations
-    freqs <- stats::xtabs(
-      # use reformulate to create the formula
-      stats::reformulate(termlabels = vars, response = wt_str), 
-      data = data,
-      na.rm = na.rm,
-      addNA = TRUE
+  out <- data %>% 
+    # calculate the frequencies
+    dplyr::count(.data[[x]], wt = .data[[wt]]) %>% 
+    # clean up the data
+    dplyr::mutate(
+      # use prop.table() to calculate percentage and round()
+      # add 2 to decimals so that when converted to percentage 
+      # it has the correct number of decimals
+      pct = round(prop.table(n), decimals + 2),
+      # round the n to the number of decimals
+      n = round(n, decimals)
     ) 
-    # create the proportions and convert it to dataframe
-    props <- as.data.frame(proportions(freqs, margin = group_labs))
-    # convert the table object into a dataframe
-    freqs <- as.data.frame(freqs, responseName = "n")
-    # create new column in freqs called pct using the column Freq from props
-    freqs$pct <- props$Freq
-    
-    # convert the original numeric variables back into numeric
-    if (length(vars_num) == 1) {
-      freqs[[vars_num]] <- as.vector(sapply(freqs[[vars_num]], as.numeric, simplify = TRUE))
-    } else if (length(vars_num) > 1) {
-      freqs[vars_num] <- sapply(freqs[vars_num], as.numeric, simplify = TRUE)
-    }
-    # add value labels back to the data
-    freqs[vars_num] <- add_labels(freqs, data, vars_num)
-    # convert the vectors with labels to factors
-    freqs[vars_num] <- label_to_factor(freqs, vars_num)
-    # convert character vectors to factors
-    freqs[vars] <- character_to_factor(freqs, data, vars)
-
-    # convert freqs to data.table for speed
-    freqs <- data.table::data.table(freqs)
-    # set the order of the data.table with NAs last
-    freqs <- data.table::setorderv(freqs, c(group_labs, x_str), na.last = TRUE)
-    
-    # convert to a tibble
-    out <- tibble::as_tibble(freqs) 
-    # 
-    out <- out[,c(group_labs, x_str, "n", "pct")]
+  
+  if (!is.null(group_names)) {
+    # if there are groups add the value labels
 
     # get the variable labels as a named list
-    group_labels <- attr_var_label(data[,group_labs])
-    # check to make sure the group_labels are in
-    # group_labels <- group_labels[names(group_labels) %in% names(out)]
-    for (x in names(group_labels)) attr(out[[x]], "label") <- group_labels[[x]]
-    
+    group_labels <- attr_var_label(data[,group_names])
+    # for each value in names(group_labels) add the variable label from group_labels
+    for (y in names(group_labels)) attr(out[[y]], "label") <- group_labels[[y]]
+
   }
 
-  if (isTRUE(drop_zero)) {
-    out <- out[out$n != 0,]
+  # if drop_zero is TRUE, remove any rows with 0
+  if (drop_zero) out <- out[out$n != 0,]
+
+  if (!is.null(attr_var_label(data[[x]]))) {
+    # if there is a variable label in the x variable
+
+    # add the variable label to x
+    attr(out[[x]], "label") <- attr_var_label(x, data)
+    # add the variable label of x as an attribute called 
+    # variable_label to the output dataframe
+    attr(out, "variable_label") <- attr_var_label(data[[x]])
+    # add the variable name of x as an attribute called
+    # variable_name to the output dataframe
+    attr(out, "variable_name") <- x_name
+
+  } else {
+    # if x does not have a variable label
+
+    # add the variable name of x as an attribute called
+    # variable_label to the output dataframe
+    attr(out, "variable_label") <- x_name
+    # add the variable name of x as an attribute called
+    # variable_name to the output dataframe    
+    attr(out, "variable_name") <- x_name
+
   }
 
-  class_names <- class(out)
+  # add an attribute containing the names of the grouping variables
+  attr(out, "group_names") <- group_names
 
-  attr(out, "variable_label") <- attr_var_label(data[[x_str]])
-
-  if (!is.null(attr_var_label(data[[x_str]]))) {
-    attr(out[[x_str]], "label") <- attr_var_label(x_str, data)
-  }
-
+  # add a variable for the n variable
   attr(out$n, "label") <- "N"
+  # add a variable label for the pct variable
   attr(out$pct, "label") <- "Percent"
+
+  # get the classes of the data.frame
+  class_names <- class(out)
+  # add adlgraphs_freqs to the classes
+  attr(out, "class") <- c("adlgraphs_freqs", class_names)
+
+  out
   
-
-  out %>% structure(class = c("adlgraphs_freqs", class_names))
-
 }
-
-label_to_factor <- function(data, cols) {
-  # convert character vectors to factors
-  lapply(
-    # perform the function only over the common data frames
-    cols |> setNames(nm = _), 
-    # write the anonymous function
-    \(y) {
-      if (!is.null(attr_val_labels(data[[y]]))) {
-        # if data[[y]] has value labels
-
-        # convert data[[y]] to factor
-        make_factor(data[[y]])
-
-      } else {
-        # if there aren't value labels just return data[[y]]
-        data[[y]]
-      }
-    }
-  )
-}
-
-add_labels <- function(new, old, cols) {
-  # convert character vectors to factors
-  lapply(
-    # perform the function only over the common data frames
-    cols |> setNames(nm = _), 
-    # write the anonymous function
-    \(y) {
-      if (!is.null(attr_val_labels(old[[y]]))) {
-        # if old[[y]] has levels
-        # set new[[y]] as factor with levels from old[[y]]
-        haven::labelled(
-          new[[y]],
-          labels = attr_val_labels(old[[y]])
-        )
-      } else {
-        new[[y]]
-      }
-    }
-  )
-}
-
-

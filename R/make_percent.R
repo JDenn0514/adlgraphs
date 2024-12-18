@@ -1,7 +1,7 @@
 #' Convert a numeric vector to a percent
 #'
 #' @param x A numeric vector you want to convert to percentages
-#' @param digits How many decimals should the value be rounded to. Default is
+#' @param decimals How many decimals should the value be rounded to. Default is
 #'   2 which means it will show two decimal places, or the hundredth decimal.
 #' @param scale A scaling factor: `x` will be multiplied by `scale` before
 #'   formatting. This is useful if the underlying data is very small or very
@@ -26,7 +26,7 @@
 #'
 #' @export
 
-make_percent <- function(x, digits = 2, scale = 100) {
+make_percent <- function(x, decimals = 2, scale = 100) {
 
   x_name <- deparse(substitute(x))
 

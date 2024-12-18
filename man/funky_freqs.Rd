@@ -4,7 +4,7 @@
 \alias{funky_freqs}
 \title{Calculate weighted frequencies}
 \usage{
-funky_freqs(data, x, group = NULL, wt = NULL, drop_zero = FALSE, na.rm = TRUE)
+funky_freqs(data, x, group, wt, drop_zero = FALSE, decimals = 3, na.rm = TRUE)
 }
 \arguments{
 \item{data}{An object of type data.frame or tibble. If piping the data into the
@@ -22,6 +22,9 @@ weighted frequencies.}
 
 \item{drop_zero}{Logical. Determines if rows with 0 should be removed
 Default is \code{FALSE}.}
+
+\item{decimals}{Number of decimals each number should be rounded to. Default
+is 3.}
 
 \item{na.rm}{Logical. Determines if NAs should be kept or removed Default is
 \code{TRUE}.}
