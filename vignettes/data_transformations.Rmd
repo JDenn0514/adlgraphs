@@ -22,13 +22,14 @@ knitr::opts_chunk$set(
 library(adlgraphs)
 # this is for some other basic data transformations
 library(dplyr)
-# for working with labelled data
 
 
 ```
 
 
-`adlgraphs` provides three main functions to reduce the amount of time it takes to perform a few very common data transformations:
+`adlgraphs` provides four main functions to reduce the amount of time it takes to perform a few very common data transformations:
+
+- `flip_val() - flips the valence of a vector
 
 - `num_rev()` - reverses the values of a vector
 
@@ -36,60 +37,52 @@ library(dplyr)
 
 - `make_binary()` - converts a vector to a binary (0 and 1)
 
-## `num_rev()` 
+## `num_rev()` and `flip_val()`
 
-`num_rev()` was designed with `forcats::fct_rev()` in mind. However, instead of operating on factors, `num_rev()` operates on numeric vectors. Let's take a look at how this operates in practice. To do so, let's look at the variable `top` from the data set `test_data`. As we can see, survey respondents saw the a positively valanced statement, "I would feel comfortable buying products from Israel", with the values ranging from 1 to 4 where `1 = Strongly agree` and `4 = Strongly disagree`.
-
-```{r}
-str(test_data$top)
-```
-
-In survey research, we often have to reverse a variable. This is primarily done for two reasons. The first is because we want to flip the valence of the question. One reason this might be the case is because we wanted to create an index by summing this up with other variables. If the other statements were negatively valanced, it may be in our best interest to keep the value labels the same but reverse the valance of `top` so that it can now be interpreted as "I would not feel comfortable buying products from Israel." Since the value labels don't change, the people who were previously classified as "Strongly agree" are now going be classified as "Strongly disagree", etc.
-
-The second reason one might reverse the values, is to change the direction of the scale. For example, as the values in `top` increase, so does one's level of disagreement. We might want to reverse the values so that now a 1 = "Strongly disagree" and a 4 = "Strongly agree", and thus a higher number means more agreement. Because this method does not flip the valance of the question, people who were originally classified as "Strongly agree" are still going to be classified as "Strongly agree". Put another way, the question isn't changing and therefore people's responses aren't changing. The only thing that changes is the value associated with their response.
-
-`num_rev()` was designed with the second goal in mind. Normally when simply reversing the values by subtracting them, all underlying metadata and attributes are lost. As a result, we would have to reverse the values, update the value labels and set the variable label again. This is really time consuming. The purpose of `num_rev()` is to fix this by automating this process of reversing a numeric vector while maintaining the variable and value labels. In addition, this function adds a new attribute called `transformation` that describes the data transformation used to create this variable. 
-
-I'm now going to show this function in action. We can see that when `top` = 1, `top_rev` = 4; when `top` = 2, `top_rev` = 3; `top` = 3, `top_rev` = 2; and when `top` = 4, `top_rev` = 1. 
-
-```{r}
-new_df <- test_data %>% 
-  # let's make a new variable with the num_rev function
-  mutate(top_rev = num_rev(top)) %>% 
-  # keep only these two variables
-  select(top_rev, top)
-
-head(new_df)
-```
-
-This function does a lot more than just `5 - top`. Let's take a look. Using `str()` we can see that both variables have "label" and "labels" attributes and `top_rev` has a new attribute called "transformation". The new "transformation" attribute is automatically added and describes what sort of data transformation the variable underwent when it was created. This is valuable in case you forgot how it was created. In addition, both variables have the same variable label as seen in the "label" attribute. The key difference between these can be found in the "labels" attribute. In `top_rev`, the labels are reversed. In the original variable, `top`, 1 = "Strongly agree", 2 = "Somewhat agree", etc. However, in the new variable 4 = "Strongly agree", 3 = "Somewhat agree", etc.
+Let's create a vector called `blue` that measures people's agreement with the statement "I like the color blue" and set it so that a higher number means more disagreement.
 
 ```{r}
 
-str(new_df)
+# create the vector
+blue <- sample(c(1:4), size = 20, replace = TRUE)
+# add value labels
+attr(blue, "labels") <- c(
+  "Strongly agree" = 1, 
+  "Somewhat agree" = 2, 
+  "Somewhat disagree" = 3, 
+  "Strongly disagree" = 4
+)
+# add a variable label
+attr(blue, "label") <- "I like the color blue"
+
+# make it a haven-labelled object (this is just for printing purposes)
+class(blue) <- c("haven_labelled", "vctrs_vctr", "double")
+
+# show the output and attributes
+str(blue)
 
 ```
 
-Now, there are two reasons that the different labels is significant. First, it means that when we check the frequencies for both variables we will get the same results. The only difference is the order of the response options.
+Now, given the way the statement is written, we would naturally assume a higher number means more agreement and therefore the person likes blue more. However, that's not the case. This is particularly relevant when comparing means or running regressions, etc. To fix this, we just need to reverse the values and their associated labels to show that a higher number means more agreement. This is what `num_rev()` does. 
+
+Looking at the example below, we can see that the labels for the two vectors are reversed and the values are different as well. However, the variable labels for both are the same. Doing it this way ensures that the overall output of the question stays the same. We still get the same percentage of people who agree and disagree, but the actual numbers that underlie the variable have reversed. 
+
 
 ```{r}
-get_freq_table(new_df, top_rev)
-
-get_freq_table(new_df, top)
+# reverse the direction of the scale
+blue_rev <- num_rev(blue)
+# let's compare the two
+str(list(blue = blue, blue_rev = blue_rev))
 
 ```
 
-Second, the means of the variable will be different. For `top`, higher score means more disagreement. However, for `top_rev`, a higher number means more agreement. We can see the differences below.
+Conversely, if we wanted to show how much people dislike the color blue, we could show how many people disagree with the statement, however this is not as intuitive as simply showing agreement with a negative statement. To fix this proble, we could flip the valence of the question to something like, "I dislike the color blue" and change the value labels, while keep the values the same. This is what `flip_val()` does.
+
+Looking below, we can see that the values between `blue` and `blue_flip` are the same, but the value labels and variable labels are different. Similarly, we can see that the values and variable labels between `blue_flip` and `blue_rev` are different, but their value labels are the same. 
 
 ```{r}
-
-get_means(new_df, top_rev)
-
-get_means(new_df, top)
-
+blue_flip <- flip_val(blue, "I dislike the color blue")
+str(list(blue = blue, blue_rev = blue_rev, blue_flip = blue_flip))
 ```
-
-
-
 
 

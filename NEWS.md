@@ -1,3 +1,15 @@
+# adlgraphs 0.3.53
+
+## added a new function `flip_val()` and updated a vignette
+
+#### `flip_val`
+
+- This allows you to flip the valence of a variable
+
+#### updated the vignette for `data_transformations`
+
+- Simplified the vignette and added information about `flip_val()` 
+
 # adlgraphs 0.3.52
 ## Added a new function `set_question_preface()`
 

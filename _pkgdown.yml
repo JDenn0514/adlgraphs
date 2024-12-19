@@ -50,6 +50,7 @@ reference:
   contents:
     - case_match_fct
     - case_when_fct
+    - flip_val
     - make_factor
     - make_quarts
     - make_dicho
