@@ -195,9 +195,9 @@ get_diffs <- function(
   out[[treats]] <- gsub(pattern = treats, replacement = "", x = out$term, fixed = TRUE)
   
   # keep only the relevant columns and reorder them
-  out <- out[c(group_names, treats, "Estimate", "pct_change", "mean",  "n", "conf.low", "conf.high", "Pr(>|t|)")]
+  out <- out[c(group_names, treats, "Estimate", "pct_change", "mean",  "n", "conf.low", "conf.high", "Pr(>|t|)", "stars")]
   # rename the columns
-  colnames(out) <- c(group_names, treats, "diffs", "pct_change", "mean", "n", "conf.low", "conf.high", "p_value")
+  colnames(out) <- c(group_names, treats, "diffs", "pct_change", "mean", "n", "conf.low", "conf.high", "p_value", "stars")
 
   if (!show_means) {
     # if show_means is false, remove it
@@ -252,6 +252,7 @@ get_diffs <- function(
   attr(out$conf.low, "label") <- "Low CI"
   attr(out$conf.high, "label") <- "High CI"
   attr(out$p_value, "label") <- "P-Value"
+  attr(out$stars, "label") <- ""
 
   if (!is.null(attr_var_label(data[[x]]))) {
     # if there is a variable label in the x variable
@@ -398,6 +399,7 @@ bivariate_reg <- function(
     out$n <- n[-1]
 
   }
+  out$stars <- stars_pval(out$`Pr(>|t|)`)
   out
 
 }
