@@ -21,9 +21,10 @@ prettytable <- function(x) {
 prettytable.adlgraphs_freqs <- function(x, wide = TRUE) {
 
   group_names <- attr(x, "group_names")
-  variable_name <- attr(x, "variable_name")
+  variable_name <- as.character(rlang::quo_squash(attr(x, "variable_name")))
 
-  if (!is.null(group_names)) {
+
+  if (length(group_names) != 0) {
     # clean up the percent column
     x$pct <- make_percent(x$pct)
     # clean up the n
@@ -76,8 +77,7 @@ prettytable.adlgraphs_freqs <- function(x, wide = TRUE) {
     x %>% 
       gt::gt(rowname_col = variable_name) %>% 
       gt::tab_header(paste0('Calculating the frequencies for "', attr(x, "variable_label"), '"')) %>% 
-      gt::opt_table_lines("all") %>% 
-      gt::opt_stylize(style = 3)
+      gt::opt_table_lines("all") 
   }
 
 }
