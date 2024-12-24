@@ -43,7 +43,7 @@ funky_freqs <- function(
   
 
   # get the object's name
-  x_name <- deparse(substitute(x))
+  x_name <- rlang::enexpr(x)
 
   # ensure that string or symbol are accepted in x
   x <- rlang::as_name(rlang::ensym(x))
