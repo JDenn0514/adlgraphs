@@ -1,6 +1,49 @@
 
 # my own functions --------------------------------------------------------
 
+# this function updates the column names so that they are N or Percent
+fix_pct <- function(x) {
+  # extract the columns from the gt data
+  columns <- colnames(x[["_data"]])
+  # get only the columns with "n_" or "pct_"
+  og_cols <- grep("_n|_pct", columns,  value = TRUE)
+  # extract only the part of the string with "n_" or "pct_" in it
+  new_cols <- unlist(regmatches(og_cols, m = regexec("_n|_pct", og_cols)))
+  
+  # clean up the names of the columns
+  # replace "n_" with "N" in the 
+  new_cols <- gsub("_n", "N", new_cols) 
+  # replace "pct_" with "Percent", use . as placeholder
+  new_cols <- gsub("_pct", "Percent", new_cols)
+
+  # set the names of new_names using the original column names
+  names(new_cols) <- og_cols
+  return(new_cols)
+
+}
+
+# this function sorts the columns in a wide data.frame
+sort_cols <- function(x, group_names, variable_name) {
+  # keep only the strings starting with "n_" or "pct_"
+  new_cols <- grep("n_|pct_", colnames(x),  value = TRUE)
+
+  # make a list by splitting each string in new_cols by "_"
+  list_strings <- strsplit(new_cols, "_", fixed = TRUE)
+  # use do.call to perform rbind over each element in list_strings 
+  #   and combine all resulting vectors together as a matrix
+  mat <- do.call(rbind, list_strings)
+  # convert the matrix into a data frame
+  data <- data.frame(mat)
+
+  # rename the columns 
+  names(data) <- c("pct_n", group_names)
+
+  # the sort data by the columns in group_names
+  data <- sort_by(data, data[group_names])
+  return(data)
+}
+
+
 # helper function for doing grouped data analysis
 group_analysis_helper <- function(data, cols) {
   # extract the df in the "groups" attribute

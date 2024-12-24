@@ -16,80 +16,72 @@ prettytable <- function(x) {
   UseMethod("prettytable")
 }
 
-#' @export
-# create the default pretty table function
-prettytable.default <- function(x) {
-
-  # by specifying any
-  if ("pct" %in% colnames(x)) {
-    prettytable.adlgraphs_freqs(x)
-  }
-}
 
 #' @export
-prettytable.adlgraphs_freqs <- function(x) {
+prettytable.adlgraphs_freqs <- function(x, wide = TRUE) {
 
-  num_cols <- length(colnames(x))
+  group_names <- attr(x, "group_names")
+  variable_name <- attr(x, "variable_name")
 
-  if (num_cols == 3) {
-    # if there are only three columns it means there is no grouping variable
+  if (!is.null(group_names)) {
+    # clean up the percent column
+    x$pct <- make_percent(x$pct)
+    # clean up the n
+    x$n <- round(x$n)
 
-    # get the name of the main variable
-    x_lab <- colnames(x)[1]
-
-    # get the label of the main variable
-    x_variable_label <- get_variable_label(x[[x_lab]], x_lab)
-
-    x %>%
-      dplyr::mutate(
-        pct = make_percent(pct),
-        n = round(n, 2),
-        x_f = make_factor(.data[[x_lab]])
-      ) %>%
-      dplyr::select(x_f, n, pct) %>%
-      gt::gt() %>%
-      gt::cols_label(
-        x_f = x_variable_label,
-        n = "N",
-        pct = "Percent"
-      )
-
-  } else if (num_cols == 4) {
-
-    # get the name of the main variable
-    x_lab <- colnames(x)[2]
-    # get the label of the main variable
-    x_variable_label <- get_variable_label(x[[x_lab]], x_lab)
-
-    # get the group object's name
-    group_lab <- colnames(x)[1]
-    # get the group column labels
-    group_cols <- get_unique_labels(x[[1]])
-    # set the group variable label
-    group_variable_label <- get_variable_label(x[[group_lab]], group_lab)
-
-    x %>%
-      dplyr::mutate(
-        pct = make_percent(pct),
-        n = round(n, 2),
-        pct_lab = glue::glue("{pct} (n = {n})"),
-        x_f = make_factor(.data[[x_lab]])
-      ) %>%
-      dplyr::select(c(x_f, dplyr::all_of({{ group_lab }}), pct_lab)) %>%
+    data <- x %>% 
+      # pivot the data based on the 
       tidyr::pivot_wider(
-        names_from = group_lab,
-        values_from = pct_lab
-      ) %>%
-      gt::gt() %>%
-      gt::cols_label(x_f = x_variable_label) %>%
-      gt::tab_spanner(
-        label = group_variable_label,
-        columns = group_cols
-      )
+        names_from = tidyselect::all_of(group_names),
+        values_from = c(pct, n)
+      ) 
+  
+    # create a data.frame with the column names in the right order
+    sorted <- sort_cols(data, group_names, x)
 
+    # put the column names back together as a vector with "_" separating each part
+    reordered <- do.call(paste, c(sorted, sep = "_"))
+    # reorder the columns using the reorderd vector of col names
+    data <- data[c(variable_name, reordered)]
+
+    # reorder the columns in the sorted data
+    sorted <- sorted[,c(group_names, "pct_n")]
+    # put the col names back together as a vector with the "_" separating each part
+    fixed_cols <- do.call(paste, c(sorted, sep = "_"))
+
+    # rename the columns in data using fixed_cols
+    names(data) <- c(variable_name, fixed_cols)
+    # return(data)
+      
+    # create the gt object
+    data %>% 
+      gt::gt(rowname_col = variable_name)  %>% 
+      gt::tab_spanner_delim(delim = "_", split = "first") %>% 
+      # fix the column labels for n and pct
+      gt::cols_label(.list = fix_pct(.)) %>% 
+      gt::tab_header(paste0('Calculating the frequencies for "', attr(x, "variable_label"), '"')) %>% 
+      gt::opt_table_lines("all") %>% 
+      gt::tab_style(
+        gt::cell_borders(color = "#D3D3D3"),
+        gt::cells_column_spanners()
+      )
+  } else {
+    # reorder the columns 
+    x <- x[,c(variable_name, "pct", "n")]
+    # clean up
+    x$pct <- make_percent(x$pct)
+    attr(x$pct, "label") <- "Percent"
+    x$n <- round(x$n)
+    attr(x$n, "label") <- "N"
+    x %>% 
+      gt::gt(rowname_col = variable_name) %>% 
+      gt::tab_header(paste0('Calculating the frequencies for "', attr(x, "variable_label"), '"')) %>% 
+      gt::opt_table_lines("all") %>% 
+      gt::opt_stylize(style = 3)
   }
 
 }
+
 
 # prettytable.adlgraphs_dunnett <- function(x) {
 #
