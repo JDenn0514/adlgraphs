@@ -25,7 +25,7 @@ fix_pct <- function(x) {
 # this function sorts the columns in a wide data.frame
 sort_cols <- function(x, group_names, variable_name) {
   # keep only the strings starting with "n_" or "pct_"
-  new_cols <- grep("n_|pct_", colnames(x),  value = TRUE)
+  new_cols <- grep("^(n_|pct_)", colnames(x),  value = TRUE)
 
   # make a list by splitting each string in new_cols by "_"
   list_strings <- strsplit(new_cols, "_", fixed = TRUE)
