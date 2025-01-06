@@ -38,7 +38,7 @@ prettytable.adlgraphs_freqs <- function(x, wide = TRUE) {
       ) 
   
     # create a data.frame with the column names in the right order
-    sorted <- sort_cols(data, group_names, x)
+    sorted <- sort_cols(data, group_names, variable_name)
 
     # put the column names back together as a vector with "_" separating each part
     reordered <- do.call(paste, c(sorted, sep = "_"))
