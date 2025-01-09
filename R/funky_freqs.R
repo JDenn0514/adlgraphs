@@ -47,6 +47,9 @@ funky_freqs <- function(
 
   # ensure that string or symbol are accepted in x
   x <- rlang::as_name(rlang::ensym(x))
+  
+  # get the variable label in x
+  x_label <- attr_var_label(data[[x]])
 
   # Prepare group variables
   # if the data is grouped, use dplyr::group_vars to get them, else set to NULL
@@ -113,14 +116,14 @@ funky_freqs <- function(
   # if drop_zero is TRUE, remove any rows with 0
   if (drop_zero) out <- out[out$n != 0,]
 
-  if (!is.null(attr_var_label(data[[x]]))) {
+  if (!is.null(x_label)) {
     # if there is a variable label in the x variable
 
     # add the variable label to x
-    attr(out[[x]], "label") <- attr_var_label(x, data)
+    attr(out[[x]], "label") <- x_label
     # add the variable label of x as an attribute called 
     # variable_label to the output dataframe
-    attr(out, "variable_label") <- attr_var_label(data[[x]])
+    attr(out, "variable_label") <- x_label
     # add the variable name of x as an attribute called
     # variable_name to the output dataframe
     attr(out, "variable_name") <- x_name
