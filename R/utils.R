@@ -23,7 +23,7 @@ fix_pct <- function(x) {
 }
 
 # this function sorts the columns in a wide data.frame
-sort_cols <- function(x, group_names, variable_name) {
+sort_cols <- function(x, group_names, variable_name, og) {
   # keep only the strings starting with "n_" or "pct_"
   new_cols <- grep("^(n_|pct_)", colnames(x),  value = TRUE)
 
@@ -37,12 +37,33 @@ sort_cols <- function(x, group_names, variable_name) {
 
   # rename the columns 
   names(data) <- c("pct_n", group_names)
+  
+  data[group_names] <- character_to_factor(data, og, group_names)
 
   # the sort data by the columns in group_names
   data <- sort_by(data, data[group_names])
   return(data)
 }
 
+
+character_to_factor <- function(new, old, cols) {
+  # convert character vectors to factors
+  lapply(
+    # perform the function only over the common data frames
+    cols |> setNames(nm = _), 
+    # write the anonymous function
+    \(y) {
+      if (!is.null(levels(old[[y]]))) {
+        # if old[[y]] has levels
+        # set new[[y]] as factor with levels from old[[y]]
+        factor(new[[y]], levels(old[[y]]))
+      } else {
+        # if old[[y]] does not have levels coerce to factor
+        as.factor(new[[y]])
+      }
+    }
+  )
+}
 
 # helper function for doing grouped data analysis
 group_analysis_helper <- function(data, cols) {

@@ -30,7 +30,7 @@ prettytable.adlgraphs_freqs <- function(x, wide = TRUE) {
     # clean up the n
     x$n <- round(x$n)
 
-    data <- x %>% 
+    x_wide <- x %>% 
       # pivot the data based on the 
       tidyr::pivot_wider(
         names_from = tidyselect::all_of(group_names),
@@ -38,24 +38,23 @@ prettytable.adlgraphs_freqs <- function(x, wide = TRUE) {
       ) 
   
     # create a data.frame with the column names in the right order
-    sorted <- sort_cols(data, group_names, variable_name)
+    sorted <- sort_cols(x_wide, group_names, variable_name, x)
 
     # put the column names back together as a vector with "_" separating each part
     reordered <- do.call(paste, c(sorted, sep = "_"))
     # reorder the columns using the reorderd vector of col names
-    data <- data[c(variable_name, reordered)]
+    x_wide <- x_wide[c(variable_name, reordered)]
 
     # reorder the columns in the sorted data
     sorted <- sorted[,c(group_names, "pct_n")]
     # put the col names back together as a vector with the "_" separating each part
     fixed_cols <- do.call(paste, c(sorted, sep = "_"))
-
+    
     # rename the columns in data using fixed_cols
-    names(data) <- c(variable_name, fixed_cols)
-    # return(data)
+    names(x_wide) <- c(variable_name, fixed_cols)
       
     # create the gt object
-    data %>% 
+    x_wide %>% 
       gt::gt(rowname_col = variable_name)  %>% 
       gt::tab_spanner_delim(delim = "_", split = "first") %>% 
       # fix the column labels for n and pct
