@@ -134,6 +134,7 @@ get_corr.grouped_df <- function(data, x, y, group, wt) {
 
 }
 
+
 #' Calculate individual weighted correlations
 #' 
 #' This is one of the main worker functions behind [get_corr()]. It calculates
@@ -148,8 +149,9 @@ get_corr.grouped_df <- function(data, x, y, group, wt) {
 #' 
 #' @export
 wtd_corr <- function(data, x, y,  wt) {
-  x <- accept_string_or_sym({{ x }})
-  y <- accept_string_or_sym({{ y }})
+
+  x <- adlgraphs:::accept_string_or_sym({{ x }})
+  y <- adlgraphs:::accept_string_or_sym({{ y }})
 
   # get variable labels
   x_lab <- attr_var_label(data[[x]])
@@ -163,100 +165,101 @@ wtd_corr <- function(data, x, y,  wt) {
   x_name_vec <- stats::setNames(x_name, x_lab)
   y_name_vec <- stats::setNames(y_name, y_lab)
 
-  if (!missing(wt)) {
-    # if not missing wt
-
-    # make it accepting a string or symbol
-    wt <- accept_string_or_sym({{ wt }})
-
-    # get the correlation
-    cor <- onecor.wtd(data[[x]], data[[y]], data[[wt]]) 
-
+  # Prepare weights
+  if (missing(wt)) {
+    wt <- "wts"
+    data[[wt]] <- rep(1, nrow(data))
   } else {
-    # if wt is missing then just calculate it without weights
-    cor <- onecor.wtd(data[[x]], data[[y]])
-
+    wt <- rlang::as_name(rlang::ensym(wt))
+    data[[wt]][is.na(data[[wt]])] <- 0
   }
 
-  out <- cor %>% 
-    # converts the vector to a dataframe so we can use mutate
-    tibble::enframe() %>% 
-    # enframe makes it vertical so we need to pivot it to be wide again
-    tidyr::pivot_wider(names_from = "name", values_from = "value") %>% 
-    # add a bunch of variables and clean up data
-    dplyr::mutate(
-      # calculate the lower CI
-      conf.low = correlation - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.err,
-      # calculate the higher CI
-      conf.high = correlation + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.err,
-      # create the stars column based on p-value
-      stars = stars_pval(p.value),
-      # create the x variable and add value labels based on original variable label
-      x = x_name %>% haven::labelled(labels = x_name_vec),
-      # create the x variable and add value labels based on original variable label
-      y = y_name %>% haven::labelled(labels = y_name_vec)
-    ) %>% 
-    # reorder the columns and drop some
-    dplyr::select(c(x, y, correlation, n, conf.low, conf.high, p.value, stars))
+  data <- data[c(x, y, wt)]
+  data <- data[stats::complete.cases(data),]
+
+  # standardize the data
+  data[[x]] <- stdz(data[[x]], data[[wt]])
+  data[[y]] <- stdz(data[[y]], data[[wt]])
+
+  model <- stats::lm(
+    stats::reformulate(x, y),
+    data = data,
+    weights = data[[wt]]
+  )
+  
+  coefs <- coef(summary(model))[2,]
+  coefs <- as.data.frame(t(coefs))
+
+  # get the length of x without NAs
+  n <- length(data[[x]])
+  # make a new column with the number of observations
+  coefs$n <- n
+
+  # calculate z
+  z <- stats::qt(1 - ((1 - 0.95) / 2), df = model$df.residual)
+  # calculate the margin of error
+  coefs$moe <- z * coefs$`Std. Error`
+  # calculate low confidence interval
+  coefs$conf.low <- coefs$Estimate - coefs$moe
+  # calculate high CI
+  coefs$conf.high <- coefs$Estimate + coefs$moe
+  # create a new column with the stars
+  coefs$stars <- stars_pval(coefs[["Pr(>|t|)"]])
+
+  coefs$x <- x_name
+  if (!is.null(x_lab)) {
+    # if x_lab is not null 
+
+    # add labels
+    attr(coefs$x, "labels") <- x_name_vec
+    # update the class
+    class(coefs$x) <- c("haven_labelled", "vctrs_vctr", "character")
+  }
+  # set the y column using the 
+  coefs$y <- y_name
+  if (!is.null(y_lab)) {
+    # if y_lab is not null 
+
+    # add labels
+    attr(coefs$y, "labels") <- y_name_vec
+    # update the class
+    class(coefs$y) <- c("haven_labelled", "vctrs_vctr", "character")
+  }
+
+  out <- coefs[c("x", "y", "Estimate", "n", "conf.low", "conf.high", "Pr(>|t|)", "stars")]
+  names(out) <- c("x", "y", "correlation", "n", "conf.low", "conf.high", "p_value", "stars")
 
   attr(out$correlation, "label") <- "Correlation"
   attr(out$n, "label") <- "N"
   attr(out$conf.low, "label") <- "Low CI"
   attr(out$conf.high, "label") <- "High CI"
-  attr(out$p.value, "label") <- "P-Value"
+  attr(out$p_value, "label") <- "P-Value"
+
+  class(out) <- c("tbl_df", "tbl", "data.frame")
 
   return(out)
 
 }
 
 
-# Calculate the weighted correlations as a matrix
-onecor.wtd <- function(x, y, wt = NULL){
-  if(is.null(wt)){
-    wt <- rep(1, length(x))
-  }
-  # remove NAs
-  use <- !is.na(y) & !is.na(x)
-  # drop NAs
-  x <- x[use]
-  y <- y[use]
-  wt <- wt[use]
-  
-  # get the length of x without NAs
-  n <- length(x)
-
-  # standardize the x and y values
-  x_stdz <- stdz(x, wt = wt)
-  y_stdz <- stdz(y, wt = wt)
-
-  # get the correlation coefficients
-  corcoef <- coef(summary(lm(y_stdz ~ x_stdz, weights=wt)))[2,]
-
-  # clean up the final vector
-  corcoef <- corcoef %>%
-    # add the number of observations 
-    append(n) %>% 
-    # set the names
-    setNames(c("correlation", "std.err", "t.value", "p.value", "n")) 
-
-  return(corcoef)
-}
-
 # standardize the data using weights
 stdz <- function(x, wt = NULL){
 
-  if (is.null(wt)) {
-    # if wt is null 
-    x <- x - mean(x, na.rm = TRUE)
-    x <- x / sd(x, na.rm = TRUE)
-    return(x)
-  } else {
-    # subtract the weighted mean from x to center the data
-    x <- x - weighted.mean(x, wt, na.rm = TRUE)
-    # divide x by the weighted sd of x to scale the data
-    x <- x / wtd_sd(x, wt, na.rm = TRUE)
-    x
-  }
+  # Prepare weights
+  if (missing(wt)) {
+    wt <- rep(1, length(x))
+  } 
+
+  # calculate the weighted n
+  n <- sum(wt, na.rm = TRUE)
+  # center x by subtracting the mean from it
+  x_mean <- x - (sum(x * wt, na.rm = TRUE) / n)
+  # calculate the weighted sd
+  x_sd <- sqrt(sum(wt * (x_mean)^2, na.rm = TRUE) / n)
+  # divide x by the weighted sd of x to scale the data
+  x <- x_mean / x_sd
+  x
+
 
 }
 

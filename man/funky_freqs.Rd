@@ -32,7 +32,7 @@ is 3.}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-Use this function to calculate simple weighted frequencies weighted grouped.
+Use this function to calculate simple weighted frequencies.
 You can also specify a grouping variable by which you want to calculate the
 frequencies.
 

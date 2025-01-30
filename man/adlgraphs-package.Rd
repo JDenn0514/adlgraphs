@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-The goal of adlgraphs is to to help ensure that the data visualizations produced by the Center for Antisemitism Research (CAR) at the Anti-Defamation League (ADL) are consistent with ADL's brand guidelines and that CAR's data visualizations are consistent and cohesive. In addition, it contains a myriad array of different functions to help make data analysis and data cleaning quicker, easier, and more succinct.
+The main goal of adlgraphs is toward improving the efficiency and ease of cleaning, analyzing, and visualizing survey data, so that the turnaround time between data collection and presentation of analysis and findings could be as minimized as much as possible. In addition, this has ensured that the presentation of data and results is consistent across projects.
 }
 \seealso{
 Useful links:

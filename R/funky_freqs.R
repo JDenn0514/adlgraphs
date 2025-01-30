@@ -4,7 +4,7 @@
 #' 
 #' `r lifecycle::badge("experimental")`
 #'
-#' Use this function to calculate simple weighted frequencies weighted grouped.
+#' Use this function to calculate simple weighted frequencies.
 #' You can also specify a grouping variable by which you want to calculate the
 #' frequencies.
 #'

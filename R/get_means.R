@@ -73,6 +73,8 @@ get_means <- function(
   na.rm = TRUE,
   conf_level = 0.95
 ) {
+  
+  # TODO: Possibly change this to rlang::enexpr()
   x_name <- deparse(substitute(x))
   # Ensure x is a string
   x <- rlang::as_name(rlang::ensym(x))
