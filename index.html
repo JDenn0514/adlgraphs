@@ -20,8 +20,8 @@
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
 <meta property="og:title" content="Create Graphs with ADL Style and Branding">
-<meta name="description" content="The goal of adlgraphs is to to help ensure that the data visualizations produced by the Center for Antisemitism Research (CAR) at the Anti-Defamation League (ADL) are consistent with ADLs brand guidelines and that CARs data visualizations are consistent and cohesive. In addition, it contains a myriad array of different functions to help make data analysis and data cleaning quicker, easier, and more succinct.">
-<meta property="og:description" content="The goal of adlgraphs is to to help ensure that the data visualizations produced by the Center for Antisemitism Research (CAR) at the Anti-Defamation League (ADL) are consistent with ADLs brand guidelines and that CARs data visualizations are consistent and cohesive. In addition, it contains a myriad array of different functions to help make data analysis and data cleaning quicker, easier, and more succinct.">
+<meta name="description" content="The main goal of adlgraphs is toward improving the efficiency and ease of cleaning, analyzing, and visualizing survey data, so that the turnaround time between data collection and presentation of analysis and findings could be as minimized as much as possible. In addition, this has ensured that the presentation of data and results is consistent across projects.">
+<meta property="og:description" content="The main goal of adlgraphs is toward improving the efficiency and ease of cleaning, analyzing, and visualizing survey data, so that the turnaround time between data collection and presentation of analysis and findings could be as minimized as much as possible. In addition, this has ensured that the presentation of data and results is consistent across projects.">
 <meta property="og:image" content="https://jdenn0514.github.io/adlgraphs/logo.png">
 </head>
 <body>
@@ -32,7 +32,7 @@
 
     <a class="navbar-brand me-2" href="index.html">adlgraphs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.55</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.56</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,18 +63,20 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header">
-<img src="logo.png" class="logo" alt=""><h1 id="adlgraphs">adlgraphs<a class="anchor" aria-label="anchor" href="#adlgraphs"></a>
-</h1>
-</div>
-</div>
-<div class="section level1">
-<h1 id="adlgraphs-">adlgraphs 
+<img src="logo.png" class="logo" alt=""><h1 id="adlgraphs-">adlgraphs 
 <a class="anchor" aria-label="anchor" href="#adlgraphs-"></a>
 </h1>
+</div>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>The goal of adlgraphs is to to help ensure that the data visualizations produced by the Center for Antisemitism Research (CAR) at the Anti-Defamation League (ADL) are consistent with ADL’s brand guidelines and that CAR’s data visualizations are consistent and cohesive. In addition, it contains a myriad array of different functions to help make data analysis and data cleaning, quicker, easier, and more succinct.</p>
+<p>adlgraphs was initially built to ensure that the data visualizations produced by the Center for Antisemitism Research (CAR) at the Anti-Defamation League (ADL) are consistent with ADL’s brand guidelines and that CAR’s data visualizations are consistent and cohesive. (Hence the use of “graphs” in the name.)</p>
+<p>Over time, the focus has shifted toward improving the efficiency and ease of cleaning, analyzing, and visualizing survey data, so that the turnaround time between data collection and the presentation of analysis and findings could be as minimized as much as possible.</p>
+</div>
+<div class="section level2">
+<h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a>
+</h2>
+<p>This package is regularly updated. Sometimes these updates include adding new functions, other times it involves updating existing functions (fixing bugs, changing how they operate slightly, adding additional functionality, speeding it up, etc.). While I try to maintain backward compatibility, that is not always possible. If you are suddenly getting an error message when re-running old code, it is possible that the function has been updated so check the documentation to make sure that you are still using it properly .</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -85,7 +87,6 @@
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"JDenn0514/adlgraphs"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
-
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
