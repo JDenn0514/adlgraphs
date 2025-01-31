@@ -55,6 +55,7 @@ reference:
     - make_quarts
     - make_dicho
     - make_binary
+    - make_nested
     - num_rev
     - make_quarts
     - refactor
@@ -75,6 +76,7 @@ reference:
     - get_all_corr
     - get_loadings
     - prettytable
+    - row_means
     - wtd_corr
 - title: Attribute helpers
   contents:
