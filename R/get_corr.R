@@ -70,7 +70,7 @@ get_corr <- function(
   # if the data is grouped, use dplyr::group_vars to get them, else set to NULL
   group_names <- if(inherits(data, "grouped_df")) dplyr::group_vars(data) else NULL
   # if group arg is missing set to NULL, else use as.character(substitute()) to capture it
-  group_vars <- if (missing(group)) NULL else adlgraphs:::select_groups({{ group }}, data)
+  group_vars <- if (missing(group)) NULL else select_groups({{ group }}, data)
   # remove the "c" from the group_vars vector if it is there
   group_vars <- group_vars[group_vars != "c"]
   # combine group_names and group_vars for the final vector of group names

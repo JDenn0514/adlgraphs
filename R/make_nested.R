@@ -61,7 +61,7 @@
 make_nested <- function(data, group, na.rm = TRUE, sep = "_") {
   
   ## Prepare group variables
-  group_vars <- if (missing(group)) NULL else adlgraphs:::select_groups({{ group }}, data)
+  group_vars <- if (missing(group)) NULL else select_groups({{ group }}, data)
   group_vars <- group_vars[group_vars != "c"]
   group_names <- if (inherits(data, "grouped_df")) dplyr::group_vars(data) else NULL
   group_names <- unique(c(group_names, group_vars))
