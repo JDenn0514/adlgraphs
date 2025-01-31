@@ -13,13 +13,15 @@
 #'   variable.
 #' @param wt Can be either character strings or symbols. Weights. Add if 
 #'   you have a weighting variable and want to get weighted correlations
+#' @param decimals Number of decimals each number should be rounded to. Default
+#'   is 3.
 #'
 #' @returns A tibble showing correlations (`correlation`), number of observations 
 #'   (`n`), low and high confidence intervals (`conf.low`, `conf.high`), 
-#'   the p-value (`p.value`), and stars indicating it's statistical significance.
-#'   If data is of class `"grouped_df"` it will return one row for each unique 
-#'   observation if one group is provided and one row per unique combination of 
-#'   observations if multiple groups are used.
+#'   the p-value (`p_value`), and stars indicating it's statistical significance.
+#'   If data is of class `"grouped_df"` or the `group` argument is specified,
+#'   it will return one row for each unique observation if one group is provided
+#'   and one row per unique combination of observations if multiple groups are used.
 #' 
 #' @examples
 #' # load the dplyr for piping and grouping
@@ -46,35 +48,54 @@
 #' test_data %>% get_corr(x = top, y = sdo_sum, group = edu_f, wt = wts)
 #' 
 #' @export
-get_corr <- function(data, x, y, group = NULL, wt) {
-  UseMethod("get_corr")
-}
+get_corr <- function(
+  data,
+  x,
+  y,
+  group = NULL,
+  wt = NULL,
+  decimals = 3
+) {
 
-#' @export
-get_corr.default <- function(data, x, y, group, wt) {
+  # Prepare weights
+  if (missing(wt)) {
+    wt <- "wts"
+    data[[wt]] <- rep(1, nrow(data))
+  } else {
+    wt <- rlang::as_name(rlang::ensym(wt))
+    data[[wt]][is.na(data[[wt]])] <- 0
+  }
 
-  if (missing(group)) {
+  # Prepare group variables
+  # if the data is grouped, use dplyr::group_vars to get them, else set to NULL
+  group_names <- if(inherits(data, "grouped_df")) dplyr::group_vars(data) else NULL
+  # if group arg is missing set to NULL, else use as.character(substitute()) to capture it
+  group_vars <- if (missing(group)) NULL else adlgraphs:::select_groups({{ group }}, data)
+  # remove the "c" from the group_vars vector if it is there
+  group_vars <- group_vars[group_vars != "c"]
+  # combine group_names and group_vars for the final vector of group names
+  # use unique to make sure there aren't any duplicates
+  group_names <- unique(c(group_names, group_vars))
+
+  if (is.null(group_names)) {
     # if group is null just get the normal correlation
-    out <- wtd_corr(data, x = {{ x }}, y = {{ y }}, wt = {{ wt }})
+    out <- wtd_corr(data, x = {{ x }}, y = {{ y }}, wt = {{ wt }}, decimals = decimals)
 
   } else {
 
-    group <- accept_string_or_sym({{ group }})
     # make a nested data frame
-    nest_data <- data %>% 
-      dplyr::group_by(.data[[group]]) %>% 
-      tidyr::nest()
+    nest_data <- make_nested(data, {{ group_names }})
 
     # get the groups 
     # we will combine this with the correlations
-    just_groups <- nest_data %>% dplyr::select(-data)
+    just_groups <- nest_data[c(group_names)]
 
     # make the correlation dataframe
     corr_df <- purrr::map(
       # we are iterating over the data column
       nest_data$data, 
       # use wtd_corr to get the individuals correlations
-      ~wtd_corr(data = .x, x = {{ x }}, y = {{ y }}, wt = {{ wt }}) 
+      ~wtd_corr(data = .x, x = {{ x }}, y = {{ y }}, wt = {{ wt }}, decimals = decimals) 
     ) %>% 
       # bind the rows together
       dplyr::bind_rows()
@@ -82,9 +103,15 @@ get_corr.default <- function(data, x, y, group, wt) {
     # combine the columns of the grouping variable with the correlation
     out <- dplyr::bind_cols(just_groups, corr_df)
     # sort the first two columns
-    out <- out %>% 
-      dplyr::arrange(.by_group = TRUE)
+    out <- sort_by(out, out[group_names])
 
+    # add the group labels
+    # get the variable labels as a named list
+    group_labels <- attr_var_label(data[,group_names])
+    # for each value in names(group_labels) add the variable label from group_labels
+    for (y in names(group_labels)) attr(out[[y]], "label") <- group_labels[[y]]
+  
+    
   }
 
 
@@ -92,43 +119,7 @@ get_corr.default <- function(data, x, y, group, wt) {
   attr(out$n, "label") <- "N"
   attr(out$conf.low, "label") <- "Low CI"
   attr(out$conf.high, "label") <- "High CI"
-  attr(out$p.value, "label") <- "P-Value"
-
-  return(out)
-
-}
-
-#' @export
-get_corr.grouped_df <- function(data, x, y, group, wt) {
-  
-  # make it a nested data set
-  nest_data <- data %>% tidyr::nest()
-
-  # get the groups 
-  # we will combine this with the correlations
-  just_groups <- nest_data %>% dplyr::select(-data)
-
-  # make the correlation dataframe
-  corr_df <- purrr::map(
-    # we are iterating over the data column
-    nest_data$data, 
-    # use wtd_corr to get the individuals correlations
-    ~wtd_corr(data = .x, x = {{ x }}, y = {{ y }}, wt = {{ wt }}) 
-  ) %>% 
-    # bind the rows together
-    dplyr::bind_rows()
-  
-  # combine the columns of the grouping variable with the correlation
-  out <- dplyr::bind_cols(just_groups, corr_df)
-  # sort the first two columns
-  out <- out %>% 
-    dplyr::arrange(.by_group = TRUE)
-
-  attr(out$correlation, "label") <- "Correlation"
-  attr(out$n, "label") <- "N"
-  attr(out$conf.low, "label") <- "Low CI"
-  attr(out$conf.high, "label") <- "High CI"
-  attr(out$p.value, "label") <- "P-Value"
+  attr(out$p_value, "label") <- "P-Value"
 
   return(out)
 
@@ -146,12 +137,14 @@ get_corr.grouped_df <- function(data, x, y, group, wt) {
 #'   in the data you want to calculate the correlation between. 
 #' @param wt Can be either character strings or symbols. Weights. Add if 
 #'   you have a weighting variable and want to get weighted correlations
+#' @param decimals Number of decimals each number should be rounded to. Default
+#'   is 3.
 #' 
 #' @export
-wtd_corr <- function(data, x, y,  wt) {
+wtd_corr <- function(data, x, y,  wt, decimals) {
 
-  x <- adlgraphs:::accept_string_or_sym({{ x }})
-  y <- adlgraphs:::accept_string_or_sym({{ y }})
+  x <- rlang::as_name(rlang::ensym(x))
+  y <- rlang::as_name(rlang::ensym(y))
 
   # get variable labels
   x_lab <- attr_var_label(data[[x]])

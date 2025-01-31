@@ -1,3 +1,21 @@
+adlgraphs 0.3.6
+
+## added two new functions `row_means()` and `make_nested()`
+
+#### `row_means`
+
+- This allows you to calculate row means
+
+#### `make_nested` 
+
+- This produces a nested data frame
+
+#### Fixing some bugs in `get_corr()`
+
+- Previously `get_corr()` had some bugs that have been fixed.
+
+- Also added the ability to group by multiple variables
+
 # adlgraphs 0.3.53
 
 ## added a new function `flip_val()` and updated a vignette

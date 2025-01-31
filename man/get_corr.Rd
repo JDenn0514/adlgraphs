@@ -4,7 +4,7 @@
 \alias{get_corr}
 \title{Calculate weighted correlations}
 \usage{
-get_corr(data, x, y, group = NULL, wt)
+get_corr(data, x, y, group = NULL, wt = NULL, decimals = 3)
 }
 \arguments{
 \item{data}{An object of type data.frame or tibble. If piping the data into the
@@ -18,14 +18,17 @@ variable.}
 
 \item{wt}{Can be either character strings or symbols. Weights. Add if
 you have a weighting variable and want to get weighted correlations}
+
+\item{decimals}{Number of decimals each number should be rounded to. Default
+is 3.}
 }
 \value{
 A tibble showing correlations (\code{correlation}), number of observations
 (\code{n}), low and high confidence intervals (\code{conf.low}, \code{conf.high}),
-the p-value (\code{p.value}), and stars indicating it's statistical significance.
-If data is of class \code{"grouped_df"} it will return one row for each unique
-observation if one group is provided and one row per unique combination of
-observations if multiple groups are used.
+the p-value (\code{p_value}), and stars indicating it's statistical significance.
+If data is of class \code{"grouped_df"} or the \code{group} argument is specified,
+it will return one row for each unique observation if one group is provided
+and one row per unique combination of observations if multiple groups are used.
 }
 \description{
 This function calculates weighted Pearson correlations between two variables.

@@ -4,7 +4,7 @@
 \alias{wtd_corr}
 \title{Calculate individual weighted correlations}
 \usage{
-wtd_corr(data, x, y, wt)
+wtd_corr(data, x, y, wt, decimals)
 }
 \arguments{
 \item{data}{An object of type data.frame or tibble. If piping the data into the
@@ -15,6 +15,9 @@ in the data you want to calculate the correlation between.}
 
 \item{wt}{Can be either character strings or symbols. Weights. Add if
 you have a weighting variable and want to get weighted correlations}
+
+\item{decimals}{Number of decimals each number should be rounded to. Default
+is 3.}
 }
 \description{
 This is one of the main worker functions behind \code{\link[=get_corr]{get_corr()}}. It calculates
