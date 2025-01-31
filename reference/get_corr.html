@@ -13,7 +13,7 @@ specified, then it will return the same output as wtd_corr()."><meta property="o
 
     <a class="navbar-brand me-2" href="../index.html">adlgraphs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.56</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,7 +51,7 @@ specified, then it will return the same output as <code><a href="wtd_corr.html">
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_corr</span><span class="op">(</span><span class="va">data</span>, <span class="va">x</span>, <span class="va">y</span>, group <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">wt</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_corr</span><span class="op">(</span><span class="va">data</span>, <span class="va">x</span>, <span class="va">y</span>, group <span class="op">=</span> <span class="cn">NULL</span>, wt <span class="op">=</span> <span class="cn">NULL</span>, decimals <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -77,15 +77,20 @@ variable.</p></dd>
 <dd><p>Can be either character strings or symbols. Weights. Add if
 you have a weighting variable and want to get weighted correlations</p></dd>
 
+
+<dt id="arg-decimals">decimals<a class="anchor" aria-label="anchor" href="#arg-decimals"></a></dt>
+<dd><p>Number of decimals each number should be rounded to. Default
+is 3.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A tibble showing correlations (<code>correlation</code>), number of observations
 (<code>n</code>), low and high confidence intervals (<code>conf.low</code>, <code>conf.high</code>),
-the p-value (<code>p.value</code>), and stars indicating it's statistical significance.
-If data is of class <code>"grouped_df"</code> it will return one row for each unique
-observation if one group is provided and one row per unique combination of
-observations if multiple groups are used.</p>
+the p-value (<code>p_value</code>), and stars indicating it's statistical significance.
+If data is of class <code>"grouped_df"</code> or the <code>group</code> argument is specified,
+it will return one row for each unique observation if one group is provided
+and one row per unique combination of observations if multiple groups are used.</p>
     </div>
 
     <div class="section level2">
@@ -95,37 +100,49 @@ observations if multiple groups are used.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Let's first do a simple correlation where we pipe in the data</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">get_corr</span><span class="op">(</span>x <span class="op">=</span> <span class="va">top</span>, y <span class="op">=</span> <span class="va">sdo_sum</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in `[[&lt;-`(`*tmp*`, wt, value = numeric(0)):</span> Assigned data `*vtmp*` must be compatible with existing data.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> Existing data has 250 rows.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> Assigned data has 0 rows.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Only vectors of size 1 are recycled.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `vectbl_recycle_rhs_rows()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Can't recycle input of size 0 to size 250.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   x               y          correlation     n conf.low conf.high  p_value stars</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> top<span style="color: #949494;"> [An ideal …</span> sdo…<span style="color: #949494;"> [Soc…</span>      -<span style="color: #BB0000;">0.736</span>   250   -<span style="color: #BB0000;">0.821</span>    -<span style="color: #BB0000;">0.651</span> 6.41<span style="color: #949494;">e</span><span style="color: #BB0000;">-44</span> ***  </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Repeat but with weights</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">get_corr</span><span class="op">(</span>x <span class="op">=</span> <span class="va">top</span>, y <span class="op">=</span> <span class="va">sdo_sum</span>, wt <span class="op">=</span> <span class="va">wts</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `p.value`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in attr(out$p.value, "label") &lt;- "P-Value":</span> attempt to set an attribute on NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   x               y          correlation     n conf.low conf.high  p_value stars</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> top<span style="color: #949494;"> [An ideal …</span> sdo…<span style="color: #949494;"> [Soc…</span>      -<span style="color: #BB0000;">0.721</span>   250   -<span style="color: #BB0000;">0.808</span>    -<span style="color: #BB0000;">0.634</span> 2.25<span style="color: #949494;">e</span><span style="color: #BB0000;">-41</span> ***  </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Now let's get the correlatoin among only people with a bachelor's degree</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">edu_f2</span> <span class="op">==</span> <span class="st">"At Least a Bachelor's Degree"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu">get_corr</span><span class="op">(</span>x <span class="op">=</span> <span class="va">top</span>, y <span class="op">=</span> <span class="va">sdo_sum</span>, wt <span class="op">=</span> <span class="va">wts</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `p.value`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in attr(out$p.value, "label") &lt;- "P-Value":</span> attempt to set an attribute on NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   x               y          correlation     n conf.low conf.high  p_value stars</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> top<span style="color: #949494;"> [An ideal …</span> sdo…<span style="color: #949494;"> [Soc…</span>      -<span style="color: #BB0000;">0.712</span>   108   -<span style="color: #BB0000;">0.847</span>    -<span style="color: #BB0000;">0.577</span> 5.41<span style="color: #949494;">e</span><span style="color: #BB0000;">-18</span> ***  </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Now let's get it for each education level. Two ways of doing this:</span></span></span>
 <span class="r-in"><span><span class="co"># The first is to group the data ahead of time</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">edu_f</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu">get_corr</span><span class="op">(</span>x <span class="op">=</span> <span class="va">top</span>, y <span class="op">=</span> <span class="va">sdo_sum</span>, wt <span class="op">=</span> <span class="va">wts</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `p.value`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in attr(out$p.value, "label") &lt;- "P-Value":</span> attempt to set an attribute on NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   edu_f x         y          correlation     n conf.low conf.high  p_value stars</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> High… top<span style="color: #949494;"> [An …</span> sdo…<span style="color: #949494;"> [Soc…</span>      -<span style="color: #BB0000;">0.728</span>    64   -<span style="color: #BB0000;">0.902</span>    -<span style="color: #BB0000;">0.555</span> 8.94<span style="color: #949494;">e</span><span style="color: #BB0000;">-12</span> ***  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Some… top<span style="color: #949494;"> [An …</span> sdo…<span style="color: #949494;"> [Soc…</span>      -<span style="color: #BB0000;">0.729</span>    78   -<span style="color: #BB0000;">0.885</span>    -<span style="color: #BB0000;">0.572</span> 3.93<span style="color: #949494;">e</span><span style="color: #BB0000;">-14</span> ***  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Bach… top<span style="color: #949494;"> [An …</span> sdo…<span style="color: #949494;"> [Soc…</span>      -<span style="color: #BB0000;">0.603</span>    68   -<span style="color: #BB0000;">0.799</span>    -<span style="color: #BB0000;">0.407</span> 5.24<span style="color: #949494;">e</span><span style="color: #BB0000;">- 8</span> ***  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Grad… top<span style="color: #949494;"> [An …</span> sdo…<span style="color: #949494;"> [Soc…</span>      -<span style="color: #BB0000;">0.814</span>    40   -<span style="color: #BB0000;">1.00</span>     -<span style="color: #BB0000;">0.623</span> 1.68<span style="color: #949494;">e</span><span style="color: #BB0000;">-10</span> ***  </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># The second is to use the group argument</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">get_corr</span><span class="op">(</span>x <span class="op">=</span> <span class="va">top</span>, y <span class="op">=</span> <span class="va">sdo_sum</span>, group <span class="op">=</span> <span class="va">edu_f</span>, wt <span class="op">=</span> <span class="va">wts</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `p.value`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in attr(out$p.value, "label") &lt;- "P-Value":</span> attempt to set an attribute on NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   edu_f x         y          correlation     n conf.low conf.high  p_value stars</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> High… top<span style="color: #949494;"> [An …</span> sdo…<span style="color: #949494;"> [Soc…</span>      -<span style="color: #BB0000;">0.728</span>    64   -<span style="color: #BB0000;">0.902</span>    -<span style="color: #BB0000;">0.555</span> 8.94<span style="color: #949494;">e</span><span style="color: #BB0000;">-12</span> ***  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Some… top<span style="color: #949494;"> [An …</span> sdo…<span style="color: #949494;"> [Soc…</span>      -<span style="color: #BB0000;">0.729</span>    78   -<span style="color: #BB0000;">0.885</span>    -<span style="color: #BB0000;">0.572</span> 3.93<span style="color: #949494;">e</span><span style="color: #BB0000;">-14</span> ***  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Bach… top<span style="color: #949494;"> [An …</span> sdo…<span style="color: #949494;"> [Soc…</span>      -<span style="color: #BB0000;">0.603</span>    68   -<span style="color: #BB0000;">0.799</span>    -<span style="color: #BB0000;">0.407</span> 5.24<span style="color: #949494;">e</span><span style="color: #BB0000;">- 8</span> ***  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Grad… top<span style="color: #949494;"> [An …</span> sdo…<span style="color: #949494;"> [Soc…</span>      -<span style="color: #BB0000;">0.814</span>    40   -<span style="color: #BB0000;">1.00</span>     -<span style="color: #BB0000;">0.623</span> 1.68<span style="color: #949494;">e</span><span style="color: #BB0000;">-10</span> ***  </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
