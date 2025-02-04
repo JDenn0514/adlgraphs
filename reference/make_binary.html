@@ -97,12 +97,9 @@ what the 1 and 0 mean.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/" class="external-link">tibble</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://larmarange.github.io/labelled/" class="external-link">labelled</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://haven.tidyverse.org" class="external-link">haven</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># create fake data</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html" class="external-link">tribble</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="op">~</span><span class="va">x</span>, <span class="op">~</span><span class="va">y</span>, <span class="op">~</span><span class="va">z</span>,</span></span>
 <span class="r-in"><span>  <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">3</span>,</span></span>
@@ -111,72 +108,40 @@ what the 1 and 0 mean.</p>
 <span class="r-in"><span>  <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">4</span>,</span></span>
 <span class="r-in"><span>  <span class="fl">5</span>, <span class="fl">4</span>, <span class="fl">3</span>,</span></span>
 <span class="r-in"><span>  <span class="fl">6</span>, <span class="fl">5</span>, <span class="fl">6</span></span></span>
-<span class="r-in"><span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
-<span class="r-in"><span><span class="co"># add value labels</span></span></span>
-<span class="r-in"><span><span class="fu">labelled</span><span class="fu">::</span><span class="fu"><a href="https://larmarange.github.io/labelled/reference/val_labels.html" class="external-link">set_value_labels</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`Strongly agree` <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>        `Agree` <span class="op">=</span> <span class="fl">2</span>,</span></span>
-<span class="r-in"><span>        `Somewhat agree` <span class="op">=</span> <span class="fl">3</span>,</span></span>
-<span class="r-in"><span>        `Somewhat disagree` <span class="op">=</span> <span class="fl">4</span>,</span></span>
-<span class="r-in"><span>        `Disagree` <span class="op">=</span> <span class="fl">5</span>,</span></span>
-<span class="r-in"><span>        `Strongly disagree` <span class="op">=</span> <span class="fl">6</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`Strongly agree` <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>        `Agree` <span class="op">=</span> <span class="fl">2</span>,</span></span>
-<span class="r-in"><span>        `Somewhat agree` <span class="op">=</span> <span class="fl">3</span>,</span></span>
-<span class="r-in"><span>        `Somewhat disagree` <span class="op">=</span> <span class="fl">4</span>,</span></span>
-<span class="r-in"><span>        `Disagree` <span class="op">=</span> <span class="fl">5</span>,</span></span>
-<span class="r-in"><span>        `Strongly disagree` <span class="op">=</span> <span class="fl">6</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`Strongly agree` <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>        `Agree` <span class="op">=</span> <span class="fl">2</span>,</span></span>
-<span class="r-in"><span>        `Somewhat agree` <span class="op">=</span> <span class="fl">3</span>,</span></span>
-<span class="r-in"><span>        `Somewhat disagree` <span class="op">=</span> <span class="fl">4</span>,</span></span>
-<span class="r-in"><span>        `Disagree` <span class="op">=</span> <span class="fl">5</span>,</span></span>
-<span class="r-in"><span>        `Strongly disagree` <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
-<span class="r-in"><span><span class="co"># add variable labels</span></span></span>
-<span class="r-in"><span><span class="fu">labelled</span><span class="fu">::</span><span class="fu"><a href="https://larmarange.github.io/labelled/reference/var_label.html" class="external-link">set_variable_labels</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  x <span class="op">=</span> <span class="st">"This is the variable label for x"</span>,</span></span>
-<span class="r-in"><span>  y <span class="op">=</span> <span class="st">"This is the variable label for y"</span>,</span></span>
-<span class="r-in"><span>  z <span class="op">=</span> <span class="st">"This is the variable label for z"</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span> </span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">labs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>   <span class="st">"Strongly agree"</span> <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>   <span class="st">"Agree"</span> <span class="op">=</span> <span class="fl">2</span>,</span></span>
+<span class="r-in"><span>   <span class="st">"Somewhat agree"</span> <span class="op">=</span> <span class="fl">3</span>,</span></span>
+<span class="r-in"><span>   <span class="st">"Somewhat disagree"</span> <span class="op">=</span> <span class="fl">4</span>,</span></span>
+<span class="r-in"><span>   <span class="st">"Disagree"</span> <span class="op">=</span> <span class="fl">5</span>,</span></span>
+<span class="r-in"><span>   <span class="st">"Strongly disagree"</span> <span class="op">=</span> <span class="fl">6</span></span></span>
+<span class="r-in"><span> <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">x</span>, <span class="st">"labels"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">labs</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">z</span>, <span class="st">"labels"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">labs</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">z</span>, <span class="st">"labels"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">labs</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># show the data transformation with a haven_labelled vector</span></span></span>
-<span class="r-in"><span><span class="va">binary_df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>binary_x <span class="op">=</span> <span class="fu">make_binary</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">binary_df</span> <span class="op">&lt;-</span> <span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>binary_x <span class="op">=</span> <span class="fu">make_binary</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in dplyr::mutate(., binary_x = make_binary(x)):</span> <span style="color: #00BBBB;">ℹ</span> In argument: `binary_x = make_binary(x)`.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> object 'x' not found</span>
 <span class="r-in"><span><span class="co"># check the updated dataset</span></span></span>
 <span class="r-in"><span><span class="va">binary_df</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   x                     y                     z                     binary_x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 3<span style="color: #949494;"> [Somewhat agree]</span>    2<span style="color: #949494;"> [Agree]</span>             3<span style="color: #949494;"> [Somewhat agree]</span>           1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 4<span style="color: #949494;"> [Somewhat disagree]</span> 4<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Agree]</span>                    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 2<span style="color: #949494;"> [Agree]</span>             6<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly agree]</span>           1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 1<span style="color: #949494;"> [Strongly agree]</span>    1<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Somewhat disagree]</span>        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> 5<span style="color: #949494;"> [Disagree]</span>          4<span style="color: #949494;"> [Somewhat disagree]</span> 3<span style="color: #949494;"> [Somewhat agree]</span>           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> 6<span style="color: #949494;"> [Strongly disagree]</span> 5<span style="color: #949494;"> [Disagree]</span>          6<span style="color: #949494;"> [Strongly disagree]</span>        0</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'binary_df' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Check the attributes</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">binary_df</span><span class="op">$</span><span class="va">binary_x</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $transformation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Converting 'x' to a binary variable with 'Agree' = 1 and 'Disagree' = 0.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $label</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "This is the variable label for x"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $labels</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Agree Disagree </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        1        0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'binary_df' not found</span>
 <span class="r-in"><span><span class="co"># another way of checking the attributes</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">binary_df</span><span class="op">$</span><span class="va">binary_x</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  num [1:6] 1 0 1 1 0 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "transformation")= 'glue' chr "Converting 'x' to a binary variable with 'Agree' = 1 and 'Disagree' = 0."</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "label")= chr "This is the variable label for x"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "labels")= Named num [1:2] 1 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "names")= chr [1:2] "Agree" "Disagree"</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'binary_df' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># check the factor levels</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">binary_df</span><span class="op">$</span><span class="va">binary_x</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1 0</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'binary_df' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># ----------------------------------------------------------------------------</span></span></span>
 <span class="r-in"><span></span></span>
@@ -188,42 +153,24 @@ what the 1 and 0 mean.</p>
 <span class="r-in"><span>    <span class="co"># convert the factor to a binary variable</span></span></span>
 <span class="r-in"><span>    binary_x <span class="op">=</span> <span class="fu">make_binary</span><span class="op">(</span><span class="va">factor_x</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in dplyr::mutate(., factor_x = make_factor(x), binary_x = make_binary(factor_x)):</span> <span style="color: #00BBBB;">ℹ</span> In argument: `binary_x = make_binary(factor_x)`.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> `binary_x` must be a vector, not a symbol.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># check the updated dataset</span></span></span>
 <span class="r-in"><span><span class="va">binary_df</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   x                     y                     z                factor_x binary_x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 3<span style="color: #949494;"> [Somewhat agree]</span>    2<span style="color: #949494;"> [Agree]</span>             3<span style="color: #949494;"> [Somewhat agr…</span> Somewha…        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 4<span style="color: #949494;"> [Somewhat disagree]</span> 4<span style="color: #949494;"> [Somewhat disagree]</span> 2<span style="color: #949494;"> [Agree]</span>        Somewha…        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 2<span style="color: #949494;"> [Agree]</span>             6<span style="color: #949494;"> [Strongly disagree]</span> 1<span style="color: #949494;"> [Strongly agr…</span> Agree           1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 1<span style="color: #949494;"> [Strongly agree]</span>    1<span style="color: #949494;"> [Strongly agree]</span>    4<span style="color: #949494;"> [Somewhat dis…</span> Strongl…        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> 5<span style="color: #949494;"> [Disagree]</span>          4<span style="color: #949494;"> [Somewhat disagree]</span> 3<span style="color: #949494;"> [Somewhat agr…</span> Disagree        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> 6<span style="color: #949494;"> [Strongly disagree]</span> 5<span style="color: #949494;"> [Disagree]</span>          6<span style="color: #949494;"> [Strongly dis…</span> Strongl…        0</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'binary_df' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Check the attributes</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">binary_df</span><span class="op">$</span><span class="va">binary_x</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $transformation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Converting 'factor_x' to a binary variable with 'Agree' = 1 and 'Disagree' = 0.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $label</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "This is the variable label for x"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $labels</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Agree Disagree </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        1        0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'binary_df' not found</span>
 <span class="r-in"><span><span class="co"># another way of checking the attributes</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">binary_df</span><span class="op">$</span><span class="va">binary_x</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  num [1:6] 1 0 1 1 0 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "transformation")= 'glue' chr "Converting 'factor_x' to a binary variable with 'Agree' = 1 and 'Disagree' = 0."</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "label")= chr "This is the variable label for x"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "labels")= Named num [1:2] 1 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "names")= chr [1:2] "Agree" "Disagree"</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'binary_df' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># check the factor levels</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">binary_df</span><span class="op">$</span><span class="va">binary_x</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1 0</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'binary_df' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># ----------------------------------------------------------------------------</span></span></span>
 <span class="r-in"><span></span></span>
@@ -245,70 +192,24 @@ what the 1 and 0 mean.</p>
 <span class="r-in"><span>      .names <span class="op">=</span> <span class="st">"binary_flipped_{col}"</span></span></span>
 <span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in dplyr::mutate(., dplyr::across(x:z, make_binary, .names = "binary_{col}"),     dplyr::across(x:z, ~make_binary(., flip_values = TRUE), .names = "binary_flipped_{col}")):</span> <span style="color: #00BBBB;">ℹ</span> In argument: `dplyr::across(x:z, make_binary, .names =</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span>   "binary_{col}")`.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `across()`:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Can't compute column `binary_x`.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `dplyr_internal_error()`:</span></span>
 <span class="r-in"><span><span class="co"># show that the function worked properly by creating two new sets of variables</span></span></span>
 <span class="r-in"><span><span class="va">binary_df</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 9</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   x                  y       z       binary_x binary_y binary_z binary_flipped_x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl+lbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl+l&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl+l&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 3<span style="color: #949494;"> [Somewhat agree]</span> 2<span style="color: #949494;"> [Agr…</span> 3<span style="color: #949494;"> [Som…</span>        1        1        1                0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 4<span style="color: #949494;"> [Somewhat disag…</span> 4<span style="color: #949494;"> [Som…</span> 2<span style="color: #949494;"> [Agr…</span>        0        0        1                1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 2<span style="color: #949494;"> [Agree]</span>          6<span style="color: #949494;"> [Str…</span> 1<span style="color: #949494;"> [Str…</span>        1        0        1                0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 1<span style="color: #949494;"> [Strongly agree]</span> 1<span style="color: #949494;"> [Str…</span> 4<span style="color: #949494;"> [Som…</span>        1        1        0                0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> 5<span style="color: #949494;"> [Disagree]</span>       4<span style="color: #949494;"> [Som…</span> 3<span style="color: #949494;"> [Som…</span>        0        0        1                1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> 6<span style="color: #949494;"> [Strongly disag…</span> 5<span style="color: #949494;"> [Dis…</span> 6<span style="color: #949494;"> [Str…</span>        0        0        0                1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: binary_flipped_y &lt;dbl&gt;, binary_flipped_z &lt;dbl&gt;</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'binary_df' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># show the underlying structure of the entire df</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">binary_df</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> tibble [6 × 9] (S3: tbl_df/tbl/data.frame)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ x               : dbl+lbl [1:6] 3, 4, 2, 1, 5, 6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    ..@ labels: Named num [1:6] 1 2 3 4 5 6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    .. ..- attr(*, "names")= chr [1:6] "Strongly agree" "Agree" "Somewhat agree" "Somewhat disagree" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    ..@ label : chr "This is the variable label for x"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ y               : dbl+lbl [1:6] 2, 4, 6, 1, 4, 5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    ..@ labels: Named num [1:6] 1 2 3 4 5 6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    .. ..- attr(*, "names")= chr [1:6] "Strongly agree" "Agree" "Somewhat agree" "Somewhat disagree" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    ..@ label : chr "This is the variable label for y"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ z               : dbl+lbl [1:6] 3, 2, 1, 4, 3, 6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    ..@ labels: Named num [1:6] 1 2 3 4 5 6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    .. ..- attr(*, "names")= chr [1:6] "Strongly agree" "Agree" "Somewhat agree" "Somewhat disagree" ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    ..@ label : chr "This is the variable label for z"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ binary_x        : num [1:6] 1 0 1 1 0 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "transformation")= 'glue' chr "Converting 'x' to a binary variable with 'Agree' = 1 and 'Disagree' = 0."</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "label")= chr "This is the variable label for x"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "labels")= Named num [1:2] 1 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr [1:2] "Agree" "Disagree"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ binary_y        : num [1:6] 1 0 0 1 0 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "transformation")= 'glue' chr "Converting 'y' to a binary variable with 'Agree' = 1 and 'Disagree' = 0."</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "label")= chr "This is the variable label for y"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "labels")= Named num [1:2] 1 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr [1:2] "Agree" "Disagree"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ binary_z        : num [1:6] 1 1 1 0 1 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "transformation")= 'glue' chr "Converting 'z' to a binary variable with 'Agree' = 1 and 'Disagree' = 0."</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "label")= chr "This is the variable label for z"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "labels")= Named num [1:2] 1 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr [1:2] "Agree" "Disagree"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ binary_flipped_x: num [1:6] 0 1 0 0 1 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "transformation")= 'glue' chr "Converting 'x' to a binary variable with 'Disagree' = 1 and 'Agree' = 0."</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "label")= chr "This is the variable label for x"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "labels")= Named num [1:2] 1 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr [1:2] "Disagree" "Agree"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ binary_flipped_y: num [1:6] 0 1 1 0 1 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "transformation")= 'glue' chr "Converting 'y' to a binary variable with 'Disagree' = 1 and 'Agree' = 0."</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "label")= chr "This is the variable label for y"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "labels")= Named num [1:2] 1 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr [1:2] "Disagree" "Agree"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ binary_flipped_z: num [1:6] 0 0 0 1 0 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "transformation")= 'glue' chr "Converting 'z' to a binary variable with 'Disagree' = 1 and 'Agree' = 0."</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "label")= chr "This is the variable label for z"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "labels")= Named num [1:2] 1 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..- attr(*, "names")= chr [1:2] "Disagree" "Agree"</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'binary_df' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># show how the levels are flipped when "flip_levels = TRUE"</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">binary_df</span><span class="op">$</span><span class="va">binary_x</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'binary_df' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">binary_df</span><span class="op">$</span><span class="va">binary_flipped_x</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'binary_df' not found</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
