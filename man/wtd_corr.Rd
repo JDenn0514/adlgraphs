@@ -4,7 +4,7 @@
 \alias{wtd_corr}
 \title{Calculate individual weighted correlations}
 \usage{
-wtd_corr(data, x, y, wt, decimals)
+wtd_corr(data, x, y, wt, decimals = 3)
 }
 \arguments{
 \item{data}{An object of type data.frame or tibble. If piping the data into the

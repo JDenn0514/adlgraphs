@@ -109,7 +109,7 @@ get_corr <- function(
     # get the variable labels as a named list
     group_labels <- attr_var_label(data[,group_names])
     # for each value in names(group_labels) add the variable label from group_labels
-    for (y in names(group_labels)) attr(out[[y]], "label") <- group_labels[[y]]
+    for (var in names(group_labels)) attr(out[[var]], "label") <- group_labels[[var]]
   
     
   }
@@ -141,7 +141,7 @@ get_corr <- function(
 #'   is 3.
 #' 
 #' @export
-wtd_corr <- function(data, x, y,  wt, decimals) {
+wtd_corr <- function(data, x, y,  wt, decimals = 3) {
 
   x <- rlang::as_name(rlang::ensym(x))
   y <- rlang::as_name(rlang::ensym(y))
@@ -221,6 +221,14 @@ wtd_corr <- function(data, x, y,  wt, decimals) {
 
   out <- coefs[c("x", "y", "Estimate", "n", "conf.low", "conf.high", "Pr(>|t|)", "stars")]
   names(out) <- c("x", "y", "correlation", "n", "conf.low", "conf.high", "p_value", "stars")
+
+  # round decimals 
+  round_cols <- c("correlation", "conf.low", "conf.high", "p_value")
+
+  out[round_cols] <- lapply(
+    round_cols,
+    \(x) round(out[[x]], decimals)
+  )
 
   attr(out$correlation, "label") <- "Correlation"
   attr(out$n, "label") <- "N"
