@@ -112,7 +112,7 @@ clean_demos <- function(
         # reorder the levels
         race_f = refactor(race_f, c("White", "Black", "Hispanic", "AAPI", "Multi/Other")),
       ) %>%
-      labelled::set_variable_labels(race_f = "Race/Ethnicity")
+      structure(race_f, label = "Race/Ethnicity")
 
   } else if (
     "white_b" %in% colnames(df) &&
@@ -134,9 +134,9 @@ clean_demos <- function(
           white_b == 1 ~ "White"
         ),
         # reorder the levels
-        race_f = refactor(race_f, c("White", "Black", "Hispanic", "AAPI", "Multi/Other"))
-      ) %>%
-      labelled::set_variable_labels(race_f = "Race/Ethnicity")
+        race_f = refactor(race_f, c("White", "Black", "Hispanic", "AAPI", "Multi/Other")) %>% 
+          structure(label = "Race/Ethnicity")
+      ) 
   }
 
   if ("sex" %in% colnames(df)) {
@@ -145,18 +145,16 @@ clean_demos <- function(
 
         ## gender
         # making a three category variable
-        gender_f3 = make_factor(sex),
+        gender_f3 = make_factor(sex) %>% 
+          structure(label = "Gender"),
         # making a binary numeric
         gender_f2 = dplyr::case_match(
           sex,
           1 ~ "A man",
           2 ~ "A woman"
-        )
-      ) %>%
-      labelled::set_variable_labels(
-        gender_f2     = "Gender",
-        gender_f3     = "Gender"
-      )
+        ) %>% 
+          structure(label = "Gender")
+      ) 
   }
 
   if ("edu" %in% colnames(df)) {
@@ -165,17 +163,15 @@ clean_demos <- function(
       dplyr::mutate(
         ## EDU
         # create the five group education variable
-        edu_f = make_factor(edu),
+        edu_f = make_factor(edu) %>% 
+          structure(label = "Highest Education Level"),
         # making a binary factor
         edu_f2 = adlgraphs::case_when_fct(
           edu < 4 ~ "No College Degree",
           edu > 3 ~ "At Least a Bachelor's Degree"
-        )
-      ) %>%
-      labelled::set_variable_labels(
-        edu_f = "Highest Education Level",
-        edu_f2 = "College Graduate"
-      )
+        ) %>% 
+          structure(label = "College Graduate")
+      ) 
 
   }
 
@@ -194,7 +190,8 @@ clean_demos <- function(
           c(8:10) ~ 7,
           11 ~ 8,
           12 ~ 9
-        ),
+        ) %>% 
+          structure(label = "Income"),
         # make it a 9 levelfactor
         income_f9 = adlgraphs::case_when_fct(
           income == 1 ~ "Less than $10,000",
@@ -206,12 +203,9 @@ clean_demos <- function(
           income %in% c(8:10) ~ "$70,000 to $99,999",
           income == 11 ~ "$100,000 to $149,999",
           income == 12 ~ "$150,000 or more"
-        )
-      ) %>%
-      labelled::set_variable_labels(
-        income_f9 = "Income",
-        income_n9 = "Income"
-      )
+        ) %>% 
+          structure(label = "Income")
+      ) 
   }
 
   if ("age" %in% colnames(df)) {
@@ -262,8 +256,8 @@ clean_demos <- function(
     if ("start_date" %in% colnames(df)) {
       df <- df %>% 
         dplyr::mutate(
-          # set the current year using lubridate
-          current_year = lubridate::year(start_date) %>% 
+          # set the current year 
+          current_year = format(as.Date(start_date), "%Y") %>% 
             # set the label
             structure(label = "Year study was conducted"),
           # set the birth year based on their age and the current year
@@ -301,18 +295,16 @@ clean_demos <- function(
       dplyr::mutate(
         ## Politics
         # 5 group political ideology
-        ideo_f = make_factor(ideology),
+        ideo_f = make_factor(ideology) %>% 
+          structure(label = "Political Ideology"),
         # set up the order and make it three groups
         ideo_f3 = adlgraphs::case_when_fct(
           ideology %in% c(1, 2) ~ "Liberal",
           ideology == 3 ~ "Moderate",
           ideology %in% c(4, 5) ~ "Conservative"
-        )
-      ) %>%
-      labelled::set_variable_labels(
-        ideo_f = "Political Ideology",
-        ideo_f3 = "Political Ideology"
-      )
+        ) %>% 
+          structure(label = "Political Ideology")
+      ) 
 
   }
 
@@ -320,17 +312,15 @@ clean_demos <- function(
     df <- df %>%
       dplyr::mutate(
         # convert to a factor
-        pid_f8 = make_factor(partyid8),
+        pid_f8 = make_factor(partyid8) %>% 
+          structure(label = "Political Partisanship"),
         # set the order and make three groups
         pid_f3 = adlgraphs::case_when_fct(
           partyid8 %in% c(1:3) ~ "Democrat",
           partyid8 %in% c(4,8) ~ "Independent",
           partyid8 %in% c(5:7) ~ "Republican",
-        )
-      ) %>%
-      labelled::set_variable_labels(
-        pid_f8 = "Political Partisanship",
-        pid_f3 = "Political Partisanship"
+        ) %>% 
+          structure(label = "Political Partisanship")
       )
 
   }
@@ -339,17 +329,15 @@ clean_demos <- function(
     df <- df %>%
       dplyr::mutate(
         # convert to a factor
-        pid_f7 = make_factor(partyid7),
+        pid_f7 = make_factor(partyid7) %>% 
+          structure(label = "Political Partisanship"),
         # set the order and make three groups
         pid_f3 = adlgraphs::case_when_fct(
           partyid7 %in% c(1:3) ~ "Democrat",
           partyid7 %in% c(4) ~ "Independent",
           partyid7 %in% c(5:7) ~ "Republican",
-        )
-      ) %>%
-      labelled::set_variable_labels(
-        pid_f7 = "Political Partisanship",
-        pid_f3 = "Political Partisanship"
+        ) %>% 
+          structure(label = "Political Partisanship")
       )
 
   }
@@ -358,18 +346,16 @@ clean_demos <- function(
     df <- df %>%
       dplyr::mutate(
         # convert progressive to a factor
-        progressive_f = make_factor(progressive),
+        progressive_f = make_factor(progressive) %>% 
+          structure(label = "Politically, would you say you identify as a Progressive?"),
         # convert to a dichotomous factor
         progressive_f2 = dplyr::case_match(
           progressive,
           c(1:2) ~ "Yes",
           c(3:4) ~ "No"
-        )
-      ) %>%
-      labelled::set_variable_labels(
-        progressive_f = "Politically Progressive",
-        progressive_f2 = "Politically Progressive"
-      )
+        ) %>% 
+          structure(label = "Politically, would you say you identify as a Progressive?")
+      ) 
   }
 
   if ("religpew"  %in% colnames(df) && "born_again" %in% colnames(df)) {

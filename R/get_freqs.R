@@ -102,7 +102,7 @@ get_freqs <- function(data, x, group, wt, cross_tab = FALSE) {
     if (is.numeric(data[[group]]) && !is.null(attr_val_labels(data[[group]]))) {
       # if group is class numeric AND DOES contain value labels
 
-      # convert to a factor with sjlabelled
+      # convert to a factor with make_factor
       data <- data %>%
         # convert to a factor using make_factor
         dplyr::mutate(group_f = make_factor(.data[[group]])) %>%

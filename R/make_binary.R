@@ -35,12 +35,9 @@
 #'
 #'
 #' @examples
-#' library(tibble)
 #' library(dplyr)
-#' library(labelled)
-#' library(haven)
-#'
-#' # create fake data
+#' 
+#' 
 #' df <- tibble::tribble(
 #'   ~x, ~y, ~z,
 #'   3, 2, 3,
@@ -49,37 +46,23 @@
 #'   1, 1, 4,
 #'   5, 4, 3,
 #'   6, 5, 6
-#' ) %>%
-#' # add value labels
-#' labelled::set_value_labels(
-#'   x = c(`Strongly agree` = 1,
-#'         `Agree` = 2,
-#'         `Somewhat agree` = 3,
-#'         `Somewhat disagree` = 4,
-#'         `Disagree` = 5,
-#'         `Strongly disagree` = 6),
-#'   y = c(`Strongly agree` = 1,
-#'         `Agree` = 2,
-#'         `Somewhat agree` = 3,
-#'         `Somewhat disagree` = 4,
-#'         `Disagree` = 5,
-#'         `Strongly disagree` = 6),
-#'   z = c(`Strongly agree` = 1,
-#'         `Agree` = 2,
-#'         `Somewhat agree` = 3,
-#'         `Somewhat disagree` = 4,
-#'         `Disagree` = 5,
-#'         `Strongly disagree` = 6)
-#' ) %>%
-#' # add variable labels
-#' labelled::set_variable_labels(
-#'   x = "This is the variable label for x",
-#'   y = "This is the variable label for y",
-#'   z = "This is the variable label for z"
-#' )
-#'
+#' ) 
+#' 
+#' labs <- c(
+#'    "Strongly agree" = 1,
+#'    "Agree" = 2,
+#'    "Somewhat agree" = 3,
+#'    "Somewhat disagree" = 4,
+#'    "Disagree" = 5,
+#'    "Strongly disagree" = 6
+#'  )
+#' 
+#' attr(df$x, "labels") <- labs
+#' attr(df$z, "labels") <- labs
+#' attr(df$z, "labels") <- labs
+#' 
 #' # show the data transformation with a haven_labelled vector
-#' binary_df <- df %>% dplyr::mutate(binary_x = make_binary(x))
+#' binary_df <- test_data %>% dplyr::mutate(binary_x = make_binary(x))
 #' # check the updated dataset
 #' binary_df
 #'
@@ -147,7 +130,7 @@
 make_binary <- function(x, flip_values = FALSE) {
 
   # get the object's name
-  x_lab <- deparse(substitute(x))
+  x_name <- rlang::enexpr(x)
   # make a new object containing the variable label
   variable_label <- attr_var_label(x)
 
@@ -159,19 +142,20 @@ make_binary <- function(x, flip_values = FALSE) {
   # get the second factor level
   second_level <- levels(x)[2]
 
+
   if (flip_values == FALSE) {
 
     # create a named vector using the factor labels
     values <- stats::setNames(c(1, 0), c(first_level, second_level))
 
     # make the variable a binary vector using case_match
-    dplyr::case_match(
+    out <- dplyr::case_match(
       x,
       first_level ~ 1,
       second_level ~ 0
     ) %>%
       structure(
-        transformation = glue::glue("Converting '{x_lab}' to a binary variable with '{first_level}' = 1 and '{second_level}' = 0."),
+        transformation = paste0("Converting '", x_name, "' to a binary variable with '", first_level, "' = 1 and '", second_level, "' = 0."),
         label = variable_label,
         labels = values
       )
@@ -182,17 +166,19 @@ make_binary <- function(x, flip_values = FALSE) {
     # create a named vector using the factor labels
     values <- stats::setNames(c(1, 0), c(second_level, first_level))
 
-    dplyr::case_match(
+    out <- dplyr::case_match(
       x,
       second_level ~ 1,
       first_level ~ 0
     ) %>%
       structure(
-        transformation = glue::glue("Converting '{x_lab}' to a binary variable with '{second_level}' = 1 and '{first_level}' = 0."),
+        transformation = paste0("Converting '", x_name, "' to a binary variable with '", second_level, "' = 1 and '", first_level, "' = 0."),
         label = variable_label,
         labels = values
       )
   }
+
+  if (is.null(attr_var_label(out))) attr(out, "label") <- x_name
 }
 
 

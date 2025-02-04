@@ -13,8 +13,10 @@ function, this is not required.}
 \item{x, y}{Can be either character strings or symbols. Name of two variables
 in the data you want to calculate the correlation between.}
 
-\item{group}{Can be either a character string or a symbol. The grouping
-variable.}
+\item{group}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> A selection of columns to
+group the data by in addition to \code{treats}. This operates very similarly
+to \code{.by} from dplyr (for more info on that see \link[dplyr:dplyr_by]{?dplyr_by}).
+See examples to see how it operates.}
 
 \item{wt}{Can be either character strings or symbols. Weights. Add if
 you have a weighting variable and want to get weighted correlations}

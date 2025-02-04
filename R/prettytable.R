@@ -10,15 +10,14 @@
 #'
 #' @param x An object to turn into a pretty table.
 #'
-#'
 #' @export
 prettytable <- function(x) {
   UseMethod("prettytable")
 }
 
-
+#TODO add a wide argument
 #' @export
-prettytable.adlgraphs_freqs <- function(x, wide = TRUE) {
+prettytable.adlgraphs_freqs <- function(x) {
 
   group_names <- attr(x, "group_names")
   variable_name <- as.character(rlang::quo_squash(attr(x, "variable_name")))

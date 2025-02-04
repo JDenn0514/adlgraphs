@@ -76,7 +76,7 @@ num_rev <- function(x) {
         structure(transformation = glue::glue("Reversing '{x_lab}' while maintaining correct value labels"))
     }
 
-  } else if (is.numeric(x) && is.null(sjlabelled::get_labels(x))) {
+  } else if (is.numeric(x) && is.null(attr(x, "labels"))) {
     # if x is numeric and does not have value labels
 
     # find the max value in x and add 1

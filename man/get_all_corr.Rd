@@ -4,7 +4,7 @@
 \alias{get_all_corr}
 \title{Get correlations for a combination of variables}
 \usage{
-get_all_corr(data, cols, wt = NULL, remove_redundant = TRUE)
+get_all_corr(data, cols, group, wt, remove_redundant = TRUE, decimals = 3)
 }
 \arguments{
 \item{data}{A data frame or tibble object}
@@ -12,10 +12,18 @@ get_all_corr(data, cols, wt = NULL, remove_redundant = TRUE)
 \item{cols}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> The variables you want
 to get the correlations for.}
 
+\item{group}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> A selection of columns to
+group the data by in addition to \code{treats}. This operates very similarly
+to \code{.by} from dplyr (for more info on that see \link[dplyr:dplyr_by]{?dplyr_by}).
+See examples to see how it operates.}
+
 \item{wt}{A variable to use as the weights for weighted correlations}
 
 \item{remove_redundant}{Should rows where the two variables are the same be
 kept or removed? If \code{TRUE}, the default, they are removed.}
+
+\item{decimals}{Number of decimals each number should be rounded to. Default
+is 3.}
 }
 \value{
 A data.frame with the correlations between every combination of
@@ -23,7 +31,7 @@ columns in \code{data}.
 }
 \description{
 \code{get_all_corr} makes it easy to calculate correlations across
-every variable in a data frame or select set of variables. It also
+every variable in a data frame or a select set of variables. It also
 works with grouped data frames so you can check correlations among
 the levels of several grouping variables.
 }
@@ -58,6 +66,12 @@ test_data \%>\%
   dplyr::group_by(edu_f2) \%>\% 
   get_all_corr(c(top:dominate), wt = wts)
 
+# Another way to calculate grouped correlations is to 
+# specify the group argument inside the function call:
+get_all_corr(test_data, c(top:dominate), edu_f2, wts)
+
+# You can also use multiple grouping variables
+get_all_corr(test_data, c(top:dominate), c(edu_f2, pid_f3), wts)
 
 
 }

@@ -39,6 +39,7 @@
 #' # show the output
 #' new$sdo_avg_new
 #' 
+#' @export
 row_means <- function(cols, label = NULL, na.rm = TRUE) {
 
   # get the dataframe with only relevant columns

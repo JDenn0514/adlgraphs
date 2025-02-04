@@ -9,8 +9,10 @@
 #'   function, this is not required.
 #' @param x,y Can be either character strings or symbols. Name of two variables
 #'   in the data you want to calculate the correlation between. 
-#' @param group Can be either a character string or a symbol. The grouping 
-#'   variable.
+#' @param group <[`tidy-select`][dplyr_tidy_select]> A selection of columns to 
+#'   group the data by in addition to `treats`. This operates very similarly
+#'   to `.by` from dplyr (for more info on that see [?dplyr_by][dplyr_by]). 
+#'   See examples to see how it operates.
 #' @param wt Can be either character strings or symbols. Weights. Add if 
 #'   you have a weighting variable and want to get weighted correlations
 #' @param decimals Number of decimals each number should be rounded to. Default

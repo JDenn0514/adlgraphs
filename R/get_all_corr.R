@@ -1,19 +1,26 @@
 #' Get correlations for a combination of variables
 #' 
 #' `get_all_corr` makes it easy to calculate correlations across 
-#' every variable in a data frame or select set of variables. It also
+#' every variable in a data frame or a select set of variables. It also
 #' works with grouped data frames so you can check correlations among
 #' the levels of several grouping variables.
 #' 
 #' @param data A data frame or tibble object
 #' @param cols  <[`tidy-select`][dplyr_tidy_select]> The variables you want 
 #'   to get the correlations for. 
+#' @param group <[`tidy-select`][dplyr_tidy_select]> A selection of columns to 
+#'   group the data by in addition to `treats`. This operates very similarly
+#'   to `.by` from dplyr (for more info on that see [?dplyr_by][dplyr_by]). 
+#'   See examples to see how it operates.
 #' @param wt A variable to use as the weights for weighted correlations
 #' @param remove_redundant Should rows where the two variables are the same be 
 #'   kept or removed? If `TRUE`, the default, they are removed. 
+#' @param decimals Number of decimals each number should be rounded to. Default
+#'   is 3.
 #' 
 #' @returns A data.frame with the correlations between every combination of 
 #'   columns in `data`.
+#' 
 #' 
 #' @examples
 #' # load dplyr and adlgraphs
@@ -46,41 +53,67 @@
 #'   dplyr::group_by(edu_f2) %>% 
 #'   get_all_corr(c(top:dominate), wt = wts)
 #' 
+#' # Another way to calculate grouped correlations is to 
+#' # specify the group argument inside the function call:
+#' get_all_corr(test_data, c(top:dominate), edu_f2, wts)
+#' 
+#' # You can also use multiple grouping variables
+#' get_all_corr(test_data, c(top:dominate), c(edu_f2, pid_f3), wts)
 #' 
 #' 
 #' @export
-get_all_corr <- function(data, cols, wt = NULL, remove_redundant = TRUE) {
-  UseMethod("get_all_corr")
-}
+get_all_corr <- function(data, cols, group, wt, remove_redundant = TRUE, decimals = 3) {
 
-#' @export
-get_all_corr.default <- function(data, cols, wt = NULL, remove_redundant = TRUE) {
-
-  if (!missing(cols)) {
-    data <- dplyr::select(data, {{ cols }})
+  # Prepare weights
+  if (missing(wt)) {
+    wt <- "wts"
+    data[[wt]] <- rep(1, nrow(data))
+  } else {
+    wt <- rlang::as_name(rlang::ensym(wt))
+    data[[wt]][is.na(data[[wt]])] <- 0
   }
 
-  data <- data %>% 
+  # Prepare group variables
+  # if the data is grouped, use dplyr::group_vars to get them, else set to NULL
+  group_names <- if(inherits(data, "grouped_df")) dplyr::group_vars(data) else NULL
+  # if group arg is missing set to NULL, else use as.character(substitute()) to capture it
+  group_vars <- if (missing(group)) NULL else select_groups({{ group }}, data)
+  # remove the "c" from the group_vars vector if it is there
+  group_vars <- group_vars[group_vars != "c"]
+  # combine group_names and group_vars for the final vector of group names
+  # use unique to make sure there aren't any duplicates
+  group_names <- unique(c(group_names, group_vars))
+
+  if (!missing(cols) & !is.null(group_names)) {
+    data <- dplyr::select(data, {{ cols }}, tidyselect::all_of(c(group_names, wt)))
+  } else if (!missing(cols) & is.null(group_names)) {
+    data <- dplyr::select(data, {{ cols }}, tidyselect::all_of(wt))
+  }
+
+  # get all of the variables that are numeric
+  num_data <- data %>% 
     dplyr::ungroup() %>% 
     dplyr::select(tidyselect::where(is.numeric))
 
   # get a combination of every variable
-  combinations <- expand.grid(names(data), names(data), stringsAsFactors = FALSE)
+  combinations <- expand.grid(names(num_data[names(num_data) != wt]), names(num_data[names(num_data) != wt]), stringsAsFactors = FALSE)
   
   if (isTRUE(remove_redundant)) {
     combinations <- dplyr::filter(combinations, !Var1 == Var2)
   }
 
+  # create a simple internal function to calculate the correlations
   internal_corr <- function(i) {
 
     # get the variable names
-    x_name <- as.character(combinations[i, "Var1"])
-    y_name <- as.character(combinations[i, "Var2"])
+    x_name <- combinations[i, "Var1"]
+    y_name <- combinations[i, "Var2"]
 
-    # run the correlation
-    corr <- wtd_corr({{ data }}, {{ x_name }}, {{ y_name }}, wt = wt)
-    # set the value labels for 
-    return(corr)
+    if (!is.null(group_names)) {
+      get_corr(data, {{ x_name }}, {{ y_name }}, group = {{ group_names }}, wt = {{ wt }}, decimals = decimals)
+    } else {
+      wtd_corr(data, {{ x_name }}, {{ y_name }}, wt = {{ wt }}, decimals = decimals)
+    }
 
   }
 
@@ -93,53 +126,3 @@ get_all_corr.default <- function(data, cols, wt = NULL, remove_redundant = TRUE)
     dplyr::bind_rows()
 
 }
-
-#' @export
-get_all_corr.grouped_df <- function(data, cols, wt = NULL, remove_redundant = TRUE) {
-
-  group_helpers <- group_analysis_helper(data = data, cols = {{ cols }})
-
-  # make the correlation dataframe
-  corr_df <- purrr::map(
-    # we are iterating over the data column
-    group_helpers$nest_data$data, 
-    # use get_all_corr.data.frame to get the individuals loadings
-    ~get_all_corr.default(
-      data = .x, 
-      wt = wt,
-      remove_redundant = remove_redundant
-    )
-  ) 
-
-   # name the objects in the list
-   names(corr_df) <- group_helpers$just_groups
-
-   if (length(group_helpers$nest_data) > 2) {
-     # if there are two or more grouping variables do the following
- 
-     # create the output data frame
-     # combine the list objects and make a new variable 
-     # called "groups" containing the names of each list
-     out <- dplyr::bind_rows(corr_df, .id = "groups") %>% 
-       # split up the string by the - and use the group_labs vector as the names
-       tidyr::separate_wider_delim(groups, delim = " - ", names = c(group_helpers$group_labs)) %>% 
-       # group the data by the vector group variables
-       dplyr::group_by(dplyr::across(tidyselect::all_of(group_helpers$group_labs))) %>% 
-       # arrange by the groups
-       dplyr::arrange(.by_group = TRUE)
-     
-   } else {
- 
-     # create the output data frame
-     # combine the list objects and make a new variable 
-     # called "groups" containing the names of each list
-     out <- dplyr::bind_rows(corr_df, .id = group_helpers$group_labs) %>% 
-       # arrange by the groups
-       dplyr::arrange(.by_group = TRUE) 
- 
-   }
-  
-  return(out)
- 
-}
-
