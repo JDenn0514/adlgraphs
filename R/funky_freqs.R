@@ -150,7 +150,7 @@ funky_freqs <- function(
   # add a variable label for the pct variable
   attr(out$pct, "label") <- "Percent"
 
-  attr(out, "genpop") <- data
+  attr(out, "dataset") <- data
 
   # get the classes of the data.frame
   class_names <- class(out)
