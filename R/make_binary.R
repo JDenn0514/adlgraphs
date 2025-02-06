@@ -36,7 +36,7 @@
 #'
 #' @examples
 #' library(dplyr)
-#' 
+#' library(adlgraphs)
 #' 
 #' df <- tibble::tribble(
 #'   ~x, ~y, ~z,
@@ -49,20 +49,20 @@
 #' ) 
 #' 
 #' labs <- c(
-#'    "Strongly agree" = 1,
-#'    "Agree" = 2,
-#'    "Somewhat agree" = 3,
-#'    "Somewhat disagree" = 4,
-#'    "Disagree" = 5,
-#'    "Strongly disagree" = 6
+#'   "Strongly agree" = 1,
+#'   "Agree" = 2,
+#'   "Somewhat agree" = 3,
+#'   "Somewhat disagree" = 4,
+#'   "Disagree" = 5,
+#'   "Strongly disagree" = 6
 #'  )
 #' 
 #' attr(df$x, "labels") <- labs
-#' attr(df$z, "labels") <- labs
+#' attr(df$y, "labels") <- labs
 #' attr(df$z, "labels") <- labs
 #' 
 #' # show the data transformation with a haven_labelled vector
-#' binary_df <- test_data %>% dplyr::mutate(binary_x = make_binary(x))
+#' binary_df <- dplyr::mutate(df, binary_x = make_binary(x))
 #' # check the updated dataset
 #' binary_df
 #'
@@ -111,8 +111,9 @@
 #'     ),
 #'     # if you want to flip the factor levels, follow this example
 #'     dplyr::across(
-#'       x:z,
-#'       ~make_binary(., flip_values = TRUE),
+#'       c(x:z),
+#'       # the . placeholder is important to remember
+#'       ~ make_binary(.x, flip_values = TRUE),
 #'       .names = "binary_flipped_{col}"
 #'     )
 #'   )
@@ -179,6 +180,7 @@ make_binary <- function(x, flip_values = FALSE) {
   }
 
   if (is.null(attr_var_label(out))) attr(out, "label") <- x_name
+  out
 }
 
 

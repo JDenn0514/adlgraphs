@@ -21,8 +21,8 @@ library(ggplot2)
 library(stringr)
 library(forcats)
 library(haven)
-library(labelled)
 library(glue)
+
 ```
 
 At CAR, our data visualization often consists of creating bar plots. These can be stacked bar plots or dodged/grouped bar plots, horizontally or vertically oriented, and with or without confidence intervals. While bar plots may not be the flashiest of graphs, they are really valuable due to the ease at which they convey information, the amount of information they can convey, and the fact that most people know how to read them.
@@ -90,7 +90,7 @@ test_data %>%
   scale_x_discrete(labels = label_wrap_gen(10)) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
   labs(
-    x = glue('"{str_wrap(var_label(test_data$top), 55)}"'),
+    x = glue('"{str_wrap(attr_var_label(test_data$top), 55)}"'),
     y = NULL,
     title = "About 40% of Americans Think an Ideal\nSociety Is Hierarchical"
   )

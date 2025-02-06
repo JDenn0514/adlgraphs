@@ -1,6 +1,6 @@
 
 
-.onLoad <- function(...) {
+.onAttach <- function(...) {
 
   family <- name <- path <- NULL
 

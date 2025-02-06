@@ -1,7 +1,10 @@
 #' Make proper percent labels
 #'
 #' This function is a wrapper around a very common data transformation that is
-#' done every time we make a frequency plot
+#' done every time we make a frequency plot. It changes the `x` variable by
+#' multiplying it 100 and creates a new variable called `pct_lab` which is a 
+#' string of the `x` variable but with a "%" symbol added.
+#' 
 #'
 #' @param data A data frame or vector. Can be left blank if used during piping
 #' @param x a variable we want to convert to a percentage. The value is `pct`
@@ -13,26 +16,10 @@
 #'   that is the same as pct but with a "%" symbol at the end of it.
 #' 
 #' @examples
-#'
-#' library(tibble)
 #' library(dplyr)
-#' library(labelled)
-#' library(haven)
-#'
-#' # create the fake data
-#' df <- tibble::tribble(
-#'   ~x, ~y, ~z,
-#'   3, 2, 3,
-#'   4, 4, 2,
-#'   2, 6, 1,
-#'   1, 1, 4,
-#'   5, 4, 3,
-#'   6, 5, 6
-#' )
-#'
-#' df %>%
-#'   count(x) %>%
-#'   mutate(pct = prop.table(n)) %>%
+#' # get the frequencies of top andupdate 
+#' test_data %>%
+#'   get_freqs(top) %>% 
 #'   pct_conv()
 #'
 #' @export

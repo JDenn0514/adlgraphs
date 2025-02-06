@@ -19,7 +19,6 @@
 #' @importFrom haven as_factor is.labelled write_sav
 #' @importFrom highcharter hc_theme hc_theme_merge
 #' @importFrom jtools scale_mod
-#' @importFrom labelled set_variable_labels set_value_labels
 #' @importFrom mvtnorm qmvt pmvt
 #' @importFrom officer body_add_par
 #' @importFrom prismatic color
