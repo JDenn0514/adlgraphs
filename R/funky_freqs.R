@@ -113,6 +113,8 @@ funky_freqs <- function(
 
   }
 
+  
+
   # if drop_zero is TRUE, remove any rows with 0
   if (drop_zero) out <- out[out$n != 0,]
 
@@ -147,6 +149,8 @@ funky_freqs <- function(
   attr(out$n, "label") <- "N"
   # add a variable label for the pct variable
   attr(out$pct, "label") <- "Percent"
+
+  attr(out, "genpop") <- data
 
   # get the classes of the data.frame
   class_names <- class(out)
