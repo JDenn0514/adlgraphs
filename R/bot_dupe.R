@@ -12,9 +12,10 @@ remove_bot_dupe <- function(data) {
 
   # remove previews
   if ("DistributionChannel" %in% colnames(data)) {
-    data <- data %>% dplyr::filter(DistributionChannel != "preview")
+    # data <- data %>% dplyr::filter(DistributionChannel != "preview")
+    data <- data[data$DistributionChannel != "preview",]
   } else if ("distribution_channel" %in% colnames(data)) {
-    data <- data %>% dplyr::filter(distribution_channel != "preview")
+    data <- data[data$distribution_channel != "preview",]
   }
 
   # get the people who are above 18
@@ -27,14 +28,14 @@ remove_bot_dupe <- function(data) {
           # age, adding 17 so the ages start at 18
           age_n = 17 + age %>% 
             structure(label = "Age")
-        ) %>% 
-        dplyr::filter(age_n > 17)
+        ) 
+      
+      data <- data[data$age_n > 17,]
 
     } else if (is.null(attr_val_labels(data$age))) {
 
-      data <- data %>% 
+      data <- data[data$age_n > 17,]
 
-        dplyr::filter(age > 17)
     }
 
   } 
@@ -43,16 +44,16 @@ remove_bot_dupe <- function(data) {
 
   # remove bots
   if ("Q_RecaptchaScore" %in% colnames(data)) {
-    data <- data %>% dplyr::filter(Q_RecaptchaScore > 0.41)
+    data <- data[data$Q_RecaptchaScore > 0.41,]
   } else if ("q_recaptcha_score" %in% colnames(data)) {
-    data <- data %>% dplyr::filter(q_recaptcha_score > 0.41)
+    data <- data[data$q_recaptcha_score > 0.41,]
   }
 
   # remove duplicates
-  if ("Q_RelevantIDDuplicate" %in% colnames(data)) {
-    data <- data %>% dplyr::filter(Q_RelevantIDDuplicate != "true")
+  if ("Q_RelevantIDDuplicateScore" %in% colnames(data)) {
+    data <- data[data$Q_RelevantIDDuplicateScore < 76,]
   } else if ("q_relevant_id_duplicate" %in% colnames(data)) {
-    data <- data %>% dplyr::filter(q_relevant_id_duplicate != "true")
+    data <- data[data$q_relevant_id_duplicate_score < 76,]
   }
 
   return(data)
