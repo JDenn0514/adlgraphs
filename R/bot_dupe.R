@@ -12,7 +12,6 @@ remove_bot_dupe <- function(data) {
 
   # remove previews
   if ("DistributionChannel" %in% colnames(data)) {
-    # data <- data %>% dplyr::filter(DistributionChannel != "preview")
     data <- data[data$DistributionChannel != "preview",]
   } else if ("distribution_channel" %in% colnames(data)) {
     data <- data[data$distribution_channel != "preview",]
@@ -34,7 +33,7 @@ remove_bot_dupe <- function(data) {
 
     } else if (is.null(attr_val_labels(data$age))) {
 
-      data <- data[data$age_n > 17,]
+      data <- data[data$age > 17,]
 
     }
 
@@ -73,11 +72,11 @@ remove_bot_dupe <- function(data) {
 #' @export
 get_bot_dupe <- function(data) {
 
-  # remove preview responses
+  # remove previews
   if ("DistributionChannel" %in% colnames(data)) {
-    data <- data %>% dplyr::filter(DistributionChannel != "preview")
+    data <- data[data$DistributionChannel != "preview",]
   } else if ("distribution_channel" %in% colnames(data)) {
-    data <- data %>% dplyr::filter(distribution_channel != "preview")
+    data <- data[data$distribution_channel != "preview",]
   }
 
 
