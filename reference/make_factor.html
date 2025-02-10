@@ -94,15 +94,15 @@ so that you can specify the levels yourself, kind of like with factor()."><meta 
 using the value labels. This works with numeric, character, and factor vectors.</p>
 <p>This function is very similar to <a href="https://haven.tidyverse.org/reference/as_factor.html" class="external-link"><code><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">haven::as_factor()</a></code></a>
 and
-<a href="https://strengejacke.github.io/sjlabelled/reference/as_label.html" class="external-link"><code><a href="https://strengejacke.github.io/sjlabelled/reference/as_label.html" class="external-link">sjlabelled::as_label()</a></code></a>
+<a href="https://strengejacke.github.io/sjlabelled/reference/as_label.html" class="external-link"><code>sjlabelled::as_label()</code></a>
 and is heavily based on both. However, it has some key differences. The main
 difference compared to both functions  is that <code>make_factor()</code> adds a
 "transformation" attribute to the new variable  indicating how it was
 created. You can see this in the examples.</p>
-<p>Compared to <a href="https://strengejacke.github.io/sjlabelled/reference/as_label.html" class="external-link"><code><a href="https://strengejacke.github.io/sjlabelled/reference/as_label.html" class="external-link">sjlabelled::as_label()</a></code></a>
-it is not as extensive. For example, while <a href="https://strengejacke.github.io/sjlabelled/reference/as_label.html" class="external-link"><code><a href="https://strengejacke.github.io/sjlabelled/reference/as_label.html" class="external-link">sjlabelled::as_label()</a></code></a>
+<p>Compared to <a href="https://strengejacke.github.io/sjlabelled/reference/as_label.html" class="external-link"><code>sjlabelled::as_label()</code></a>
+it is not as extensive. For example, while <a href="https://strengejacke.github.io/sjlabelled/reference/as_label.html" class="external-link"><code>sjlabelled::as_label()</code></a>
 works with data.frames and vectors, <code>make_factor()</code> only works with vectors.
-In addition, <a href="https://strengejacke.github.io/sjlabelled/reference/as_label.html" class="external-link"><code><a href="https://strengejacke.github.io/sjlabelled/reference/as_label.html" class="external-link">sjlabelled::as_label()</a></code></a>
+In addition, <a href="https://strengejacke.github.io/sjlabelled/reference/as_label.html" class="external-link"><code>sjlabelled::as_label()</code></a>
 has many different arguments that enable you to control the appearance of the
 labels, NAs, and other things. <code>make_factor()</code> on the other hand is much
 simpler. Similarly,
