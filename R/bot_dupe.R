@@ -61,6 +61,7 @@ remove_bot_dupe <- function(data) {
 
 
 
+
 #' Get the bots or duplicates from a data frame
 #' 
 #' This function is the opposite of `remove_bot_dupes()`. Instead of removing bots
@@ -84,6 +85,10 @@ get_bot_dupe <- function(data) {
   clean <- remove_bot_dupe(data)
   # remove clean data from original data
   bots <- dplyr::anti_join(data, clean)
+
+  # create the two new variables
+  bots$duplicate <- ifelse(bots$Q_RelevantIDDuplicateScore < 0.76, TRUE, FALSE)
+  bots$bot <- ifelse(bots$Q_RecaptchaScore > 0.41, TRUE, FALSE)
   # return the bad data
   return(bots)
 
