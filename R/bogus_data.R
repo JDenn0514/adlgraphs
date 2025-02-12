@@ -60,12 +60,20 @@ remove_bogus <- function(data, duration, cut_off = 0.3) {
   }
 
   
-  # cut off time
-  cut_off_time <- median(data[[duration]]) * cut_off
-  # remove speedsters
-  data <- data[data[[duration]] > cut_off_time,]
+  if (!missing(duration)) {
+    # if duration is not found in data give an error
+    if (!duration %in% colnames(data)) {
+      cli::cli_abort(c(
+        "`{duration}` is not a variable found in {data_name}.",
+        "i" = "Make sure the variable supplied to {.var duration} is present in {.var data}"
+      ))
+    }
+    # cut off time
+    cut_off_time <- median(data[[duration]]) * cut_off
+    # remove speedsters
+    data <- data[data[[duration]] > cut_off_time,]
+  }
   
-
   data
 }
 
@@ -86,8 +94,6 @@ remove_bogus <- function(data, duration, cut_off = 0.3) {
 #' @export
 get_bogus <- function(data, duration, cut_off = 0.3) {
 
-  duration <- rlang::enexpr(duration)
-
   # remove previews
   if ("DistributionChannel" %in% colnames(data)) {
     data <- data[data$DistributionChannel != "preview",]
@@ -97,7 +103,7 @@ get_bogus <- function(data, duration, cut_off = 0.3) {
 
 
   # get the clean data
-  clean <- remove_bogus(data)
+  clean <- remove_bogus(data, duration = duration, cut_off = cut_off)
   # remove clean data from original data
   bogus <- dplyr::anti_join(data, clean)
 
