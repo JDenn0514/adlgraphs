@@ -89,8 +89,9 @@ reference:
     - attr_transformation
     - flatten_labelled_vec
     - set_question_preface
-- title: Miscellaneous data cleaning functions
+- title: Data cleaning functions
   desc: These are miscellaneous functions to help automate some data cleaning
+  contents:
     - clean_demos
     - remove_bogus
     - get_bogus
