@@ -100,13 +100,13 @@ get_bogus <- function(data, duration, cut_off = 0.3) {
   bogus <- dplyr::anti_join(data, clean)
 
   # create the two new variables
-  bogus$duplicate <- ifelse(bots$Q_RelevantIDDuplicateScore < 0.76, TRUE, FALSE)
-  bogus$bot <- ifelse(bots$Q_RecaptchaScore > 0.41, TRUE, FALSE)
+  bogus$duplicate <- ifelse(bogus$Q_RelevantIDDuplicateScore < 0.76, TRUE, FALSE)
+  bogus$bot <- ifelse(bogus$Q_RecaptchaScore > 0.41, TRUE, FALSE)
 
   # get the cut off time
   cut_off_time <- median(data[[duration]]) * cut_off
   # add a new variable if they were speedsters
-  bogus$speedsters <- ifelse(bots[[duration]] > cut_off_time, TRUE, FALSE)
+  bogus$speedsters <- ifelse(bogus[[duration]] > cut_off_time, TRUE, FALSE)
   # return the bad data
   bogus
 
