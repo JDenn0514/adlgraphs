@@ -86,6 +86,8 @@ remove_bogus <- function(data, duration, cut_off = 0.3) {
 #' @export
 get_bogus <- function(data, duration, cut_off = 0.3) {
 
+  duration <- rlang::enexpr(duration)
+
   # remove previews
   if ("DistributionChannel" %in% colnames(data)) {
     data <- data[data$DistributionChannel != "preview",]
@@ -133,7 +135,7 @@ get_bogus <- function(data, duration, cut_off = 0.3) {
 #' @export
 export_bogus <- function(data, filename, export_raw_data = TRUE, id = NULL, duration, cut_off = 0.3) {
 
-  data <- get_bogus(data, duration = duration, cut_off = cut_off)
+  data <- get_bogus(data, duration, cut_off = cut_off)
   
   if (isFALSE(export_raw_data)) {
     data <- data %>% 
