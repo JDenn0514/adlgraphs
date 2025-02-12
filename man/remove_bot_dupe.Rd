@@ -10,7 +10,13 @@ remove_bot_dupe(data)
 \item{data}{A data.frame object you want to operate on}
 }
 \description{
-This function removes respondents suspected of being bots or duplicate
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+}
+\details{
+\code{remove_bot_dupe()} is deprecated because the function \code{remove_bogus()}
+does the same thing but also removes speedsters.
+
+This funciton removes respondents suspected of being bots or duplicate
 survey takers, as well as previews and people under 18 from a data frame.
 It is made specifically for surveys programmed with Qualtrics.
 }

@@ -17,6 +17,12 @@ exports only three columns: the ID, duplicate, and bot}
 \item{id}{The unique ID variable. Only relevant when \code{export_raw_data} is FALSE.}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
+}
+\details{
+\code{export_bot_dupe()} is superseded because the function \code{export_bogus()}
+does the same thing but also removes speedsters.
+
 This function creates a file containing all responses suspected of being bots and/or
 duplicates. Can create a .xlsx, .sav, or .csv file
 }

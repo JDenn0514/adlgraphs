@@ -10,9 +10,9 @@
 #'   function, this is not required.
 #' @param x Either a character string or symbol. The variable with which want
 #'   to get the frequencies.
-#' @param group Either a character string or a symbol. The grouping variable.
+#' @param group	Either a character string or a symbol. The grouping variable.
 #' @param wt Weights. Add if you have a weighting variable and want to get
-#'   weighted frequencies
+#'   weighted frequencies.
 #' @param show_genpop Logical. Should there be a column showing the frequencies
 #'   for the general population
 #'

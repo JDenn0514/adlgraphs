@@ -16,7 +16,7 @@ to get the frequencies.}
 \item{group}{Either a character string or a symbol. The grouping variable.}
 
 \item{wt}{Weights. Add if you have a weighting variable and want to get
-weighted frequencies}
+weighted frequencies.}
 
 \item{show_genpop}{Logical. Should there be a column showing the frequencies
 for the general population}

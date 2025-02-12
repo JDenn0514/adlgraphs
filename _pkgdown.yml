@@ -89,14 +89,16 @@ reference:
     - attr_transformation
     - flatten_labelled_vec
     - set_question_preface
+- title: Miscellaneous data cleaning functions
+  desc: These are miscellaneous functions to help automate some data cleaning
+    - clean_demos
+    - remove_bogus
+    - get_bogus
+    - export_bogus
 - title: Miscellaneous functions
   contents:
-    - remove_bot_dupe
-    - get_bot_dupe
     - get_col_names
-    - export_bot_dupe
     - codebook
-    - clean_demos
     - dunnett_helper
     - funky_freqs
     - stars_pval
@@ -105,6 +107,11 @@ reference:
 - title: Data
   contents:
     - test_data
+- title: Deprecated fuctions
+  contents:
+    - remove_bot_dupe
+    - get_bot_dupe
+    - export_bot_dupe
 
 
 

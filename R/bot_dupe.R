@@ -1,14 +1,20 @@
 #' Remove bots and/or duplicates from a data frame
 #' 
-#' This function removes respondents suspected of being bots or duplicate 
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' `remove_bot_dupe()` is deprecated because the function `remove_bogus()`
+#' does the same thing but also removes speedsters. 
+#' 
+#' This funciton removes respondents suspected of being bots or duplicate 
 #' survey takers, as well as previews and people under 18 from a data frame. 
 #' It is made specifically for surveys programmed with Qualtrics. 
 #' 
 #' @param data A data.frame object you want to operate on
 #' 
 #' @export
-
 remove_bot_dupe <- function(data) {
+
+  lifecycle::deprecate_soft("0.3.61", "remove_bot_dupe()", "remove_bogus")
 
   # remove previews
   if ("DistributionChannel" %in% colnames(data)) {
@@ -64,6 +70,11 @@ remove_bot_dupe <- function(data) {
 
 #' Get the bots or duplicates from a data frame
 #' 
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' `get_bot_dupe()` is deprecated because the function `get_bogus()`
+#' does the same thing but also removes speedsters. 
+#' 
 #' This function is the opposite of `remove_bot_dupes()`. Instead of removing bots
 #' and duplicates from a data frame, it keeps them. This was designed to make it easy
 #' to send to survey panel providers so they can remove them from your data set.
@@ -72,6 +83,8 @@ remove_bot_dupe <- function(data) {
 #' 
 #' @export
 get_bot_dupe <- function(data) {
+
+  lifecycle::deprecate_soft("0.3.61", "get_bot_dupe()", "get_bogus()")
 
   # remove previews
   if ("DistributionChannel" %in% colnames(data)) {
@@ -89,6 +102,7 @@ get_bot_dupe <- function(data) {
   # create the two new variables
   bots$duplicate <- ifelse(bots$Q_RelevantIDDuplicateScore < 0.76, TRUE, FALSE)
   bots$bot <- ifelse(bots$Q_RecaptchaScore > 0.41, TRUE, FALSE)
+
   # return the bad data
   return(bots)
 
@@ -97,6 +111,11 @@ get_bot_dupe <- function(data) {
 
 
 #' Export data frame with only bots and duplicates
+#' 
+#' `r lifecycle::badge("superseded")`
+#' 
+#' `export_bot_dupe()` is superseded because the function `export_bogus()` 
+#' does the same thing but also removes speedsters. 
 #' 
 #' This function creates a file containing all responses suspected of being bots and/or
 #' duplicates. Can create a .xlsx, .sav, or .csv file
@@ -109,6 +128,8 @@ get_bot_dupe <- function(data) {
 #' 
 #' @export
 export_bot_dupe <- function(data, filename, export_raw_data = TRUE, id = NULL) {
+
+  lifecycle::deprecate_soft("0.3.61", "export_bot_dupe()", "export_bogus")
 
   data <- get_bot_dupe(data)
   

@@ -1,15 +1,13 @@
 Type: Package
 Package: adlgraphs
 Title: Create Graphs with ADL Style and Branding
-Version: 0.3.6
+Version: 0.3.61
 Authors@R: 
     person("Jacob", "Dennen", , "jdennen@adl.org", role = c("aut", "cre"))
-Description: The main goal of adlgraphs is toward improving the efficiency and 
+Description: The main goal of adlgraphs is to improve the efficiency and 
     ease of cleaning, analyzing, and visualizing survey data, so that the 
     turnaround time between data collection and presentation of analysis and 
-    findings could be as minimized as much as possible. In addition, this has 
-    ensured that the presentation of data and results is consistent across 
-    projects.
+    findings can be as minimized. 
 License: MIT + file LICENSE
 URL: https://github.com/JDenn0514/adlgraphs,
     https://jdenn0514.github.io/adlgraphs/
@@ -31,6 +29,7 @@ Imports:
     highcharter,
     haven,
     jtools,
+    lifecycle,
     mvtnorm,
     officer,
     prismatic,

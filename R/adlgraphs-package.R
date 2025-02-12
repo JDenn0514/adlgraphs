@@ -19,6 +19,7 @@
 #' @importFrom haven as_factor is.labelled write_sav
 #' @importFrom highcharter hc_theme hc_theme_merge
 #' @importFrom jtools scale_mod
+#' @importFrom lifecycle badge deprecate_soft
 #' @importFrom mvtnorm qmvt pmvt
 #' @importFrom officer body_add_par
 #' @importFrom prismatic color
@@ -28,7 +29,7 @@
 #'   sym quo_is_missing
 #' @importFrom rstudioapi isAvailable getVersion
 #' @importFrom stats qt df.residual setNames weighted.mean sd symnum
-#'   na.omit lm coef quantile xtabs reformulate complete.cases 
+#'   na.omit lm coef quantile xtabs reformulate complete.cases median
 #'   model.matrix lm relevel
 #' @importFrom stringr str_replace str_detect
 #' @importFrom systemfonts register_font

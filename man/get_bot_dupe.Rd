@@ -10,6 +10,12 @@ get_bot_dupe(data)
 \item{data}{A data.frame object you want to operate on}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+}
+\details{
+\code{get_bot_dupe()} is deprecated because the function \code{get_bogus()}
+does the same thing but also removes speedsters.
+
 This function is the opposite of \code{remove_bot_dupes()}. Instead of removing bots
 and duplicates from a data frame, it keeps them. This was designed to make it easy
 to send to survey panel providers so they can remove them from your data set.

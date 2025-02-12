@@ -1,3 +1,11 @@
+# adlgraphs 0.3.61
+
+## Deprecated the `bot_dupe` functions in favor of `bogus` functions
+
+#### `bogus`
+
+- These functions operate virtually the same as bot_dupe, but also remove speedsters.
+
 # adlgraphs 0.3.6
 
 ## added two new functions `row_means()` and `make_nested()`
