@@ -77,7 +77,7 @@ funky_freqs <- function(
 
   # if na.rm is TRUE remove NAs from all columns in data
   if (na.rm) data <- data[stats::complete.cases(data),]
-
+  
   # convert the x and group_names to factors before the analysis to preserve NA tags
   data[,c(x, group_names)] <- lapply(
     data[,c(x, group_names)], 
@@ -144,6 +144,8 @@ funky_freqs <- function(
 
   # add an attribute containing the names of the grouping variables
   attr(out, "group_names") <- group_names
+
+  attr(out, "group_labels") <- attr_var_label(data[group_names], unlist = FALSE)
 
   # add a variable for the n variable
   attr(out$n, "label") <- "N"

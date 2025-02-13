@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-The main goal of adlgraphs is toward improving the efficiency and ease of cleaning, analyzing, and visualizing survey data, so that the turnaround time between data collection and presentation of analysis and findings could be as minimized as much as possible. In addition, this has ensured that the presentation of data and results is consistent across projects.
+The main goal of adlgraphs is to improve the efficiency and ease of cleaning, analyzing, and visualizing survey data, so that the turnaround time between data collection and presentation of analysis and findings can be as minimized.
 }
 \seealso{
 Useful links:

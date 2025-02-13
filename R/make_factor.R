@@ -1,7 +1,6 @@
 #' Convert a labelled vector into a factor
 #' 
 #' @description
-#' `r lifecycle::badge("experimental")`
 #'
 #' `make_factor()` takes a labelled vector and converts it to a factor variable
 #' using the value labels. This works with numeric, character, and factor vectors.
@@ -35,9 +34,9 @@
 #' 
 #'
 #' @param x A vector with value labels. Can be numeric, character, or a factor
-#' @param levels You can supply levels to be used if the vector is a character or 
-#'   factor. It is not clear how this will fit in with the rest of the function 
-#'   so you might get weird results at first.
+#' @param levels `r lifecycle::badge("experimental")` You can supply levels to be 
+#'   used if the vector is a character or factor. It is not clear how this will fit 
+#'   in with the rest of the function so you might get weird results at first.
 #' @param ordered Logical. Determines if the factor be ordered. Defaults to `TRUE.`
 #' @param drop_levels Logical. Determines if unused factor levels should be dropped.
 #'   Defaults to `TRUE.`
@@ -79,35 +78,97 @@ make_factor <- function(x, levels = NULL, ordered = FALSE, drop_levels = TRUE, f
     # if there aren't any value labels:
 
     if (is.factor(x)) {
+      # if it's a factor
 
-      # if it is a character vector
       if (!missing(levels) && !is.null(levels)) {
+        # if levels is not missing nor is it null
+
+        # set x to a factor with the new levels
         x <- factor(x, levels = levels)
+        # get the levels
         lvls_names <- paste(levels, collapse = ", ")
-        attr(x, "transformation") <- paste("Updated '", x_name, "' to have levels: '", lvls_names, "'", sep = "")
-        lvls_names <- paste(levels, collapse = ", ")
+        # set the transformation attribute
+        attr(x, "transformation") <- paste0("Updated '", x_name, "' to have levels: '", lvls_names, "'", sep = "")
+
+        if (is.null(variable_label)) {
+          # if variabel label is null use the x_name
+          attr(x, "label") <- x_name
+        } else {
+          # otherwise set the label with variable_label
+          attr(x, "label") <- variable_label
+        }
+        
         return(x)
+
       } else {
+        # if not, just return x
+        if (is.null(variable_label)) attr(x, "label") <- x_name
         return(x)
+
       } 
  
     } else if (is.character(x)) {
 
       # if it is a character vector
       if (!missing(levels) && !is.null(levels)) {
+        # if levels is not missing nor is it null
+
+        # set x to a factor with the new levels
         x <- factor(x, levels = levels)
+        # get the levels
         lvls_names <- paste(levels, collapse = ", ")
-        attr(x, "transformation") <- paste("Converted '", x_name, "' into a factor with levels: '", lvls_names, "'", sep = "")
+        # set the transformation attribute
+        attr(x, "transformation") <- paste0("Updated '", x_name, "' to have levels: '", lvls_names, "'", sep = "")
+
+        # set the label attribute
+        if (is.null(variable_label)) {
+          # if variabel label is null use the x_name
+          attr(x, "label") <- x_name
+        } else {
+          # otherwise set the label with variable_label
+          attr(x, "label") <- variable_label
+        }
+        
         return(x)
+
       } else {
-        # if levels is missing
-        return(factor(x))
+        # if its a character without levels, just convert to a factor
+
+        x <- factor(x)
+
+        attr(x, "transformation") <- paste0("Updated '", x_name, "' from a character vector to a factor")
+        
+        # set the label attribute
+        if (is.null(variable_label)) {
+          # if variabel label is null use the x_name
+          attr(x, "label") <- x_name
+        } else {
+          # otherwise set the label with variable_label
+          attr(x, "label") <- variable_label
+        }
+        
+
+        return(x)
       }
       
     } else if (is.numeric(x) && isTRUE(force)) {
       # if x is numeric and force = TRUE, force to a factor and return warning
       warning("`x` has no value labels so forcing to a factor with `as.factor()`")
-      return(as.factor(x))
+      # force to a factor
+      x <- as.factor(x)
+      
+      attr(x, "transformation") <- paste0("Converted '", x_name, "' from a numeric vector to a factor")
+
+      # set the label attribute
+      if (is.null(variable_label)) {
+        # if variabel label is null use the x_name
+        attr(x, "label") <- x_name
+      } else {
+        # otherwise set the label with variable_label
+        attr(x, "label") <- variable_label
+      }
+      return(x)
+
     } else if (is.numeric(x) && isFALSE(force)) {
       # if x is numeric and force = false, return an error 
       cli::cli_abort(
@@ -168,6 +229,7 @@ make_factor <- function(x, levels = NULL, ordered = FALSE, drop_levels = TRUE, f
   } else {
     # add the transformation attribute
     attr(x, "transformation") <- paste("Converted '", x_name, "' into a factor based on its value labels", sep = "")
+    attr(x, "label") <- x_name
   }
 
   return(x)

@@ -16,9 +16,9 @@ make_factor(
 \arguments{
 \item{x}{A vector with value labels. Can be numeric, character, or a factor}
 
-\item{levels}{You can supply levels to be used if the vector is a character or
-factor. It is not clear how this will fit in with the rest of the function
-so you might get weird results at first.}
+\item{levels}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} You can supply levels to be
+used if the vector is a character or factor. It is not clear how this will fit
+in with the rest of the function so you might get weird results at first.}
 
 \item{ordered}{Logical. Determines if the factor be ordered. Defaults to \code{TRUE.}}
 
@@ -35,8 +35,6 @@ to \code{FALSE}.}
 A factor vector of same length as \code{x}.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-
 \code{make_factor()} takes a labelled vector and converts it to a factor variable
 using the value labels. This works with numeric, character, and factor vectors.
 
