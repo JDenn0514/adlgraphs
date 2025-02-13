@@ -110,9 +110,9 @@ clean_demos <- function(
           white_b == 1 ~ "White"
         ),
         # reorder the levels
-        race_f = refactor(race_f, c("White", "Black", "Hispanic", "AAPI", "Multi/Other")),
-      ) %>%
-      structure(race_f, label = "Race/Ethnicity")
+        race_f = refactor(race_f, c("White", "Black", "Hispanic", "AAPI", "Multi/Other")) %>% 
+          structure(label = "Race/Ethnicity")
+      ) 
 
   } else if (
     "white_b" %in% colnames(df) &&
