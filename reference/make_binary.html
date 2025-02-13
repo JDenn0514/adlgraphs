@@ -189,20 +189,20 @@ what the 1 and 0 mean.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $transformation</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Converting 'factor_x' to a binary variable with 'Agree' = 1 and 'Disagree' = 0."</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $label</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "x"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $labels</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Agree Disagree </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        1        0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $label</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> factor_x</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="co"># another way of checking the attributes</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">binary_df</span><span class="op">$</span><span class="va">binary_x</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  num [1:6] 1 0 1 1 0 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "transformation")= chr "Converting 'factor_x' to a binary variable with 'Agree' = 1 and 'Disagree' = 0."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "label")= chr "x"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "labels")= Named num [1:2] 1 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "names")= chr [1:2] "Agree" "Disagree"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "label")= symbol factor_x</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># check the factor levels</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">binary_df</span><span class="op">$</span><span class="va">binary_x</span><span class="op">)</span></span></span>
