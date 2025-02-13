@@ -111,7 +111,7 @@ clean_demos <- function(
         ),
         # reorder the levels
         race_f = refactor(race_f, c("White", "Black", "Hispanic", "AAPI", "Multi/Other")) %>% 
-          structure(label = "Race/Ethnicity")
+          structure(label = "Race/Ethnicity") 
       ) 
 
   } else if (
