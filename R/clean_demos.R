@@ -261,7 +261,7 @@ clean_demos <- function(
             # set the label
             structure(label = "Year study was conducted"),
           # set the birth year based on their age and the current year
-          birth_year = current_year - age_n %>% 
+          birth_year = (current_year - age_n) %>% 
             # set the label
             structure(label = "Birth Year"),
           # set teh generations using birth year
