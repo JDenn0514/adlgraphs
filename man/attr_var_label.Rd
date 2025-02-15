@@ -4,7 +4,7 @@
 \alias{attr_var_label}
 \title{Get variable label}
 \usage{
-attr_var_label(x, data, unlist)
+attr_var_label(x, data, unlist, use_name = FALSE)
 }
 \arguments{
 \item{x}{A vector object, the name of a column in a \code{data.frame}, or an
@@ -15,11 +15,16 @@ when \code{x} is only the name of a column in a \code{data.frame}.}
 
 \item{unlist}{Logical. If \code{TRUE}, the default, returns a named vector. If
 \code{FALSE}, returns a list. This only works when \code{x} is a \code{data.frame}}
+
+\item{use_name}{Logical. If there is no variable label, determines what
+the function will return. If \code{TRUE}, returns the variable name. If
+\code{FALSE}, returns an NA}
 }
 \value{
 If \code{x} is a variable or vector, a string containing the "label"
 attribute, if one is present, is returned. If \code{x} is a \code{data.frame} then a
-named vector with the "label" attribute from each variable is returned.
+named vector or list with the "label" attribute from each variable is
+returned.
 }
 \description{
 This function makes it easy to get the variable labels from either an
@@ -27,49 +32,21 @@ individual vector or a data frame. NOTE: it is not possible to set or modify
 the variable labels with this function.
 }
 \examples{
-library(adlgraphs)
-# create a random vector
-x <- sample(c(0, 1), replace = TRUE, size = 10)
-# add a question preface attribute
-attr(x, "question_preface") <- "This is a question preface"
-# check to see that there is a new attribute called `question_preface`
-attributes(x)
-# now get the question_preface
-attr_question_preface(x)
+# load dplyr so we can see how it might work in a typical workflow
+library(dplyr)
+# check for an individual vector
+attr_var_label(test_data$top)
+# get the variable label for the entire data set
+attr_var_label(test_data)
+# same, but as a list
+attr_var_label(test_data, unlist = FALSE)
 
-# now let's create a realistic workflow with a data.frame --------
-# create a fake dataset
-df <- data.frame(
-  x_1 = sample(c(0, 1), replace = TRUE, size = 10),
-  x_2 = sample(c(0, 1), replace = TRUE, size = 10),
-  x_3 = sample(c(0, 1), replace = TRUE, size = 10),
-  x_4 = sample(c(0, 1), replace = TRUE, size = 10)
-) 
+# now let's do it on a variable without a label
+top <- sample(c(1:3), 10 replace = TRUE)
+# if no label is present and use_name is TRUE, it will use the variable name
+attr_var_label(top, use_name = TRUE)
+# if it's set to false it will give NA
+attr_var_label(top, use_name = FALSE)
 
-# set the variable labels
-attr(df$x_1, "label") <- "Which of the following colors do you like? Blue"
-attr(df$x_2, "label") <- "Which of the following colors do you like? Red"
-attr(df$x_3, "label") <- "Which of the following colors do you like? Yellow"
-attr(df$x_4, "label") <- "Which of the following colors do you like? Purple" 
-
-# now let's check the variable labels
-attr_var_label(df)
-
-# this isn't an ideal variable label if we want to show how many people
-# like each of the colors, so let's fix that 
-
-# set the value labels (most survey data should have this)
-attr(df$x_1, "labels") <- c("Blue" = 1)
-attr(df$x_2, "labels") <- c("Red" = 1)
-attr(df$x_3, "labels") <- c("Yellow" = 1)
-attr(df$x_4, "labels") <- c("Purple" = 1)
-
-# add the question prefaces and update the variable labels for each column in df
-for(x in names(df)) {
-  df[[x]] <- set_question_preface(x, df)
-}
-
-# now let's check the updated variable labels
-attr_var_label(df)
 
 }

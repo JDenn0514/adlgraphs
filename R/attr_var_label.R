@@ -4,76 +4,63 @@
 #' individual vector or a data frame. NOTE: it is not possible to set or modify
 #' the variable labels with this function.
 #'
-#'
 #' @param x A vector object, the name of a column in a `data.frame`, or an
 #'   an actual `data.frame` object.
 #' @param data A `data.frame` or `tibble` object. This should only be specified
 #'   when `x` is only the name of a column in a `data.frame`.
 #' @param unlist Logical. If `TRUE`, the default, returns a named vector. If
 #'   `FALSE`, returns a list. This only works when `x` is a `data.frame`
+#' @param use_name Logical. If there is no variable label, determines what 
+#'   the function will return. If `TRUE`, returns the variable name. If 
+#'   `FALSE`, returns an NA
 #'
 #' @returns If `x` is a variable or vector, a string containing the "label" 
 #'   attribute, if one is present, is returned. If `x` is a `data.frame` then a
-#'   named vector with the "label" attribute from each variable is returned.
+#'   named vector or list with the "label" attribute from each variable is 
+#'   returned.
 #' 
 #' @examples 
-#' library(adlgraphs)
-#' # create a random vector
-#' x <- sample(c(0, 1), replace = TRUE, size = 10)
-#' # add a question preface attribute
-#' attr(x, "question_preface") <- "This is a question preface"
-#' # check to see that there is a new attribute called `question_preface`
-#' attributes(x)
-#' # now get the question_preface
-#' attr_question_preface(x)
+#' # load dplyr so we can see how it might work in a typical workflow
+#' library(dplyr)
+#' # check for an individual vector
+#' attr_var_label(test_data$top)
+#' # get the variable label for the entire data set
+#' attr_var_label(test_data)
+#' # same, but as a list
+#' attr_var_label(test_data, unlist = FALSE)
 #' 
-#' # now let's create a realistic workflow with a data.frame --------
-#' # create a fake dataset
-#' df <- data.frame(
-#'   x_1 = sample(c(0, 1), replace = TRUE, size = 10),
-#'   x_2 = sample(c(0, 1), replace = TRUE, size = 10),
-#'   x_3 = sample(c(0, 1), replace = TRUE, size = 10),
-#'   x_4 = sample(c(0, 1), replace = TRUE, size = 10)
-#' ) 
+#' # now let's do it on a variable without a label
+#' top <- sample(c(1:3), 10, replace = TRUE)
+#' # if no label is present and use_name is TRUE, it will use the variable name
+#' attr_var_label(top, use_name = TRUE)
+#' # if it's set to false it will give NA
+#' attr_var_label(top, use_name = FALSE)
 #' 
-#' # set the variable labels
-#' attr(df$x_1, "label") <- "Which of the following colors do you like? Blue"
-#' attr(df$x_2, "label") <- "Which of the following colors do you like? Red"
-#' attr(df$x_3, "label") <- "Which of the following colors do you like? Yellow"
-#' attr(df$x_4, "label") <- "Which of the following colors do you like? Purple" 
-#' 
-#' # now let's check the variable labels
-#' attr_var_label(df)
-#' 
-#' # this isn't an ideal variable label if we want to show how many people
-#' # like each of the colors, so let's fix that 
-#' 
-#' # set the value labels (most survey data should have this)
-#' attr(df$x_1, "labels") <- c("Blue" = 1)
-#' attr(df$x_2, "labels") <- c("Red" = 1)
-#' attr(df$x_3, "labels") <- c("Yellow" = 1)
-#' attr(df$x_4, "labels") <- c("Purple" = 1)
-#' 
-#' # add the question prefaces and update the variable labels for each column in df
-#' for(x in names(df)) {
-#'   df[[x]] <- set_question_preface(x, df)
-#' }
-#' 
-#' # now let's check the updated variable labels
-#' attr_var_label(df)
+
 #' 
 #' @export
-attr_var_label <- function(x, data, unlist) {
+attr_var_label <- function(x, data, unlist, use_name = FALSE) {
   UseMethod("attr_var_label")
 }
 
 #' @export
-attr_var_label.default <- function(x, data, unlist = NULL) {
+attr_var_label.default <- function(x, data, unlist = NULL, use_name = FALSE) {
+  x_name <- rlang::quo_get_expr(rlang::expr({{ x }}))
+
   if (missing(data)) {
-    attr(x, "label", exact = TRUE)
+    x <- attr(x, "label", exact = TRUE)
   } else {
-    attr(data[[x]], "label", exact = TRUE)
+    x <- attr(data[[x]], "label", exact = TRUE)
   }
+
+  if (is.null(x)) {
+    if (use_name) {
+      x <- x_name
+    } else {
+      x <- NA
+    }
+  }
+  x
 }
 
 
@@ -81,17 +68,15 @@ attr_var_label.default <- function(x, data, unlist = NULL) {
 # labels for each column in a data.frame or tibble.
 # write a function that will get the variable label for each column in the data
 #' @export
-attr_var_label.data.frame <- function(x, data = NULL, unlist = TRUE) {
+attr_var_label.data.frame <- function(x, data = NULL, unlist = TRUE, use_name = FALSE) {
   # get a list of columns
   cols <- names(x)
 
-  # write up a function that makes the string in the format we want
-  string_fun <- function(var) {
-    string <- attr(x[[var]], "label", exact = TRUE)
-  }
-
   # iterate string_fun over each of the columns laid out earlier
-  var_labels <- lapply(cols, string_fun) %>%
+  var_labels <- purrr::map(
+    cols, 
+    ~ attr_var_label.default({{ .x }}, data = x, unlist = unlist, use_name = use_name)
+  ) %>%
     # set the names of the objects in the list
     setNames(cols)
 
@@ -103,6 +88,7 @@ attr_var_label.data.frame <- function(x, data = NULL, unlist = TRUE) {
   }
 
 }
+
 
 
 
