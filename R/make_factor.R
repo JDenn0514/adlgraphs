@@ -54,7 +54,7 @@
 #' attributes(new_df$top_f)
 #'
 #' @export
-make_factor <- function(x, levels = NULL, ordered = FALSE, drop_levels = TRUE, force = TRUE, na.rm = FALSE) {
+make_factor <- function(x, ordered = FALSE, drop_levels = TRUE, force = TRUE, na.rm = FALSE) {
   # don't use rlang as that won't work when x is "data[[x]]"
   x_name <- deparse(substitute(x))
 

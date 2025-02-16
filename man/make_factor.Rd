@@ -6,7 +6,6 @@
 \usage{
 make_factor(
   x,
-  levels = NULL,
   ordered = FALSE,
   drop_levels = TRUE,
   force = TRUE,

@@ -39,7 +39,6 @@ Imports:
     rlang,
     rstudioapi,
     stats,
-    stringr,
     systemfonts,
     tibble,
     tidyr,
@@ -52,7 +51,8 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
-    labelled
+    labelled,
+    stringr
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true

@@ -297,8 +297,6 @@ bivariate_reg <- function(
   
   data[[treats]] <- make_factor(data[[treats]], drop_levels = TRUE, force = TRUE)
 
-  if (missing(ref_level)) ref_level <- levels(data[[treats]])[1]
-
   if (!missing(ref_level) && ref_level != levels(data[[treats]])[1]) {
     data[[treats]] <- stats::relevel(data[[treats]], ref_level)
   } 

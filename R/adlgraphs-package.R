@@ -31,7 +31,6 @@
 #' @importFrom stats qt df.residual setNames weighted.mean sd symnum
 #'   na.omit lm coef quantile xtabs reformulate complete.cases median
 #'   model.matrix lm relevel
-#' @importFrom stringr str_replace str_detect
 #' @importFrom systemfonts register_font
 #' @importFrom tibble as_tibble enframe new_tibble
 #' @importFrom tidyr pivot_wider drop_na nest unnest separate_wider_delim

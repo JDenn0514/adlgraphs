@@ -25,7 +25,7 @@ make_quarts <- function(x) {
     levs[4] ~ "Highest 25%"
   ) %>%
     structure(
-      transformation = glue::glue("Converted {x_lab} into a factor variable with four levels based on the quartiles: {stringr::str_flatten(levs, ', ')}")
+      transformation = glue::glue("Converted {x_lab} into a factor variable with four levels based on the quartiles: {paste0(levs, collapse = ', ')}")
     )
   # set value labels so we know what values are in each quartile
   attr(x, "labels") <- levs

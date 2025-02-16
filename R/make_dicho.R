@@ -135,11 +135,15 @@ make_dicho <- function(x, flip_levels = FALSE) {
     # if x is class haven_labelled convert to a factor using haven::as_factor
     x <- make_factor(x)
 
-  } else if (is.character(x) || is.factor(x)) {
+  } else if (is.character(x)) {
 
-    # if x is of class character or factor return x
+    # if x is of class character, make it a factor
+    # message("`x` is a character vector which may cause ")
+    x <- make_factor(x)
+
+  } else if (is.factor(x)) {
+    # if its a factor just return x
     x
-
   } else {
     # if x is any other class return this error
     cli::cli_abort(
@@ -153,22 +157,21 @@ make_dicho <- function(x, flip_levels = FALSE) {
   # get the original levels of the variable (this prevents the order from flipping)
   lvl_x <- levels(x)
 
-  # get the binary levels
-  lvl_x_f2 <- dplyr::if_else(
-    stringr::str_detect(lvl_x, "\\s"),
-    stringr::str_replace(lvl_x, "\\w+\\s", ""),
+  lvl_x_f2 <- ifelse(
+    grepl("\\s", lvl_x),
+    sub( "\\w+\\s", "", lvl_x),
     lvl_x
-  ) %>%
-    stringr::str_to_title() %>%
-    unique()
+  ) 
+  
+  lvl_x_f2 <- unique(capitalize(lvl_x_f2))
 
   # remove the first word if there are multiple words (using base to )
-  x <- dplyr::if_else(
-    stringr::str_detect(x, "\\s"),
-    stringr::str_replace(x, "\\w+\\s", ""),
+  x <- ifelse(
+    grepl("\\s", x),
+    sub( "\\w+\\s", "", x),
     x
-  ) |>
-    stringr::str_to_title()
+  ) 
+  x <- capitalize(x)
 
   if (flip_levels == TRUE) {
 
@@ -202,5 +205,8 @@ make_dicho <- function(x, flip_levels = FALSE) {
   }
 }
 
-
+capitalize <- function(x) {
+  substr(x, 1, 1) <- toupper(substr(x, 1, 1))
+  x
+}
 

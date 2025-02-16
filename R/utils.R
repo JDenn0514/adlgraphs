@@ -605,3 +605,25 @@ replace_with <- function(x, from, to) {
   out[!is.na(matches)] <- to[matches[!is.na(matches)]]
   out
 }
+
+
+# standardize the data using weights
+stdz <- function(x, wt = NULL){
+
+  # Prepare weights
+  if (missing(wt)) {
+    wt <- rep(1, length(x))
+  } 
+
+  # calculate the weighted n
+  n <- sum(wt, na.rm = TRUE)
+  # center x by subtracting the mean from it
+  x_mean <- x - (sum(x * wt, na.rm = TRUE) / n)
+  # calculate the weighted sd
+  x_sd <- sqrt(sum(wt * (x_mean)^2, na.rm = TRUE) / n)
+  # divide x by the weighted sd of x to scale the data
+  x <- x_mean / x_sd
+  x
+
+
+}

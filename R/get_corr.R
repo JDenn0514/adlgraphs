@@ -116,6 +116,8 @@ get_corr <- function(
     
   }
 
+  # add an attribute containing the names of the grouping variables
+  attr(out, "group_names") <- group_names
 
   attr(out$correlation, "label") <- "Correlation"
   attr(out$n, "label") <- "N"
@@ -123,7 +125,12 @@ get_corr <- function(
   attr(out$conf.high, "label") <- "High CI"
   attr(out$p_value, "label") <- "P-Value"
 
-  return(out)
+  # get the classes of the data.frame
+  class_names <- class(out)
+  # add adlgraphs_freqs to the classes
+  attr(out, "class") <- c("adlgraphs_means", class_names)
+
+  out
 
 }
 
@@ -245,25 +252,6 @@ wtd_corr <- function(data, x, y,  wt, decimals = 3) {
 }
 
 
-# standardize the data using weights
-stdz <- function(x, wt = NULL){
 
-  # Prepare weights
-  if (missing(wt)) {
-    wt <- rep(1, length(x))
-  } 
-
-  # calculate the weighted n
-  n <- sum(wt, na.rm = TRUE)
-  # center x by subtracting the mean from it
-  x_mean <- x - (sum(x * wt, na.rm = TRUE) / n)
-  # calculate the weighted sd
-  x_sd <- sqrt(sum(wt * (x_mean)^2, na.rm = TRUE) / n)
-  # divide x by the weighted sd of x to scale the data
-  x <- x_mean / x_sd
-  x
-
-
-}
 
 

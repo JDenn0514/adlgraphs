@@ -36,12 +36,11 @@
 #' 
 #' # now let's do it on a variable without a label
 #' top <- sample(c(1:3), 10, replace = TRUE)
-#' # if no label is present and use_name is TRUE, it will use the variable name
-#' attr_var_label(top, use_name = TRUE)
-#' # if it's set to false it will give NA
-#' attr_var_label(top, use_name = FALSE)
+#' # if no label is present and if_null = "name", it will use the variable name
+#' attr_var_label(top, if_null = "name")
+#' # if it's se to "NA" it will give NA
+#' attr_var_label(top, if_null = "NA")
 #' 
-
 #' 
 #' @export
 attr_var_label <- function(x, data, unlist, if_null = NULL) {

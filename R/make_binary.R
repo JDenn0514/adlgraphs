@@ -131,7 +131,7 @@
 make_binary <- function(x, flip_values = FALSE) {
 
   # get the object's name
-  x_name <- rlang::enexpr(x)
+  x_name <- deparse(substitute(x))
   # make a new object containing the variable label
   variable_label <- attr_var_label(x)
 
