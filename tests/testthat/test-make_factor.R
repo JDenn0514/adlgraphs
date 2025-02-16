@@ -34,7 +34,27 @@ testthat::test_that("all labels are preserved when using a non-haven_labelled nu
   testthat::expect_equal(make_factor(s1), exp)
 })
 
-#### CHARACTER VECTORS WITH VALUE LABELS
+testthat::test_that("Convert NAs using labels", {
+  s1 <- haven::labelled(c(0, 1, haven::tagged_na("c")), c("A" = 0, "B" = 1, "C" = haven::tagged_na("c")))
+  exp <- factor(c("A", "B", "C"), levels = c("A", "B", "C")) %>%
+    structure(
+      transformation = "Converted 's1' into a factor based on its value labels",
+      label = "s1"
+    )
+  testthat::expect_equal(make_factor(s1), exp)
+})
+
+testthat::test_that("Keep NAs as NAs", {
+  s1 <- haven::labelled(c(0, 1, haven::tagged_na("c")), c("A" = 0, "B" = 1, "C" = haven::tagged_na("c")))
+  exp <- factor(c("A", "B", NA), levels = c("A", "B", NA)) %>%
+    structure(
+      transformation = "Converted 's1' into a factor based on its value labels",
+      label = "s1"
+    )
+  testthat::expect_equal(make_factor(s1, na.rm = TRUE), exp)
+})
+
+#### CHARACTER VECTORS WITH VALUE LABELS ------------------------
 testthat::test_that("character labelled converts to factor preserves all attributes", {
   s1 <- haven::labelled(c("M", "M", "F"), c(Male = "M", Female = "F"), "Gender")
   exp <- factor(c("Male", "Male", "Female"), levels = c("Male", "Female")) %>%
@@ -77,6 +97,21 @@ testthat::test_that("all labels are preserved when using a non-haven_labelled nu
   testthat::expect_equal(make_factor(s1), exp)
 })
 
+test_that("converts tagged NAs", {
+  s1 <- haven::labelled(
+    c(1:2, haven::tagged_na("a")), 
+    c("Orange" = 1, "Blue" = 2, "Apple" = haven::tagged_na("a")),
+  )
+  exp <- factor(c("Orange", "Blue", "Apple"), levels = c("Orange", "Blue", "Apple")) %>% 
+    structure(
+      transformation = "Converted 's1' into a factor based on its value labels",
+      label = "s1"
+    )
+  expect_equal(make_factor(s1), exp)
+})
+
+# Without labels --------------------------------------------------------------
+
 #### CHARACTER VECTORS WITHOUT VALUE LABELS
 
 testthat::test_that("convert to factor, add transformation and label attributes", {
@@ -101,8 +136,41 @@ testthat::test_that("convert to factor, add transformation and keep label attrib
 
 testthat::test_that("should force s1 to a factor", {
   s1 <- c(0, 1, 2)
-  testthat::expect_snapshot(make_factor(s1, force = TRUE))
+  testthat::expect_warning(make_factor(s1))
+
+  exp <- as.factor(c(0, 1, 2)) %>% 
+    structure(
+      label = "s1",
+      transformation = "Converted 's1' from a numeric vector to a factor"
+    )
+  testthat::expect_equal(suppressWarnings(make_factor(s1)), exp)
 })
+
+
+
+testthat::test_that("should force s1 to a factor", {
+  s1 <- c(0, 1, 2)
+  attr(s1, "label") <- "Label"
+
+  exp <- as.factor(c(0, 1, 2)) %>% 
+    structure(
+      label = "Label",
+      transformation = "Converted 's1' from a numeric vector to a factor"
+    )
+  testthat::expect_equal(suppressWarnings(make_factor(s1)), exp)
+})
+
+#### FACTOR VECTORS
+
+testthat::test_that("add label attribute to factor without one", {
+  s1 <- factor(letters, levels = letters)
+  exp <- structure(
+    factor(letters, levels = letters),
+    label = "s1"
+  )
+  testthat::expect_equal(make_factor(s1), exp)
+})
+
 
 
 
@@ -120,7 +188,10 @@ testthat::test_that("return error when some values are missing labels- character
   testthat::expect_error(make_factor(s1), "Each value in `x` must have value labels")
 })
 
-
+testthat::test_that("return error when numeric and force is FALSE", {
+  s1 <- c(1, 2, 3, 4)
+  testthat::expect_error(make_factor(s1, force = FALSE), "The vector provided in `x` does not have value labels.")
+})
 
 
 

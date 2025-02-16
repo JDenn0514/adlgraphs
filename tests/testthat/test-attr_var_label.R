@@ -33,7 +33,7 @@ testthat::test_that("check a vector without a label and use NA", {
   top <- sample(c(1:2), 5, replace = TRUE)
 
   testthat::expect_equal(
-    attr_var_label(top, use_name = FALSE), NA
+    attr_var_label(top, if_null = "NA"), NA
   )
 })
 
@@ -41,7 +41,7 @@ testthat::test_that("check a vector without a label and use the anme", {
   top <- sample(c(1:2), 5, replace = TRUE)
 
   testthat::expect_equal(
-    attr_var_label(top, use_name = TRUE), `top`
+    attr_var_label(top, if_null = "name"), `top`
   )
 })
 
@@ -56,25 +56,25 @@ testthat::test_that("check a dataset where some variables have labels and some d
 
   # check with NAs
   testthat::expect_equal(
-    attr_var_label(df),
+    attr_var_label(df, if_null = "NA"),
     c(x = "Variable label X", y = NA, z = "Variable label Z")
   )
 
   # check with names
   testthat::expect_equal(
-    attr_var_label(df, use_name = TRUE),
+    attr_var_label(df, if_null = "name"),
     c(x = "Variable label X", y = "y", z = "Variable label Z")
   )
 
   # don't unlist the data and use NAs
   testthat::expect_equal(
-    attr_var_label(df, unlist = FALSE),
+    attr_var_label(df, unlist = FALSE, if_null = "NA"),
     list(x = "Variable label X", y = NA, z = "Variable label Z")
   )
 
   # don't unlist the data and use names
   testthat::expect_equal(
-    attr_var_label(df, unlist = FALSE, use_name = TRUE),
+    attr_var_label(df, unlist = FALSE, if_null = "name"),
     list(x = "Variable label X", y = "y", z = "Variable label Z")
   )
 

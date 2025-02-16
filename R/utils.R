@@ -572,3 +572,36 @@ reflect_density <- function(dens, bounds, from, to) {
 n_missing <- function(x) {
   sum(is.na(x) | is.null(x))
 }
+
+
+# from the haven package
+replace_with <- function(x, from, to) {
+  stopifnot(length(from) == length(to))
+
+  if (is.numeric(x)) {
+    x <- as.numeric(x)
+  } else if (is.character(x)) {
+    x <- as.character(x)
+  }
+
+  out <- x
+  # First replace regular values
+  matches <- match(x, from, incomparables = NA)
+  if (anyNA(matches)) {
+    out[!is.na(matches)] <- to[matches[!is.na(matches)]]
+  } else {
+    out <- to[matches]
+  }
+
+  # Then tagged missing values
+  tagged <- haven::is_tagged_na(x)
+  if (!any(tagged)) {
+    return(out)
+  }
+
+  matches <- match(haven::na_tag(x), haven::na_tag(from), incomparables = NA)
+
+  # Could possibly be faster to use anyNA(matches)
+  out[!is.na(matches)] <- to[matches[!is.na(matches)]]
+  out
+}

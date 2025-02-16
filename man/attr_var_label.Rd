@@ -4,7 +4,7 @@
 \alias{attr_var_label}
 \title{Get variable label}
 \usage{
-attr_var_label(x, data, unlist, use_name = FALSE)
+attr_var_label(x, data, unlist, if_null = NULL)
 }
 \arguments{
 \item{x}{A vector object, the name of a column in a \code{data.frame}, or an
@@ -16,9 +16,15 @@ when \code{x} is only the name of a column in a \code{data.frame}.}
 \item{unlist}{Logical. If \code{TRUE}, the default, returns a named vector. If
 \code{FALSE}, returns a list. This only works when \code{x} is a \code{data.frame}}
 
-\item{use_name}{Logical. If there is no variable label, determines what
-the function will return. If \code{TRUE}, returns the variable name. If
-\code{FALSE}, returns an NA}
+\item{if_null}{String. This determines what to return should there be no
+variable label. There are three options:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{- `NULL` - This is the default. Will return `NULL`
+
+- "name" - This returns the variable name
+
+- "NA" - This returns an `NA` value
+}\if{html}{\out{</div>}}}
 }
 \value{
 If \code{x} is a variable or vector, a string containing the "label"
@@ -42,7 +48,7 @@ attr_var_label(test_data)
 attr_var_label(test_data, unlist = FALSE)
 
 # now let's do it on a variable without a label
-top <- sample(c(1:3), 10 replace = TRUE)
+top <- sample(c(1:3), 10, replace = TRUE)
 # if no label is present and use_name is TRUE, it will use the variable name
 attr_var_label(top, use_name = TRUE)
 # if it's set to false it will give NA

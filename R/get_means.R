@@ -74,8 +74,8 @@ get_means <- function(
   conf_level = 0.95
 ) {
   
-  # TODO: Possibly change this to rlang::enexpr()
-  x_name <- deparse(substitute(x))
+  x_name <- rlang::enexpr(x)
+
   # Ensure x is a string
   x <- rlang::as_name(rlang::ensym(x))
 
@@ -134,10 +134,10 @@ get_means <- function(
     ) %>% 
     dplyr::mutate(
       # calculate std.error
-      std.error = sd / sqrt(n),
+      std.error = sd / sqrt(n), 
       # calculate the confidence invtervals
-      conf.low = mean - qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
-      conf.high = mean + qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      conf.low = mean - qt(1 - ((1 - conf_level) / 2), n - 1) * std.error,
+      conf.high = mean + qt(1 - ((1 - conf_level) / 2), n - 1) * std.error,
       # convert all group variables to a factor
       dplyr::across(
         # run the function over the variables in group_names
@@ -179,10 +179,10 @@ get_means <- function(
 
     # add the variable name of x as an attribute called
     # variable_label to the output dataframe
-    attr(out, "variable_label") <- x_name
+    attr(out, "variable_label") <- x
     # add the variable name of x as an attribute called
     # variable_name to the output dataframe    
-    attr(out, "variable_name") <- x_name
+    attr(out, "variable_name") <- x
 
   }
 

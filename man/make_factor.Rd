@@ -16,10 +16,6 @@ make_factor(
 \arguments{
 \item{x}{A vector with value labels. Can be numeric, character, or a factor}
 
-\item{levels}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} You can supply levels to be
-used if the vector is a character or factor. It is not clear how this will fit
-in with the rest of the function so you might get weird results at first.}
-
 \item{ordered}{Logical. Determines if the factor be ordered. Defaults to \code{TRUE.}}
 
 \item{drop_levels}{Logical. Determines if unused factor levels should be dropped.
@@ -57,13 +53,6 @@ simpler. Similarly,
 also enables more customization over the output of the labels. Another key
 difference between this function and those is that if there are values without
 labels, this function returns an error.
-
-#' @section Lifecycle:
-The \code{levels} argument in \code{make_factor()} has not been fully developed yet.
-Currently, it only allows you to specify the levels on a character or
-factor vector without value labels. If you try using it for anything else
-it will not work. At some point, I would like to fully implement it though
-so that you can specify the levels yourself, kind of like with \code{factor()}.
 }
 \examples{
 

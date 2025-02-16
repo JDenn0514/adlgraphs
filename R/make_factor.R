@@ -25,18 +25,8 @@
 #' difference between this function and those is that if there are values without
 #' labels, this function returns an error.
 #' 
-#' #' @section Lifecycle:
-#' The `levels` argument in `make_factor()` has not been fully developed yet. 
-#' Currently, it only allows you to specify the levels on a character or 
-#' factor vector without value labels. If you try using it for anything else
-#' it will not work. At some point, I would like to fully implement it though 
-#' so that you can specify the levels yourself, kind of like with `factor()`.
-#' 
 #'
 #' @param x A vector with value labels. Can be numeric, character, or a factor
-#' @param levels `r lifecycle::badge("experimental")` You can supply levels to be 
-#'   used if the vector is a character or factor. It is not clear how this will fit 
-#'   in with the rest of the function so you might get weird results at first.
 #' @param ordered Logical. Determines if the factor be ordered. Defaults to `TRUE.`
 #' @param drop_levels Logical. Determines if unused factor levels should be dropped.
 #'   Defaults to `TRUE.`
@@ -66,7 +56,7 @@
 #' @export
 make_factor <- function(x, levels = NULL, ordered = FALSE, drop_levels = TRUE, force = TRUE, na.rm = FALSE) {
   # get the variable's name as a string
-  x_name <- deparse(substitute(x))
+  x_name <- rlang::as_name(rlang::ensym(x))
 
   # Get the variable label (assumes attr_var_label function exists)
   variable_label <- attr_var_label(x)
@@ -80,76 +70,28 @@ make_factor <- function(x, levels = NULL, ordered = FALSE, drop_levels = TRUE, f
     if (is.factor(x)) {
       # if it's a factor
 
-      if (!missing(levels) && !is.null(levels)) {
-        # if levels is not missing nor is it null
-
-        # set x to a factor with the new levels
-        x <- factor(x, levels = levels)
-        # get the levels
-        lvls_names <- paste(levels, collapse = ", ")
-        # set the transformation attribute
-        attr(x, "transformation") <- paste0("Updated '", x_name, "' to have levels: '", lvls_names, "'", sep = "")
-
-        if (is.null(variable_label)) {
-          # if variabel label is null use the x_name
-          attr(x, "label") <- x_name
-        } else {
-          # otherwise set the label with variable_label
-          attr(x, "label") <- variable_label
-        }
-        
-        return(x)
-
-      } else {
-        # if not, just return x
-        if (is.null(variable_label)) attr(x, "label") <- x_name
-        return(x)
-
-      } 
+      # if not, just return x
+      if (is.null(variable_label)) attr(x, "label") <- x_name
+      return(x)
  
     } else if (is.character(x)) {
-
-      # if it is a character vector
-      if (!missing(levels) && !is.null(levels)) {
-        # if levels is not missing nor is it null
-
-        # set x to a factor with the new levels
-        x <- factor(x, levels = levels)
-        # get the levels
-        lvls_names <- paste(levels, collapse = ", ")
-        # set the transformation attribute
-        attr(x, "transformation") <- paste0("Updated '", x_name, "' to have levels: '", lvls_names, "'", sep = "")
-
-        # set the label attribute
-        if (is.null(variable_label)) {
-          # if variabel label is null use the x_name
-          attr(x, "label") <- x_name
-        } else {
-          # otherwise set the label with variable_label
-          attr(x, "label") <- variable_label
-        }
-        
-        return(x)
-
-      } else {
         # if its a character without levels, just convert to a factor
 
-        x <- factor(x)
-
-        attr(x, "transformation") <- paste0("Updated '", x_name, "' from a character vector to a factor")
-        
-        # set the label attribute
-        if (is.null(variable_label)) {
-          # if variabel label is null use the x_name
-          attr(x, "label") <- x_name
-        } else {
-          # otherwise set the label with variable_label
-          attr(x, "label") <- variable_label
-        }
-        
-
-        return(x)
+      # convert to a factor
+      x <- factor(x)
+      # add transformation attribute
+      attr(x, "transformation") <- paste0("Updated '", x_name, "' from a character vector to a factor")
+      
+      # set the label attribute
+      if (is.null(variable_label)) {
+        # if variabel label is null use the x_name
+        attr(x, "label") <- x_name
+      } else {
+        # otherwise set the label with variable_label
+        attr(x, "label") <- variable_label
       }
+      
+      return(x)
       
     } else if (is.numeric(x) && isTRUE(force)) {
       # if x is numeric and force = TRUE, force to a factor and return warning
@@ -237,33 +179,4 @@ make_factor <- function(x, levels = NULL, ordered = FALSE, drop_levels = TRUE, f
 
 
 
-replace_with <- function(x, from, to) {
-  stopifnot(length(from) == length(to))
 
-  if (is.numeric(x)) {
-    x <- as.numeric(x)
-  } else if (is.character(x)) {
-    x <- as.character(x)
-  }
-
-  out <- x
-  # First replace regular values
-  matches <- match(x, from, incomparables = NA)
-  if (anyNA(matches)) {
-    out[!is.na(matches)] <- to[matches[!is.na(matches)]]
-  } else {
-    out <- to[matches]
-  }
-
-  # Then tagged missing values
-  tagged <- haven::is_tagged_na(x)
-  if (!any(tagged)) {
-    return(out)
-  }
-
-  matches <- match(haven::na_tag(x), haven::na_tag(from), incomparables = NA)
-
-  # Could possibly be faster to use anyNA(matches)
-  out[!is.na(matches)] <- to[matches[!is.na(matches)]]
-  out
-}

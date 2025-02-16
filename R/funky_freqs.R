@@ -77,12 +77,33 @@ funky_freqs <- function(
 
   # if na.rm is TRUE remove NAs from all columns in data
   if (na.rm) data <- data[stats::complete.cases(data),]
-  
-  # convert the x and group_names to factors before the analysis to preserve NA tags
-  data[,c(x, group_names)] <- lapply(
-    data[,c(x, group_names)], 
-    \(y) make_factor(y, drop_levels = TRUE, force = TRUE, na.rm = na.rm)
-  )
+
+  # Get the value labels (assumes attr_val_labels function exists)
+  value_labels <- attr_val_labels(data[[x]])
+
+  # Get sorted labels and unique values
+  if (is.numeric(data[[x]])) {
+    labs <- sort(as.numeric(value_labels))
+    vals <- sort(unique(as.numeric(data[[x]])))
+  } else {
+    labs <- sort(as.character(value_labels))
+    vals <- sort(unique(as.character(x)))
+  }
+
+  # If the values don't match the labels, don't make into a factor
+  if (!all(vals %in% labs)) {
+    # convert the group_names to factors before the analysis to preserve NA tags
+    data[,c(group_names)] <- lapply(
+      data[,c(group_names)], 
+      \(y) make_factor(y, drop_levels = TRUE, force = TRUE, na.rm = na.rm)
+    )
+  } else {
+    # convert the x and group_names to factors before the analysis to preserve NA tags
+    data[,c(x, group_names)] <- lapply(
+      data[,c(x, group_names)], 
+      \(y) make_factor(y, drop_levels = TRUE, force = TRUE, na.rm = na.rm)
+    )
+  }
 
   if (!missing(group) && !is.null(group_names)) {
     # if the group arg is not missing, apply grouping based on group_names

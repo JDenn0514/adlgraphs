@@ -1,297 +1,431 @@
 
-# # check to make sure output is correct ----------------------
-# testthat::test_that("expect outputs to be equal for mean with just x", {
+# check to make sure output is correct ----------------------
+testthat::test_that("expect outputs to be equal for mean with x, no groups and no wts", {
 
-#   # manually calculate the mean
-#   mean_x <- test_data %>%
-#     dplyr::summarise(
-#       # calculate the weighted n
-#       n = sum(wts, na.rm = TRUE), 
-#       # calculate the mean (weighted sum / n)
-#       mean = sum(trad_n * wts, na.rm = TRUE) / n,
-#       # calculate the weighted sd
-#       sd = sqrt(sum(wts * (trad_n - mean)^2, na.rm = TRUE) / n),
-#       # remove the groups
-#       .groups = "drop"
-#     ) %>% 
-#     dplyr::mutate(
-#       # calculate std.error
-#       std.error = sd / sqrt(n),
-#       # calculate the confidence invtervals
-#       conf.low = mean - qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
-#       conf.high = mean + qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
-#       # convert all group variables to a factor
-#       dplyr::across(
-#         # run the function over the variables in group_names
-#         tidyselect::all_of(group_names),
-#         # convert to a factor, removing levels, forcing to factor, and keeping NA as NA
-#         ~ make_factor(.x, drop_levels = TRUE, force = TRUE, na.rm = TRUE)
-#       ),
-#       # round all numeric columns 
-#       dplyr::across(
-#         dplyr::where(is.numeric),
-#         ~round(.x, decimals)
-#       )
-#     ) %>% 
-#     # keep only relevant variables and reorder them
-#     dplyr::select(c(tidyselect::all_of(group_names), mean, sd, n, conf.low, conf.high))
+  mean_x <- data.frame(
+    mean = 4.22,
+    sd = 3.872,
+    n = 250,
+    conf.low = 3.738,
+    conf.high = 4.702
+  )
 
-#   # add a variable for the n variable
-#   attr(mean_x$n, "label") <- "N"
-#   # add a variable label for the mean variable
-#   attr(mean_x$mean, "label") <- "Mean"
-#   # add a variable label for the mean variable
-#   attr(mean_x$sd, "label") <- "SD"
-#   # add a variable label for the mean variable
-#   attr(out$conf.low, "label") <- "Low CI"
-#   # add a variable label for the mean variable
-#   attr(out$conf.high, "label") <- "High CI"
+  # add a variable for the n variable
+  attr(mean_x$n, "label") <- "N"
+  # add a variable label for the mean variable
+  attr(mean_x$mean, "label") <- "Mean"
+  # add a variable label for the mean variable
+  attr(mean_x$sd, "label") <- "SD"
+  # add a variable label for the mean variable
+  attr(mean_x$conf.low, "label") <- "Low CI"
+  # add a variable label for the mean variable
+  attr(mean_x$conf.high, "label") <- "High CI"
 
-#   # test without quotes
-#   testthat::expect_equal(
-#     mean_x,
-#     test_data %>% get_means(trad_n)
-#   )
-#   # test with quotes
-#   testthat::expect_equal(
-#     mean_x,
-#     test_data %>% get_means("trad_n")
-#   )
-# })
+  class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
 
-# testthat::test_that("expect outputs to be equal for mean with just x and wts", {
+  attr(mean_x, "variable_label") <- "ADL Index"
+  attr(mean_x, "variable_name") <- "trad_n" 
 
-#   # manually calculate the mean
-#   mean_x <- test_data %>%
-#     dplyr::summarise(
-#       # calculate the mean
-#       mean = weighted.mean(trad_n, wts, na.rm = TRUE),
-#       # calculate the standard deviation
-#       sd = sd(trad_n, na.rm = TRUE),
-#       # get the number of respondents
-#       n = dplyr::n()
-#     ) %>%
-#     dplyr::mutate(
-#       # calculate the standard error
-#       std.error = sd/sqrt(n),
-#       # calculate the lower CI
-#       conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-#       # calculate the higher CI
-#       conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-#       # round all of the numbers to the second decimal
-#       dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-#     ) %>% dplyr::select(-std.error)
+  # test without quotes
+  testthat::expect_equal(
+    mean_x,
+    test_data %>% get_means(trad_n)
+  )
+  # test with quotes
+  testthat::expect_equal(
+    mean_x,
+    test_data %>% get_means("trad_n")
+  )
+})
 
-#   # test without quotes
-#   testthat::expect_equal(
-#     mean_x,
-#     test_data %>% get_means(trad_n, wt = wts)
-#   )
-#   # test with quotes
-#   testthat::expect_equal(
-#     mean_x,
-#     test_data %>% get_means("trad_n", wt = "wts")
-#   )
-# })
+testthat::test_that("expect outputs to be equal for mean with x, no groups and no wts", {
 
-# testthat::test_that("expect outputs to be equal for mean with a factor grouping variable", {
+  mean_x <- data.frame(
+    mean = 4.22,
+    sd = 3.872,
+    n = 250,
+    conf.low = 3.738,
+    conf.high = 4.702
+  )
 
-#   # manually calculate the mean
-#   mean_x <- test_data %>%
-#     dplyr::group_by(edu_f) %>%
-#     dplyr::summarise(
-#       # calculate the mean
-#       mean = mean(trad_n,  na.rm = TRUE),
-#       # calculate the standard deviation
-#       sd = sd(trad_n, na.rm = TRUE),
-#       # get the number of respondents
-#       n = dplyr::n()
-#     ) %>%
-#     dplyr::mutate(
-#       # calculate the standard error
-#       std.error = sd/sqrt(n),
-#       # calculate the lower CI
-#       conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-#       # calculate the higher CI
-#       conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-#       # round all of the numbers to the second decimal
-#       dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-#     ) %>% dplyr::select(-std.error)
+  # add a variable for the n variable
+  attr(mean_x$n, "label") <- "N"
+  # add a variable label for the mean variable
+  attr(mean_x$mean, "label") <- "Mean"
+  # add a variable label for the mean variable
+  attr(mean_x$sd, "label") <- "SD"
+  # add a variable label for the mean variable
+  attr(mean_x$conf.low, "label") <- "Low CI"
+  # add a variable label for the mean variable
+  attr(mean_x$conf.high, "label") <- "High CI"
 
-#   # test without quotes
-#   testthat::expect_equal(
-#     mean_x,
-#     test_data %>% get_means(trad_n, edu_f)
-#   )
-#   # test with quotes
-#   testthat::expect_equal(
-#     mean_x,
-#     test_data %>% get_means("trad_n", "edu_f")
-#   )
+  class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
 
-# })
+  attr(mean_x, "variable_label") <- "trad_n"
+  attr(mean_x, "variable_name") <- "trad_n"
 
-# testthat::test_that("expect outputs to be equal for mean with a labelled grouping variable", {
+  test_data$trad_n <- as.numeric(test_data$trad_n)
 
-#   # manually calculate the mean
-#   mean_x <- test_data %>%
-#     dplyr::mutate(top = make_factor(top)) %>%
-#     dplyr::group_by(top) %>%
-#     dplyr::summarise(
-#       # calculate the mean
-#       mean = mean(trad_n,  na.rm = TRUE),
-#       # calculate the standard deviation
-#       sd = sd(trad_n, na.rm = TRUE),
-#       # get the number of respondents
-#       n = dplyr::n()
-#     ) %>%
-#     dplyr::mutate(
-#       # calculate the standard error
-#       std.error = sd/sqrt(n),
-#       # calculate the lower CI
-#       conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-#       # calculate the higher CI
-#       conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-#       # round all of the numbers to the second decimal
-#       dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-#     ) %>% dplyr::select(-std.error)
+  # test without quotes
+  testthat::expect_equal(
+    mean_x,
+    test_data %>% get_means(trad_n)
+  )
+  # test with quotes
+  testthat::expect_equal(
+    mean_x,
+    test_data %>% get_means("trad_n")
+  )
+})
 
-#   # remove transformation attribute
-#   attr(mean_x$top, "transformation") <- NULL
+testthat::test_that("expect outputs to be equal when ci is 0.9", {
 
-#   ### Test without quotes
-#   # get the means for the test
-#   test <- test_data %>% get_means(trad_n, top)
-#   # remove the transformation attribute
-#   attr(test$top, "transformation") <- NULL
+  mean_x <- data.frame(
+    mean = 3.973,
+    sd = 3.757,
+    n = 245.115,
+    conf.low = 3.577,
+    conf.high = 4.369
+  )
 
-#   # test them
-#   testthat::expect_equal(
-#     mean_x,
-#     test
-#   )
+  # add a variable for the n variable
+  attr(mean_x$n, "label") <- "N"
+  # add a variable label for the mean variable
+  attr(mean_x$mean, "label") <- "Mean"
+  # add a variable label for the mean variable
+  attr(mean_x$sd, "label") <- "SD"
+  # add a variable label for the mean variable
+  attr(mean_x$conf.low, "label") <- "Low CI"
+  # add a variable label for the mean variable
+  attr(mean_x$conf.high, "label") <- "High CI"
+
+  class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
+
+  attr(mean_x, "variable_label") <- "ADL Index"
+  attr(mean_x, "variable_name") <- "trad_n" 
+
+  # test without quotes
+  testthat::expect_equal(
+    mean_x,
+    test_data %>% get_means(trad_n, wt = wts, conf_level = 0.9)
+  )
+  # test with quotes
+  testthat::expect_equal(
+    mean_x,
+    test_data %>% get_means("trad_n", wt = "wts", conf_level = 0.9)
+  )
+})
 
 
-#   ### test with quotes
-#   # get the means for the test
-#   test <- test_data %>% get_means("trad_n", "top")
-#   # remove transformation attribute
-#   attr(test$top, "transformation") <- NULL
-#   # test them
-#   testthat::expect_equal(
-#     mean_x,
-#     test
-#   )
+testthat::test_that("expect outputs to be equal when decimals is 2", {
 
-# })
+  mean_x <- data.frame(
+    mean = 3.97,
+    sd = 3.76,
+    n = 245.11,
+    conf.low = 3.5,
+    conf.high = 4.45
+  )
 
-# testthat::test_that("expect outputs to be equal for mean with a factor grouping variable and wts", {
+  # add a variable for the n variable
+  attr(mean_x$n, "label") <- "N"
+  # add a variable label for the mean variable
+  attr(mean_x$mean, "label") <- "Mean"
+  # add a variable label for the mean variable
+  attr(mean_x$sd, "label") <- "SD"
+  # add a variable label for the mean variable
+  attr(mean_x$conf.low, "label") <- "Low CI"
+  # add a variable label for the mean variable
+  attr(mean_x$conf.high, "label") <- "High CI"
 
-#   # manually calculate the mean
-#   mean_x <- test_data %>%
-#     dplyr::group_by(edu_f) %>%
-#     dplyr::summarise(
-#       # calculate the mean
-#       mean = weighted.mean(trad_n, wts, na.rm = TRUE),
-#       # calculate the standard deviation
-#       sd = sd(trad_n, na.rm = TRUE),
-#       # get the number of respondents
-#       n = dplyr::n()
-#     ) %>%
-#     dplyr::mutate(
-#       # calculate the standard error
-#       std.error = sd/sqrt(n),
-#       # calculate the lower CI
-#       conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-#       # calculate the higher CI
-#       conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-#       # round all of the numbers to the second decimal
-#       dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-#     ) %>% dplyr::select(-std.error)
+  class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
 
-#   # test without quotes
-#   testthat::expect_equal(
-#     mean_x,
-#     test_data %>% get_means(trad_n, edu_f, wt = wts)
-#   )
-#   # test with quotes
-#   testthat::expect_equal(
-#     mean_x,
-#     test_data %>% get_means("trad_n", "edu_f", wt = "wts")
-#   )
-# })
+  attr(mean_x, "variable_label") <- "ADL Index"
+  attr(mean_x, "variable_name") <- "trad_n" 
 
-# testthat::test_that("expect outputs to be equal for mean with a labelled group variable and wts", {
+  # test without quotes
+  testthat::expect_equal(
+    mean_x,
+    test_data %>% get_means(trad_n, wt = wts, decimals = 2)
+  )
+  # test with quotes
+  testthat::expect_equal(
+    mean_x,
+    test_data %>% get_means("trad_n", wt = "wts", decimals = 2)
+  )
+})
 
-#   # manually calculate the mean
-#   mean_x <- test_data %>%
-#     dplyr::mutate(top = haven::as_factor(top)) %>%
-#     dplyr::group_by(top) %>%
-#     dplyr::summarise(
-#     # calculate the mean
-#     mean = weighted.mean(trad_n, wts, na.rm = TRUE),
-#     # calculate the standard deviation
-#     sd = sd(trad_n, na.rm = TRUE),
-#     # get the number of respondents
-#     n = dplyr::n()
-#   ) %>%
-#     dplyr::mutate(
-#       # calculate the standard error
-#       std.error = sd/sqrt(n),
-#       # calculate the lower CI
-#       conf.low = mean - qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-#       # calculate the higher CI
-#       conf.high = mean + qt(1 - ((1 - 0.95) / 2),  n - 1) * std.error,
-#       # round all of the numbers to the second decimal
-#       dplyr::across(dplyr::where(is.numeric), ~round(.x, 2))
-#     ) %>% dplyr::select(-std.error)
+testthat::test_that("expect outputs to be equal for mean with x, no groups and wts", {
 
-#   # remove transformation attribute
-#   attr(mean_x$top, "transformation") <- NULL
+  mean_x <- data.frame(
+    mean = 3.973,
+    sd = 3.757,
+    n = 245.115,
+    conf.low = 3.501,
+    conf.high = 4.446
+  )
 
-#   ### Test without quotes
-#   # get the means for the test
-#   test <- test_data %>% get_means(x = trad_n, group = top, wt = wts)
-#   # remove the transformation attribute
-#   attr(test$top, "transformation") <- NULL
+  # add a variable for the n variable
+  attr(mean_x$n, "label") <- "N"
+  # add a variable label for the mean variable
+  attr(mean_x$mean, "label") <- "Mean"
+  # add a variable label for the mean variable
+  attr(mean_x$sd, "label") <- "SD"
+  # add a variable label for the mean variable
+  attr(mean_x$conf.low, "label") <- "Low CI"
+  # add a variable label for the mean variable
+  attr(mean_x$conf.high, "label") <- "High CI"
 
-#   # test them
-#   testthat::expect_equal(
-#     mean_x,
-#     test
-#   )
+  class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
+
+  attr(mean_x, "variable_label") <- "ADL Index"
+  attr(mean_x, "variable_name") <- "trad_n" 
+
+  # test without quotes
+  testthat::expect_equal(
+    mean_x,
+    test_data %>% get_means(trad_n, wt = wts)
+  )
+  # test with quotes
+  testthat::expect_equal(
+    mean_x,
+    test_data %>% get_means("trad_n", wt = "wts")
+  )
+})
+
+testthat::test_that("expect outputs to be equal for mean with x, one group and wts", {
+
+  # manually calculate the mean
+  mean_x <- test_data %>%
+    group_by(edu_f2) %>% 
+    dplyr::summarise(
+      # calculate the weighted n
+      n = sum(wts, na.rm = TRUE), 
+      # calculate the mean (weighted sum / n)
+      mean = sum(trad_n * wts, na.rm = TRUE) / n,
+      # calculate the weighted sd
+      sd = sqrt(sum(wts * (trad_n - mean)^2, na.rm = TRUE) / n),
+      # remove the groups
+      .groups = "drop"
+    ) %>% 
+    dplyr::mutate(
+      # calculate std.error
+      std.error = sd / sqrt(n),
+      # calculate the confidence invtervals
+      conf.low = mean - qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      conf.high = mean + qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      # convert all group variables to a factor
+      dplyr::across(
+        # run the function over the variables in group_names
+        c(edu_f2),
+        # convert to a factor, removing levels, forcing to factor, and keeping NA as NA
+        ~ make_factor(.x, drop_levels = TRUE, force = TRUE, na.rm = TRUE)
+      ),
+      # round all numeric columns 
+      dplyr::across(
+        dplyr::where(is.numeric),
+        ~round(.x, 3)
+      )
+    ) %>% 
+    # keep only relevant variables and reorder them
+    dplyr::select(c(edu_f2, mean, sd, n, conf.low, conf.high))
+
+  # add a variable for the n variable
+  attr(mean_x$n, "label") <- "N"
+  # add a variable label for the mean variable
+  attr(mean_x$mean, "label") <- "Mean"
+  # add a variable label for the mean variable
+  attr(mean_x$sd, "label") <- "SD"
+  # add a variable label for the mean variable
+  attr(mean_x$conf.low, "label") <- "Low CI"
+  # add a variable label for the mean variable
+  attr(mean_x$conf.high, "label") <- "High CI"
+
+  class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
+
+  attr(mean_x, "group_names") <- c("edu_f2")
+  attr(mean_x, "variable_label") <- "ADL Index"
+  attr(mean_x, "variable_name") <- "trad_n" 
+
+  # test without quotes
+  testthat::expect_equal(
+    mean_x,
+    test_data %>% get_means(trad_n, c(edu_f2), wt = wts)
+  )
+  # test with quotes
+  testthat::expect_equal(
+    mean_x,
+    test_data %>% get_means("trad_n", c("edu_f2"), wt = wts)
+  )
+})
 
 
-#   ### test with quotes
-#   # get the means for the test
-#   test <- test_data %>% get_means(x = "trad_n", group = "top", wt = "wts")
-#   # remove transformation attribute
-#   attr(test$top, "transformation") <- NULL
-#   # test them
-#   testthat::expect_equal(
-#     mean_x,
-#     test
-#   )
+testthat::test_that("expect outputs to be equal for mean with x, one group with NAs and wts", {
 
-# })
+  test_data$pid_f3_NA <- ifelse(test_data$pid_f3 == "Independent", NA, paste(test_data$pid_f3))
+
+  test_data <- test_data[c("trad_n", "pid_f3_NA", "wts")]
+  
+  # manually calculate the mean
+  mean_x <- test_data %>%
+    dplyr::group_by(pid_f3_NA) %>% 
+    dplyr::summarise(
+      # calculate the weighted n
+      n = sum(wts, na.rm = TRUE), 
+      # calculate the mean (weighted sum / n)
+      mean = sum(trad_n * wts, na.rm = TRUE) / n,
+      # calculate the weighted sd
+      sd = sqrt(sum(wts * (trad_n - mean)^2, na.rm = TRUE) / n),
+    ) %>% 
+    dplyr::mutate(
+      # calculate std.error
+      std.error = sd / sqrt(n),
+      # calculate the confidence invtervals
+      conf.low = mean - qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      conf.high = mean + qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      # convert all group variables to a factor
+      dplyr::across(
+        # run the function over the variables in group_names
+        c(pid_f3_NA),
+        # convert to a factor, removing levels, forcing to factor, and keeping NA as NA
+        ~ make_factor(.x, drop_levels = TRUE, force = TRUE, na.rm = TRUE)
+      ),
+      # round all numeric columns 
+      dplyr::across(
+        dplyr::where(is.numeric),
+        ~round(.x, 3)
+      )
+    )
+    # keep only relevant variables and reorder them
+  mean_x <- mean_x[c("pid_f3_NA", "mean", "sd", "n", "conf.low", "conf.high")]
+
+  # add a variable for the n variable
+  attr(mean_x$n, "label") <- "N"
+  # add a variable label for the mean variable
+  attr(mean_x$mean, "label") <- "Mean"
+  # add a variable label for the mean variable
+  attr(mean_x$sd, "label") <- "SD"
+  # add a variable label for the mean variable
+  attr(mean_x$conf.low, "label") <- "Low CI"
+  # add a variable label for the mean variable
+  attr(mean_x$conf.high, "label") <- "High CI"
+
+  class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
+
+  attr(mean_x, "group_names") <- c("pid_f3_NA")
+  attr(mean_x, "variable_label") <- "ADL Index"
+  attr(mean_x, "variable_name") <- "trad_n" 
+
+  # test with NAs
+  testthat::expect_equal(
+    mean_x,
+    test_data %>% get_means(trad_n, c(pid_f3_NA), wt = wts, na.rm = FALSE)
+  )
+  
+  # remove NAs from the group variables
+  mean_x <- mean_x[stats::complete.cases(mean_x),]
+  # test without NAs
+  testthat::expect_equal(
+    mean_x,
+    test_data %>% get_means(trad_n, c(pid_f3_NA), wt = wts)
+  )
+
+})
+
+# check to make sure output is correct ----------------------
+testthat::test_that("expect outputs to be equal for mean with x, two groups and wts", {
+
+  # manually calculate the mean
+  mean_x <- test_data %>%
+    group_by(edu_f2, pid_f3) %>% 
+    dplyr::summarise(
+      # calculate the weighted n
+      n = sum(wts, na.rm = TRUE), 
+      # calculate the mean (weighted sum / n)
+      mean = sum(trad_n * wts, na.rm = TRUE) / n,
+      # calculate the weighted sd
+      sd = sqrt(sum(wts * (trad_n - mean)^2, na.rm = TRUE) / n),
+      # remove the groups
+      .groups = "drop"
+    ) %>% 
+    dplyr::mutate(
+      # calculate std.error
+      std.error = sd / sqrt(n),
+      # calculate the confidence invtervals
+      conf.low = mean - qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      conf.high = mean + qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      # convert all group variables to a factor
+      dplyr::across(
+        # run the function over the variables in group_names
+        c(edu_f2, pid_f3),
+        # convert to a factor, removing levels, forcing to factor, and keeping NA as NA
+        ~ make_factor(.x, drop_levels = TRUE, force = TRUE, na.rm = TRUE)
+      ),
+      # round all numeric columns 
+      dplyr::across(
+        dplyr::where(is.numeric),
+        ~round(.x, 3)
+      )
+    ) %>% 
+    # keep only relevant variables and reorder them
+    dplyr::select(c(edu_f2, pid_f3, mean, sd, n, conf.low, conf.high))
+
+  # add a variable for the n variable
+  attr(mean_x$n, "label") <- "N"
+  # add a variable label for the mean variable
+  attr(mean_x$mean, "label") <- "Mean"
+  # add a variable label for the mean variable
+  attr(mean_x$sd, "label") <- "SD"
+  # add a variable label for the mean variable
+  attr(mean_x$conf.low, "label") <- "Low CI"
+  # add a variable label for the mean variable
+  attr(mean_x$conf.high, "label") <- "High CI"
+
+  class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
+
+  attr(mean_x, "group_names") <- c("edu_f2", "pid_f3")
+  attr(mean_x, "variable_label") <- "ADL Index"
+  attr(mean_x, "variable_name") <- "trad_n" 
+
+  # test without quotes
+  testthat::expect_equal(
+    mean_x,
+    test_data %>% get_means(trad_n, c(edu_f2, pid_f3), wt = wts)
+  )
+  # test with quotes
+  testthat::expect_equal(
+    mean_x,
+    test_data %>% get_means("trad_n", c("edu_f2", "pid_f3"), wt = wts)
+  )
+})
 
 
-# # check for no errors -----------------------------
-# testthat::test_that("Check x does not return error when numeric", {
 
-#   testthat::expect_no_error(test_data %>% get_means(trad_n))
-#   testthat::expect_no_error(test_data %>% get_means("trad_n"))
+# check for no errors -----------------------------
+testthat::test_that("Check x does not return error when group is numeric", {
 
-#   testthat::expect_no_error(test_data %>% get_means(accept_isr))
-#   testthat::expect_no_error(test_data %>% get_means("accept_isr"))
+  testthat::expect_no_error(test_data %>% get_means(trad_n))
+  testthat::expect_no_error(test_data %>% get_means("trad_n"))
 
-#   testthat::expect_no_error(test_data %>% get_means(trad_n, accept_isr))
-#   testthat::expect_no_error(test_data %>% get_means("trad_n", "accept_isr"))
+  testthat::expect_no_error(test_data %>% get_means(accept_isr))
+  testthat::expect_no_error(test_data %>% get_means("accept_isr"))
 
-#   testthat::expect_no_error(test_data %>% get_means(trad_n, accept_isr))
-#   testthat::expect_no_error(test_data %>% get_means("trad_n", "accept_isr"))
+  testthat::expect_no_error(test_data %>% get_means(trad_n, accept_isr))
+  testthat::expect_no_error(test_data %>% get_means("trad_n", "accept_isr"))
+
+  testthat::expect_no_error(test_data %>% get_means(trad_n, accept_isr))
+  testthat::expect_no_error(test_data %>% get_means("trad_n", "accept_isr"))
 
 
-# })
+})
+
+testthat::test_that("Check x returns error when x is not numeric", {
+
+  testthat::expect_error(test_data %>% get_means(edu_f2))
+  testthat::expect_error(test_data %>% get_means("edu_f2"))
+
+})
+
+
 
 
