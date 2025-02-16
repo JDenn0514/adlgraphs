@@ -55,8 +55,8 @@
 #'
 #' @export
 make_factor <- function(x, levels = NULL, ordered = FALSE, drop_levels = TRUE, force = TRUE, na.rm = FALSE) {
-  # get the variable's name as a string
-  x_name <- rlang::as_name(rlang::ensym(x))
+  # don't use rlang as that won't work when x is "data[[x]]"
+  x_name <- deparse(substitute(x))
 
   # Get the variable label (assumes attr_var_label function exists)
   variable_label <- attr_var_label(x)

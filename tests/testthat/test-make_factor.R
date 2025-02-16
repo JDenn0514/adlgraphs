@@ -171,7 +171,18 @@ testthat::test_that("add label attribute to factor without one", {
   testthat::expect_equal(make_factor(s1), exp)
 })
 
-
+testthat::test_that("Check a vector from a data set", {
+  x <- c(1, 2, 2, 1) %>% 
+    structure(labels = c("Yes" = 1, "No" = 2))
+  y <- factor(c("Yes", "No", "No", "Yes"), levels = c("Yes", "No")) %>% 
+    structure(
+      transformation = "Converted 'df[[\"x\"]]' into a factor based on its value labels",
+      label = 'df[[\"x\"]]'
+    )
+  df <- data.frame(x, y)
+  
+  testthat::expect_equal(make_factor(df[["x"]], drop_levels = TRUE), df$y)
+})
 
 
 
