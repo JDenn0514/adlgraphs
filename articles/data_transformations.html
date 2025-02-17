@@ -143,11 +143,11 @@ underlie the variable have reversed.</p>
 <span><span class="co">#&gt;    ..@ labels: Named num [1:4] 1 2 3 4</span></span>
 <span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly agree" "Somewhat agree" "Somewhat disagree" "Strongly disagree"</span></span>
 <span><span class="co">#&gt;    ..@ label : chr "I like the color blue"</span></span>
-<span><span class="co">#&gt;  $ blue_rev: dbl+lbl [1:20] 4, 2, 1, 2, 4, 3, 2, 2, 2, 1, 3, 4, 4, 4, 2, 1, 2, 4, 3, 3</span></span>
-<span><span class="co">#&gt;    ..@ labels        : Named num [1:4] 1 2 3 4</span></span>
-<span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly disagree" "Somewhat disagree" "Somewhat agree" "Strongly agree"</span></span>
-<span><span class="co">#&gt;    ..@ label         : chr "I like the color blue"</span></span>
-<span><span class="co">#&gt;    ..@ transformation: 'glue' chr "Reversing 'blue' while maintaining correct value labels"</span></span></code></pre></div>
+<span><span class="co">#&gt;  $ blue_rev: num [1:20] 4 2 1 2 4 3 2 2 2 1 ...</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "labels")= Named num [1:4] 1 2 3 4</span></span>
+<span><span class="co">#&gt;   .. ..- attr(*, "names")= chr [1:4] "Strongly disagree" "Somewhat disagree" "Somewhat agree" "Strongly agree"</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "label")= chr "I like the color blue"</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "transformation")= chr "Reversing 'blue' while maintaining correct value labels"</span></span></code></pre></div>
 <p>Conversely, if we wanted to show how much people dislike the color
 blue, we could show how many people disagree with the statement, however
 this is not as intuitive as simply showing agreement with a negative
@@ -168,11 +168,11 @@ are different, but their value labels are the same.</p>
 <span><span class="co">#&gt;    ..@ labels: Named num [1:4] 1 2 3 4</span></span>
 <span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly agree" "Somewhat agree" "Somewhat disagree" "Strongly disagree"</span></span>
 <span><span class="co">#&gt;    ..@ label : chr "I like the color blue"</span></span>
-<span><span class="co">#&gt;  $ blue_rev : dbl+lbl [1:20] 4, 2, 1, 2, 4, 3, 2, 2, 2, 1, 3, 4, 4, 4, 2, 1, 2, 4, 3, 3</span></span>
-<span><span class="co">#&gt;    ..@ labels        : Named num [1:4] 1 2 3 4</span></span>
-<span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly disagree" "Somewhat disagree" "Somewhat agree" "Strongly agree"</span></span>
-<span><span class="co">#&gt;    ..@ label         : chr "I like the color blue"</span></span>
-<span><span class="co">#&gt;    ..@ transformation: 'glue' chr "Reversing 'blue' while maintaining correct value labels"</span></span>
+<span><span class="co">#&gt;  $ blue_rev : num [1:20] 4 2 1 2 4 3 2 2 2 1 ...</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "labels")= Named num [1:4] 1 2 3 4</span></span>
+<span><span class="co">#&gt;   .. ..- attr(*, "names")= chr [1:4] "Strongly disagree" "Somewhat disagree" "Somewhat agree" "Strongly agree"</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "label")= chr "I like the color blue"</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "transformation")= chr "Reversing 'blue' while maintaining correct value labels"</span></span>
 <span><span class="co">#&gt;  $ blue_flip: int+lbl [1:20] 1, 3, 4, 3, 1, 2, 3, 3, 3, 4, 2, 1, 1, 1, 3, 4, 3, 1, 2, 2</span></span>
 <span><span class="co">#&gt;    ..@ labels        : Named num [1:4] 1 2 3 4</span></span>
 <span><span class="co">#&gt;    .. ..- attr(*, "names")= chr [1:4] "Strongly disagree" "Somewhat disagree" "Somewhat agree" "Strongly agree"</span></span>
