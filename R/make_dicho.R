@@ -125,7 +125,7 @@
 make_dicho <- function(x, flip_levels = FALSE) {
 
   # get the object's name
-  x_lab <- deparse(substitute(x))
+  x_name <- deparse(substitute(x))
 
   # get the variable lable
   variable_label <- attr_var_label(x)
@@ -148,7 +148,7 @@ make_dicho <- function(x, flip_levels = FALSE) {
     # if x is any other class return this error
     cli::cli_abort(
       c(
-        "`{x_lab}` must be a vector of class {.cls factor}, {.cls character}, {.cls haven_labelled}, or {.cls numeric} with value labels",
+        "`{x_name}` must be a vector of class {.cls factor}, {.cls character}, {.cls haven_labelled}, or {.cls numeric} with value labels",
         x = "You've supplied a {.cls {class(x)}} vector without value labels."
       )
     )
@@ -179,11 +179,11 @@ make_dicho <- function(x, flip_levels = FALSE) {
     lab <- unique(lvl_x_f2)[2]
 
     # change the factor levels
-    forcats::fct_relevel(x, lab) %>%
+    factor(x, levels = rev(lvl_x_f2)) %>% 
       # add new attributes
       structure(
-        # indicate that the original variable was converted to a dichotomous factor
-        transformation = glue::glue("Converting '{x_lab}' to a dichotomous factor and reordering the factor levels so that '{lab}' is the reference level"),
+        # set the transformation attribute
+        transformation = paste0("Converting '", x_name, "' to a dichotomous factor and reordering the factor levels so that '", lab, "' is the reference level"),
         # add the original variable label
         label = variable_label
       )
@@ -194,10 +194,10 @@ make_dicho <- function(x, flip_levels = FALSE) {
     lab <- unique(lvl_x_f2)[1]
 
     # add new attributes
-    forcats::fct_relevel(x, lab) %>%
+    factor(x, levels = lvl_x_f2) %>% 
       structure(
         # indicate that the original variable was converted to a dichotomous factor
-        transformation = glue::glue("Converting '{x_lab}' to a dichotomous factor with '{lab}' as the reference level"),
+        transformation = paste0("Converting '", x_name, "' to a dichotomous factor with '", lab, "' as the reference level"),
         # add the original variable label
         label = variable_label
       )

@@ -153,7 +153,24 @@ get_corr <- function(
 wtd_corr <- function(data, x, y,  wt, decimals = 3) {
 
   x <- rlang::as_name(rlang::ensym(x))
+
+  # Check if x is numeric
+  if (!is.numeric(data[[x]])) {
+    cli::cli_abort(c(
+      "`{x}` must be a numeric variable.",
+      x = "Supplied variable is {class(data[[x]])}."
+    ))
+  }
+
   y <- rlang::as_name(rlang::ensym(y))
+
+  # Check if x is numeric
+  if (!is.numeric(data[[y]])) {
+    cli::cli_abort(c(
+      "`{y}` must be a numeric variable.",
+      x = "Supplied variable is {class(data[[y]])}."
+    ))
+  }
 
   # get variable labels
   x_lab <- attr_var_label(data[[x]])
@@ -170,10 +187,23 @@ wtd_corr <- function(data, x, y,  wt, decimals = 3) {
   # Prepare weights
   if (missing(wt)) {
     wt <- "wts"
-    data[[wt]] <- rep(1, nrow(data))
+    data[[wt]] <- rep(1, length(data[[x]]))  
   } else {
+    # ensure that string or symbol are accepted in wt
     wt <- rlang::as_name(rlang::ensym(wt))
-    data[[wt]][is.na(data[[wt]])] <- 0
+
+    if (!is.numeric(data[[wt]])) {
+      # if it is not numeric then return an error
+      cli::cli_abort(c(
+        "`{wt}` must be a numeric variable.",
+        x = "Supplied variable is {class(data[[wt]])}."
+      ))
+
+    } else {
+      # if it is numeric, replace NAs with 0
+      data[[wt]][is.na(data[[wt]])] <- 0
+    }
+
   }
 
   data <- data[c(x, y, wt)]

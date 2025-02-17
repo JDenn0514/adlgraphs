@@ -105,7 +105,19 @@ get_means <- function(
   } else {
     # ensure that string or symbol are accepted in wt
     wt <- rlang::as_name(rlang::ensym(wt))
-    data[[wt]][is.na(data[[wt]])] <- 0
+
+    if (!is.numeric(data[[wt]])) {
+      # if it is not numeric then return an error
+      cli::cli_abort(c(
+        "`{wt}` must be a numeric variable.",
+        x = "Supplied variable is {class(data[[wt]])}."
+      ))
+
+    } else {
+      # if it is numeric, replace NAs with 0
+      data[[wt]][is.na(data[[wt]])] <- 0
+    }
+
   }
 
   # get the data

@@ -419,13 +419,19 @@ testthat::test_that("Check x does not return error when group is numeric", {
 
 })
 
-testthat::test_that("Check x returns error when x is not numeric", {
 
-  testthat::expect_error(test_data %>% get_means(edu_f2))
-  testthat::expect_error(test_data %>% get_means("edu_f2"))
+# check for errors from inputs -------------------------------------------
 
+testthat::test_that("error when x is not numeric", {
+  testthat::expect_snapshot(
+    get_means(test_data, pid_f3),
+    error = TRUE
+  )
 })
 
-
-
-
+testthat::test_that("error when wt is not numeric", {
+  testthat::expect_snapshot(
+    get_means(test_data, trad_n, wt = pid_f3),
+    error = TRUE
+  )
+})

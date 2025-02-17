@@ -114,7 +114,7 @@ get_diffs <- function(
   # Check for numeric x and reference level presence
   if (!is.numeric(data[[x]])) {
     cli::cli_abort(c(
-      "{.arg x} and must be of class `numeric`",
+      "{.arg x} must be of class `numeric`",
       "i" = "`{x_name}` is of class {class(data[[x]])}"
     ))
   }
@@ -122,10 +122,23 @@ get_diffs <- function(
   # Prepare weights
   if (missing(wt)) {
     wt <- "wts"
-    data[[wt]] <- rep(1, nrow(data))
+    data[[wt]] <- rep(1, length(data[[x]]))  
   } else {
+    # ensure that string or symbol are accepted in wt
     wt <- rlang::as_name(rlang::ensym(wt))
-    data[[wt]][is.na(data[[wt]])] <- 0
+
+    if (!is.numeric(data[[wt]])) {
+      # if it is not numeric then return an error
+      cli::cli_abort(c(
+        "`{wt}` must be a numeric variable.",
+        x = "Supplied variable is {class(data[[wt]])}."
+      ))
+
+    } else {
+      # if it is numeric, replace NAs with 0
+      data[[wt]][is.na(data[[wt]])] <- 0
+    }
+
   }
 
   # force the treats variable to a factor
@@ -139,24 +152,7 @@ get_diffs <- function(
 
   if (!is.null(group_names)) {
 
-    # split up the data frame using vec_split 
-    res <- vctrs::vec_split(
-      # the data frame to split, use setdiff to get the columns not in group_names
-      x = data[!names(data) %in% c(group_names)],
-      # split the data by the grouping variables
-      by = data[group_names]
-    )
-    # create a nested data frame based on the split data from res
-    nest_data <- vctrs::vec_cbind(
-      # this creates columns with the levels from the variables used to split the data
-      res$key, 
-      # this creates a new tibble from each combination of levels used to split the data
-      tibble::new_tibble(list(data = res$val))
-    )
-    # get the columns in group_names as a list and unname it
-    cols <- unname(as.list(nest_data[group_names]))
-    # using the list of columns, paste them together using rlang::exec and paste
-    nest_data$name <- rlang::exec(paste, !!!cols, sep = "_")
+    nest_data <- make_nested(data, {{ group_names }})
     
     # iterate over each nest tibble from 
     out <- purrr::map(

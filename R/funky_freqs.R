@@ -47,7 +47,7 @@ funky_freqs <- function(
 
   # ensure that string or symbol are accepted in x
   x <- rlang::as_name(rlang::ensym(x))
-  
+
   # get the variable label in x
   x_label <- attr_var_label(data[[x]])
 
@@ -69,7 +69,19 @@ funky_freqs <- function(
   } else {
     # ensure that string or symbol are accepted in wt
     wt <- rlang::as_name(rlang::ensym(wt))
-    data[[wt]][is.na(data[[wt]])] <- 0
+
+    if (!is.numeric(data[[wt]])) {
+      # if it is not numeric then return an error
+      cli::cli_abort(c(
+        "`{wt}` must be a numeric variable.",
+        x = "Supplied variable is {class(data[[wt]])}."
+      ))
+
+    } else {
+      # if it is numeric, replace NAs with 0
+      data[[wt]][is.na(data[[wt]])] <- 0
+    }
+
   }
   # subset the data with only relevant variables
   # this is so that when we remove NAs we are only doing it over the right variables
@@ -95,13 +107,13 @@ funky_freqs <- function(
     # convert the group_names to factors before the analysis to preserve NA tags
     data[,c(group_names)] <- lapply(
       data[,c(group_names)], 
-      \(y) make_factor(y, drop_levels = TRUE, force = TRUE, na.rm = na.rm)
+      \(y) make_factor(y, drop_levels = drop_zero, force = TRUE, na.rm = na.rm)
     )
   } else {
     # convert the x and group_names to factors before the analysis to preserve NA tags
     data[,c(x, group_names)] <- lapply(
       data[,c(x, group_names)], 
-      \(y) make_factor(y, drop_levels = TRUE, force = TRUE, na.rm = na.rm)
+      \(y) make_factor(y, drop_levels = drop_zero, force = TRUE, na.rm = na.rm)
     )
   }
 
@@ -113,7 +125,7 @@ funky_freqs <- function(
 
   out <- data %>% 
     # calculate the frequencies
-    dplyr::count(.data[[x]], wt = .data[[wt]]) %>% 
+    dplyr::count(.data[[x]], wt = .data[[wt]], .drop = drop_zero) %>% 
     # clean up the data
     dplyr::mutate(
       # use prop.table() to calculate percentage and round()
@@ -133,11 +145,6 @@ funky_freqs <- function(
     for (y in names(group_labels)) attr(out[[y]], "label") <- group_labels[[y]]
 
   }
-
-  
-
-  # if drop_zero is TRUE, remove any rows with 0
-  if (drop_zero) out <- out[out$n != 0,]
 
   if (!is.null(x_label)) {
     # if there is a variable label in the x variable
@@ -164,9 +171,10 @@ funky_freqs <- function(
   }
 
   # add an attribute containing the names of the grouping variables
-  attr(out, "group_names") <- group_names
-
-  attr(out, "group_labels") <- attr_var_label(data[group_names], unlist = FALSE)
+  if (!is.null(group_names)) {
+    attr(out, "group_names") <- group_names
+    attr(out, "group_labels") <- group_labels
+  }
 
   # add a variable for the n variable
   attr(out$n, "label") <- "N"

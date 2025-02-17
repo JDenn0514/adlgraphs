@@ -73,10 +73,10 @@
 #'   dplyr::count(new_species)
 #' 
 #' @export
-case_match_fct <- function(.x, ..., .default = NULL) {
+case_match_fct <- function(x, ..., .default = NULL) {
 
   # get the object's name
-  x_lab <- deparse(substitute(.x))
+  x_name <- deparse(substitute(x))
 
   # get the arguments from ...
   args <- rlang::list2(...)
@@ -94,9 +94,8 @@ case_match_fct <- function(.x, ..., .default = NULL) {
   # remove levels with NA
   args_rhs <- args_rhs[!is.na(args_rhs)]
 
-  # create the function
   text_fun <- function(x) {
-    glue::glue("What was '{args_lhs[x]}' has become '{args_rhs[x]}'")
+    paste0("What was '", args_lhs[x], "' has become '", args_rhs[x], "'")
   }
   # create the main text that goes in the transformation
   text <- purrr::map(seq_arg_len, text_fun) %>%
@@ -114,31 +113,30 @@ case_match_fct <- function(.x, ..., .default = NULL) {
   if (is.null(.default)) {
       # set the vector to a factor and specify the levels
     factor(
-      dplyr::case_match(.x, ..., .default = .default),
+      dplyr::case_match(x, ..., .default = .default),
       levels = args_rhs
     ) %>%
       structure(
-        label = attr_var_label(.x),
-        transformation = glue::glue(
-          "Recoded '{x_lab}' as a factor and set the levels based on their order.
-          The data transformation is as follows:
-          {text}"
+        label = attr_var_label(x),
+        transformation = paste(
+          "Recoded '", x_name, "' as a factor and set the levels based on their order. \n
+          The data transformation is as follows:\n", text
         )
       )
 
   } else {
     # set the vector to a factor and specify the levels
     factor(
-      dplyr::case_match(.x, ..., .default = .default),
+      dplyr::case_match(x, ..., .default = .default),
       levels = args_rhs
     ) %>%
       structure(
-        label = attr_var_label(.x),
-        transformation = glue::glue(
-          "Recoded '{x_lab}' as a factor and set the levels based on their order.
-        The data transformation is as follows:
-        {text},
-        Everything else has become '{default}'"
+        label = attr_var_label(x),
+        transformation = paste0(
+          "Recoded '", x_name, "' as a factor and set the levels based on their order.\n
+          The data transformation is as follows:\n",
+          text,
+          "Everything else has become '", default, "'"
         )
       )
 

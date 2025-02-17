@@ -90,13 +90,6 @@ testthat::test_that("check with no variable label", {
   testthat::expect_equal(attr(df, "variable_label"), exp)
 })
 
-testthat::test_that("error when x is not numeric", {
-  testthat::expect_snapshot(
-    test_data %>% get_diffs(edu_f2, pid_f3),
-    error = TRUE
-  )
-})
-
 
 # Check with one grouping variable -------------------------
 
@@ -198,3 +191,23 @@ testthat::test_that("check results are same with dplyr::group_by()", {
     test_data %>% dplyr::group_by(edu_f2) %>% get_diffs(trad_n, pid_f3, top)
   )
 })
+
+
+# check errors for inputs ------------------------------------------------
+
+testthat::test_that("error when x is not numeric", {
+  testthat::expect_snapshot(
+    test_data %>% get_diffs(edu_f2, pid_f3),
+    error = TRUE
+  )
+})
+
+testthat::test_that("error when wt is not numeric", {
+  testthat::expect_snapshot(
+    test_data %>% get_diffs(trad_n, pid_f3, wt = edu_f2),
+    error = TRUE
+  )
+})
+
+
+

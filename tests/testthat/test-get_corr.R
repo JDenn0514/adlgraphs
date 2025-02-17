@@ -180,6 +180,28 @@ testthat::test_that("check wtd_corr without wts", {
 })
 
 
+# test for errors for incorrect inputs  ----------------------------------------
 
+testthat::test_that("error when x is not numeric", {
+  testthat::expect_snapshot(
+    get_corr(test_data, edu_f2, trad_n),
+    error = TRUE
+  )
+})
+
+testthat::test_that("error when y is not numeric", {
+  testthat::expect_snapshot(
+    get_corr(test_data, trad_n, edu_f2),
+    error = TRUE
+  )
+})
+
+
+testthat::test_that("error when y is not numeric", {
+  testthat::expect_snapshot(
+    get_corr(test_data, trad_n, sdo_sum, wt = pid_f3),
+    error = TRUE
+  )
+})
 
 
