@@ -2,7 +2,7 @@
 #'
 #' Recode a variable using the `dplyr::case_match()` syntax
 #'
-#' @param .x A vector to match against.
+#' @param x A vector to match against.
 #'
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> A sequence of two-sided
 #'   formulas: `old_values ~ new_value`. The right hand side (RHS) determines
@@ -118,12 +118,10 @@ case_match_fct <- function(x, ..., .default = NULL) {
     ) %>%
       structure(
         label = attr_var_label(x),
-        transformation = paste(
-          "Recoded '", x_name, "' as a factor and set the levels based on their order. \n
-          The data transformation is as follows:\n", text
+        transformation = paste0(
+          "Recoded '", x_name, "' as a factor and set the levels based on their order.\nThe data transformation is as follows:\n", text
         )
       )
-
   } else {
     # set the vector to a factor and specify the levels
     factor(
@@ -133,10 +131,7 @@ case_match_fct <- function(x, ..., .default = NULL) {
       structure(
         label = attr_var_label(x),
         transformation = paste0(
-          "Recoded '", x_name, "' as a factor and set the levels based on their order.\n
-          The data transformation is as follows:\n",
-          text,
-          "Everything else has become '", default, "'"
+          "Recoded '", x_name, "' as a factor and set the levels based on their order.\nThe data transformation is as follows:\n", text, "\nEverything else has become '", default, "'"
         )
       )
 

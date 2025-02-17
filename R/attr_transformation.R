@@ -22,9 +22,9 @@ attr_transformation <- function(x, data) {
 #' @export
 attr_transformation.default <- function(x, data) {
   if (missing(data)) {
-    attr(x, "transformation", exact = TRUE)
+    cat(attr(x, "transformation", exact = TRUE))
   } else {
-    attr(data[[x]], "transformation", exact = TRUE)
+    cat(attr(data[[x]], "transformation", exact = TRUE))
   }
 }
 
@@ -39,7 +39,7 @@ attr_transformation.data.frame <- function(x, data = NULL) {
 
   # write up a function that makes the string in the format we want
   string_fun <- function(var) {
-    string <- attr(x[[var]], "transformation", exact = TRUE)
+    string <- cat(attr(x[[var]], "transformation", exact = TRUE))
   }
 
   # iterate string_fun over each of the columns laid out earlier
