@@ -4,10 +4,10 @@
 \alias{case_match_fct}
 \title{\code{case_match} with factor levels}
 \usage{
-case_match_fct(.x, ..., .default = NULL)
+case_match_fct(x, ..., .default = NULL)
 }
 \arguments{
-\item{.x}{A vector to match against.}
+\item{x}{A vector to match against.}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> A sequence of two-sided
 formulas: \code{old_values ~ new_value}. The right hand side (RHS) determines

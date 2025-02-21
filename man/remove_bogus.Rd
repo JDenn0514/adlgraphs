@@ -4,7 +4,7 @@
 \alias{remove_bogus}
 \title{Remove bots, duplicates, and/or speedsters from a data frame}
 \usage{
-remove_bogus(data, duration, cut_off = 0.3)
+remove_bogus(data, duration, cut_off = 0.3, only_finished = TRUE)
 }
 \arguments{
 \item{data}{A data frame.}
@@ -14,6 +14,10 @@ remove_bogus(data, duration, cut_off = 0.3)
 \item{cut_off}{Specify what percentage of the median time should be used
 to remove speedsters. Default is 0.3, which means people who's time to
 complete is 0.3 that of the median completion time are removed.}
+
+\item{only_finished}{Logical. If \code{TRUE}, the default, removes all
+respondents who did not finish according to the \code{finished}/\code{Finished}
+variable. If \code{FALSE}, keeps those who did not finish.}
 }
 \description{
 This function removes respondents suspected of being bots or duplicate

@@ -10,9 +10,22 @@
 #' @param cut_off Specify what percentage of the median time should be used
 #'   to remove speedsters. Default is 0.3, which means people who's time to
 #'   complete is 0.3 that of the median completion time are removed.
-#' 
+#' @param only_finished Logical. If `TRUE`, the default, removes all 
+#'   respondents who did not finish according to the `finished`/`Finished`
+#'   variable. If `FALSE`, keeps those who did not finish.
 #' @export
-remove_bogus <- function(data, duration, cut_off = 0.3) {
+remove_bogus <- function(data, duration, cut_off = 0.3, only_finished = TRUE) {
+
+  data_name <- x_expression(data)
+  
+  if (only_finished) {
+    # if only_finished is TRUE, keep only people who finished
+    if ("Finished" %in% colnames(data)) {
+      data <- data[data$Finished == TRUE,]
+    } else if ("finished" %in% colnames(data)) {
+      data <- data[data$finished == TRUE,] 
+    }
+  }
 
   # remove previews
   if ("DistributionChannel" %in% colnames(data)) {
@@ -33,17 +46,16 @@ remove_bogus <- function(data, duration, cut_off = 0.3) {
             structure(label = "Age")
         ) 
       
-      data <- data[data$age_n > 17,]
+      data <- data[data$age_n > 17 & !is.na(data$age_n),]
 
     } else if (is.null(attr_val_labels(data$age))) {
 
-      data <- data[data$age > 17,]
+      data <- data[data$age > 17 & !is.na(data$age),]
+      
 
     }
 
   } 
-
-  
 
   # remove bots
   if ("Q_RecaptchaScore" %in% colnames(data)) {
@@ -64,7 +76,7 @@ remove_bogus <- function(data, duration, cut_off = 0.3) {
     # if duration is not found in data give an error
     if (!duration %in% colnames(data)) {
       cli::cli_abort(c(
-        "`{duration}` is not a variable found in {data_name}.",
+        "`{duration}` is not a variable found in `{data_name}`.",
         "i" = "Make sure the variable supplied to {.var duration} is present in {.var data}"
       ))
     }

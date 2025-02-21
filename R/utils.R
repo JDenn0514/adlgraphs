@@ -627,3 +627,17 @@ stdz <- function(x, wt = NULL){
 
 
 }
+
+# Courtsey of Artem Sokolov from this Stack Overflow answer
+# https://stackoverflow.com/questions/52066097/get-expression-that-evaluated-to-dot-in-function-called-by-magrittr-pipe/52080518#52080518
+# get the name of the object piped into a function e.g., (test_data %>% funky_freqs(top)) the name is test_data
+x_expression <- function(x) {
+  getAST <- function(ee) purrr::map_if(as.list(ee), is.call, getAST)
+
+  sc <- sys.calls()
+  ASTs <- purrr::map(as.list(sc), getAST) %>%
+    purrr::keep(~identical(.[[1]], quote(`%>%`)))  # Match first element to %>%
+
+  if( length(ASTs) == 0 ) return(rlang::enexpr(x))        # Not in a pipe
+  dplyr::last( ASTs )[[2]]    # Second element is the left-hand side
+}
