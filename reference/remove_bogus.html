@@ -51,7 +51,7 @@ Qualtrics.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">remove_bogus</span><span class="op">(</span><span class="va">data</span>, <span class="va">duration</span>, cut_off <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">remove_bogus</span><span class="op">(</span><span class="va">data</span>, <span class="va">duration</span>, cut_off <span class="op">=</span> <span class="fl">0.3</span>, only_finished <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -70,6 +70,12 @@ Qualtrics.</p>
 <dd><p>Specify what percentage of the median time should be used
 to remove speedsters. Default is 0.3, which means people who's time to
 complete is 0.3 that of the median completion time are removed.</p></dd>
+
+
+<dt id="arg-only-finished">only_finished<a class="anchor" aria-label="anchor" href="#arg-only-finished"></a></dt>
+<dd><p>Logical. If <code>TRUE</code>, the default, removes all
+respondents who did not finish according to the <code>finished</code>/<code>Finished</code>
+variable. If <code>FALSE</code>, keeps those who did not finish.</p></dd>
 
 </dl></div>
 
