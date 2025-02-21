@@ -4,7 +4,7 @@
 #' @importFrom cli cli_abort
 #' @importFrom data.table rbindlist
 #' @importFrom dplyr %>% across all_of arrange bind_cols bind_rows count
-#'   everything group_by mutate rename select where anti_join ungroup
+#'   everything group_by mutate rename select where anti_join ungroup last
 #' @importFrom forcats as_factor fct_relevel
 #' @importFrom furrr future_map furrr_options
 #' @importFrom ggplot2 theme element_line element_blank element_text theme_minimal
@@ -16,14 +16,14 @@
 #' @importFrom grDevices colorRampPalette rgb
 #' @importFrom gt gt tab_spanner fmt_markdown tab_style
 #' @importFrom gto body_add_gt
-#' @importFrom haven as_factor is.labelled write_sav
+#' @importFrom haven write_sav
 #' @importFrom highcharter hc_theme hc_theme_merge
 #' @importFrom jtools scale_mod
 #' @importFrom lifecycle badge deprecate_soft
 #' @importFrom mvtnorm qmvt pmvt
 #' @importFrom officer body_add_par
 #' @importFrom prismatic color
-#' @importFrom purrr map pmap pmap_chr walk
+#' @importFrom purrr map pmap pmap_chr walk map_if keep
 #' @importFrom readr write_csv
 #' @importFrom rlang set_names sym := .data caller_arg caller_env enexpr
 #'   sym quo_is_missing

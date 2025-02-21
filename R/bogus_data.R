@@ -21,9 +21,19 @@ remove_bogus <- function(data, duration, cut_off = 0.3, only_finished = TRUE) {
   if (only_finished) {
     # if only_finished is TRUE, keep only people who finished
     if ("Finished" %in% colnames(data)) {
-      data <- data[data$Finished == TRUE,]
+      # check the class
+      if ("double" %in% class(data$Finished)) {
+        data <- data[data$Finished == 1,]
+      } else if ("logical" %in% class(data$Finished)) {
+        data <- data[data$Finished == TRUE,]
+      }
     } else if ("finished" %in% colnames(data)) {
-      data <- data[data$finished == TRUE,] 
+      # check the class
+      if ("double" %in% class(data$finished)) {
+        data <- data[data$finished == 1,]
+      } else if ("logical" %in% class(data$finished)) {
+        data <- data[data$finished == TRUE,]
+      }
     }
   }
 
@@ -59,9 +69,9 @@ remove_bogus <- function(data, duration, cut_off = 0.3, only_finished = TRUE) {
 
   # remove bots
   if ("Q_RecaptchaScore" %in% colnames(data)) {
-    data <- data[data$Q_RecaptchaScore > 0.41,]
+    data <- data[data$Q_RecaptchaScore >= 0.5,]
   } else if ("q_recaptcha_score" %in% colnames(data)) {
-    data <- data[data$q_recaptcha_score > 0.41,]
+    data <- data[data$q_recaptcha_score >= 0.5,]
   }
 
   # remove duplicates
@@ -120,8 +130,17 @@ get_bogus <- function(data, duration, cut_off = 0.3) {
   bogus <- dplyr::anti_join(data, clean)
 
   # create the two new variables
-  bogus$duplicate <- ifelse(bogus$Q_RelevantIDDuplicateScore < 0.76, TRUE, FALSE)
-  bogus$bot <- ifelse(bogus$Q_RecaptchaScore > 0.41, TRUE, FALSE)
+  if ("Q_RelevantIDDuplicateScore" %in% colnames(data)) {
+    bogus$duplicate <- ifelse(bogus$Q_RelevantIDDuplicateScore > 0.75, TRUE, FALSE)
+  } else if ("q_relevant_id_duplicate_score" %in% colnames(data)) {
+    bogus$duplicate <- ifelse(bogus$q_relevant_id_duplicate_score > 0.75, TRUE, FALSE)
+  }
+
+  if ("Q_RecaptchaScore" %in% colnames(data)) {
+    bogus$bot <- ifelse(bogus$Q_RecaptchaScore < 0.5, TRUE, FALSE)
+  } else if ("q_recaptcha_score" %in% colnames(data)) {
+    bogus$duplicate <- ifelse(bogus$q_recaptcha_score < 0.5, TRUE, FALSE)
+  }
 
   # get the cut off time
   cut_off_time <- median(data[[duration]]) * cut_off
