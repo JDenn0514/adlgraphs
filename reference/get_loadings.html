@@ -58,14 +58,18 @@ loadings may change along the different levels of a group.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_loadings</span><span class="op">(</span></span>
-<span>  <span class="va">model</span>,</span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">cols</span>,</span>
+<span>  <span class="va">group</span>,</span>
 <span>  labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  threshold <span class="op">=</span> <span class="fl">0.4</span>,</span>
 <span>  print <span class="op">=</span> <span class="st">"short"</span>,</span>
 <span>  nfactors <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  fm <span class="op">=</span> <span class="st">"pa"</span>,</span>
 <span>  rotate <span class="op">=</span> <span class="st">"oblimin"</span>,</span>
-<span>  sort <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  sort <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  decimals <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -73,9 +77,21 @@ loadings may change along the different levels of a group.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-model">model<a class="anchor" aria-label="anchor" href="#arg-model"></a></dt>
-<dd><p>Either a model created using <code><a href="https://rdrr.io/pkg/psych/man/fa.html" class="external-link">psych::fa()</a></code> or a
+<dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
+<dd><p>Either a data created using <code><a href="https://rdrr.io/pkg/psych/man/fa.html" class="external-link">psych::fa()</a></code> or a
 data.frame</p></dd>
+
+
+<dt id="arg-cols">cols<a class="anchor" aria-label="anchor" href="#arg-cols"></a></dt>
+<dd><p>&lt;<code><a href="https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html" class="external-link">tidy-select</a></code>&gt; The variables you want
+to get the correlations for.</p></dd>
+
+
+<dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
+<dd><p>&lt;<code><a href="https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html" class="external-link">tidy-select</a></code>&gt; A selection of columns to
+group the data by in addition to <code>treats</code>. This operates very similarly
+to <code>.by</code> from dplyr (for more info on that see <a href="https://dplyr.tidyverse.org/reference/dplyr_by.html" class="external-link">?dplyr_by</a>).
+See examples to see how it operates.</p></dd>
 
 
 <dt id="arg-labels">labels<a class="anchor" aria-label="anchor" href="#arg-labels"></a></dt>
@@ -100,37 +116,31 @@ that has not been created yet.</p></dd>
 
 
 <dt id="arg-fm">fm<a class="anchor" aria-label="anchor" href="#arg-fm"></a></dt>
-<dd><p>Factoring method fm="minres" will do a minimum residual as will
-fm="uls". Both of these use a first derivative. fm="ols" differs very
-slightly from "minres" in that it minimizes the entire residual matrix
-using an OLS procedure but uses the empirical first derivative. This
-will be slower. fm="wls" will do a weighted least squares (WLS)
-solution, fm="gls" does a generalized weighted least squares (GLS),
-fm="pa" will do the principal factor solution, fm="ml" will do a
-maximum likelihood factor analysis. fm="minchi" will minimize the
-sample size weighted chi square when treating pairwise correlations
-with different number of subjects per pair. fm ="minrank" will do a
-minimum rank factor analysis. "old.min" will do minimal residual the
-way it was done prior to April, 2017 (see discussion below). fm="alpha"
-will do alpha factor analysis as described in Kaiser and Coffey (1965).
-Default is "pa".</p></dd>
+<dd><p>Factoring method used in the factor analysis. Default is
+"pa". For more information on the various methods see the <code>fm</code>
+argument in the <code><a href="https://rdrr.io/pkg/psych/man/fa.html" class="external-link">psych::fa()</a></code> function.</p></dd>
 
 
 <dt id="arg-rotate">rotate<a class="anchor" aria-label="anchor" href="#arg-rotate"></a></dt>
-<dd><p>"none", "varimax", "quartimax", "bentlerT", "equamax",
-"varimin", "geominT" and "bifactor" are orthogonal rotations.
-"Promax", "promax", "oblimin", "simplimax", "bentlerQ, "geominQ" and
-"biquartimin" and "cluster" are possible oblique transformations of
-the solution. The default is to do a oblimin transformation, although
-versions prior to 2009 defaulted to varimax. SPSS seems to do a
-Kaiser normalization before doing Promax, this is done here by the
-call to "promax" which does the normalization before calling Promax in
-GPArotation.</p></dd>
+<dd><p>The type of factor rotation to perform when conducting
+the factor analysis. Default is "oblimin". For more information on
+the different rotation methods available, check the documentation
+for the <code>rotate</code> argument in <code><a href="https://rdrr.io/pkg/psych/man/fa.html" class="external-link">psych::fa()</a></code>.</p></dd>
 
 
 <dt id="arg-sort">sort<a class="anchor" aria-label="anchor" href="#arg-sort"></a></dt>
 <dd><p>Logical. If <code>TRUE</code>, the default, the loadings are sorted
 largest to smallest. If <code>FALSE</code>, no sorting occurs.</p></dd>
+
+
+<dt id="arg-decimals">decimals<a class="anchor" aria-label="anchor" href="#arg-decimals"></a></dt>
+<dd><p>Number of decimals each number should be rounded to. Default
+is 3.</p></dd>
+
+
+<dt id="arg-na-rm">na.rm<a class="anchor" aria-label="anchor" href="#arg-na-rm"></a></dt>
+<dd><p>Logical. Default is <code>TRUE</code> which removes NAs prior to
+calculation.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -141,7 +151,6 @@ largest to smallest. If <code>FALSE</code>, no sorting occurs.</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JDenn0514/adlgraphs" class="external-link">adlgraphs</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://personality-project.org/r/psych/" class="external-link">psych</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -155,30 +164,32 @@ largest to smallest. If <code>FALSE</code>, no sorting occurs.</p></dd>
 <span class="r-in"><span><span class="fu">get_loadings</span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 4</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   variables     PA1 communality uniqueness</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> controlled  0.685     0.469        0.531</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> small       0.654     0.428        0.572</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> run         0.610     0.373        0.627</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> top        <span style="color: #BB0000;">NA</span>         0.086<span style="text-decoration: underline;">2</span>       0.914</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> inferior   <span style="color: #BB0000;">NA</span>         0.122        0.878</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> dominate   <span style="color: #BB0000;">NA</span>         0.021<span style="text-decoration: underline;">3</span>       0.979</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> deserving  <span style="color: #BB0000;">NA</span>         0.001<span style="text-decoration: underline;">10</span>      0.999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> special    <span style="color: #BB0000;">NA</span>         0.088<span style="text-decoration: underline;">5</span>       0.912</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> harder     <span style="color: #BB0000;">NA</span>         0.068<span style="text-decoration: underline;">7</span>       0.931</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> controlled  0.685       0.469      0.531</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> small       0.654       0.428      0.572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> run         0.61        0.373      0.627</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> top        <span style="color: #BB0000;">NA</span>           0.086      0.914</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> inferior   <span style="color: #BB0000;">NA</span>           0.122      0.878</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> dominate   <span style="color: #BB0000;">NA</span>           0.021      0.979</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> deserving  <span style="color: #BB0000;">NA</span>           0.001      0.999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> special    <span style="color: #BB0000;">NA</span>           0.088      0.912</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> harder     <span style="color: #BB0000;">NA</span>           0.069      0.931</span>
 <span class="r-in"><span><span class="co"># get the loadings with the variable labels based on data object</span></span></span>
 <span class="r-in"><span><span class="fu">get_loadings</span><span class="op">(</span><span class="va">model</span>, <span class="va">data</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   variables  labels                                   PA1 communality uniqueness</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> controlled <span style="color: #949494;">"</span>Much of our lives are being control…  0.685     0.469        0.531</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> small      <span style="color: #949494;">"</span>Even though we live in a democracy,…  0.654     0.428        0.572</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> run        <span style="color: #949494;">"</span>The people who really \"run\" the c…  0.610     0.373        0.627</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> top        <span style="color: #949494;">"</span>An ideal society requires some grou… <span style="color: #BB0000;">NA</span>         0.086<span style="text-decoration: underline;">2</span>       0.914</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> inferior   <span style="color: #949494;">"</span>Some groups of people are simply in… <span style="color: #BB0000;">NA</span>         0.122        0.878</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> dominate   <span style="color: #949494;">"</span>No one group should dominate in soc… <span style="color: #BB0000;">NA</span>         0.021<span style="text-decoration: underline;">3</span>       0.979</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> deserving  <span style="color: #949494;">"</span>Groups at the bottom are just as de… <span style="color: #BB0000;">NA</span>         0.001<span style="text-decoration: underline;">10</span>      0.999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> special    <span style="color: #949494;">"</span>It is unfair for some groups in soc… <span style="color: #BB0000;">NA</span>         0.088<span style="text-decoration: underline;">5</span>       0.912</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> harder     <span style="color: #949494;">"</span>I have a harder time succeeding tha… <span style="color: #BB0000;">NA</span>         0.068<span style="text-decoration: underline;">7</span>       0.931</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> `cols` is only valid when supplying an object of class <span style="color: #0000BB;">&lt;data.frame&gt;</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> You've supplied an object with class <span style="color: #0000BB;">&lt;psych/fa&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   variables     PA1 communality uniqueness</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> controlled  0.685       0.469      0.531</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> small       0.654       0.428      0.572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> run         0.61        0.373      0.627</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> top        <span style="color: #BB0000;">NA</span>           0.086      0.914</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> inferior   <span style="color: #BB0000;">NA</span>           0.122      0.878</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> dominate   <span style="color: #BB0000;">NA</span>           0.021      0.979</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> deserving  <span style="color: #BB0000;">NA</span>           0.001      0.999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> special    <span style="color: #BB0000;">NA</span>           0.088      0.912</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> harder     <span style="color: #BB0000;">NA</span>           0.069      0.931</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># we can do all of this in one step with pipes</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
@@ -190,16 +201,16 @@ largest to smallest. If <code>FALSE</code>, no sorting occurs.</p></dd>
 <span class="r-in"><span>  <span class="fu">get_loadings</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 4</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   variables     PA1 communality uniqueness</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> controlled  0.685     0.469        0.531</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> small       0.654     0.428        0.572</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> run         0.610     0.373        0.627</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> top        <span style="color: #BB0000;">NA</span>         0.086<span style="text-decoration: underline;">2</span>       0.914</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> inferior   <span style="color: #BB0000;">NA</span>         0.122        0.878</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> dominate   <span style="color: #BB0000;">NA</span>         0.021<span style="text-decoration: underline;">3</span>       0.979</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> deserving  <span style="color: #BB0000;">NA</span>         0.001<span style="text-decoration: underline;">10</span>      0.999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> special    <span style="color: #BB0000;">NA</span>         0.088<span style="text-decoration: underline;">5</span>       0.912</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> harder     <span style="color: #BB0000;">NA</span>         0.068<span style="text-decoration: underline;">7</span>       0.931</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> controlled  0.685       0.469      0.531</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> small       0.654       0.428      0.572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> run         0.61        0.373      0.627</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> top        <span style="color: #BB0000;">NA</span>           0.086      0.914</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> inferior   <span style="color: #BB0000;">NA</span>           0.122      0.878</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> dominate   <span style="color: #BB0000;">NA</span>           0.021      0.979</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> deserving  <span style="color: #BB0000;">NA</span>           0.001      0.999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> special    <span style="color: #BB0000;">NA</span>           0.088      0.912</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> harder     <span style="color: #BB0000;">NA</span>           0.069      0.931</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Now let's remove the threshold for the loadings and include labels</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
@@ -211,16 +222,16 @@ largest to smallest. If <code>FALSE</code>, no sorting occurs.</p></dd>
 <span class="r-in"><span>  <span class="fu">get_loadings</span><span class="op">(</span>threshold <span class="op">=</span> <span class="fl">0</span>, labels <span class="op">=</span> <span class="va">data</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   variables  labels                                   PA1 communality uniqueness</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> controlled <span style="color: #949494;">"</span>Much of our lives are being contro…  0.685      0.469        0.531</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> small      <span style="color: #949494;">"</span>Even though we live in a democracy…  0.654      0.428        0.572</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> run        <span style="color: #949494;">"</span>The people who really \"run\" the …  0.610      0.373        0.627</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> inferior   <span style="color: #949494;">"</span>Some groups of people are simply i…  0.350      0.122        0.878</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> special    <span style="color: #949494;">"</span>It is unfair for some groups in so…  0.297      0.088<span style="text-decoration: underline;">5</span>       0.912</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> top        <span style="color: #949494;">"</span>An ideal society requires some gro…  0.294      0.086<span style="text-decoration: underline;">2</span>       0.914</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> harder     <span style="color: #949494;">"</span>I have a harder time succeeding th…  0.262      0.068<span style="text-decoration: underline;">7</span>       0.931</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> dominate   <span style="color: #949494;">"</span>No one group should dominate in so…  0.146      0.021<span style="text-decoration: underline;">3</span>       0.979</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> deserving  <span style="color: #949494;">"</span>Groups at the bottom are just as d… -<span style="color: #BB0000;">0.033</span><span style="color: #BB0000; text-decoration: underline;">1</span>     0.001<span style="text-decoration: underline;">10</span>      0.999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> controlled <span style="color: #949494;">"</span>Much of our lives are being control…  0.685       0.469      0.531</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> small      <span style="color: #949494;">"</span>Even though we live in a democracy,…  0.654       0.428      0.572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> run        <span style="color: #949494;">"</span>The people who really \"run\" the c…  0.61        0.373      0.627</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> inferior   <span style="color: #949494;">"</span>Some groups of people are simply in…  0.35        0.122      0.878</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> special    <span style="color: #949494;">"</span>It is unfair for some groups in soc…  0.297       0.088      0.912</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> top        <span style="color: #949494;">"</span>An ideal society requires some grou…  0.294       0.086      0.914</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> harder     <span style="color: #949494;">"</span>I have a harder time succeeding tha…  0.262       0.069      0.931</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> dominate   <span style="color: #949494;">"</span>No one group should dominate in soc…  0.146       0.021      0.979</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> deserving  <span style="color: #949494;">"</span>Groups at the bottom are just as de… -<span style="color: #BB0000;">0.033</span>       0.001      0.999</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># alternatively, we could skip the fa step entirely like so</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
@@ -228,18 +239,18 @@ largest to smallest. If <code>FALSE</code>, no sorting occurs.</p></dd>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">top</span><span class="op">:</span><span class="va">run</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="co"># specify number of factors, rotation, and factor method</span></span></span>
 <span class="r-in"><span>  <span class="fu">get_loadings</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   variables                                           PA1 communality uniqueness</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>                                         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> controlled<span style="color: #949494;"> [Much of our lives are being control…</span>  0.685     0.469        0.531</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> small<span style="color: #949494;"> [Even though we live in a democracy, a fe…</span>  0.654     0.428        0.572</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> run<span style="color: #949494;"> [The people who really "run" the country ar…</span>  0.610     0.373        0.627</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> top<span style="color: #949494;"> [An ideal society requires some groups to b…</span> <span style="color: #BB0000;">NA</span>         0.086<span style="text-decoration: underline;">2</span>       0.914</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> inferior<span style="color: #949494;"> [Some groups of people are simply infe…</span> <span style="color: #BB0000;">NA</span>         0.122        0.878</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> dominate<span style="color: #949494;"> [No one group should dominate in socie…</span> <span style="color: #BB0000;">NA</span>         0.021<span style="text-decoration: underline;">3</span>       0.979</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> deserving<span style="color: #949494;"> [Groups at the bottom are just as des…</span> <span style="color: #BB0000;">NA</span>         0.001<span style="text-decoration: underline;">10</span>      0.999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> special<span style="color: #949494;"> [It is unfair for some groups in societ…</span> <span style="color: #BB0000;">NA</span>         0.088<span style="text-decoration: underline;">5</span>       0.912</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> harder<span style="color: #949494;"> [I have a harder time succeeding than my…</span> <span style="color: #BB0000;">NA</span>         0.068<span style="text-decoration: underline;">7</span>       0.931</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   variables  labels                                   PA1 communality uniqueness</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> controlled <span style="color: #949494;">"</span>Much of our lives are being control…  0.685       0.469      0.531</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> small      <span style="color: #949494;">"</span>Even though we live in a democracy,…  0.654       0.428      0.572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> run        <span style="color: #949494;">"</span>The people who really \"run\" the c…  0.61        0.373      0.627</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> top        <span style="color: #949494;">"</span>An ideal society requires some grou… <span style="color: #BB0000;">NA</span>           0.086      0.914</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> inferior   <span style="color: #949494;">"</span>Some groups of people are simply in… <span style="color: #BB0000;">NA</span>           0.122      0.878</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> dominate   <span style="color: #949494;">"</span>No one group should dominate in soc… <span style="color: #BB0000;">NA</span>           0.021      0.979</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> deserving  <span style="color: #949494;">"</span>Groups at the bottom are just as de… <span style="color: #BB0000;">NA</span>           0.001      0.999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> special    <span style="color: #949494;">"</span>It is unfair for some groups in soc… <span style="color: #BB0000;">NA</span>           0.088      0.912</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> harder     <span style="color: #949494;">"</span>I have a harder time succeeding tha… <span style="color: #BB0000;">NA</span>           0.069      0.931</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># we can also specify the number of factors, rotation, and factoring method</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
@@ -247,18 +258,18 @@ largest to smallest. If <code>FALSE</code>, no sorting occurs.</p></dd>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">top</span><span class="op">:</span><span class="va">run</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="co"># specify number of factors, rotation, factor method, and threshold</span></span></span>
 <span class="r-in"><span>  <span class="fu">get_loadings</span><span class="op">(</span>nfactors <span class="op">=</span> <span class="fl">2</span>, rotate <span class="op">=</span> <span class="st">"varimax"</span>, fm <span class="op">=</span> <span class="st">"minres"</span>, threshold <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   variables                                    MR1    MR2 communality uniqueness</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> run<span style="color: #949494;"> [The people who really "run" the cou…</span>  0.692 <span style="color: #BB0000;">NA</span>          0.503       0.497</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> small<span style="color: #949494;"> [Even though we live in a democrac…</span>  0.656 <span style="color: #BB0000;">NA</span>          0.430       0.570</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> controlled<span style="color: #949494;"> [Much of our lives are being …</span>  0.642 <span style="color: #BB0000;">NA</span>          0.425       0.575</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> special<span style="color: #949494;"> [It is unfair for some groups in…</span>  0.294 <span style="color: #BB0000;">NA</span>          0.088<span style="text-decoration: underline;">7</span>      0.911</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> inferior<span style="color: #949494;"> [Some groups of people are simp…</span>  0.292  0.646      0.503       0.497</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> dominate<span style="color: #949494;"> [No one group should dominate i…</span>  0.263 -<span style="color: #BB0000;">0.415</span>      0.241       0.759</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> harder<span style="color: #949494;"> [I have a harder time succeeding …</span>  0.254 <span style="color: #BB0000;">NA</span>          0.065<span style="text-decoration: underline;">5</span>      0.935</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> top<span style="color: #949494;"> [An ideal society requires some grou…</span>  0.225  0.587      0.395       0.605</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> deserving<span style="color: #949494;"> [Groups at the bottom are just…</span> <span style="color: #BB0000;">NA</span>     -<span style="color: #BB0000;">0.429</span>      0.187       0.813</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   variables  labels                            MR1    MR2 communality uniqueness</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> run        <span style="color: #949494;">"</span>The people who really \"run\…  0.692 <span style="color: #BB0000;">NA</span>           0.503      0.497</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> small      <span style="color: #949494;">"</span>Even though we live in a dem…  0.656 <span style="color: #BB0000;">NA</span>           0.43       0.57 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> controlled <span style="color: #949494;">"</span>Much of our lives are being …  0.642 <span style="color: #BB0000;">NA</span>           0.425      0.575</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> special    <span style="color: #949494;">"</span>It is unfair for some groups…  0.294 <span style="color: #BB0000;">NA</span>           0.089      0.911</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> inferior   <span style="color: #949494;">"</span>Some groups of people are si…  0.292  0.646       0.503      0.497</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> dominate   <span style="color: #949494;">"</span>No one group should dominate…  0.263 -<span style="color: #BB0000;">0.415</span>       0.241      0.759</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> harder     <span style="color: #949494;">"</span>I have a harder time succeed…  0.254 <span style="color: #BB0000;">NA</span>           0.065      0.935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> top        <span style="color: #949494;">"</span>An ideal society requires so…  0.225  0.587       0.395      0.605</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> deserving  <span style="color: #949494;">"</span>Groups at the bottom are jus… <span style="color: #BB0000;">NA</span>     -<span style="color: #BB0000;">0.429</span>       0.187      0.813</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># we can also calculate the factor loadings by a grouping variable</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
@@ -266,29 +277,69 @@ largest to smallest. If <code>FALSE</code>, no sorting occurs.</p></dd>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">edu_f2</span>, <span class="va">top</span><span class="op">:</span><span class="va">run</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="co"># group the data</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">edu_f2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
-<span class="r-in"><span>  <span class="co"># specify number of factors, rotation, factor method, and threshold</span></span></span>
-<span class="r-in"><span>  <span class="fu">get_loadings</span><span class="op">(</span>nfactors <span class="op">=</span> <span class="fl">2</span>, rotate <span class="op">=</span> <span class="st">"varimax"</span>, fm <span class="op">=</span> <span class="st">"minres"</span>, threshold <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 18 × 6</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    groups                       variables      MR1    MR2 communality uniqueness</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;chr+lbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> No College Degree            run<span style="color: #949494;"> [The p…</span>  0.723 <span style="color: #BB0000;">NA</span>          0.528       0.472</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> No College Degree            small<span style="color: #949494;"> [Eve…</span>  0.670 <span style="color: #BB0000;">NA</span>          0.453       0.547</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> No College Degree            cont…<span style="color: #949494;"> [Muc…</span>  0.598  0.208      0.401       0.599</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> No College Degree            domi…<span style="color: #949494;"> [No …</span>  0.438 -<span style="color: #BB0000;">0.332</span>      0.302       0.698</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> No College Degree            hard…<span style="color: #949494;"> [I h…</span>  0.303 <span style="color: #BB0000;">NA</span>          0.106       0.894</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> No College Degree            spec…<span style="color: #949494;"> [It …</span>  0.245 <span style="color: #BB0000;">NA</span>          0.096<span style="text-decoration: underline;">4</span>      0.904</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> No College Degree            infe…<span style="color: #949494;"> [Som…</span> <span style="color: #BB0000;">NA</span>      0.682      0.483       0.517</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> No College Degree            top<span style="color: #949494;"> [An id…</span> <span style="color: #BB0000;">NA</span>      0.633      0.416       0.584</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> No College Degree            dese…<span style="color: #949494;"> [Gro…</span> <span style="color: #BB0000;">NA</span>     -<span style="color: #BB0000;">0.485</span>      0.235       0.765</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> At Least a Bachelor's Degree run<span style="color: #949494;"> [The p…</span>  0.641 <span style="color: #BB0000;">NA</span>          0.413       0.587</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> At Least a Bachelor's Degree cont…<span style="color: #949494;"> [Muc…</span>  0.640  0.215      0.456       0.544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> At Least a Bachelor's Degree small<span style="color: #949494;"> [Eve…</span>  0.639 <span style="color: #BB0000;">NA</span>          0.429       0.571</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> At Least a Bachelor's Degree spec…<span style="color: #949494;"> [It …</span>  0.325 <span style="color: #BB0000;">NA</span>          0.112       0.888</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> At Least a Bachelor's Degree infe…<span style="color: #949494;"> [Som…</span>  0.293  0.588      0.432       0.568</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> At Least a Bachelor's Degree dese…<span style="color: #949494;"> [Gro…</span>  0.263 -<span style="color: #BB0000;">0.399</span>      0.229       0.771</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> At Least a Bachelor's Degree top<span style="color: #949494;"> [An id…</span> <span style="color: #BB0000;">NA</span>      0.573      0.368       0.632</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">17</span> At Least a Bachelor's Degree domi…<span style="color: #949494;"> [No …</span> <span style="color: #BB0000;">NA</span>     -<span style="color: #BB0000;">0.503</span>      0.288       0.712</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">18</span> At Least a Bachelor's Degree hard…<span style="color: #949494;"> [I h…</span> <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>          0.022<span style="text-decoration: underline;">3</span>      0.978</span>
+<span class="r-in"><span>  <span class="co"># specify number of factors, and the threshold</span></span></span>
+<span class="r-in"><span>  <span class="fu">get_loadings</span><span class="op">(</span>nfactors <span class="op">=</span> <span class="fl">2</span>, threshold <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> </span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: GPArotation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 18 × 7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    edu_f2                  variables labels    PA1    PA2 communality uniqueness</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> No College Degree       run       <span style="color: #949494;">"</span>The …  0.73  <span style="color: #BB0000;">NA</span>           0.526      0.474</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> No College Degree       small     <span style="color: #949494;">"</span>Even…  0.661 <span style="color: #BB0000;">NA</span>           0.454      0.546</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> No College Degree       controll… <span style="color: #949494;">"</span>Much…  0.569  0.22        0.402      0.598</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> No College Degree       dominate  <span style="color: #949494;">"</span>No o…  0.484 -<span style="color: #BB0000;">0.329</span>       0.304      0.696</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> No College Degree       harder    <span style="color: #949494;">"</span>I ha…  0.287 <span style="color: #BB0000;">NA</span>           0.106      0.894</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> No College Degree       special   <span style="color: #949494;">"</span>It i…  0.218 <span style="color: #BB0000;">NA</span>           0.096      0.904</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> No College Degree       inferior  <span style="color: #949494;">"</span>Some… <span style="color: #BB0000;">NA</span>      0.687       0.48       0.52 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> No College Degree       top       <span style="color: #949494;">"</span>An i… <span style="color: #BB0000;">NA</span>      0.639       0.415      0.585</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> No College Degree       deserving <span style="color: #949494;">"</span>Grou… <span style="color: #BB0000;">NA</span>     -<span style="color: #BB0000;">0.489</span>       0.236      0.764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> At Least a Bachelor's … run       <span style="color: #949494;">"</span>The …  0.654 <span style="color: #BB0000;">NA</span>           0.413      0.587</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> At Least a Bachelor's … small     <span style="color: #949494;">"</span>Even…  0.637 <span style="color: #BB0000;">NA</span>           0.429      0.571</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> At Least a Bachelor's … controll… <span style="color: #949494;">"</span>Much…  0.633 <span style="color: #BB0000;">NA</span>           0.457      0.543</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> At Least a Bachelor's … special   <span style="color: #949494;">"</span>It i…  0.336 <span style="color: #BB0000;">NA</span>           0.112      0.888</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> At Least a Bachelor's … deserving <span style="color: #949494;">"</span>Grou…  0.298 -<span style="color: #BB0000;">0.433</span>       0.229      0.771</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> At Least a Bachelor's … inferior  <span style="color: #949494;">"</span>Some…  0.252  0.561       0.431      0.569</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> At Least a Bachelor's … dominate  <span style="color: #949494;">"</span>No o…  0.228 -<span style="color: #BB0000;">0.53</span>        0.289      0.711</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">17</span> At Least a Bachelor's … top       <span style="color: #949494;">"</span>An i… <span style="color: #BB0000;">NA</span>      0.557       0.367      0.633</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">18</span> At Least a Bachelor's … harder    <span style="color: #949494;">"</span>I ha… <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>           0.022      0.978</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># let's repeat the previous analysis, but use internal arguments to select the </span></span></span>
+<span class="r-in"><span><span class="co"># columns to include in the factor analysis and the grouping variables</span></span></span>
+<span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="co"># group indicates we want to run the factor analysis across each level in edu_f2</span></span></span>
+<span class="r-in"><span>  <span class="co"># nfactors specifies we want two factors</span></span></span>
+<span class="r-in"><span>  <span class="co"># threshold sets the cut off for the loadings</span></span></span>
+<span class="r-in"><span>  <span class="fu">get_loadings</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="co"># specify the variables to include in the factor analysis</span></span></span>
+<span class="r-in"><span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">top</span><span class="op">:</span><span class="va">run</span><span class="op">)</span>, </span></span>
+<span class="r-in"><span>    <span class="co"># specify the group variable, run separate factor analyses for each level</span></span></span>
+<span class="r-in"><span>    group <span class="op">=</span> <span class="va">edu_f2</span>, </span></span>
+<span class="r-in"><span>    <span class="co"># specify two factors</span></span></span>
+<span class="r-in"><span>    nfactors <span class="op">=</span> <span class="fl">2</span>, </span></span>
+<span class="r-in"><span>    <span class="co"># specify the loadings are cut off at |0.2|</span></span></span>
+<span class="r-in"><span>    threshold <span class="op">=</span> <span class="fl">0.2</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span> </span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 18 × 7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    edu_f2                  variables labels    PA1    PA2 communality uniqueness</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> No College Degree       run       <span style="color: #949494;">"</span>The …  0.73  <span style="color: #BB0000;">NA</span>           0.526      0.474</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> No College Degree       small     <span style="color: #949494;">"</span>Even…  0.661 <span style="color: #BB0000;">NA</span>           0.454      0.546</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> No College Degree       controll… <span style="color: #949494;">"</span>Much…  0.569  0.22        0.402      0.598</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> No College Degree       dominate  <span style="color: #949494;">"</span>No o…  0.484 -<span style="color: #BB0000;">0.329</span>       0.304      0.696</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> No College Degree       harder    <span style="color: #949494;">"</span>I ha…  0.287 <span style="color: #BB0000;">NA</span>           0.106      0.894</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> No College Degree       special   <span style="color: #949494;">"</span>It i…  0.218 <span style="color: #BB0000;">NA</span>           0.096      0.904</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> No College Degree       inferior  <span style="color: #949494;">"</span>Some… <span style="color: #BB0000;">NA</span>      0.687       0.48       0.52 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> No College Degree       top       <span style="color: #949494;">"</span>An i… <span style="color: #BB0000;">NA</span>      0.639       0.415      0.585</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> No College Degree       deserving <span style="color: #949494;">"</span>Grou… <span style="color: #BB0000;">NA</span>     -<span style="color: #BB0000;">0.489</span>       0.236      0.764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> At Least a Bachelor's … run       <span style="color: #949494;">"</span>The …  0.654 <span style="color: #BB0000;">NA</span>           0.413      0.587</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> At Least a Bachelor's … small     <span style="color: #949494;">"</span>Even…  0.637 <span style="color: #BB0000;">NA</span>           0.429      0.571</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> At Least a Bachelor's … controll… <span style="color: #949494;">"</span>Much…  0.633 <span style="color: #BB0000;">NA</span>           0.457      0.543</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> At Least a Bachelor's … special   <span style="color: #949494;">"</span>It i…  0.336 <span style="color: #BB0000;">NA</span>           0.112      0.888</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> At Least a Bachelor's … deserving <span style="color: #949494;">"</span>Grou…  0.298 -<span style="color: #BB0000;">0.433</span>       0.229      0.771</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> At Least a Bachelor's … inferior  <span style="color: #949494;">"</span>Some…  0.252  0.561       0.431      0.569</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> At Least a Bachelor's … dominate  <span style="color: #949494;">"</span>No o…  0.228 -<span style="color: #BB0000;">0.53</span>        0.289      0.711</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">17</span> At Least a Bachelor's … top       <span style="color: #949494;">"</span>An i… <span style="color: #BB0000;">NA</span>      0.557       0.367      0.633</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">18</span> At Least a Bachelor's … harder    <span style="color: #949494;">"</span>I ha… <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>           0.022      0.978</span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
