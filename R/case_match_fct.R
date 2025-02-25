@@ -106,7 +106,7 @@ case_match_fct <- function(x, ..., .default = NULL) {
   # add .default to the levels
   # this makes sure if you use .default instead of TRUE ~, it will return the
   # proper vector instead of NAs
-  args_rhs[[arg_len]] = .default
+  args_rhs[[arg_len]] <- .default
 
   default <- .default
 

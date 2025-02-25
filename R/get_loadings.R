@@ -1,4 +1,3 @@
-
 #' Calculate the loadings in factor analysis 
 #' 
 #' This function creates a data frame of factor loadings from 
@@ -8,8 +7,14 @@
 #' works on grouped data frame if you want to check how the factor
 #' loadings may change along the different levels of a group.
 #' 
-#' @param model Either a model created using `psych::fa()` or a 
+#' @param data Either a data created using `psych::fa()` or a 
 #'   data.frame
+#' @param cols  <[`tidy-select`][dplyr_tidy_select]> The variables you want 
+#'   to get the correlations for. 
+#' @param group <[`tidy-select`][dplyr_tidy_select]> A selection of columns to 
+#'   group the data by in addition to `treats`. This operates very similarly
+#'   to `.by` from dplyr (for more info on that see [?dplyr_by][dplyr_by]). 
+#'   See examples to see how it operates.
 #' @param labels Either a character vector or data frame. Creates a 
 #'   new column called "labels" for each variable in the factor 
 #'   analysis.
@@ -19,37 +24,24 @@
 #'   a dataframe of the factor loadings. The alternative is "long" but
 #'   that has not been created yet.
 #' @param nfactors Number of factors to extract, default is 1.
-#' @param fm Factoring method fm="minres" will do a minimum residual as will 
-#'   fm="uls". Both of these use a first derivative. fm="ols" differs very 
-#'   slightly from "minres" in that it minimizes the entire residual matrix 
-#'   using an OLS procedure but uses the empirical first derivative. This 
-#'   will be slower. fm="wls" will do a weighted least squares (WLS) 
-#'   solution, fm="gls" does a generalized weighted least squares (GLS),
-#'   fm="pa" will do the principal factor solution, fm="ml" will do a 
-#'   maximum likelihood factor analysis. fm="minchi" will minimize the 
-#'   sample size weighted chi square when treating pairwise correlations 
-#'   with different number of subjects per pair. fm ="minrank" will do a 
-#'   minimum rank factor analysis. "old.min" will do minimal residual the 
-#'   way it was done prior to April, 2017 (see discussion below). fm="alpha" 
-#'   will do alpha factor analysis as described in Kaiser and Coffey (1965). 
-#'   Default is "pa".
-#' @param rotate "none", "varimax", "quartimax", "bentlerT", "equamax", 
-#'   "varimin", "geominT" and "bifactor" are orthogonal rotations. 
-#'   "Promax", "promax", "oblimin", "simplimax", "bentlerQ, "geominQ" and 
-#'   "biquartimin" and "cluster" are possible oblique transformations of 
-#'   the solution. The default is to do a oblimin transformation, although 
-#'   versions prior to 2009 defaulted to varimax. SPSS seems to do a 
-#'   Kaiser normalization before doing Promax, this is done here by the 
-#'   call to "promax" which does the normalization before calling Promax in 
-#'   GPArotation.
+#' @param fm Factoring method used in the factor analysis. Default is 
+#'   "pa". For more information on the various methods see the `fm`
+#'   argument in the `psych::fa()` function. 
+#' @param rotate The type of factor rotation to perform when conducting
+#'   the factor analysis. Default is "oblimin". For more information on 
+#'   the different rotation methods available, check the documentation 
+#'   for the `rotate` argument in `psych::fa()`.
 #' @param sort Logical. If `TRUE`, the default, the loadings are sorted 
 #'   largest to smallest. If `FALSE`, no sorting occurs.
+#' @param decimals Number of decimals each number should be rounded to. Default
+#'   is 3.
+#' @param na.rm Logical. Default is `TRUE` which removes NAs prior to 
+#'   calculation.
 #' 
 #' @returns A data.frame showing factor loadings. 
 #' 
 #' @examples
 #' 
-#' library(adlgraphs)
 #' library(dplyr)
 #' library(psych)
 #' 
@@ -102,59 +94,103 @@
 #'   select(edu_f2, top:run) %>% 
 #'   # group the data
 #'   group_by(edu_f2) %>% 
-#'   # specify number of factors, rotation, factor method, and threshold
-#'   get_loadings(nfactors = 2, rotate = "varimax", fm = "minres", threshold = 0.2) 
+#'   # specify number of factors, and the threshold
+#'   get_loadings(nfactors = 2, threshold = 0.2) 
+#' 
+#' # let's repeat the previous analysis, but use internal arguments to select the 
+#' # columns to include in the factor analysis and the grouping variables
+#' test_data %>% 
+#'   # group indicates we want to run the factor analysis across each level in edu_f2
+#'   # nfactors specifies we want two factors
+#'   # threshold sets the cut off for the loadings
+#'   get_loadings(
+#'     # specify the variables to include in the factor analysis
+#'     cols = c(top:run), 
+#'     # specify the group variable, run separate factor analyses for each level
+#'     group = edu_f2, 
+#'     # specify two factors
+#'     nfactors = 2, 
+#'     # specify the loadings are cut off at |0.2|
+#'     threshold = 0.2
+#'   ) 
+#' 
 #' 
 #' 
 #' @export
-
 get_loadings <- function(
-  model,
+  data,
+  cols,
+  group,
   labels = NULL, 
   threshold = 0.4, 
   print = "short",
   nfactors = 1,
   fm = "pa",
   rotate = "oblimin",
-  sort = TRUE
+  sort = TRUE,
+  decimals = 3,
+  na.rm = FALSE
 ) {
   UseMethod("get_loadings")
 }
 
+
+
 #' @export
-get_loadings.default <- function(
-  model,
+get_loadings.psych <- function(
+  data,
+  cols,
+  group,
   labels = NULL, 
   threshold = 0.4, 
   print = "short",
   nfactors = 1,
   fm = "pa",
   rotate = "oblimin",
-  sort = TRUE
+  sort = TRUE,
+  decimals = 3,
+  na.rm = FALSE
 ) {
 
-  n <- model$factors
+  if (!missing(cols)) {
+    cli::cli_inform(c(
+      "{.arg cols} is only valid when supplying an object of class {.cls data.frame}", 
+      "You've supplied an object with class {.cls {class(data)}}"
+    ))
+  }
+  
+  if (!missing(group)) {
+    cli::cli_inform(c(
+      "{.arg group} is only valid when supplying an object of class {.cls data.frame}", 
+      "You've supplied an object with class {.cls {class(data)}}"
+    ))
+  }
+
+  n <- data$factors
 
   # get the factor loadings, communality, and uniqueness
-  loadings <- tibble::as_tibble(unclass(model$loadings), rownames = "variables") %>% 
-    dplyr::mutate(
-      communality = model$communality,
-      uniqueness = model$uniqueness
-    )
+  out <- as.data.frame(unclass(data$loadings))
+  out$variables <- rownames(out)
+  out <- out[c("variables", names(out[names(out) != "variables"]))]
+  rownames(out) <- NULL
+  # add communality as new column
+  out$communality <- data$communality
+  # add uniqueness as new column
+  out$uniqueness <- data$uniqueness
     
   if (!is.null(labels)) {
     if (is.character(labels)) {
-
-      loadings <- loadings %>% 
-        dplyr::mutate(labels = labels) %>% 
-        dplyr::relocate(labels, .after = "variables") 
-
+      # add the labels as a new column since its a character vector
+      out$labels <- labels
+      # move labels after variables
+      out <- out[c("variables", "labels", names(out[!names(out) %in% c("variables", "labels")]))]
     } else if (is.data.frame(labels)) {
-
+      # get the variable labels since its a data frame
       labels <- attr_var_label(labels)
-      loadings <- loadings %>% 
-        dplyr::mutate(labels = labels) %>% 
-        dplyr::relocate(labels, .after = "variables") 
+      # add the labels as a new column
+      out$labels <- labels
+      # move the labels column to come after the variables column
+      out <- out[c("variables", "labels", names(out[!names(out) %in% c("variables", "labels")]))]
     }
       
   }
@@ -162,207 +198,284 @@ get_loadings.default <- function(
   if (is.null(labels)) {
     # get the columns with loadings in them
     loading_cols <- seq(from = 2, to = n + 1)
-    # loading_cols <- 2:(n + 1)
+    # load_names <- names(out[!names(out) %in% c("variables", "labels", "communality", "uniqueness")])
   } else {
     # get the columns with loadings in them
-    loading_cols <- seq(from = 3, to = n +2)
+    loading_cols <- seq(from = 3, to = n + 2)
+    # load_names <- names(out[!names(out) %in% c("variables", "communality", "uniqueness")])
   }
 
-  attr(loadings, "loadings_columns") <- loading_cols
+  attr(out, "loadings_columns") <- loading_cols
 
-  loadings[, loading_cols][abs(loadings[, loading_cols]) < threshold] <- NA
+  # set columns with value below the threshold as NA
+  out[, loading_cols][abs(out[, loading_cols]) < threshold] <- NA
   
-  if (isTRUE(sort)) {
-    # get the names of the columns with the loadings and reverse the order
-    load_names <- rev(names(loadings[,loading_cols]))
-
-    # use a for loop to reorder the columns
-    for (x in load_names) {
-      loadings <- loadings %>% 
-      dplyr::arrange(dplyr::desc(abs(.data[[x]])))
-    }
+  if (sort) {
+    # if sort is true, sort by absolute values  
+    out <- sort_by(out, -abs(out[,loading_cols]))
   }
 
-  return(loadings)
+  # get the numeric columns
+  num_cols <- c(loading_cols, max(loading_cols) + 1, max(loading_cols + 2))
+  # round the numeric columns
+  out[, num_cols] <- round(out[, num_cols], decimals)
+
+  # add variable labels
+  attr(out$communality, "label") <- "Communality"
+  attr(out$uniqueness, "label") <- "Uniqueness"
+  attr(out$variables, "label") <- "Variable Name"
+  if (!is.null(labels)) attr(out$labels, "label") <- "Variable Label"
+
+  # return(rev(names(out[loading_cols])))
+
+  # # set the variable names for the loading columns as Factor X
+  for (x in rev(names(out[loading_cols]))) {
+    attr(out[[x]], "label") <- sub("[A-Z]+", "Factor ", x)
+  }
+  
+  
+  # set the class attributes
+  class(out) <- c("adlgraphs_loadings", "tbl_df", "tbl", "data.frame")
+
+  out
+
+}
+
+#' @export
+get_loadings.factanal <- function(
+  data,
+  cols,
+  group,
+  labels = NULL, 
+  threshold = 0.4, 
+  print = "short",
+  nfactors = 1,
+  fm = "pa",
+  rotate = "oblimin",
+  sort = TRUE,
+  decimals = 3,
+  na.rm = FALSE
+) {
+
+  if (!missing(cols)) {
+    cli::cli_inform(c(
+      "{.arg cols} is only valid when supplying an object of class {.cls data.frame}", 
+      "You've supplied an object with class {.cls {class(data)}}"
+    ))
+  }
+  
+  if (!missing(group)) {
+    cli::cli_inform(c(
+      "{.arg group} is only valid when supplying an object of class {.cls data.frame}", 
+      "You've supplied an object with class {.cls {class(data)}}"
+    ))
+  }
+  
+  n <- data$factors
+
+  # get the factor loadings, communality, and uniqueness
+  out <- as.data.frame(unclass(data$loadings))
+  # use the rownames to set the variables label
+  out$variables <- rownames(out)
+  # reorder the columns so variables is first
+  out <- out[c("variables", names(out[names(out) != "variables"]))]
+  rownames(out) <- NULL
+
+  # add communality as new column
+  out$communality <- 1 - data$uniqueness
+  # add uniqueness as new column
+  out$uniqueness <- data$uniqueness
+
+    
+  if (!is.null(labels)) {
+    if (is.character(labels)) {
+      # add the labels as a new column since its a character vector
+      out$labels <- labels
+      # move labels after variables
+      out <- out[c("variables", "labels", names(out[!names(out) %in% c("variables", "labels")]))]
+    } else if (is.data.frame(labels)) {
+      # get the variable labels since its a data frame
+      labels <- attr_var_label(labels)
+      # add the labels as a new column
+      out$labels <- labels
+      # move the labels and column to come after the variables column
+      out <- out[c("variables", "labels", names(out[!names(out) %in% c("variables", "labels")]))]
+    }
+      
+  }
+
+  if (is.null(labels)) {
+    # get the columns with loadings in them
+    loading_cols <- seq(from = 2, to = n + 1)
+    # load_names <- names(out[!names(out) %in% c("variables", "labels", "communality", "uniqueness")])
+  } else {
+    # get the columns with loadings in them
+    loading_cols <- seq(from = 3, to = n + 2)
+    # load_names <- names(out[!names(out) %in% c("variables", "communality", "uniqueness")])
+  }
+
+  attr(out, "loadings_columns") <- loading_cols
+
+  # set columns with value below the threshold as NA
+  out[, loading_cols][abs(out[, loading_cols]) < threshold] <- NA
+  
+  if (sort) {
+    # if sort is true, sort by absolute values  
+    out <- sort_by(out, -abs(out[,loading_cols]))
+  }
+
+  # get the numeric columns
+  num_cols <- c(loading_cols, max(loading_cols) + 1, max(loading_cols + 2))
+  # round the numeric columns
+  out[, num_cols] <- round(out[, num_cols], decimals)
+
+  # add variable labels
+  attr(out$communality, "label") <- "Communality"
+  attr(out$uniqueness, "label") <- "Uniqueness"
+  attr(out$variables, "label") <- "Variable Name"
+  if (!is.null(labels)) attr(out$labels, "label") <- "Variable Label"
+
+  # # set the variable names for the loading columns as Factor X
+  for (x in seq(n)) {
+    if (!missing(labels)) {
+      var <- x + 2
+    } else {
+      var <- x + 1
+    }
+    attr(out[[var]], "label") <- paste("Factor", x)
+  }
+  
+  # set the class attributes
+  class(out) <- c("adlgraphs_loadings", "tbl_df", "tbl", "data.frame")
+
+  out
 
 }
 
 #' @export
 get_loadings.data.frame <- function(
-  model,
+  data,
+  cols,
+  group,
   labels = NULL, 
   threshold = 0.4, 
   print = "short",
   nfactors = 1,
   fm = "pa",
   rotate = "oblimin",
-  sort = TRUE
+  sort = TRUE,
+  decimals = 3,
+  na.rm = FALSE
 ) {
 
-  # remove all non-numeric columns
-  model <- model %>% 
-    dplyr::select(dplyr::where(is.numeric))
+  # Prepare group variables
+  # if the data is grouped, get them using attr(data, "groups"), else set to NULL
+  group_names <- if(inherits(data, "grouped_df")) setdiff(names(attr(data, "groups")), ".rows") else NULL
+  # if group arg is missing set to NULL, else use as.character(substitute()) to capture it
+  group_vars <- if (missing(group)) NULL else select_groups({{ group }}, data)
+  # remove the "c" from the group_vars vector if it is there
+  group_vars <- group_vars[group_vars != "c"]
+  # combine group_names and group_vars for the final vector of group names
+  # use unique to make sure there aren't any duplicates
+  group_names <- unique(c(group_names, group_vars))
+    
+  # if cols is not missing, keep only the group_names and variables in cols
+  if (!missing(cols)) data <- data %>% dplyr::select(tidyselect::all_of(group_names), {{ cols }})
 
-  # get the variable labels from the model
-  var_labels <- attr_var_label(model)
-  # switch the names with the values in var_labels
-  var_labels <- stats::setNames(names(var_labels), var_labels)
+
+  # get the variable labels except for the group variables
+  labels <- attr_var_label(data[!names(data) %in% group_names])
+
+  if (na.rm) data <- data[stats::complete.cases(data),]
   
-  model <- model %>% 
-    psych::fa(
+  if (!is.null(group_names)) {
+    # if the groups are not null
+
+    # create a nested data frame
+    nest_data <- make_nested(data, {{ group_names }})
+
+    # iterate over each nested tibble from 
+    # TODO: Add the fa object as an attribute in the output
+    out <- purrr::map(
+      nest_data$data,
+      ~ psych::fa(
+        .x,
+        nfactors = nfactors,
+        fm = fm,
+        rotate = rotate
+      ) %>% 
+        get_loadings(
+          labels = labels,
+          threshold = threshold,
+          sort = sort
+        )
+    ) %>% 
+      stats::setNames(nest_data$name) 
+
+    # combine the lists
+    out <- vctrs::vec_rbind(!!!out, .names_to = "groups") %>% 
+      tidyr::separate_wider_delim(cols = "groups", delim = "_", names = group_names)
+
+  } else {
+    out <- psych::fa(
+      r = data,
       nfactors = nfactors,
       fm = fm,
       rotate = rotate
-    )
-  
-  loadings <- get_loadings.default(model, labels = labels, threshold = threshold, sort = sort)
-  
-  if (is.null(labels)) {
-    loadings$variables <- haven::labelled(
-      loadings$variables,
-      labels = var_labels
-    )
-  }
-  return(loadings)
-  
-}
-
-#' @export
-get_loadings.grouped_df <- function(
-  model,
-  labels = NULL, 
-  threshold = 0.4, 
-  print = "short",
-  nfactors = 1,
-  fm = "pa",
-  rotate = "oblimin",
-  sort = TRUE
-) {
-  # extract the df in the "groups" attribute
-  group_labs <- attr(model, "groups") %>% 
-    # remove the .rows column
-    dplyr::select(-`.rows`)
-  # get the column names, these are the grouping variables
-  group_labs <- colnames(group_labs)
-
-  leng_groups <- length(group_labs)
-
-  if (leng_groups > 1) {
-    # if there are multiple grouping variables
-
-    # make it a nested data set
-    nest_data <- model %>% 
-      tidyr::nest() %>% 
-      tidyr::drop_na(everything())
-
-    for (n in c(1:leng_groups)) {
-      if (n == 1) {
-        string <- paste('.data[[group_labs[1]]]')
-      } else {
-        string <- paste0(string, ', " - ", .data[[group_labs[', n, ']]]')
-      }
-      new_string = paste0("paste0(", string, ")")
-    }
-
-    # get the groups 
-    # we will combine this with the correlations
-    just_groups <- nest_data %>% 
-      # remove the data column so it's just the groups
-      dplyr::select(-data) %>% 
-      # combined the grouping variabels
-      dplyr::mutate(groups_combined = eval(parse(text = new_string))) %>% 
-      # extract it as a vector
-      dplyr::pull(groups_combined)
-
-    # make the correlation dataframe
-    load_df <- purrr::map(
-      # we are iterating over the data column
-      nest_data$data, 
-      # use get_loadings.data.frame to get the individuals loadings
-      ~get_loadings.data.frame(
-        model = .x, 
-        labels = labels, 
+    ) %>% 
+      get_loadings(
+        labels = labels,
         threshold = threshold,
-        nfactors = nfactors, 
-        fm = fm, 
-        rotate = rotate,
-        sort = sort
+        sort = sort,
+        decimals = decimals
       )
-    ) 
-
-    if (print == "short") {
-      # name the objects in the list
-      names(load_df) <- just_groups
-      # create the output data frame
-      # combine the list objects and make a new variable 
-      # called "groups" containing the names of each list
-      out <- dplyr::bind_rows(load_df, .id = "groups") %>% 
-        # split up the string by the - and use the group_labs vector as the names
-        tidyr::separate_wider_delim(groups, delim = " - ", names = c(group_labs)) %>% 
-        # group the data by the vector group variables
-        dplyr::group_by(dplyr::across(tidyselect::all_of(group_labs))) %>% 
-        # arrange by the groups
-        dplyr::arrange(.by_group = TRUE)
+  }
 
 
 
-      attr(out$variables, "label") <- "Variables"
-      attr(out$communality, "label") <- "Common Variance"
-      attr(out$uniqueness, "label") <- "Unique Variance"
-
-      return(out)
-    }
+  # add variable labels
+  attr(out$communality, "label") <- "Communality"
+  attr(out$uniqueness, "label") <- "Uniqueness"
+  attr(out$variables, "label") <- "Variable Name"
+  if ("labels" %in% names(out)) {
+    attr(out$labels, "label") <- "Variable Label"
+    # get the names of the loading variables
+    load_names <- names(out[!names(out) %in% c(group_names, "variables", "labels", "communality", "uniqueness")])
+  } else {
+    # get the names of the loading variables
+    load_names <- names(out[!names(out) %in% c(group_names, "variables", "communality", "uniqueness")])
+  }
     
 
-  } else {
-    # if there is only one grouping variable
+  # # set the variable names for the loading columns as Factor X
+  for (x in rev(load_names)) {
+    attr(out[[x]], "label") <- sub("[A-Z]+", "Factor ", x)
+  }
+  
+  if (!is.null(group_names)) {
+    # if there are groups add the value labels
 
-    # make it a nested data set
-    nest_data <- model %>% 
-      tidyr::nest() %>% 
-      tidyr::drop_na(everything())
-
-    # get the groups 
-    # we will combine this with the correlations
-    just_groups <- nest_data %>% 
-      dplyr::pull(-data) 
-
-    # make the correlation dataframe
-    load_df <- purrr::map(
-      # we are iterating over the data column
-      nest_data$data, 
-      # use get_loadings.data.frame to get the individuals loadings
-      ~get_loadings.data.frame(
-        model = .x, 
-        labels = labels, 
-        threshold = threshold,
-        nfactors = nfactors, 
-        fm = fm, 
-        rotate = rotate,
-        sort = sort
-      )
-    ) 
-
-    if (print == "short") {
-      # name the objects in the list
-      names(load_df) <- just_groups
-      # combine the rows and make a new label called 
-      out <- dplyr::bind_rows(load_df, .id = "groups")
-
-      # combine the columns of the grouping variable with the correlation
-      # out <- dplyr::bind_cols(just_groups, load_df)
-      # sort the first two columns
-      out <- out %>% 
-        dplyr::arrange(.by_group = TRUE)
-
-      attr(out$variables, "label") <- "Variables"
-      attr(out$communality, "label") <- "Common Variance"
-      attr(out$uniqueness, "label") <- "Unique Variance"
-
-      return(out)
-    }
+    # get the variable labels as a named list
+    group_labels <- attr_var_label(data[,group_names])
+    # for each value in names(group_labels) add the variable label from group_labels
+    for (y in names(group_labels)) attr(out[[y]], "label") <- group_labels[[y]]
 
   }
 
+  # add an attribute containing the names of the grouping variables
+  attr(out, "group_names") <- group_names
+
+  # set the class attributes
+  class(out) <- c("adlgraphs_loadings", "tbl_df", "tbl", "data.frame")
+  
+  out
+
 }
+
+
+
+
+
+
+
 

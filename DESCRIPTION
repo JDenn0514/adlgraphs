@@ -2,12 +2,14 @@ Type: Package
 Package: adlgraphs
 Title: Create Graphs with ADL Style and Branding
 Version: 0.3.61
-Authors@R: 
-    person("Jacob", "Dennen", , "jdennen@adl.org", role = c("aut", "cre"))
+Authors@R: c(
+    person("Jacob", "Dennen", , email = "jdennen@adl.org", role = c("aut", "cre")),
+    person("Sarah", "Cueva Egan", , role = "ctb")
+    )
 Description: The main goal of adlgraphs is to improve the efficiency and 
     ease of cleaning, analyzing, and visualizing survey data, so that the 
     turnaround time between data collection and presentation of analysis and 
-    findings can be as minimized. 
+    findings can be minimized. 
 License: MIT + file LICENSE
 URL: https://github.com/JDenn0514/adlgraphs,
     https://jdenn0514.github.io/adlgraphs/
@@ -43,7 +45,6 @@ Imports:
     tibble,
     tidyr,
     tidyselect,
-    waldo,
     withr,
     writexl,
     vctrs

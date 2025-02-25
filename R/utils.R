@@ -105,7 +105,7 @@ group_analysis_helper <- function(data, cols) {
       } else {
         string <- paste0(string, ', " - ", .data[[group_labs[', n, ']]]')
       }
-      new_string = paste0("paste0(", string, ")")
+      new_string <- paste0("paste0(", string, ")")
     }
 
     # get the groups 
@@ -296,6 +296,20 @@ select_groups <- function(group, data) {
   return(group_vars)
 }
 
+# check_groups <- function(group, data) {
+#   # if the data is grouped, use dplyr::group_vars to get them, else set to NULL
+#   group_names <- if(inherits(data, "grouped_df")) setdiff(names(attr(model, "groups")), ".rows") else NULL
+#   # if group arg is missing set to NULL, else use as.character(substitute()) to capture it
+#   group_vars <- if (missing(group)) NULL else select_groups({{ group }}, data)
+#   # remove the "c" from the group_vars vector if it is there
+#   group_vars <- group_vars[group_vars != "c"]
+#   # combine group_names and group_vars for the final vector of group names
+#   # use unique to make sure there aren't any duplicates
+#   group_names <- unique(c(group_names, group_vars))
+
+#   group_names
+# }
+
 
 # functions from other packages -------------------------------------------
 
@@ -315,7 +329,7 @@ eval_select_by <- function(
   names(out)
 }
 
-#
+# from 
 check_factor <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
   if (is.character(x)) {
     factor(x)
@@ -476,8 +490,8 @@ quantcut <- function(x, q = 4, na.rm = TRUE, ...) {
     rownames(pairs) <- c("lower.bound", "upper.bound")
     colnames(pairs) <- levs
 
-    closed.lower <- rep(F, ncol(pairs)) # default lower is open
-    closed.upper <- rep(T, ncol(pairs)) # default upper is closed
+    closed.lower <- rep(FALSE, ncol(pairs)) # default lower is open
+    closed.upper <- rep(TRUE, ncol(pairs)) # default upper is closed
     closed.lower[1] <- TRUE # lowest interval is always closed
 
     for (i in 2:ncol(pairs)) { # open lower interval if above singlet

@@ -89,7 +89,7 @@ case_when_fct <- function(..., .default = NULL) {
   # add .default to the levels
   # this makes sure if you use .default instead of TRUE ~, it will return the
   # proper vector instead of NAs
-  levels[[arg_len]] = .default
+  levels[[arg_len]] <- .default
 
   # set the vector to a factor and specify the levels
   factor(

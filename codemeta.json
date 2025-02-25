@@ -99,7 +99,7 @@
       "@type": "SoftwareApplication",
       "identifier": "R",
       "name": "R",
-      "version": ">= 3.5"
+      "version": ">= 4.4"
     },
     "2": {
       "@type": "SoftwareApplication",
@@ -425,18 +425,6 @@
     },
     "30": {
       "@type": "SoftwareApplication",
-      "identifier": "waldo",
-      "name": "waldo",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=waldo"
-    },
-    "31": {
-      "@type": "SoftwareApplication",
       "identifier": "withr",
       "name": "withr",
       "provider": {
@@ -447,7 +435,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=withr"
     },
-    "32": {
+    "31": {
       "@type": "SoftwareApplication",
       "identifier": "writexl",
       "name": "writexl",
@@ -459,7 +447,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=writexl"
     },
-    "33": {
+    "32": {
       "@type": "SoftwareApplication",
       "identifier": "vctrs",
       "name": "vctrs",
@@ -473,9 +461,5 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "794.563KB",
-  "releaseNotes": "https://github.com/JDenn0514/adlgraphs/blob/master/NEWS.md",
-  "readme": "https://github.com/JDenn0514/adlgraphs/blob/main/README.md",
-  "contIntegration": "https://github.com/JDenn0514/adlgraphs/actions/workflows/R-CMD-check.yaml",
-  "developmentStatus": "https://lifecycle.r-lib.org/articles/stages.html#stable"
+  "fileSize": "815.097KB"
 }

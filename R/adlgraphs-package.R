@@ -32,12 +32,11 @@
 #'   na.omit lm coef quantile xtabs reformulate complete.cases median
 #'   model.matrix lm relevel
 #' @importFrom systemfonts register_font
-#' @importFrom tibble as_tibble enframe new_tibble
+#' @importFrom tibble as_tibble new_tibble
 #' @importFrom tidyr pivot_wider drop_na nest unnest separate_wider_delim
 #' @importFrom tidyselect all_of eval_select where
 #' @importFrom utils tail
 #' @importFrom vctrs vec_ptype_abbr vec_rbind vec_cbind vec_split 
-#' @importFrom waldo compare
 #' @importFrom withr with_seed
 #' @importFrom writexl write_xlsx
 #' @keywords internal

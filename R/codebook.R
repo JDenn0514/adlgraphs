@@ -61,9 +61,9 @@ codebook <- function(data) {
 
   data_lab <- deparse(substitute(data))
 
-  if (!is.data.frame(data) || !tibble::is_tibble(data)) {
+  if (!is.data.frame(data)) {
     cli::cli_abort(c(
-      "{.var data} must be of class {.cls tbl_df}, {.cls tbl}, or {.cls data.frame}",
+      "{.var data} must be of class {.cls data.frame}",
       "x" = "You've supplied an object of class {.cls {class(data)}}"
     ))
   }

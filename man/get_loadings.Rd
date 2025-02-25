@@ -5,19 +5,31 @@
 \title{Calculate the loadings in factor analysis}
 \usage{
 get_loadings(
-  model,
+  data,
+  cols,
+  group,
   labels = NULL,
   threshold = 0.4,
   print = "short",
   nfactors = 1,
   fm = "pa",
   rotate = "oblimin",
-  sort = TRUE
+  sort = TRUE,
+  decimals = 3,
+  na.rm = FALSE
 )
 }
 \arguments{
-\item{model}{Either a model created using \code{psych::fa()} or a
+\item{data}{Either a data created using \code{psych::fa()} or a
 data.frame}
+
+\item{cols}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> The variables you want
+to get the correlations for.}
+
+\item{group}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> A selection of columns to
+group the data by in addition to \code{treats}. This operates very similarly
+to \code{.by} from dplyr (for more info on that see \link[dplyr:dplyr_by]{?dplyr_by}).
+See examples to see how it operates.}
 
 \item{labels}{Either a character vector or data frame. Creates a
 new column called "labels" for each variable in the factor
@@ -32,33 +44,23 @@ that has not been created yet.}
 
 \item{nfactors}{Number of factors to extract, default is 1.}
 
-\item{fm}{Factoring method fm="minres" will do a minimum residual as will
-fm="uls". Both of these use a first derivative. fm="ols" differs very
-slightly from "minres" in that it minimizes the entire residual matrix
-using an OLS procedure but uses the empirical first derivative. This
-will be slower. fm="wls" will do a weighted least squares (WLS)
-solution, fm="gls" does a generalized weighted least squares (GLS),
-fm="pa" will do the principal factor solution, fm="ml" will do a
-maximum likelihood factor analysis. fm="minchi" will minimize the
-sample size weighted chi square when treating pairwise correlations
-with different number of subjects per pair. fm ="minrank" will do a
-minimum rank factor analysis. "old.min" will do minimal residual the
-way it was done prior to April, 2017 (see discussion below). fm="alpha"
-will do alpha factor analysis as described in Kaiser and Coffey (1965).
-Default is "pa".}
+\item{fm}{Factoring method used in the factor analysis. Default is
+"pa". For more information on the various methods see the \code{fm}
+argument in the \code{psych::fa()} function.}
 
-\item{rotate}{"none", "varimax", "quartimax", "bentlerT", "equamax",
-"varimin", "geominT" and "bifactor" are orthogonal rotations.
-"Promax", "promax", "oblimin", "simplimax", "bentlerQ, "geominQ" and
-"biquartimin" and "cluster" are possible oblique transformations of
-the solution. The default is to do a oblimin transformation, although
-versions prior to 2009 defaulted to varimax. SPSS seems to do a
-Kaiser normalization before doing Promax, this is done here by the
-call to "promax" which does the normalization before calling Promax in
-GPArotation.}
+\item{rotate}{The type of factor rotation to perform when conducting
+the factor analysis. Default is "oblimin". For more information on
+the different rotation methods available, check the documentation
+for the \code{rotate} argument in \code{psych::fa()}.}
 
 \item{sort}{Logical. If \code{TRUE}, the default, the loadings are sorted
 largest to smallest. If \code{FALSE}, no sorting occurs.}
+
+\item{decimals}{Number of decimals each number should be rounded to. Default
+is 3.}
+
+\item{na.rm}{Logical. Default is \code{TRUE} which removes NAs prior to
+calculation.}
 }
 \value{
 A data.frame showing factor loadings.
@@ -73,7 +75,6 @@ loadings may change along the different levels of a group.
 }
 \examples{
 
-library(adlgraphs)
 library(dplyr)
 library(psych)
 
@@ -126,8 +127,26 @@ test_data \%>\%
   select(edu_f2, top:run) \%>\% 
   # group the data
   group_by(edu_f2) \%>\% 
-  # specify number of factors, rotation, factor method, and threshold
-  get_loadings(nfactors = 2, rotate = "varimax", fm = "minres", threshold = 0.2) 
+  # specify number of factors, and the threshold
+  get_loadings(nfactors = 2, threshold = 0.2) 
+
+# let's repeat the previous analysis, but use internal arguments to select the 
+# columns to include in the factor analysis and the grouping variables
+test_data \%>\% 
+  # group indicates we want to run the factor analysis across each level in edu_f2
+  # nfactors specifies we want two factors
+  # threshold sets the cut off for the loadings
+  get_loadings(
+    # specify the variables to include in the factor analysis
+    cols = c(top:run), 
+    # specify the group variable, run separate factor analyses for each level
+    group = edu_f2, 
+    # specify two factors
+    nfactors = 2, 
+    # specify the loadings are cut off at |0.2|
+    threshold = 0.2
+  ) 
+
 
 
 }

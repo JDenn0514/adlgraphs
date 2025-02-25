@@ -86,6 +86,5 @@ adl_palettes <-
     "bluescale"
   )
 
-rm(primary, secondary, tertiary, binary, pid3, categorical, likert_4, likert_6, bluescale)
 
 usethis::use_data(adl_palettes, overwrite = TRUE)
