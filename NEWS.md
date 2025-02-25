@@ -1,3 +1,11 @@
+# adlgraphs 0.3.62
+
+## Changes to get_loadings
+
+- Changed the underlying methods so that it works on an object created used `psych::fa()` and `factanal()`
+
+- Redeveloped the way it calculates the grouped variables. It now operates the same way as most of the other functions in the package.
+
 # adlgraphs 0.3.61
 
 ## Deprecated the `bot_dupe` functions in favor of `bogus` functions
