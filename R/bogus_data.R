@@ -139,7 +139,7 @@ get_bogus <- function(data, duration, cut_off = 0.3) {
   if ("Q_RecaptchaScore" %in% colnames(data)) {
     bogus$bot <- ifelse(bogus$Q_RecaptchaScore < 0.5, TRUE, FALSE)
   } else if ("q_recaptcha_score" %in% colnames(data)) {
-    bogus$duplicate <- ifelse(bogus$q_recaptcha_score < 0.5, TRUE, FALSE)
+    bogus$bot <- ifelse(bogus$q_recaptcha_score < 0.5, TRUE, FALSE)
   }
 
   # get the cut off time
