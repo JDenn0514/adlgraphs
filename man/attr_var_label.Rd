@@ -4,14 +4,14 @@
 \alias{attr_var_label}
 \title{Get variable label}
 \usage{
-attr_var_label(x, data, unlist, if_null = NULL)
+attr_var_label(data, x, unlist = TRUE, if_null = NULL)
 }
 \arguments{
-\item{x}{A vector object, the name of a column in a \code{data.frame}, or an
-an actual \code{data.frame} object.}
-
 \item{data}{A \code{data.frame} or \code{tibble} object. This should only be specified
 when \code{x} is only the name of a column in a \code{data.frame}.}
+
+\item{x}{A vector object, the name of a column in a \code{data.frame}, or an
+an actual \code{data.frame} object.}
 
 \item{unlist}{Logical. If \code{TRUE}, the default, returns a named vector. If
 \code{FALSE}, returns a list. This only works when \code{x} is a \code{data.frame}}

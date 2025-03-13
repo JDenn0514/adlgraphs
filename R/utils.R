@@ -296,6 +296,27 @@ select_groups <- function(group, data) {
   return(group_vars)
 }
 
+# a low level function for getting variable labels that powers the attr_var_label
+low_var_label <- function(x, data, if_null = NULL) {
+  
+  x_name <- rlang::quo_get_expr(rlang::expr({{ x }}))
+
+  if (missing(data)) {
+    x <- attr(x, "label", exact = TRUE)
+  } else {
+    x <- attr(data[[x]], "label", exact = TRUE)
+  }
+
+  if (is.null(x) && !is.null(if_null)) {
+    if (if_null == "name") {
+      x <- x_name
+    } else if (if_null == "NA" && !is.null(if_null)) {
+      x <- NA
+    }
+  }
+  x
+}
+
 # check_groups <- function(group, data) {
 #   # if the data is grouped, use dplyr::group_vars to get them, else set to NULL
 #   group_names <- if(inherits(data, "grouped_df")) setdiff(names(attr(model, "groups")), ".rows") else NULL

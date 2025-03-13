@@ -43,59 +43,34 @@
 #' 
 #' 
 #' @export
-attr_var_label <- function(x, data, unlist, if_null = NULL) {
-  UseMethod("attr_var_label")
-}
-
-#' @export
-attr_var_label.default <- function(x, data, unlist = NULL, if_null = NULL) {
-  x_name <- rlang::quo_get_expr(rlang::expr({{ x }}))
-
-  if (missing(data)) {
-    x <- attr(x, "label", exact = TRUE)
-  } else {
-    x <- attr(data[[x]], "label", exact = TRUE)
-  }
-
-  if (is.null(x) && !is.null(if_null)) {
-    if (if_null == "name") {
-      x <- x_name
-    } else if (if_null == "NA" && !is.null(if_null)) {
-      x <- NA
+attr_var_label <- function(data, x, unlist = TRUE, if_null = NULL) {
+  if (missing(x)) {
+    if ("data.frame" %in% class(data)) {
+      out <- purrr::map(
+        names(data),
+        ~low_var_label({{ .x }}, data, if_null = if_null) 
+      ) %>% 
+        setNames(names(data))
+  
+      if (isTRUE(unlist)) out <- unlist(out)
+    } else {
+      out <- low_var_label({{ data }}, if_null = if_null)
     }
-  }
-  x
-}
-
-
-# Create a vector containing character strings comprised of all the variable
-# labels for each column in a data.frame or tibble.
-# write a function that will get the variable label for each column in the data
-#' @export
-attr_var_label.data.frame <- function(x, data = NULL, unlist = TRUE, if_null = NULL) {
-  # get a list of columns
-  cols <- names(x)
-
-  # iterate string_fun over each of the columns laid out earlier
-  var_labels <- purrr::map(
-    cols, 
-    ~ attr_var_label.default({{ .x }}, data = x, unlist = unlist, if_null = if_null)
-  ) %>%
-    # set the names of the objects in the list
-    setNames(cols)
-
-  if (isTRUE(unlist)) {
-    # map string_fun over each of the columns laid out earlier
-    var_labels %>% unlist()
+  
   } else {
-    var_labels
+    # if x is not missing, get a data frame with x 
+    # do it this way so you can select multiple variables
+    data <- data %>% dplyr::select({{ x }})
+    out <- purrr::map(
+      names(data),
+      ~low_var_label({{ .x }}, data, if_null = if_null) 
+    ) %>% 
+      setNames(names(data))
+
+    if (isTRUE(unlist)) {
+      out <- unlist(out, use.names = TRUE)
+    } 
   }
 
+  out
 }
-
-
-
-
-
-
-
