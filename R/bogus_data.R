@@ -76,10 +76,19 @@ remove_bogus <- function(data, duration, cut_off = 0.3, only_finished = TRUE) {
 
   # remove duplicates
   if ("Q_RelevantIDDuplicateScore" %in% colnames(data)) {
-    data <- data[data$Q_RelevantIDDuplicateScore < 76,]
-  } else if ("q_relevant_id_duplicate" %in% colnames(data)) {
-    data <- data[data$q_relevant_id_duplicate_score < 76,]
+    data <- data[data$Q_RelevantIDDuplicateScore < 75,]
+  } else if ("q_relevant_id_duplicate_score" %in% colnames(data)) {
+    data <- data[data$q_relevant_id_duplicate_score < 75,]
   }
+
+  # remove fraudulent and bots
+  if ("Q_RelevantIDFraudScore" %in% colnames(data)) {
+    data <- data[data$Q_RelevantIDFraudScore < 30,]
+  } else if ("q_relevant_id_fraud_score" %in% colnames(data)) {
+    data <- data[data$q_relevant_id_fraud_score < 30,]
+  }
+
+
 
   
   if (!missing(duration)) {

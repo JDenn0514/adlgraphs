@@ -8,6 +8,11 @@ prettytable(x)
 }
 \arguments{
 \item{x}{An object to turn into a pretty table.}
+
+\item{show_genpop}{Logical. If the data is grouped, determines if data should
+should be shown for the general population as well. \code{FALSE}, the default,
+does not show the results for the general population. \code{TRUE} shows the
+results for the general population in a new column.}
 }
 \description{
 Takes a data frame object and makes it into a pretty table. This is designed
