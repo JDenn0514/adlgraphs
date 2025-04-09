@@ -15,7 +15,7 @@
 #'   results for the general population in a new column.
 #'
 #' @export
-prettytable <- function(x) {
+prettytable <- function(x, show_genpop = FALSE) {
   UseMethod("prettytable")
 }
 

@@ -4,7 +4,7 @@
 \alias{prettytable}
 \title{Make pretty HTML tables}
 \usage{
-prettytable(x)
+prettytable(x, show_genpop = FALSE)
 }
 \arguments{
 \item{x}{An object to turn into a pretty table.}
