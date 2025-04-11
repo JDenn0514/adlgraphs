@@ -4,27 +4,51 @@
 \alias{get_all_freqs}
 \title{Export frequencies for a set of variables to a word doc.}
 \usage{
-get_all_freqs(data, x, group, wt, show_genpop, file_name)
+get_all_freqs(
+  data,
+  cols,
+  group = NULL,
+  wt = NULL,
+  drop_zero = FALSE,
+  decimals = 1,
+  na.rm = TRUE,
+  show_genpop = FALSE,
+  file_name
+)
 }
 \arguments{
-\item{data}{An object of type data.frame or tibble. If piping the data into the
-function, this is not required.}
+\item{data}{A data frame or tibble object}
 
-\item{x}{A vector of variables you want to get the frequencies for.}
+\item{cols}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> The variables you want
+to get the correlations for.}
 
-\item{group}{A character string. The first grouping variable.}
+\item{group}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> A selection of columns to
+group the data by in addition to \code{treats}. This operates very similarly
+to \code{.by} from dplyr (for more info on that see \link[dplyr:dplyr_by]{?dplyr_by}).
+See examples to see how it operates.}
 
 \item{wt}{A character string. Add if you have a weighting variable and want
 to get weighted frequencies}
 
-\item{show_genpop}{Logical. Should there be a column showing the frequencies
-for the general population}
+\item{drop_zero}{Logical. Determines if rows with 0 should be removed.
+Default is \code{FALSE}.}
+
+\item{decimals}{Number of decimals each number should be rounded to. Default
+is 1.}
+
+\item{na.rm}{Logical. Determines if NAs should be kept or removed. Default is
+\code{TRUE}.}
+
+\item{show_genpop}{Logical. Determines if there is a column showing the frequencies
+for the general population. Default is \code{FALSE} which does not include
+columns for the full sample. If \code{TRUE}, includeds two columns at
+the end for the full sample.}
 
 \item{file_name}{A character string specifying the name of the file to be
 created with the frequencies and where the file will be located. File must
 end in .docx}
 }
 \description{
-This function uses \code{\link[=get_freq_table]{get_freq_table()}} to get the frequencies for a set of variables
-suppplied by the user. It then outputs these frequencies to a word doc.
+This function makes it easy to export frequencies and cross-tabs of a set
+of variables to a Word Document. It uses the
 }
