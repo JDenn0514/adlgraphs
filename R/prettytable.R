@@ -35,8 +35,15 @@ prettytable.adlgraphs_freqs <- function(x, show_genpop = FALSE) {
 
   if (length(group_names) != 0) {
 
+    if (show_genpop) {
+      # get the number of decimals in pct
+      dec <- unlist(lapply(x$pct, decimal_places))
+      # subtract two from the max 
+      dec <- max(dec) - 2
+    }
+
     # clean up the percent column by making it a percentage
-    x$pct <- make_percent(x$pct)
+    x$pct <- make_percent(x$pct, decimals = NULL)
     # clean up the n
     x$n <- round(x$n)
 
@@ -74,7 +81,7 @@ prettytable.adlgraphs_freqs <- function(x, show_genpop = FALSE) {
       # get the frequencies of the general population
       genpop <- funky_freqs(data, {{ var_name }}, wt = {{ wt }})
       # convert pct to a percent
-      genpop$pct <- make_percent(genpop$pct)
+      genpop$pct <- make_percent(genpop$pct, decimals = dec)
       # round the number of respondents
       genpop$n <- round(genpop$n)
       # rename the last two columns
