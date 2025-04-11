@@ -1,8 +1,10 @@
 #' Calculate weighted frequencies
+#' 
+#' @description
 #'
-#' Use this function to calculate simple weighted frequencies weighted grouped.
+#' Use this function to calculate simple weighted frequencies.
 #' You can also specify a grouping variable by which you want to calculate the
-#' frequencies
+#' frequencies.
 #'
 #' The `x`, `group`, and `wt` arguments can either be strings or symbols
 #' (meaning they can have quotes or no quotes). The benefit of this is that it
@@ -14,11 +16,17 @@
 #'   function, this is not required.
 #' @param x Either a character string or symbol. The variable with which want
 #'   to get the frequencies.
-#' @param group Either a character string or a symbol. The grouping variable.
+#' @param group <[`tidy-select`][dplyr_tidy_select]> A selection of columns to 
+#'   group the data by in addition to `treats`. This operates very similarly
+#'   to `.by` from dplyr (for more info on that see [?dplyr_by][dplyr_by]). 
 #' @param wt Weights. Add if you have a weighting variable and want to get
-#'   weighted frequencies
-#' @param cross_tab Logical. If a `group` object has been supplied, should the
-#'   the table be pivoted to create make it like crosstabs
+#'   weighted frequencies.
+#' @param drop_zero Logical. Determines if rows with 0 should be removed 
+#'   Default is `FALSE`.
+#' @param decimals Number of decimals each number should be rounded to. Default
+#'   is 3.
+#' @param na.rm Logical. Determines if NAs should be kept or removed Default is
+#'   `TRUE`.
 #'
 #' @examples
 #' # load the package
@@ -27,206 +35,181 @@
 #' # Let's calculate the overall frequency for big_events
 #' get_freqs(test_data, big_events)
 #'
-#' # it also works if x is a string
-#' get_means(test_data, "big_events")
-#'
 #' # Let's do that again but add weights
 #' get_freqs(test_data, big_events, wt = wts)
+#' 
+#' # Can also a grouping variable by specifying the group arg
+#' get_freqs(test_data, big_events, group = pid_f3, wt = wts)
+#' 
+#' # You can also group the data and do it
+#' test_data %>% 
+#'   group_by(pid_f3) %>% 
+#'   get_freqs(big_events, wt = wts)
+#' 
+#' # you can also group by two or more variables
+#' get_freqs(test_data, big_events, group = c(pid_f3, edu_f2), wt = wts)
+#' 
+#' # also works when the arguments are strings
+#' get_freqs(test_data, "big_events", group = c("pid_f3", "edu_f2"), wt = "wts")
 #'
-#' # the wt argument can also be in quotes like this
-#' get_freqs(test_data, "big_events", wt = "wts")
-#'
-#' # Now let's do the average score for different education levels
-#' get_freqs(test_data, big_events, edu_f, wts)
-#'
-#' # it also works with quotes
-#' get_freqs(test_data, "big_events", "edu_f", "wts")
-#'
-#' # if we want to pivot the results so they look like cross tabs, then we need
-#' # to set `cross_tab` to TRUE
-#' get_freqs(test_data, big_events, edu_f, wts, cross_tab = TRUE)
-
-#'
-#' # you can also pipe in the `data` argument if you want to do some data
-#' # transformations before you calculate the means. For example, say you want
-#' # to compare the frequencies of `big_events` among people who agreed vs
-#' # disagreed with the variable `top`:
-#' test_data %>%
-#'   mutate(top_f2 = make_dicho(top)) %>%
-#'   get_freqs(trad_n, top_f2, wts)
-#'
-#'
-#'
-#'
+#' 
 #' @export
-#'
-#'
-
-get_freqs <- function(data, x, group, wt, cross_tab = FALSE) {
-
+get_freqs <- function(
+  data, 
+  x, 
+  group, 
+  wt, 
+  drop_zero = FALSE,
+  decimals = 3,
+  na.rm = TRUE
+) {
+  
   # get the object's name
-  x_lab <- deparse(substitute(x))
+  x_name <- rlang::enexpr(x)
 
-  # use enexpr() to capture the expressions supplied in "x"
-  # enexpr returns a naked expression of the argument supplied in "x"
-  # this is what allows the input to be either a string or a symbol
-  x <- rlang::enexpr(x)
+  # ensure that string or symbol are accepted in x
+  x <- rlang::as_name(rlang::ensym(x))
 
-  if (!is.character(x)) {
-    # if the name supplied in "x" is not a character...
+  # get the variable label in x
+  x_label <- attr_var_label(data[[x]])
 
-    # capture x and convert to a symbol object with ensym()
-    #then use as_name() to make it a string
-    x <- rlang::as_name(rlang::ensym(x))
+  # Prepare group variables
+  # if the data is grouped, use dplyr::group_vars to get them, else set to NULL
+  group_names <- if(inherits(data, "grouped_df")) dplyr::group_vars(data) else NULL
+  # if group arg is missing set to NULL, else use as.character(substitute()) to capture it
+  group_vars <- if (missing(group)) NULL else select_groups({{ group }}, data)
+  # remove the "c" from the group_vars vector if it is there
+  group_vars <- group_vars[group_vars != "c"]
+  # combine group_names and group_vars for the final vector of group names
+  # use unique to make sure there aren't any duplicates
+  group_names <- unique(c(group_names, group_vars))
 
-  }
+  # Prepare weights
+  if (missing(wt)) {
+    wt <- "wts"
+    data[[wt]] <- rep(1, length(data[[x]]))  
+  } else {
+    # ensure that string or symbol are accepted in wt
+    wt <- rlang::as_name(rlang::ensym(wt))
 
-
-  if (!missing(group)) {
-    # if group is not missing group the data
-
-    # use enexpr() to capture the expressions supplied in "group"
-    # enexpr returns a naked expression of the argument supplied in "group"
-    # this is what allows the input to be either a string or a symbol
-    group <- rlang::enexpr(group)
-
-    if (!is.character(group)) {
-      # if the object supplied in "group" is not a character...
-
-      # capture group and convert to a symbol object with ensym()
-      #then use as_name() to make it a string
-      group <- rlang::as_name(rlang::ensym(group))
-
-    }
-
-    if (is.numeric(data[[group]]) && !is.null(attr_val_labels(data[[group]]))) {
-      # if group is class numeric AND DOES contain value labels
-
-      # convert to a factor with make_factor
-      data <- data %>%
-        # convert to a factor using make_factor
-        dplyr::mutate(group_f = make_factor(.data[[group]])) %>%
-        # group by group_f
-        dplyr::group_by(group_f)
-
-    } else if (is.character(data[[group]]) || is.factor(data[[group]])) {
-      # if group is of class character or factor return x
-
-      data <- data %>%
-        # just make a new variable called group_f comprised of gropu
-        dplyr::mutate(group_f = .data[[group]]) %>%
-        # group by group_f
-        dplyr::group_by(group_f)
+    if (!is.numeric(data[[wt]])) {
+      # if it is not numeric then return an error
+      cli::cli_abort(c(
+        "`{wt}` must be a numeric variable.",
+        x = "Supplied variable is {class(data[[wt]])}."
+      ))
 
     } else {
-      # if group is anything else (ie numeric)
-
-      data <- data %>%
-        # force to a factor
-        dplyr::mutate(group_f = as.factor(group)) %>%
-        # group by group_f
-        dplyr::group_by(group_f)
-
+      # if it is numeric, replace NAs with 0
+      data[[wt]][is.na(data[[wt]])] <- 0
     }
 
   }
+  # subset the data with only relevant variables
+  # this is so that when we remove NAs we are only doing it over the right variables
+  data <- data[c(x, group_names, wt)]
 
-  if (missing(wt)) {
-    # if missing wt
+  # if na.rm is TRUE remove NAs from all columns in data
+  if (na.rm) data <- data[stats::complete.cases(data),]
 
+  # Get the value labels (assumes attr_val_labels function exists)
+  value_labels <- attr_val_labels(data[[x]])
+
+  # Get sorted labels and unique values
+  if (is.numeric(data[[x]])) {
+    labs <- sort(as.numeric(value_labels))
+    vals <- sort(unique(as.numeric(data[[x]])))
+  } else {
+    labs <- sort(as.character(value_labels))
+    vals <- sort(unique(as.character(x)))
+  }
+
+  # If the values don't match the labels, don't make into a factor
+  if (!all(vals %in% labs)) {
+    # convert the group_names to factors before the analysis to preserve NA tags
+    data[,c(group_names)] <- lapply(
+      data[,c(group_names)], 
+      \(y) make_factor(y, drop_levels = drop_zero, force = TRUE, na.rm = na.rm)
+    )
+  } else {
+    # convert the x and group_names to factors before the analysis to preserve NA tags
+    data[,c(x, group_names)] <- lapply(
+      data[,c(x, group_names)], 
+      \(y) make_factor(y, drop_levels = drop_zero, force = TRUE, na.rm = na.rm)
+    )
+  }
+
+  if (!missing(group) && !is.null(group_names)) {
+    # if the group arg is not missing, apply grouping based on group_names
+    data <- data %>% 
+      dplyr::group_by(dplyr::across(tidyselect::all_of(group_names)))
+  } 
+
+  out <- data %>% 
     # calculate the frequencies
-    data_freq <- data %>%
-      tidyr::drop_na(dplyr::all_of(x)) %>%
-      dplyr::count(.data[[x]]) %>%
-      dplyr::mutate(pct = prop.table(n))
+    dplyr::count(.data[[x]], wt = .data[[wt]], .drop = drop_zero) %>% 
+    # clean up the data
+    dplyr::mutate(
+      # use prop.table() to calculate percentage and round()
+      # add 2 to decimals so that when converted to percentage 
+      # it has the correct number of decimals
+      pct = round(prop.table(n), decimals + 2),
+      # round the n to the number of decimals
+      n = round(n, decimals)
+    ) 
+  
+  if (!is.null(group_names)) {
+    # if there are groups add the value labels
 
-    if (!missing(group)) {
-      # if not missing group
+    # get the variable labels as a named list
+    group_labels <- attr_var_label(data[,group_names])
+    # for each value in names(group_labels) add the variable label from group_labels
+    for (y in names(group_labels)) attr(out[[y]], "label") <- group_labels[[y]]
 
-      # rename the group_f variable with the name supplied in "group"
-      data_freq <- data_freq %>% dplyr::rename({{ group }} := group_f)
+  }
 
-      if (isTRUE(cross_tab)) {
-        # cross_tab is TRUE then pivot the table
+  if (!is.null(x_label)) {
+    # if there is a variable label in the x variable
 
-        data_freq <- data_freq %>%
-          dplyr::mutate(
-            pct = make_percent(pct),
-            pct_lab = glue::glue("{pct} (n = {n})"),
-          ) %>%
-          dplyr::select(-c(pct, n)) %>%
-          tidyr::pivot_wider(
-            names_from = {{ group }},
-            values_from = pct_lab
-          ) %>%
-          dplyr::arrange(.data[[x]])
-
-      }
-
-    }
+    # add the variable label to x
+    attr(out[[x]], "label") <- x_label
+    # add the variable label of x as an attribute called 
+    # variable_label to the output dataframe
+    attr(out, "variable_label") <- x_label
+    # add the variable name of x as an attribute called
+    # variable_name to the output dataframe
+    attr(out, "variable_name") <- x_name
 
   } else {
-    # if wt is not missing
+    # if x does not have a variable label
 
-    # use enexpr() to capture the expressions supplied in "wt"
-    # enexpr returns a naked expression of the argument supplied in "wt"
-    # this is what allows the input to be either a string or a symbol
-    wt <- rlang::enexpr(wt)
-
-    if (!is.character(wt)) {
-      # if the object supplied in "x" is not a character...
-
-      # capture x and convert to a symbol object with ensym()
-      #then use as_name() to make it a string
-      wt <- rlang::as_name(rlang::ensym(wt))
-
-    }
-
-    # calculate the frequencies
-    data_freq <- data %>%
-      tidyr::drop_na(all_of(x)) %>%
-      dplyr::count(.data[[x]], wt = .data[[wt]]) %>%
-      dplyr::mutate(pct = prop.table(n),
-                    n = round(n, 1))
-
-
-    if (!missing(group)) {
-      # if not missing group
-
-      # rename the group_f variable with the name supplied in "group"
-      data_freq <- data_freq %>% dplyr::rename({{ group }} := group_f)
-
-      if (isTRUE(cross_tab)) {
-        # cross_tab is TRUE then pivot the table
-
-        data_freq <- data_freq %>%
-          dplyr::mutate(
-            n = round(n, 1),
-            pct = make_percent(pct),
-            pct_lab = glue::glue("{pct} (n = {n})"),
-          ) %>%
-          dplyr::select(-c(pct, n)) %>%
-          tidyr::pivot_wider(
-            names_from = {{ group }},
-            values_from = pct_lab
-          ) %>%
-          dplyr::arrange(.data[[x]])
-
-      }
-
-    }
+    # add the variable name of x as an attribute called
+    # variable_label to the output dataframe
+    attr(out, "variable_label") <- x_name
+    # add the variable name of x as an attribute called
+    # variable_name to the output dataframe    
+    attr(out, "variable_name") <- x_name
 
   }
 
-  class_names <- class(data_freq)
+  # add an attribute containing the names of the grouping variables
+  if (!is.null(group_names)) {
+    attr(out, "group_names") <- group_names
+    attr(out, "group_labels") <- group_labels
+  }
 
-  data_freq %>% structure(class = c("adlgraphs_freqs", class_names))
+  # add a variable for the n variable
+  attr(out$n, "label") <- "N"
+  # add a variable label for the pct variable
+  attr(out$pct, "label") <- "Percent"
 
+  attr(out, "dataset") <- data
+
+  # get the classes of the data.frame
+  class_names <- class(out)
+  # add adlgraphs_freqs to the classes
+  attr(out, "class") <- c("adlgraphs_freqs", class_names)
+
+  out
+  
 }
-
-
-
-
-
-
-

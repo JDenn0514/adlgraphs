@@ -4,7 +4,16 @@
 \alias{get_freq_table}
 \title{Get the frequencies as a GT table}
 \usage{
-get_freq_table(data, x, group, wt, show_genpop = FALSE)
+get_freq_table(
+  data,
+  x,
+  group = NULL,
+  wt = NULL,
+  drop_zero = FALSE,
+  decimals = 3,
+  na.rm = TRUE,
+  show_genpop = FALSE
+)
 }
 \arguments{
 \item{data}{An object of type data.frame or tibble. If piping the data into the
@@ -13,18 +22,29 @@ function, this is not required.}
 \item{x}{Either a character string or symbol. The variable with which want
 to get the frequencies.}
 
-\item{group}{Either a character string or a symbol. The grouping variable.}
+\item{group}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> A selection of columns to
+group the data by in addition to \code{treats}. This operates very similarly
+to \code{.by} from dplyr (for more info on that see \link[dplyr:dplyr_by]{?dplyr_by}).}
 
 \item{wt}{Weights. Add if you have a weighting variable and want to get
 weighted frequencies.}
 
-\item{show_genpop}{Logical. Should there be a column showing the frequencies
-for the general population}
+\item{drop_zero}{Logical. Determines if rows with 0 should be removed
+Default is \code{FALSE}.}
+
+\item{decimals}{Number of decimals each number should be rounded to. Default
+is 3.}
+
+\item{na.rm}{Logical. Determines if NAs should be kept or removed Default is
+\code{TRUE}.}
+
+\item{show_genpop}{Logical. If the data is grouped, determines if data should
+should be shown for the general population as well. \code{FALSE}, the default,
+does not show the results for the general population. \code{TRUE} shows the
+results for the general population in a new column.}
 }
 \description{
-This function creates a GT table of the frequencies of a specified variable
-and has the ability to get the frequencies for one grouping variable.
-While this can be used on it's own, it was created more to be used in
-\code{\link[=get_all_freqs]{get_all_freqs()}}`, a function that outputs the frequencies of a set of
-variables to a word doc.
+This is essentially a wrapper around \code{get_freqs()} and \code{prettytable()} so you
+only have to call this rather than calling both functions. It takes the
+\code{get_freqs()} output and then makes it pretty using \code{prettytable()}.
 }

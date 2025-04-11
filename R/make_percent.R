@@ -40,10 +40,14 @@ make_percent <- function(x, decimals = 2, scale = 100) {
   }
 
   new_x <- x * scale
-  new_x <- round(new_x, decimals)
-  new_x <- paste0(new_x, "%")
 
-
+  if (is.null(decimals)) {
+    new_x <- paste0(new_x, "%")
+  } else {
+    new_x <- round(new_x, decimals)
+    new_x <- paste0(new_x, "%")
+  }
+  
   if (!is.null(attributes(x))) {
     attributes(new_x) <- utils::modifyList(as.list(attributes(new_x)), attributes(x))
   }

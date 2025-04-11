@@ -676,3 +676,16 @@ x_expression <- function(x) {
   if( length(ASTs) == 0 ) return(rlang::enexpr(x))        # Not in a pipe
   dplyr::last( ASTs )[[2]]    # Second element is the left-hand side
 }
+
+
+# Courtesy of Gergely Daróczi from this Stack Overflow Answer:
+# https://stackoverflow.com/questions/5173692/how-to-return-number-of-decimal-places-in-r
+# determines the number of decimal places in a string
+decimal_places <- function(x) {
+  if (abs(x - round(x)) > .Machine$double.eps^0.5) {
+      nchar(strsplit(sub('0+$', '', as.character(x)), ".", fixed = TRUE)[[1]][[2]])
+  } else {
+      return(0)
+  }
+}
+

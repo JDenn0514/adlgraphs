@@ -4,7 +4,7 @@
 \alias{get_freqs}
 \title{Calculate weighted frequencies}
 \usage{
-get_freqs(data, x, group, wt, cross_tab = FALSE)
+get_freqs(data, x, group, wt, drop_zero = FALSE, decimals = 3, na.rm = TRUE)
 }
 \arguments{
 \item{data}{An object of type data.frame or tibble. If piping the data into the
@@ -13,20 +13,27 @@ function, this is not required.}
 \item{x}{Either a character string or symbol. The variable with which want
 to get the frequencies.}
 
-\item{group}{Either a character string or a symbol. The grouping variable.}
+\item{group}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> A selection of columns to
+group the data by in addition to \code{treats}. This operates very similarly
+to \code{.by} from dplyr (for more info on that see \link[dplyr:dplyr_by]{?dplyr_by}).}
 
 \item{wt}{Weights. Add if you have a weighting variable and want to get
-weighted frequencies}
+weighted frequencies.}
 
-\item{cross_tab}{Logical. If a \code{group} object has been supplied, should the
-the table be pivoted to create make it like crosstabs}
+\item{drop_zero}{Logical. Determines if rows with 0 should be removed
+Default is \code{FALSE}.}
+
+\item{decimals}{Number of decimals each number should be rounded to. Default
+is 3.}
+
+\item{na.rm}{Logical. Determines if NAs should be kept or removed Default is
+\code{TRUE}.}
 }
 \description{
-Use this function to calculate simple weighted frequencies weighted grouped.
+Use this function to calculate simple weighted frequencies.
 You can also specify a grouping variable by which you want to calculate the
-frequencies
-}
-\details{
+frequencies.
+
 The \code{x}, \code{group}, and \code{wt} arguments can either be strings or symbols
 (meaning they can have quotes or no quotes). The benefit of this is that it
 makes it really easy to iterate this function over a list or vector of
@@ -40,34 +47,22 @@ library(dplyr)
 # Let's calculate the overall frequency for big_events
 get_freqs(test_data, big_events)
 
-# it also works if x is a string
-get_means(test_data, "big_events")
-
 # Let's do that again but add weights
 get_freqs(test_data, big_events, wt = wts)
 
-# the wt argument can also be in quotes like this
-get_freqs(test_data, "big_events", wt = "wts")
+# Can also a grouping variable by specifying the group arg
+get_freqs(test_data, big_events, group = pid_f3, wt = wts)
 
-# Now let's do the average score for different education levels
-get_freqs(test_data, big_events, edu_f, wts)
+# You can also group the data and do it
+test_data \%>\% 
+  group_by(pid_f3) \%>\% 
+  get_freqs(big_events, wt = wts)
 
-# it also works with quotes
-get_freqs(test_data, "big_events", "edu_f", "wts")
+# you can also group by two or more variables
+get_freqs(test_data, big_events, group = c(pid_f3, edu_f2), wt = wts)
 
-# if we want to pivot the results so they look like cross tabs, then we need
-# to set `cross_tab` to TRUE
-get_freqs(test_data, big_events, edu_f, wts, cross_tab = TRUE)
-
-# you can also pipe in the `data` argument if you want to do some data
-# transformations before you calculate the means. For example, say you want
-# to compare the frequencies of `big_events` among people who agreed vs
-# disagreed with the variable `top`:
-test_data \%>\%
-  mutate(top_f2 = make_dicho(top)) \%>\%
-  get_freqs(trad_n, top_f2, wts)
-
-
+# also works when the arguments are strings
+get_freqs(test_data, "big_events", group = c("pid_f3", "edu_f2"), wt = "wts")
 
 
 }
