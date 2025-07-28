@@ -79,7 +79,7 @@ prettytable.adlgraphs_freqs <- function(x, show_genpop = FALSE) {
       # get the name of the weights variable
       wt <- names(data)[ncol(data)]
       # get the frequencies of the general population
-      genpop <- funky_freqs(data, {{ var_name }}, wt = {{ wt }})
+      genpop <- get_freqs(data, {{ var_name }}, wt = {{ wt }})
       # convert pct to a percent
       genpop$pct <- make_percent(genpop$pct, decimals = dec)
       # round the number of respondents

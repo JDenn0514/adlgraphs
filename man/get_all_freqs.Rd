@@ -20,7 +20,7 @@ get_all_freqs(
 \item{data}{A data frame or tibble object}
 
 \item{cols}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> The variables you want
-to get the correlations for.}
+to get the frequencies for.}
 
 \item{group}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> A selection of columns to
 group the data by in addition to \code{treats}. This operates very similarly

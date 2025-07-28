@@ -22,6 +22,8 @@
 #' @importFrom lifecycle badge deprecate_soft
 #' @importFrom mvtnorm qmvt pmvt
 #' @importFrom officer body_add_par
+#' @importFrom openxlsx2 wb_color wb_add_data wb_load wb_add_worksheet wb_workbook
+#'   wb_dims wb_merge_cells wb_add_fill wb_add_font wb_add_numfmt wb_add_border 
 #' @importFrom prismatic color
 #' @importFrom purrr map pmap pmap_chr walk map_if keep
 #' @importFrom readr write_csv

@@ -34,6 +34,7 @@ Imports:
     lifecycle,
     mvtnorm,
     officer,
+    openxlsx2,
     prismatic,
     psych,
     purrr,

@@ -5,7 +5,7 @@
 #'
 #' @param data A data frame or tibble object
 #' @param cols  <[`tidy-select`][dplyr_tidy_select]> The variables you want 
-#'   to get the correlations for. 
+#'   to get the frequencies for. 
 #' @param group <[`tidy-select`][dplyr_tidy_select]> A selection of columns to 
 #'   group the data by in addition to `treats`. This operates very similarly
 #'   to `.by` from dplyr (for more info on that see [?dplyr_by][dplyr_by]). 

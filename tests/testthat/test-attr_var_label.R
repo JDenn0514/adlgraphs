@@ -7,10 +7,11 @@ testthat::test_that("check an individual vector", {
 testthat::test_that("check an a dataset, unlist it", {
   exp <- purrr::map(
     colnames(test_data),
-    ~ attr_var_label({{ .x }}, test_data)
+    \(x) attr(test_data[[x]], "label")
   ) %>% 
     setNames(colnames(test_data)) %>% 
     unlist()
+
 
   testthat::expect_equal(
     attr_var_label(test_data), exp
@@ -20,7 +21,7 @@ testthat::test_that("check an a dataset, unlist it", {
 testthat::test_that("check an a dataset, don't unlist it", {
   exp <- purrr::map(
     colnames(test_data),
-    ~ attr_var_label({{ .x }}, test_data)
+    \(x) attr(test_data[[x]], "label")
   ) %>% 
     setNames(colnames(test_data))
 
