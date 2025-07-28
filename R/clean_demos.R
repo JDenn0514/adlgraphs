@@ -240,8 +240,8 @@ clean_demos <- function(
           ),
         # create a nw four group age variable
         age_f4 = adlgraphs::case_when_fct(
-          age_n < 31 ~ "18-30",
-          age_n %in% c(31:49) ~ "31-49",
+          age_n < 30 ~ "18-29",
+          age_n %in% c(30:49) ~ "31-49",
           age_n %in% c(50:64) ~ "50-64",
           age_n > 64 ~ "65+"
         ) %>% 
