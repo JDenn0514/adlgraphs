@@ -1,3 +1,13 @@
+# adlgraphs 0.4.1
+
+## Implemented survey-compatible versions of `get_means()`, `get_diffs()`, and `get_freqs()`
+
+- These functions work with objects of class `survey.design` now which means they are compatible with objects created using `srvyr::as_survey_design` and `survey::svydesign`
+
+- There haven't been any changes on the front-end so can you continue to use it the same way as before
+
+- The only difference is that it now detects if the data object is a survey object or not
+
 # adlgraphs 0.3.62
 
 ## Changes to get_loadings

@@ -27,8 +27,7 @@ make_quarts <- function(x) {
     structure(
       transformation = glue::glue("Converted {x_lab} into a factor variable with four levels based on the quartiles: {paste0(levs, collapse = ', ')}")
     )
-  # set value labels so we know what values are in each quartile
-  attr(x, "labels") <- levs
+
   return(x)
 }
 

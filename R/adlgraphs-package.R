@@ -32,7 +32,8 @@
 #' @importFrom rstudioapi isAvailable getVersion
 #' @importFrom stats qt df.residual setNames weighted.mean sd symnum
 #'   na.omit lm coef quantile xtabs reformulate complete.cases median
-#'   model.matrix lm relevel
+#'   model.matrix relevel weights
+#' @importFrom survey svytable svyglm svyby svymean
 #' @importFrom systemfonts register_font
 #' @importFrom tibble as_tibble new_tibble
 #' @importFrom tidyr pivot_wider drop_na nest unnest separate_wider_delim
