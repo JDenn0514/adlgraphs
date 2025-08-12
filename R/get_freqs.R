@@ -443,24 +443,3 @@ get_freqs.survey.design <- function(
 }
 
 
-
-#' @export
-get_freqs.survey.design2 <- function(
-  data,
-  x,
-  group,
-  wt,
-  drop_zero = FALSE,
-  decimals = 3,
-  na.rm = TRUE
-) {
-  get_freqs.survey.design(
-    data = data,
-    x = {{ x }},
-    group = {{ group }},
-    wt = wt,
-    drop_zero = drop_zero,
-    decimals = decimals,
-    na.rm = na.rm
-  )
-}
