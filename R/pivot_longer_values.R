@@ -8,7 +8,7 @@
 #' An additional note is that this function also works with survey objects 
 #' created with either `survey::svydesign()` or `sryvr::as_survey_design()`.
 #' The function first pivots the data, then re-creates the survey object 
-#' using the same variables used previously.
+#' using the same variables used
 #'
 #' @inheritParams tidyr::pivot_longer
 #' @param name_label Add a variable label to the new column with the names of
@@ -44,10 +44,10 @@ pivot_longer_values.default <- function(
   values_to <- rlang::as_name(rlang::ensym(values_to))
   
   # get the columns that are getting pivoted
-  cols <- get_col_names(df, {{ cols }})
+  cols <- get_col_names(data, {{ cols }})
   
   # create the long data frame
-  long <- df %>%
+  long <- data %>%
     tidyr::pivot_longer(
       cols = tidyselect::all_of(cols),
       names_to = names_to,
@@ -60,14 +60,14 @@ pivot_longer_values.default <- function(
   values <- long[[values_to]]
   
   # get the variable labels to go into names as value labels
-  var_labs <- attr_var_label(df[cols])
+  var_labs <- attr_var_label(data[cols])
   
   # flip the names and values of the vector
   var_labs <- setNames(names(var_labs), var_labs)
   
   # if the 
   if (missing(name_label)) {
-    name_label <- attr_question_preface(df[[cols[1]]])
+    name_label <- attr_question_preface(data[[cols[1]]])
   }
 
   attr(long[[names_to]], "labels") <- var_labs
