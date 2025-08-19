@@ -440,6 +440,7 @@ get_freqs.survey.design <- function(
   
   # Add class
   structure(out, class = c("adlgraphs_freqs", "tbl_df", "tbl", class(out)))
+  out 
 }
 
 

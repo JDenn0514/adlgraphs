@@ -4,7 +4,14 @@
 \alias{pivot_longer_values}
 \title{Pivot data from wide to long with value labels}
 \usage{
-pivot_longer_values(data, cols, names_to, values_to, name_label = NA)
+pivot_longer_values(
+  data,
+  cols,
+  names_to = "names",
+  values_to = "values",
+  name_label,
+  ...
+)
 }
 \arguments{
 \item{data}{A data frame to pivot.}
@@ -39,13 +46,21 @@ existing column names.}
 
 \item{name_label}{Add a variable label to the new column with the names of
 the columns}
+
+\item{...}{Additional arguments passed to \code{\link[tidyr]{pivot_longer}}.}
 }
 \value{
-A longer data.frame.
+A "long" data.frame.
 }
 \description{
 This function is a wrapper around \code{\link[tidyr]{pivot_longer}}. This
 function operates in pretty much the exact same way but uses the variable
 labels from the variables specified in \code{cols} to make new value labels in the
 new variable created in the \code{names_to} variable.
+}
+\details{
+An additional note is that this function also works with survey objects
+created with either \code{survey::svydesign()} or \code{sryvr::as_survey_design()}.
+The function first pivots the data, then re-creates the survey object
+using the same variables used previously.
 }
