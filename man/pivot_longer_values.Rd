@@ -62,5 +62,5 @@ new variable created in the \code{names_to} variable.
 An additional note is that this function also works with survey objects
 created with either \code{survey::svydesign()} or \code{sryvr::as_survey_design()}.
 The function first pivots the data, then re-creates the survey object
-using the same variables used previously.
+using the same variables used
 }

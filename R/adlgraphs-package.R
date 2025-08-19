@@ -30,6 +30,7 @@
 #' @importFrom rlang set_names sym := .data caller_arg caller_env enexpr
 #'   sym quo_is_missing
 #' @importFrom rstudioapi isAvailable getVersion
+#' @importFrom srvyr as_survey_design
 #' @importFrom stats qt df.residual setNames weighted.mean sd symnum
 #'   na.omit lm coef quantile xtabs reformulate complete.cases median
 #'   model.matrix relevel weights
