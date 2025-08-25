@@ -125,7 +125,7 @@ get_freqs.default <- function(
   # if na.rm is TRUE remove NAs from all columns in data
   if (na.rm) data <- data[stats::complete.cases(data),]
 
-  # Get the value labels (assumes attr_val_labels function exists)
+  # Get the value labels 
   value_labels <- attr_val_labels(data[[x]])
 
   # Get sorted labels and unique values
@@ -439,7 +439,7 @@ get_freqs.survey.design <- function(
   attr(out, "dataset") <- data
   
   # Add class
-  structure(out, class = c("adlgraphs_freqs", "tbl_df", "tbl", class(out)))
+  out <- structure(out, class = c("adlgraphs_freqs", "tbl_df", "tbl", class(out)))
   out 
 }
 
