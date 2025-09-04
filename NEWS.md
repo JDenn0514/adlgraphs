@@ -1,3 +1,13 @@
+# adlgraphs 0.4.2
+
+## Implemented multi-column input for `get_freqs()` and improved error handling with make_factor()
+
+- `get_freqs()` now accepts multiple variables in the x argument, making it easier to get frequencies for "Select all that apply" style questions
+
+- `get_freqs()` also has a new argument called `keep` that allows you to specify which values should be kept when multiple columns are provided
+
+- `make_factor()` has improved error handling so now it specifies which values are missing labels when causing an error
+
 # adlgraphs 0.4.1
 
 ## Implemented survey-compatible versions of `get_means()`, `get_diffs()`, and `get_freqs()`

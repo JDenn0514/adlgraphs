@@ -189,19 +189,51 @@ testthat::test_that("Check a vector from a data set", {
 # Check errors ----------------------------------------
 
 # works
-testthat::test_that("return error when some values are missing labels- numeric vector", {
+testthat::test_that("error when some values are missing labels - numeric vector", {
   s1 <- haven::labelled(c(1, 4), c("Agree" = 1))
-  testthat::expect_error(make_factor(s1), "Each value in `x` must have value labels")
+  # New main message:
+  # "Each value in `x` must have value labels."
+  # Plus bullets for unlabeled values and domain summary.
+  testthat::expect_error(
+    make_factor(s1),
+    regexp = "Each value in `s1` must have value labels\\."
+  )
+  # Optionally also check the bullet about unlabeled values:
+  testthat::expect_error(
+    make_factor(s1),
+    regexp = "Unlabeled values detected:"
+  )
+  # And the info bullet about known domains:
+  testthat::expect_error(
+    make_factor(s1),
+    regexp = "Known codes: \\[|labels: \\["
+  )
 })
 
-testthat::test_that("return error when some values are missing labels- character vector", {
+testthat::test_that("error when some values are missing labels - character vector", {
   s1 <- haven::labelled(c("A", "B"), c("Agree" = "A"))
-  testthat::expect_error(make_factor(s1), "Each value in `x` must have value labels")
+  testthat::expect_error(
+    make_factor(s1),
+    regexp = "Each value in `s1` must have value labels\\."
+  )
+  testthat::expect_error(
+    make_factor(s1),
+    regexp = "Unlabeled values detected:"
+  )
+  testthat::expect_error(
+    make_factor(s1),
+    regexp = "Known codes: \\[|labels: \\["
+  )
 })
 
-testthat::test_that("return error when numeric and force is FALSE", {
+testthat::test_that("error when numeric and force is FALSE", {
   s1 <- c(1, 2, 3, 4)
-  testthat::expect_error(make_factor(s1, force = FALSE), "The vector provided in `x` does not have value labels.")
+  # Exact message from cli_abort call:
+  # "The vector provided in `x` does not have value labels."
+  testthat::expect_error(
+    make_factor(s1, force = FALSE),
+    regexp = "The vector provided in `s1` does not have value labels\\."
+  )
 })
 
 

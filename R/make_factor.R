@@ -54,127 +54,136 @@
 #' attributes(new_df$top_f)
 #'
 #' @export
-make_factor <- function(x, ordered = FALSE, drop_levels = TRUE, force = TRUE, na.rm = FALSE) {
-  # don't use rlang as that won't work when x is "data[[x]]"
+make_factor <- function(
+  x, 
+  ordered = FALSE, 
+  drop_levels = TRUE, 
+  force = TRUE, 
+  na.rm = FALSE
+) {
+  # Capture a user-friendly name for x using base R.
+  # Note: Using deparse(substitute(x)) works even when called as data[[x]].
   x_name <- deparse(substitute(x))
 
-  # Get the variable label (assumes attr_var_label function exists)
+  # Retrieve the variable-level label (e.g., "Q1. Agree?"), if present.
   variable_label <- attr_var_label(x)
 
-  # Get the value labels (assumes attr_val_labels function exists)
-  value_labels <- attr_val_labels(x)
+  # Retrieve the value labels mapping (codes -> labels).
+  # Conventionally a named character vector; names(value_labels) are codes, values are labels.
+  value_labels   <- attr_val_labels(x)
 
+  # If there are no value labels, coerce x in the most sensible way and return early.
   if (is.null(value_labels)) {
-    # if there aren't any value labels:
-
     if (is.factor(x)) {
-      # if it's a factor
-
-      # if not, just return x
+      # Already a factor: preserve it. Ensure it has a variable label attribute.
       if (is.null(variable_label)) attr(x, "label") <- x_name
       return(x)
- 
     } else if (is.character(x)) {
-        # if its a character without levels, just convert to a factor
-
-      # convert to a factor
+      # Character vector: convert to a factor (no value labels to enforce).
       x <- factor(x)
-      # add transformation attribute
+      # Document the transformation for auditability.
       attr(x, "transformation") <- paste0("Updated '", x_name, "' from a character vector to a factor")
-      
-      # set the label attribute
-      if (is.null(variable_label)) {
-        # if variabel label is null use the x_name
-        attr(x, "label") <- x_name
-      } else {
-        # otherwise set the label with variable_label
-        attr(x, "label") <- variable_label
-      }
-      
+      # Preserve/use the variable label if available; otherwise use the column name.
+      attr(x, "label") <- variable_label %||% x_name
       return(x)
-      
     } else if (is.numeric(x) && isTRUE(force)) {
-      # if x is numeric and force = TRUE, force to a factor and return warning
+      # Numeric vector without labels: force to factor if the caller asked for it.
       warning("`x` has no value labels so forcing to a factor with `as.factor()`")
-      # force to a factor
       x <- as.factor(x)
-      
       attr(x, "transformation") <- paste0("Converted '", x_name, "' from a numeric vector to a factor")
-
-      # set the label attribute
-      if (is.null(variable_label)) {
-        # if variabel label is null use the x_name
-        attr(x, "label") <- x_name
-      } else {
-        # otherwise set the label with variable_label
-        attr(x, "label") <- variable_label
-      }
+      attr(x, "label") <- variable_label %||% x_name
       return(x)
-
     } else if (is.numeric(x) && isFALSE(force)) {
-      # if x is numeric and force = false, return an error 
+      # Numeric vector without labels and not forcing: error to prevent silent coercion.
       cli::cli_abort(
-        "The vector provided in `x` does not have value labels.",
+        paste0("The vector provided in `", x_name, "` does not have value labels."),
         "i" = "If you want to force it to a factor, set `force = TRUE`."
       )
     }
   }
 
-  # Ensure all values have associated labels
-  if (is.numeric(x)) {
-    # Get sorted labels and unique values
-    labs <- sort(as.numeric(value_labels))
-    vals <- sort(unique(as.numeric(x)))
+  # From here on, value labels exist. We validate that every observed value is labeled,
+  # and we do so in a way that handles NA correctly and distinguishes codes from labels.
 
-    # If the values don't match the labels, throw an error
-    if (!all(vals %in% labs)) {
-      stop("Each value in `x` must have value labels")
-    }
-  } else {
-    # Get sorted labels and unique values
-    labs <- sort(as.character(value_labels))
-    vals <- sort(unique(as.character(x)))
+  # Define the known domains:
+  # - codes: the "raw" values expected in the data (names of the label vector)
+  # - labs:  the human-readable display labels (values of the label vector)
+  codes <- names(value_labels)      # codes domain (preferred for final factor levels)
+  labs  <- unname(value_labels)     # human-readable labels
 
-    # If the values don't match the labels, throw an error
-    if (!all(vals %in% labs)) {
-      stop("Each value in `x` must have value labels")
-    }
+  # Convert x to character for reliable comparison (works for numeric, factor, character).
+  x_chr <- as.character(x)
+  # Unique observed values in x.
+  uvals <- unique(x_chr)
+  # Exclude NA from label completeness checks; NA is not a level and shouldn’t require a label.
+  uvals_no_na <- uvals[!is.na(uvals)]
+
+  # Determine whether x currently contains codes or labels.
+  # - in_codes: all non-NA observed values are within the known codes.
+  # - in_labels: all non-NA observed values are within the known labels.
+  in_codes  <- !is.null(codes) && length(codes) > 0 && all(uvals_no_na %in% codes)
+  in_labels <- all(uvals_no_na %in% labs)
+
+  # If x doesn’t match either domain, we have unlabeled values; build an actionable error.
+  if (!(in_codes || in_labels)) {
+    # Construct the set of all known values (codes ∪ labels) for comparison.
+    known <- union(codes %||% character(0), labs)
+    # Which actual values are not accounted for in either domain?
+    missing_vals <- setdiff(uvals_no_na, known)
+
+    # Pretty-print the missing values, quoted. If none, provide a guard message.
+    if (length(missing_vals)) {
+      missing_fmt <- paste(paste0("'", missing_vals, "'"), collapse = ", ")
+    } 
+
+    # Provide a compact summary of the known domains for debugging.
+    domain_summary <- paste0(
+      "codes: [", paste(codes %||% character(0), collapse = ", "), "]; ",
+      "labels: [", paste(labs, collapse = ", "), "]"
+    )
+
+    # Abort with clear bullets:
+    # - The main problem statement, including the variable name
+    # - Exactly which values are unlabeled
+    # - What the known domains are (helps diagnose label/codes mismatch quickly)
+    cli::cli_abort(c(
+      paste("Each value in `", x_name, "` must have value labels.", sep = ""),
+      "x" = paste("Unlabeled values detected: ", missing_fmt, sep = ""),
+      "i" = paste("Known ", domain_summary, sep = "")
+    ))
   }
 
   # if na.rm is TRUE remove NAs
   if (na.rm) x[is.na(x)] <- NA
 
-  # Get the names of the value labels
-  names <- names(value_labels)
-  values <- unname(value_labels)
+  # Map from labels -> codes so final factors use the codes as levels.
+  # This aligns with your original semantics and keeps levels stable and predictable.
+  nm     <- names(value_labels)     # codes
+  values <- unname(value_labels)    # labels
 
-  
-  # Replace the values with the names of the value labels
-  x <- replace_with(x, values, names)
+  # Replace any label occurrences in x with the corresponding code.
+  # If x already contains codes, this is a no-op (no matches) — safe and fast enough.
+  x <- replace_with(x, values, nm)
 
-  # get the levels that 
-  x_levels <- unique(names)
-
-  # if keep_all_levels = FALSE, keep only the levels that appear in the data
+  # Establish the factor levels using the codes in the order defined by the label vector.
+  x_levels <- unique(nm)
+  # Optionally drop levels not present in the data (prevents extraneous zero-levels).
   if (drop_levels) x_levels <- x_levels[x_levels %in% unique(x)]
 
-  # Convert to factor with the specified order
+  # Build the final factor. Levels are codes; ordering can be controlled via `ordered`.
   x <- factor(x, levels = x_levels, ordered = ordered)
 
-
-  
+  # Attach the variable label and record the transformation for traceability.
   if (!is.null(variable_label)) {
-    # If a variable label exists, preserve it in the factor
     attr(x, "label") <- variable_label
-    # add the transformation attribute
     attr(x, "transformation") <- paste("Converted '", x_name, "' into a factor based on its value labels", sep = "")
   } else {
-    # add the transformation attribute
     attr(x, "transformation") <- paste("Converted '", x_name, "' into a factor based on its value labels", sep = "")
     attr(x, "label") <- x_name
   }
 
-  return(x)
+  # Return the labeled factor with preserved attributes and controlled levels.
+  x
 }
 
 
