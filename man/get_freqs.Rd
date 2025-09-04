@@ -84,8 +84,6 @@ The result has class \code{"adlgraphs_freqs"} and common attributes:
 }
 \description{
 \code{get_freqs()} computes weighted frequency tables for survey-style data. It supports:
-}
-\details{
 \itemize{
 \item Plain data frames with an optional weight column
 \item \code{survey.design} objects (from the survey/srvyr ecosystem)
@@ -97,7 +95,8 @@ The result has class \code{"adlgraphs_freqs"} and common attributes:
 For single-variable inputs, the response column in the output retains the original variable
 name. For multi-variable inputs, responses are pivoted to long format using \code{names_to} and
 \code{values_to}.
-
+}
+\details{
 The \code{keep} argument is applied after aggregation in multi-variable outputs to filter rows
 of the result based on the response column (\code{values_to}). It is ignored for single-variable
 calls. Accepted forms:

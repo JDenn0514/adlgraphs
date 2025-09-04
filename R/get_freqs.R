@@ -1,5 +1,5 @@
 #' Compute weighted frequencies, optionally grouped and/or across multiple variables
-#'
+#' @description
 #' `get_freqs()` computes weighted frequency tables for survey-style data. It supports:
 #'
 #' - Plain data frames with an optional weight column
