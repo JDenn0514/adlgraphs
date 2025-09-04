@@ -4,8 +4,7 @@ pkgdown_sha: ~
 articles:
   data_transformations: data_transformations.html
   how_to_use_adl_bar_plot: how_to_use_adl_bar_plot.html
-  make_coefficient_plots: make_coefficient_plots.html
-last_built: 2024-11-26T20:02Z
+last_built: 2025-09-04T14:56Z
 urls:
   reference: https://jdenn0514.github.io/adlgraphs/reference
   article: https://jdenn0514.github.io/adlgraphs/articles

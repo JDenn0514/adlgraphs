@@ -246,10 +246,20 @@ get_freqs.default <- function(
 
   # Resolve x into column names (supports tidyselect input)
   x_cols <- get_col_names(data, {{ x }})
+  # get the groups specified by dplyr::group_by()
+  existing_groups <- dplyr::group_vars(data)
+  # remove groups from x_cols
+  x_cols <- setdiff(x_cols, existing_groups)
+  
+  # return an error if no columns given
   if (!length(x_cols)) cli::cli_abort("x must select at least one column.")  # guard: need ≥1 column
 
   # Resolve group columns from tidyselect, in the order they should appear
   group_names <- compose_group_names(data, {{ group }})
+  # merge the groups (preserve order: explicit > existing, then unique)
+  group_names <- unique(c(group_names, existing_groups))
+  # ensure no groups are in x_cols
+  x_cols <- setdiff(x_cols, group_names)
 
   # Cache group labels (variable labels) from the pristine data; used to reattach later
   if (length(group_names)) {
@@ -275,6 +285,7 @@ get_freqs.default <- function(
   if (is_multi) {
     # Select the columns we need for analysis: x variables, groups, and weights
     keep_cols <- unique(c(x_cols, group_names, wt_name))
+
     narrow    <- data[, keep_cols, drop = FALSE]
 
     # Pivot from wide (multiple x columns) to long with one 'values_to' and one 'names_to'
@@ -317,6 +328,7 @@ get_freqs.default <- function(
     # ---------------------------
     # Keep only required columns for analysis: x, groups, and weights
     keep_cols <- unique(c(x_cols[1], group_names, wt_name))
+
     data_work <- data[, keep_cols, drop = FALSE]
 
     # ---------------------------
@@ -350,7 +362,7 @@ get_freqs.default <- function(
       data_work <- data_work[stats::complete.cases(data_work[, chk, drop = FALSE]), ]
     }
   }
-
+  
   # ---------------------------
   # 4) GROUP
   # ---------------------------
@@ -426,7 +438,10 @@ get_freqs.survey.design <- function(
 
   # Resolve x columns
   x_cols <- get_col_names(survey_data, {{ x }})
-
+  # get the groups specified by dplyr::group_by()
+  existing_groups <- dplyr::group_vars(survey_data)
+  # remove groups from x_cols
+  x_cols <- setdiff(x_cols, existing_groups)
   # If name_label not provided, derive a reasonable default from the first x var
   if (missing(name_label)) {
     name_label <- attr_question_preface(survey_data[[x_cols[1]]])
@@ -437,6 +452,11 @@ get_freqs.survey.design <- function(
 
   # Resolve group columns from tidyselect
   group_names <- compose_group_names(survey_data, {{ group }})
+  # merge the groups (preserve order: explicit > existing, then unique)
+  group_names <- unique(c(group_names, existing_groups))
+
+  # ensure again that now groups are in x_cols
+  x_cols <- setdiff(x_cols, group_names)
 
   # Cache group labels from pristine survey data, so we can reattach later
   if (length(group_names)) {
@@ -998,6 +1018,7 @@ factorize_multi_path <- function(
   drop_zero = FALSE,
   na.rm = TRUE
 ) {
+
   # Build the set of grouping variables for coercion (names_to + any explicit groups)
   grp <- unique(c(names_to, group_names))
 
