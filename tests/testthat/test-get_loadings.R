@@ -154,7 +154,7 @@ testthat::test_that("check for message when group is supplied", {
 testthat::test_that("Check output with sort = TRUE", {
   out <- test_data %>% 
     dplyr::select(stick_together:wall_street) %>% 
-    factanal(factors = 1) %>% 
+    stats::factanal(factors = 1) %>% 
     get_loadings(sort = TRUE, threshold = 0)
 
   # check the names of the columns in the output
@@ -201,7 +201,7 @@ testthat::test_that("check when adding labels", {
 
   ### check with dataframe
   out <- data %>% 
-    factanal(factors = 1) %>% 
+    stats::factanal(factors = 1) %>% 
     get_loadings(labels = data)
   # check labels
   attr(exp_labels, "label") <- "Variable Label"
@@ -212,7 +212,7 @@ testthat::test_that("check when adding labels", {
 
   ### check with named vector
   out <- data %>% 
-    factanal(factors = 1) %>% 
+    stats::factanal(factors = 1) %>% 
     get_loadings(labels = attr_var_label(data))
   testthat::expect_equal(out$labels, exp_labels)
   # check the names of the columns in the output
@@ -221,7 +221,7 @@ testthat::test_that("check when adding labels", {
 
   ### check with unnamed vector
   out <- data %>% 
-    factanal(factors = 1) %>% 
+    stats::factanal(factors = 1) %>% 
     get_loadings(labels = c(
       "Some groups of people are simply inferior to other groups", 
       "No one group should dominate in society", 
@@ -241,14 +241,14 @@ testthat::test_that("check when adding labels", {
 testthat::test_that("check for message when cols is supplied", {
   testthat::expect_message(test_data %>% 
     dplyr::select(inferior:controlled) %>% 
-    factanal(factors = 1) %>% 
+    stats::factanal(factors = 1) %>% 
     get_loadings(cols = c(stick_together:business_power), sort = FALSE, threshold = 0))
 })
 
 testthat::test_that("check for message when group is supplied", {
   testthat::expect_message(test_data %>% 
     dplyr::select(inferior:controlled) %>% 
-    factanal(factors = 1) %>% 
+    stats::factanal(factors = 1) %>% 
     get_loadings(group = edu_f2, sort = FALSE, threshold = 0))
 })
 

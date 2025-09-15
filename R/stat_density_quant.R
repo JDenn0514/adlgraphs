@@ -149,18 +149,18 @@ stat_density_quant <- function(mapping = NULL, data = NULL,
 
 
 
-StatDensityQuant <- ggproto(
+StatDensityQuant <- ggplot2::ggproto(
   "StatDensityQuant",
   Stat,
   required_aes = "x",
 
-  default_aes = aes(x = after_stat(density), y = after_stat(density), fill = NA, weight = NULL),
+  default_aes = aes(x = ggplot2::after_stat(density), y = ggplot2::after_stat(density), fill = NA, weight = NULL),
 
   dropped_aes = "weight",
 
   calc_panel_params = function(data, params) {
     if (is.null(params$bandwidth)) {
-      xdata <- na.omit(data.frame(x=data$x, group=data$group))
+      xdata <- stats::na.omit(data.frame(x=data$x, group=data$group))
       xs <- split(xdata$x, xdata$group)
       xs_mask <- vapply(xs, length, numeric(1)) > 1
       bws <- vapply(xs[xs_mask], bw.nrd0, numeric(1))
@@ -199,7 +199,7 @@ StatDensityQuant <- ggproto(
     # calculate bandwidth, min, and max for each panel separately
     panels <- split(data, data$PANEL)
     pardata <- lapply(panels, self$calc_panel_params, params)
-    pardata <- reduce(pardata, rbind)
+    pardata <- purrr::reduce(pardata, rbind)
 
     if (length(params$quantiles) > 1 &&
         (max(params$quantiles, na.rm = TRUE) > 1 || min(params$quantiles, na.rm = TRUE) < 0)) {
@@ -277,7 +277,7 @@ StatDensityQuant <- ggproto(
     maxdens <- max(d$y, na.rm = TRUE)
 
     # make interpolating function for density line
-    densf <- approxfun(d$x, d$y, rule = 2)
+    densf <- stats::approxfun(d$x, d$y, rule = 2)
 
 
     # calculate quantiles, needed for both quantile lines and ecdf
@@ -292,7 +292,7 @@ StatDensityQuant <- ggproto(
       probs <- quantiles
       probs[probs < 0 | probs > 1] <- NA
     }
-    qx <- na.omit(stats::quantile(data$x, probs = probs))
+    qx <- stats::na.omit(stats::quantile(data$x, probs = probs))
 
     # if requested, add data frame for quantile lines
     df_quantiles <- NULL
@@ -315,7 +315,7 @@ StatDensityQuant <- ggproto(
     if (calc_ecdf) {
       n <- length(d$x)
       ecdf <- c(0, cumsum(d$y[1:(n-1)]*(d$x[2:n]-d$x[1:(n-1)])))
-      ecdf_fun <- approxfun(d$x, ecdf, rule = 2)
+      ecdf_fun <- stats::approxfun(d$x, ecdf, rule = 2)
       ntile <- findInterval(d$x, qx, left.open = TRUE) + 1 # if make changes here, make them also below
 
       if (!is.null(df_quantiles)) {

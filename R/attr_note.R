@@ -42,7 +42,7 @@ attr_note.data.frame <- function(x, data = NULL) {
   # iterate string_fun over each of the columns laid out earlier
   lapply(cols, string_fun) %>%
     # set the names of the objects in the list
-    setNames(cols)
+    stats::setNames(cols)
 
 }
 

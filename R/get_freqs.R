@@ -16,7 +16,7 @@
 #' @param x Columns selecting one or more variables to tabulate. You can pass:
 #'   - A bare column name (e.g., `x = q1`)
 #'   - A tidyselect expression (e.g., `x = dplyr::starts_with("q")`)
-#'   - For programmatic selection, use `dplyr::all_of(c("q1", "q2"))`.
+#'   - For programmatic selection, use `tidyselect::all_of(c("q1", "q2"))`.
 #' @param group Optional columns to group by. Accepts a tidyselect expression. If `data`
 #'   is already a `grouped_df`, those groups are honored in addition to `group`.
 #' @param wt Optional weight column (numeric). Ignored for `survey.design` inputs, where
@@ -102,7 +102,7 @@
 #' df$q2 <- c("red", "red", "blue", "blue", "red", "blue", "blue", NA)
 #' res_multi <- get_freqs(
 #'   df,
-#'   x = dplyr::all_of(c("q1", "q2")),
+#'   x = tidyselect::all_of(c("q1", "q2")),
 #'   wt = wts,
 #'   names_to = "item",
 #'   values_to = "resp",
@@ -115,7 +115,7 @@
 #' # 1) keep as a character vector: retain only "yes" responses across items
 #' get_freqs(
 #'   df,
-#'   x = dplyr::all_of(c("q1", "q2")),
+#'   x = tidyselect::all_of(c("q1", "q2")),
 #'   wt = wts,
 #'   names_to = "item",
 #'   values_to = "resp",
@@ -126,7 +126,7 @@
 #' # 2) keep as a function: retain values ending with 'e' (e.g., "blue")
 #' get_freqs(
 #'   df,
-#'   x = dplyr::all_of(c("q1", "q2")),
+#'   x = tidyselect::all_of(c("q1", "q2")),
 #'   wt = wts,
 #'   names_to = "item",
 #'   values_to = "resp",
@@ -138,7 +138,7 @@
 #' # Here we keep everything except "no"
 #' get_freqs(
 #'   df,
-#'   x = dplyr::all_of(c("q1", "q2")),
+#'   x = tidyselect::all_of(c("q1", "q2")),
 #'   wt = wts,
 #'   names_to = "item",
 #'   values_to = "resp",
@@ -149,7 +149,7 @@
 #' # 4) keep with grouping: filter within groups after aggregation
 #' get_freqs(
 #'   df,
-#'   x = dplyr::all_of(c("q1", "q2")),
+#'   x = tidyselect::all_of(c("q1", "q2")),
 #'   group = grp,
 #'   wt = wts,
 #'   names_to = "item",
@@ -161,7 +161,7 @@
 #' # 5) keep function returning TRUE (no-op): leaves result unchanged
 #' get_freqs(
 #'   df,
-#'   x = dplyr::all_of(c("q1", "q2")),
+#'   x = tidyselect::all_of(c("q1", "q2")),
 #'   wt = wts,
 #'   names_to = "item",
 #'   values_to = "resp",
@@ -184,7 +184,7 @@
 #' # Zero-count levels are not expanded for multi-variable survey inputs.
 #' get_freqs(
 #'   dsn,
-#'   x = dplyr::all_of(c("q1", "q2")),
+#'   x = tidyselect::all_of(c("q1", "q2")),
 #'   names_to = "item",
 #'   values_to = "resp",
 #'   na.rm = TRUE
@@ -193,7 +193,7 @@
 #' # Note: keep is also supported for survey multi-variable outputs
 #' get_freqs(
 #'   dsn,
-#'   x = dplyr::all_of(c("q1", "q2")),
+#'   x = tidyselect::all_of(c("q1", "q2")),
 #'   names_to = "item",
 #'   values_to = "resp",
 #'   keep = resp %in% c("yes", "red"),
@@ -221,8 +221,7 @@ get_freqs <- function(
   UseMethod("get_freqs")
 }
 
-# ---- default method ----
-#' @export
+
 # ---- default method ----
 #' @export
 get_freqs.default <- function(
@@ -877,7 +876,7 @@ low_freqs <- function(
         tidyr::crossing(values_df)
       }
   
-      join_by <- c(setNames(c(gvars, name_col), c(gvars, name_col)), setNames(values_to, values_to))
+      join_by <- c(stats::setNames(c(gvars, name_col), c(gvars, name_col)), stats::setNames(values_to, values_to))
       out <- dplyr::left_join(grid_df, out, by = join_by) %>%
         dplyr::mutate(n = dplyr::coalesce(.data$n, 0L))
   

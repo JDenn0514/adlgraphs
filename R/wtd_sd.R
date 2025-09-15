@@ -25,7 +25,7 @@ wtd_sd <- function(x, wt = NULL, na.rm = TRUE) {
 
   if (is.null(wt)){
     # if wts are NULL just calcualte normal sd
-    x <- sd(x, na.rm = na.rm)
+    x <- stats::sd(x, na.rm = na.rm)
     return(x)
   } else{
     # otherwise calculate weighted sd

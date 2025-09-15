@@ -50,7 +50,7 @@ character_to_factor <- function(new, old, cols) {
   # convert character vectors to factors
   lapply(
     # perform the function only over the common data frames
-    cols |> setNames(nm = _), 
+    cols |> stats::setNames(nm = _), 
     # write the anonymous function
     \(y) {
       if (!is.null(levels(old[[y]]))) {
@@ -95,7 +95,7 @@ group_analysis_helper <- function(data, cols) {
   # make it a nested data set
   nest_data <- data %>% 
     tidyr::nest() %>% 
-    tidyr::drop_na(everything())
+    tidyr::drop_na(tidyselect::everything())
 
   if (leng_groups > 1) {
 
@@ -215,64 +215,6 @@ accept_string_or_sym <- function(x) {
 
 }
 
-
-# determine the unique values in a variable. If the variable has value labels
-# convert to a factor and get those values. If the variable is a factor or
-# character string then get those. if the variable is numeric then just get the
-# individual numbers
-get_unique_labels <- function(x) {
-
-  if (is.numeric(x) && !is.null(attr_val_labels(x))) {
-    # if group is haven_labelled
-
-    # convert to a factor
-    group_cols <- make_factor(x)
-    # get the unique values
-    group_cols <- forcats::fct_unique(group_cols)
-
-
-  }  else if (is.character(x) || is.factor(x)) {
-    # if group is of class character or factor return x
-
-    # get the unique values
-    group_cols <- forcats::fct_unique(x)
-
-  } else {
-    # if group is anything else (ie numeric)
-
-    # force to a factor
-    group_cols <- as.factor(x)
-    # get unique values
-    group_cols <- forcats::fct_unique(group_cols)
-
-  }
-
-  return(group_cols)
-
-}
-
-
-# get the variable label if there is one
-get_variable_label <- function(x, lab) {
-
-  # get the label for the group variable
-  if (!is.null(attr_var_label(x))) {
-    # if group has a variable label
-
-    # set group_variable_label to the variable label
-    var_lab <- attr_var_label(x)
-
-  } else {
-    # if there is no variable label then just set it to the variable name
-
-    # set x_variable_label as the variable name
-    var_lab <- lab
-
-  }
-
-  return(var_lab)
-
-}
 
 #' Select variables from the group variable
 #' @param group `tidy_select` columns to group the data by
@@ -441,11 +383,11 @@ facet_col <- function(facets, scales = "fixed", space = "fixed",
 # from ggforce
 FacetCol <- ggplot2::ggproto('FacetCol', ggplot2::FacetWrap,
                     draw_panels = function(self, panels, layout, x_scales, y_scales, ranges, coord, data, theme, params) {
-                      combined <- ggproto_parent(FacetWrap, self)$draw_panels(panels, layout, x_scales, y_scales, ranges, coord, data, theme, params)
+                      combined <- ggplot2::ggproto_parent(FacetWrap, self)$draw_panels(panels, layout, x_scales, y_scales, ranges, coord, data, theme, params)
                       if (params$space_free) {
                         heights <- vapply(layout$PANEL, function(i) diff(ranges[[i]]$y.range), numeric(1))
                         panel_heights <- unit(heights, "null")
-                        combined$heights[panel_rows(combined)$t] <- panel_heights
+                        combined$heights[ggplot2::panel_rows(combined)$t] <- panel_heights
                       }
                       combined
                     }
@@ -459,7 +401,7 @@ quantcut <- function(x, q = 4, na.rm = TRUE, ...) {
     q <- seq(0, 1, length.out = q + 1)
   }
 
-  quant <- quantile(x, q, na.rm = na.rm)
+  quant <- stats::quantile(x, q, na.rm = na.rm)
   dups <- duplicated(quant)
 
   if (any(dups)) {

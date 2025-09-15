@@ -21,11 +21,6 @@
 #' the data is grouped by. You can see this in action in the examples section 
 #' below.
 #'
-#' A third key difference (**WHICH HAS NOT BEEN IMPLEMENTED YET**) is the 
-#' output. This function outputs a tibble object with a special class that 
-#' enables it to be used with `prettytable()`. Furthermore, there are two 
-#' distinct outputs: one with the means and one just the difference in means.
-#'
 #' Lastly, this function allows you to add weights to calculate weighted means.
 #'
 #'
@@ -171,7 +166,7 @@ dunnett.data.frame <- function(
  
     # if na.rm is TRUE, remove NAs
     if (isTRUE(na.rm)) {
-      data <- na.omit(data)
+      data <- stats::na.omit(data)
     }
 
     # get the group helpers (nest_data, group_labs, and just_groups)
@@ -251,7 +246,7 @@ dunnett.data.frame <- function(
 
     if (isTRUE(na.rm)) {
       # if na.rm is TRUE, remove all NAs
-      data <- na.omit(data)
+      data <- stats::na.omit(data)
     }
 
     out <- dunnett_helper(
@@ -362,7 +357,7 @@ dunnett.grouped_df <- function(
   data <- dplyr::select(data, tidyselect::all_of(dplyr::group_vars(data)), {{ x }}, {{ treats }})
 
   if (isTRUE(na.rm)) {
-    data <- na.omit(data)
+    data <- stats::na.omit(data)
   }
 
   group_helpers <- group_analysis_helper(data = data)
@@ -541,7 +536,7 @@ dunnett_helper <- function(
 
   if (!is.null(wt)) {
     # use split to split the data
-    means <- sapply(split(data, treats_vec), function(z) weighted.mean(z[[x]], z[[wt]]))
+    means <- sapply(split(data, treats_vec), function(z) stats::weighted.mean(z[[x]], z[[wt]]))
   } else {
     # calculate mean of x_vec across each level in treats_vec
     means <- tapply(x_vec, treats_vec, mean)
@@ -618,7 +613,7 @@ dunnett_helper <- function(
     # round all numeric variables
     dplyr::mutate(
       dplyr::across(
-        dplyr::where(is.numeric),
+        tidyselect::where(is.numeric),
         ~round(.x, decimals)
       )
     )
@@ -716,7 +711,7 @@ character_to_factor <- function(new, old, cols) {
   # convert character vectors to factors
   lapply(
     # perform the function only over the common data frames
-    cols |> setNames(nm = _), 
+    cols |> stats::setNames(nm = _), 
     # write the anonymous function
     \(y) {
       if (!is.null(levels(old[[y]]))) {

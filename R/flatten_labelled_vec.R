@@ -34,7 +34,7 @@ flatten_labelled_vec <- function(x, data) {
 flatten_labelled_vec.default <- function(x, data) {
 
   values <- attr_val_labels(x, data)
-  names <- attr_val_labels(x, data) %>% setNames(names(.), .)
+  names <- attr_val_labels(x, data) %>% stats::setNames(names(.), .)
 
   leng <- length(values)
 
@@ -64,6 +64,6 @@ flatten_labelled_vec.data.frame <- function(x, data) {
   }
 
   lapply(cols, string_fun) %>% 
-    setNames(cols)
+    stats::setNames(cols)
 
 }

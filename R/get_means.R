@@ -173,7 +173,7 @@ get_means.default <- function(
       ),
       # round all numeric columns 
       dplyr::across(
-        dplyr::where(is.numeric),
+        tidyselect::where(is.numeric),
         ~round(.x, decimals)
       )
     )

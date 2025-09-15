@@ -9,8 +9,8 @@
 #'
 #' @param base_size Base font size, given in pts. Also controls the spacing in
 #'   the graph.
-#' @param base_line_size Base size for line elements.
-#' @param base_rect_size Base size for rect elements.
+#' @param base_line_size Base size for line ggplot2::elements.
+#' @param base_rect_size Base size for rect ggplot2::elements.
 #' @param base_lineheight Base line height for all text
 #' @param legend_position The position of the legend. Options are: "left",
 #'   "right", "top", "bottom", or "none". "none" removes the legend. "right"
@@ -137,9 +137,9 @@ theme_default <- function(
 
   # set the major grid lines
   if (grid_major == FALSE || grid == FALSE) {
-    grid_major_line <- element_blank()
+    grid_major_line <- ggplot2::element_blank()
   } else {
-    grid_major_line <- element_line(
+    grid_major_line <- ggplot2::element_line(
       color = "gray75",
       linetype = "dashed",
       linewidth = base_line_size,
@@ -149,9 +149,9 @@ theme_default <- function(
 
   # set the minor grid lines
   if (grid_minor == FALSE || grid == FALSE) {
-    grid_minor_line <- element_blank()
+    grid_minor_line <- ggplot2::element_blank()
   } else {
-    grid_minor_line <- element_line(
+    grid_minor_line <- ggplot2::element_line(
       color = "gray90",
       linetype = "dashed",
       linewidth = base_line_size / 2,
@@ -162,9 +162,9 @@ theme_default <- function(
 
   # set the major x axis grid lines
   if (grid_major_x == FALSE || grid_major == FALSE || grid == FALSE || grid_y_only == TRUE) {
-    grid_major_x_line <- element_blank()
+    grid_major_x_line <- ggplot2::element_blank()
   } else {
-    grid_major_x_line <- element_line(
+    grid_major_x_line <- ggplot2::element_line(
       color = "gray75",
       linetype = "dashed",
       linewidth = base_line_size,
@@ -174,9 +174,9 @@ theme_default <- function(
 
   # set the major y axis grid lines
   if (grid_major_y == FALSE || grid_major == FALSE || grid == FALSE || grid_x_only == TRUE) {
-    grid_major_y_line <- element_blank()
+    grid_major_y_line <- ggplot2::element_blank()
   } else {
-    grid_major_y_line <- element_line(
+    grid_major_y_line <- ggplot2::element_line(
       color = "gray75",
       linetype = "dashed",
       linewidth = base_line_size,
@@ -186,9 +186,9 @@ theme_default <- function(
 
   # set the minor x axis grid lines
   if (grid_minor_x == FALSE || grid_minor == FALSE || grid == FALSE || grid_y_only == TRUE) {
-    grid_minor_x_line <- element_blank()
+    grid_minor_x_line <- ggplot2::element_blank()
   } else {
-    grid_minor_x_line <- element_line(
+    grid_minor_x_line <- ggplot2::element_line(
       color = "gray90",
       linetype = "dashed",
       linewidth = base_line_size / 2,
@@ -198,9 +198,9 @@ theme_default <- function(
 
   # set the major y axis grid lines
   if (grid_minor_y == FALSE || grid_minor == FALSE || grid == FALSE || grid_x_only == TRUE) {
-    grid_minor_y_line <- element_blank()
+    grid_minor_y_line <- ggplot2::element_blank()
   } else {
-    grid_minor_y_line <- element_line(
+    grid_minor_y_line <- ggplot2::element_line(
       color = "gray90",
       linetype = "dashed",
       linewidth = base_line_size / 2,
@@ -218,7 +218,7 @@ theme_default <- function(
     panel_spacing_y <- unit(panel_spacing_y, "pt")
   }
 
-  facet_title_margin <- margin(
+  facet_title_margin <- ggplot2::margin(
     t = facet_title_margin_top,
     b = facet_title_margin_bottom,
     r = facet_title_margin_right,
@@ -226,10 +226,10 @@ theme_default <- function(
   )
 
   if (axis_text == FALSE) {
-    axis_text_labels <- element_blank()
+    axis_text_labels <- ggplot2::element_blank()
   } else {
-    axis_text_labels <- element_text(
-      size = rel(0.8),
+    axis_text_labels <- ggplot2::element_text(
+      size = ggplot2::rel(0.8),
       colour = "#595b60",
       inherit.blank = TRUE
     )
@@ -237,12 +237,12 @@ theme_default <- function(
 
   # set the x axis labels
   if (axis_text_x == FALSE || axis_text == FALSE) {
-    axis_text_x_labels <- element_blank()
+    axis_text_x_labels <- ggplot2::element_blank()
   } else {
-    axis_text_x_labels <- element_text(
-      size = rel(0.8),
+    axis_text_x_labels <- ggplot2::element_text(
+      size = ggplot2::rel(0.8),
       colour = "#595b60",
-      margin = margin(t = 0.8 * half_line / 2,
+      margin = ggplot2::margin(t = 0.8 * half_line / 2,
                       b = 0.8 * half_line / 2),
       vjust = 1,
       hjust = 0.5,
@@ -252,12 +252,12 @@ theme_default <- function(
 
   # set the y axis labels
   if (axis_text_y == FALSE || axis_text == FALSE) {
-    axis_text_y_labels <- element_blank()
+    axis_text_y_labels <- ggplot2::element_blank()
   } else {
-    axis_text_y_labels <- element_text(
-      size = rel(0.8),
+    axis_text_y_labels <- ggplot2::element_text(
+      size = ggplot2::rel(0.8),
       colour = "#595b60",
-      margin = margin(r = 0.8 * half_line / 2,
+      margin = ggplot2::margin(r = 0.8 * half_line / 2,
                       l = 0.8 * half_line / 2),
       vjust = 0.5,
       hjust = 1,
@@ -267,12 +267,12 @@ theme_default <- function(
 
   # set the facet title face
   if (isTRUE(facet_title_bold)) {
-    facet_title_bold <- element_text(
+    facet_title_bold <- ggplot2::element_text(
       family = adlgraphs_global$font$bold$family,
       face = "bold",
       colour = "grey10",
       size = facet_title_size,
-      margin = margin(
+      margin = ggplot2::margin(
         t = facet_title_margin_top,
         b = facet_title_margin_bottom,
         r = facet_title_margin_right,
@@ -282,12 +282,12 @@ theme_default <- function(
       hjust = 0.5
     )
   } else {
-    facet_title_bold <- element_text(
+    facet_title_bold <- ggplot2::element_text(
       family = adlgraphs_global$font$regular$family,
       face = "plain",
       colour = "grey10",
       size = facet_title_size,
-      margin = margin(
+      margin = ggplot2::margin(
         t = facet_title_margin_top,
         b = facet_title_margin_bottom,
         r = facet_title_margin_right,
@@ -299,19 +299,19 @@ theme_default <- function(
   }
 
   theme(
-    line                             = element_line(
+    line                             = ggplot2::element_line(
       colour = "black",
       linewidth = base_line_size,
       linetype = 1,
       lineend = "butt"
     ),
-    rect                             = element_rect(
+    rect                             = ggplot2::element_rect(
       fill = "white",
       colour = "black",
       linewidth = base_rect_size,
       linetype = 1
     ),
-    text                             = element_text(
+    text                             = ggplot2::element_text(
       family = adlgraphs_global$font$regular$family,
       face = "plain",
       colour = "black",
@@ -320,20 +320,20 @@ theme_default <- function(
       hjust = 0.5,
       vjust = 0.5,
       angle = 0,
-      margin = margin(),
+      margin = ggplot2::margin(),
       debug = FALSE
     ),
     title                            = NULL,
     aspect.ratio                     = NULL,
     axis.title                       = NULL,
-    axis.title.x                     = element_text(
-      margin = margin(t = half_line),
+    axis.title.x                     = ggplot2::element_text(
+      margin = ggplot2::margin(t = half_line),
       vjust = 1,
     ),
     axis.title.x.top                 = NULL,
     axis.title.x.bottom              = NULL,
-    axis.title.y                     = element_text(
-      margin = margin(r = half_line),
+    axis.title.y                     = ggplot2::element_text(
+      margin = ggplot2::margin(r = half_line),
       vjust = 1,
       angle = 90,
     ),
@@ -346,7 +346,7 @@ theme_default <- function(
     axis.text.y                      = axis_text_y_labels,
     axis.text.y.left                 = NULL,
     axis.text.y.right                = NULL,
-    axis.ticks                       = element_blank(),
+    axis.ticks                       = ggplot2::element_blank(),
     axis.ticks.x                     = NULL,
     axis.ticks.x.top                 = NULL,
     axis.ticks.x.bottom              = NULL,
@@ -371,28 +371,28 @@ theme_default <- function(
     axis.minor.ticks.length.y        = NULL,
     axis.minor.ticks.length.y.left   = NULL,
     axis.minor.ticks.length.y.right  = NULL,
-    axis.line                        = element_blank(),
+    axis.line                        = ggplot2::element_blank(),
     axis.line.x                      = NULL,
     axis.line.x.top                  = NULL,
     axis.line.x.bottom               = NULL,
     axis.line.y                      = NULL,
     axis.line.y.left                 = NULL,
     axis.line.y.right                = NULL,
-    legend.background                = element_blank(),
-    legend.margin                    = margin(half_line, half_line, half_line, half_line),
+    legend.background                = ggplot2::element_blank(),
+    legend.margin                    = ggplot2::margin(half_line, half_line, half_line, half_line),
     legend.spacing                   = unit(base_size, "pt"),
     legend.spacing.x                 = NULL,
     legend.spacing.y                 = NULL,
-    legend.key                       = element_blank(),
+    legend.key                       = ggplot2::element_blank(),
     legend.key.size                  = unit(1.2, "lines"),
     legend.key.height                = NULL,
     legend.key.width                 = NULL,
-    legend.text                      = element_text(
+    legend.text                      = ggplot2::element_text(
       size = base_size * 0.8,
       inherit.blank = TRUE
     ),
     legend.text.align                = NULL,
-    legend.title                     = element_text(
+    legend.title                     = ggplot2::element_text(
       hjust = 0,
       inherit.blank = TRUE
     ),
@@ -402,11 +402,11 @@ theme_default <- function(
     legend.justification             = "center",
     legend.box                       = NULL,
     legend.box.just                  = NULL,
-    legend.box.margin                = margin(0, 0, 0, 0, "cm"),
-    legend.box.background            = element_blank(),
+    legend.box.margin                = ggplot2::margin(0, 0, 0, 0, "cm"),
+    legend.box.background            = ggplot2::element_blank(),
     legend.box.spacing               = unit(base_size, "pt"),
-    panel.background                 = element_rect(fill = "white", colour = NA),
-    panel.border                     = element_blank(),
+    panel.background                 = ggplot2::element_rect(fill = "white", colour = NA),
+    panel.border                     = ggplot2::element_blank(),
     panel.spacing                    = unit(0, "pt"),
     panel.spacing.x                  = panel_spacing_x,
     panel.spacing.y                  = panel_spacing_y,
@@ -418,33 +418,33 @@ theme_default <- function(
     panel.grid.minor.x               = grid_minor_x_line,
     panel.grid.minor.y               = grid_minor_y_line,
     panel.ontop                      = FALSE,
-    plot.background                  = element_rect(colour = "white"),
-    plot.title                       = element_text(
+    plot.background                  = ggplot2::element_rect(colour = "white"),
+    plot.title                       = ggplot2::element_text(
       family = adlgraphs_global$font$heavy$family,
       face = "bold",
       size = base_size * 1.2,
       hjust = 0.5,
       vjust = 1,
-      margin = margin(b = base_size),
+      margin = ggplot2::margin(b = base_size),
       inherit.blank = TRUE
     ),
     plot.title.position              = "plot",
-    plot.subtitle                    = element_text(
+    plot.subtitle                    = ggplot2::element_text(
       family = adlgraphs_global$font$heavy$family,
       hjust = 0,
       vjust = 1,
-      margin = margin(b = base_size * 1.2),
+      margin = ggplot2::margin(b = base_size * 1.2),
       inherit.blank = TRUE
     ),
-    plot.caption                     = element_text(
+    plot.caption                     = ggplot2::element_text(
       size = base_size * 0.66,
       hjust = 1,
       vjust = 1,
-      margin = margin(t = base_size * 0.8),
+      margin = ggplot2::margin(t = base_size * 0.8),
       inherit.blank = TRUE
     ),
     plot.caption.position            = "panel",
-    plot.tag                         = element_text(
+    plot.tag                         = ggplot2::element_text(
       size = base_size * 1.2,
       hjust = 0.5,
       vjust = 0.5,
@@ -452,8 +452,8 @@ theme_default <- function(
     ),
     plot.tag.position                = "topleft",
     plot.tag.location                = NULL,
-    plot.margin                      = margin(half_line, half_line, half_line, half_line),
-    strip.background                 = element_blank(),
+    plot.margin                      = ggplot2::margin(half_line, half_line, half_line, half_line),
+    strip.background                 = ggplot2::element_blank(),
     strip.background.x               = NULL,
     strip.background.y               = NULL,
     strip.clip                       = "inherit",
@@ -462,11 +462,11 @@ theme_default <- function(
     strip.text.x                     = NULL,
     strip.text.x.bottom              = NULL,
     strip.text.x.top                 = NULL,
-    strip.text.y                     = element_text(
+    strip.text.y                     = ggplot2::element_text(
       angle = -90,
       inherit.blank = TRUE
     ),
-    strip.text.y.left                = element_text(
+    strip.text.y.left                = ggplot2::element_text(
       angle = -90,
       inherit.blank = TRUE
     ),

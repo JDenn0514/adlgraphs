@@ -100,7 +100,7 @@ remove_bogus <- function(data, duration, cut_off = 0.3, only_finished = TRUE) {
       ))
     }
     # cut off time
-    cut_off_time <- median(data[[duration]]) * cut_off
+    cut_off_time <- stats::median(data[[duration]]) * cut_off
     # remove speedsters
     data <- data[data[[duration]] > cut_off_time,]
   }
@@ -152,7 +152,7 @@ get_bogus <- function(data, duration, cut_off = 0.3) {
   }
 
   # get the cut off time
-  cut_off_time <- median(data[[duration]]) * cut_off
+  cut_off_time <- stats::median(data[[duration]]) * cut_off
   # add a new variable if they were speedsters
   bogus$speedsters <- ifelse(bogus[[duration]] > cut_off_time, TRUE, FALSE)
   # return the bad data

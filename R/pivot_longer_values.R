@@ -63,7 +63,7 @@ pivot_longer_values.default <- function(
   var_labs <- attr_var_label(data[cols])
   
   # flip the names and values of the vector
-  var_labs <- setNames(names(var_labs), var_labs)
+  var_labs <- stats::setNames(names(var_labs), var_labs)
   
   # if the 
   if (missing(name_label)) {
@@ -99,7 +99,7 @@ pivot_longer_values.survey.design <- function(
   
   # Get variable labels before pivoting
   var_labs <- attr_var_label(df[cols])
-  var_labs <- setNames(names(var_labs), var_labs)
+  var_labs <- stats::setNames(names(var_labs), var_labs)
   
   if (missing(name_label)) {
     name_label <- attr_question_preface(df[[cols[1]]])

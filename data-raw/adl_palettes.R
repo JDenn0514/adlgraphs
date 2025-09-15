@@ -74,7 +74,7 @@ adl_palettes <-
     # sequential
     bluescale
   ) %>%
-  rlang::set_names(
+  stats::setNames(
     "primary",
     "secondary",
     "tertiary",

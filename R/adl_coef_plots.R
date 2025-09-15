@@ -102,12 +102,12 @@ adl_coef_plots <- function(
 
     plot <- plot +
       ggplot2::geom_point(
-        position = position_dodge2(width = dodge_width, reverse = dodge_reverse),
+        position = ggplot2::position_dodge2(width = dodge_width, reverse = dodge_reverse),
         size = point_size
       ) +
       ggplot2::geom_linerange(
         ggplot2::aes(xmin = conf.low, xmax = conf.high),
-        position = position_dodge2(width = dodge_width, reverse = dodge_reverse),
+        position = ggplot2::position_dodge2(width = dodge_width, reverse = dodge_reverse),
         linewidth = line_width
       ) +
       theme_coef(...)

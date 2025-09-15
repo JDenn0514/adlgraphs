@@ -23,8 +23,8 @@
 #'
 #' @param x Variable that goes in the x-axis. This is required.
 #' @param y Variable that goes in the y-axis. This is required.
-#' @param col_label Variable that provides the values to be used as the labels
-#'   in the plot. This is what is used in `geom_text` and `geom_label`
+#' @param col_label Variable that provides the values to be used to label each
+#'   column or stack.
 #' @param group Explicitly set the overall grouping variable. This is used in
 #'   stacked graphs and dodged graphs. If NULL, the default, no grouping
 #'   variable is used. Note: No need to set this if the  data is not grouped
@@ -40,7 +40,7 @@
 #'   This must be set explicitly as it affects the location of the text, labels,
 #'   and error bars.
 #' @param col_text_size The size of the text inside/on top of the columns.
-#'   Default is 3.25. Default for web is 12.
+#'   Default is 3.25. 
 #' @param distance_from_col How far the labels are from the bars in freq plots
 #'   and how far they are from the bottom of the bar in the mean plots.
 #' @param freq_plot Logical. Determines if this is a frequency plot. If `TRUE`,
@@ -260,12 +260,12 @@ adl_bar_plots <- function(
         plot <- plot +
           ggplot2::geom_col(
             ggplot2::aes(fill = {{ fill }}),
-            position = position_dodge2(width = dodge_width, reverse = dodge_reverse),
+            position = ggplot2::position_dodge2(width = dodge_width, reverse = dodge_reverse),
             width = 0.8
           ) +
           ggplot2::geom_text(
             ggplot2::aes(label = {{ col_label }}, x = ({{ x }} + distance_from_col)),
-            position = position_dodge2(width = dodge_width, reverse = dodge_reverse),
+            position = ggplot2::position_dodge2(width = dodge_width, reverse = dodge_reverse),
             family = adlgraphs_global$font$regular$family,
             size = col_text_size,
             color = "#2c2e35",
@@ -278,12 +278,12 @@ adl_bar_plots <- function(
         plot <- plot +
           ggplot2::geom_col(
             ggplot2::aes(fill = {{ fill }}),
-            position = position_dodge2(width = dodge_width, reverse = dodge_reverse),
+            position = ggplot2::position_dodge2(width = dodge_width, reverse = dodge_reverse),
             width = 0.8
           ) +
           ggplot2::geom_text(
             ggplot2::aes(label = {{ col_label }}, y = ({{ y }} + distance_from_col)),
-            position = position_dodge2(width = dodge_width, reverse = dodge_reverse),
+            position = ggplot2::position_dodge2(width = dodge_width, reverse = dodge_reverse),
             family = adlgraphs_global$font$regular$family,
             size = col_text_size,
             color = "#2c2e35",
@@ -369,7 +369,7 @@ adl_bar_plots <- function(
           color = "#2c2e35",
           label.padding = unit(2.5, "pt")
         ) +
-        ggplot2::facet_wrap(vars({{ y }}), ncol = 1, labeller = label_wrap_gen(wrap_facet_labels), scales = "free_y") +
+        ggplot2::facet_wrap(vars({{ y }}), ncol = 1, labeller = ggplot2::label_wrap_gen(wrap_facet_labels), scales = "free_y") +
         theme_h_stack(...)
     }
 

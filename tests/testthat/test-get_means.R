@@ -212,8 +212,8 @@ testthat::test_that("expect outputs to be equal for mean with x, one group and w
       # calculate std.error
       std.error = sd / sqrt(n),
       # calculate the confidence invtervals
-      conf.low = mean - qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
-      conf.high = mean + qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      conf.low = mean - stats::qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      conf.high = mean + stats::qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
       # convert all group variables to a factor
       dplyr::across(
         # run the function over the variables in group_names
@@ -223,7 +223,7 @@ testthat::test_that("expect outputs to be equal for mean with x, one group and w
       ),
       # round all numeric columns 
       dplyr::across(
-        dplyr::where(is.numeric),
+        tidyselect::where(is.numeric),
         ~round(.x, 3)
       )
     ) %>% 
@@ -281,8 +281,8 @@ testthat::test_that("expect outputs to be equal for mean with x, one group with 
       # calculate std.error
       std.error = sd / sqrt(n),
       # calculate the confidence invtervals
-      conf.low = mean - qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
-      conf.high = mean + qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      conf.low = mean - stats::qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      conf.high = mean + stats::qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
       # convert all group variables to a factor
       dplyr::across(
         # run the function over the variables in group_names
@@ -292,7 +292,7 @@ testthat::test_that("expect outputs to be equal for mean with x, one group with 
       ),
       # round all numeric columns 
       dplyr::across(
-        dplyr::where(is.numeric),
+        tidyselect::where(is.numeric),
         ~round(.x, 3)
       )
     )
@@ -352,8 +352,8 @@ testthat::test_that("expect outputs to be equal for mean with x, two groups and 
       # calculate std.error
       std.error = sd / sqrt(n),
       # calculate the confidence invtervals
-      conf.low = mean - qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
-      conf.high = mean + qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      conf.low = mean - stats::qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      conf.high = mean + stats::qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
       # convert all group variables to a factor
       dplyr::across(
         # run the function over the variables in group_names
@@ -363,7 +363,7 @@ testthat::test_that("expect outputs to be equal for mean with x, two groups and 
       ),
       # round all numeric columns 
       dplyr::across(
-        dplyr::where(is.numeric),
+        tidyselect::where(is.numeric),
         ~round(.x, 3)
       )
     ) %>% 

@@ -92,7 +92,7 @@ scale_adl <- function(
         palette = palette_gen(type, palette, direction),
         labels = wrap_legend_labels,
         name = legend_title,
-        guide = guide_legend(reverse = TRUE),
+        guide = ggplot2::guide_legend(reverse = TRUE),
         ...
       )
     )
@@ -136,13 +136,13 @@ palette_gen <- function(
       # if the palette is pid3 and n is greater than 3
 
       # interpolate the colors until needed
-      color_list <- colorRampPalette(all_colors)(n)
+      color_list <- grDevices::colorRampPalette(all_colors)(n)
 
     } else if (palette == "bluescale") {
       # if the palette is bluescale, 
       
       # interpolate the colors until needed 
-      color_list <- colorRampPalette(all_colors)(n)
+      color_list <- grDevices::colorRampPalette(all_colors)(n)
 
     } else {
       # for all other colors, just do it from 1 to n

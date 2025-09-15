@@ -9,7 +9,7 @@ testthat::test_that("check an a dataset, unlist it", {
     colnames(test_data),
     \(x) attr(test_data[[x]], "label")
   ) %>% 
-    setNames(colnames(test_data)) %>% 
+    stats::setNames(colnames(test_data)) %>% 
     unlist()
 
 
@@ -23,7 +23,7 @@ testthat::test_that("check an a dataset, don't unlist it", {
     colnames(test_data),
     \(x) attr(test_data[[x]], "label")
   ) %>% 
-    setNames(colnames(test_data))
+    stats::setNames(colnames(test_data))
 
   testthat::expect_equal(
     attr_var_label(test_data, unlist = FALSE), exp

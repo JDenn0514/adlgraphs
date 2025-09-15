@@ -235,8 +235,8 @@ get_diffs.default <- function(
 
   # set the grouping columns to factors using levels from original data set
   out[group_cols] <- purrr::map(
-    group_cols %>% setNames(nm = .),
-    ~ factor(out[[.x]], levels = levels(data[[.x]]))
+    group_cols %>% stats::setNames(nm = .),
+    \(x) factor(out[[x]], levels = levels(data[[x]]))
   )  
   
   # reorder the columns in teh grouping variables

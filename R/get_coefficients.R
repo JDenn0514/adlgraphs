@@ -71,13 +71,13 @@ get_coefficients <- function(
   model_results <- model_results %>%
     dplyr::mutate(
       # get low confidence intervals
-      conf.low = estimate + (std.error * qt(p = (1 - conf.level) / 2,
-                                            df = df.residual(model))),
+      conf.low = estimate + (std.error * stats::qt(p = (1 - conf.level) / 2,
+                                            df = stats::df.residual(model))),
       # get high confidence intervals
-      conf.high = estimate - (std.error * qt(p = (1 - conf.level) / 2,
-                                             df = df.residual(model))),
+      conf.high = estimate - (std.error * stats::qt(p = (1 - conf.level) / 2,
+                                             df = stats::df.residual(model))),
       # round the confidence intervals to the nearest thousandth
-      dplyr::across(dplyr::where(is.numeric), ~round(.x, 3))
+      dplyr::across(tidyselect::where(is.numeric), ~round(.x, 3))
     )
 
   # attach the model to the tidy tibble
@@ -203,7 +203,7 @@ get_coefficients <- function(
   # use forcats::as_factor() to set the levels based on their order of appearance
   model_results %>% dplyr::mutate(
     dplyr::across(
-      dplyr::where(is.character),
+      tidyselect::where(is.character),
       ~forcats::fct_rev(forcats::as_factor(.x))
     )
   )

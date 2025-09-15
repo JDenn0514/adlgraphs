@@ -50,7 +50,7 @@ attr_var_label <- function(data, x, unlist = TRUE, if_null = NULL) {
         names(data),
         ~low_var_label({{ .x }}, data, if_null = if_null) 
       ) %>% 
-        setNames(names(data))
+        stats::setNames(names(data))
   
       if (isTRUE(unlist)) out <- unlist(out)
     } else {
@@ -63,9 +63,9 @@ attr_var_label <- function(data, x, unlist = TRUE, if_null = NULL) {
     data <- data %>% dplyr::select({{ x }})
     out <- purrr::map(
       names(data),
-      ~low_var_label({{ .x }}, data, if_null = if_null) 
+      \(x) low_var_label({{ x }}, data, if_null = if_null) 
     ) %>% 
-      setNames(names(data))
+      stats::setNames(names(data))
 
     if (isTRUE(unlist)) {
       out <- unlist(out, use.names = TRUE)

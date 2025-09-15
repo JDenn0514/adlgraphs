@@ -219,7 +219,7 @@ wtd_corr <- function(data, x, y,  wt, decimals = 3) {
     weights = data[[wt]]
   )
   
-  coefs <- coef(summary(model))[2,]
+  coefs <- stats::coef(summary(model))[2,]
   coefs <- as.data.frame(t(coefs))
 
   # get the length of x without NAs

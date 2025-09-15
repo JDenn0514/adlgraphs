@@ -127,7 +127,7 @@ testthat::test_that("default: decimals controls rounding as expected", {
 testthat::test_that("default: names_to and values_to respected in multi-x", {
   df <- label_vars(make_basic_df())
   out <- get_freqs(df,
-                   x = dplyr::all_of(c("x1", "x2")),
+                   x = tidyselect::all_of(c("x1", "x2")),
                    wt = wts,
                    names_to = "question",
                    values_to = "answer",
@@ -194,7 +194,7 @@ testthat::test_that("survey: multi-x no groups pivots and aggregates correctly",
 
   out <- get_freqs(
     dsn, 
-    x = dplyr::all_of(c("x1", "x2")),
+    x = tidyselect::all_of(c("x1", "x2")),
     names_to = "item", 
     values_to = "resp",
     na.rm = TRUE, 
@@ -244,7 +244,7 @@ testthat::test_that("survey: names_to/values_to respected and single-x renames v
   testthat::expect_false("value" %in% names(out1))
 
   # Multi-x: uses provided names_to/values_to
-  out2 <- get_freqs(dsn, x = dplyr::all_of(c("x1", "x2")),
+  out2 <- get_freqs(dsn, x = tidyselect::all_of(c("x1", "x2")),
                     names_to = "q", values_to = "ans", na.rm = TRUE)
   testthat::expect_true(all(c("q", "ans") %in% names(out2)))
 })
@@ -354,7 +354,7 @@ testthat::test_that("keep = function works and TRUE is a no-op (data.frame)", {
 
   out_fun <- get_freqs(
     df,
-    x = dplyr::all_of(c("x1", "x2")),
+    x = tidyselect::all_of(c("x1", "x2")),
     wt = wts,
     names_to = "item",
     values_to = "resp",
@@ -366,7 +366,7 @@ testthat::test_that("keep = function works and TRUE is a no-op (data.frame)", {
 
   out_true <- get_freqs(
     df,
-    x = dplyr::all_of(c("x1", "x2")),
+    x = tidyselect::all_of(c("x1", "x2")),
     wt = wts,
     names_to = "item",
     values_to = "resp",
@@ -381,7 +381,7 @@ testthat::test_that("keep = tidy expression evaluates in result context (data.fr
 
   out <- get_freqs(
     df,
-    x = dplyr::all_of(c("x1", "x2")),
+    x = tidyselect::all_of(c("x1", "x2")),
     group = grp,
     wt = wts,
     names_to = "item",
@@ -409,7 +409,7 @@ testthat::test_that("keep function invalid length errors (data.frame)", {
   testthat::expect_error(
     get_freqs(
       df,
-      x = dplyr::all_of(c("x1", "x2")),
+      x = tidyselect::all_of(c("x1", "x2")),
       wt = wts,
       names_to = "item",
       values_to = "resp",
@@ -423,7 +423,7 @@ testthat::test_that("keep function invalid length errors (data.frame)", {
 testthat::test_that("apply_keep_filter warns if values_col not found (defensive)", {
   df <- make_basic_df()
   out <- get_freqs(
-    df, x = dplyr::all_of(c("x1", "x2")),
+    df, x = tidyselect::all_of(c("x1", "x2")),
     wt = wts, names_to = "item", values_to = "resp", na.rm = TRUE
   )
   out2 <- out
@@ -443,7 +443,7 @@ testthat::test_that("drop_zero + keep interact reasonably (data.frame)", {
 
   out <- get_freqs(
     df,
-    x = dplyr::all_of(c("x1", "x2")),
+    x = tidyselect::all_of(c("x1", "x2")),
     wt = wts,
     names_to = "item",
     values_to = "resp",
@@ -484,7 +484,7 @@ testthat::test_that("keep = function works and TRUE is a no-op (survey.design)",
 
   out_fun <- get_freqs(
     svy,
-    x = dplyr::all_of(c("x1", "x2")),
+    x = tidyselect::all_of(c("x1", "x2")),
     names_to = "item",
     values_to = "resp",
     keep = function(v) grepl("s$", v),
@@ -495,7 +495,7 @@ testthat::test_that("keep = function works and TRUE is a no-op (survey.design)",
 
   out_true <- get_freqs(
     svy,
-    x = dplyr::all_of(c("x1", "x2")),
+    x = tidyselect::all_of(c("x1", "x2")),
     names_to = "item",
     values_to = "resp",
     keep = function(v) TRUE,
@@ -510,7 +510,7 @@ testthat::test_that("keep = tidy expression evaluates in result context (survey.
 
   out <- get_freqs(
     svy,
-    x = dplyr::all_of(c("x1", "x2")),
+    x = tidyselect::all_of(c("x1", "x2")),
     group = grp,
     names_to = "item",
     values_to = "resp",
@@ -583,7 +583,7 @@ testthat::test_that("keep filters responses; item labels and groups retained (mu
 
   out <- get_freqs(
     svy,
-    x = dplyr::all_of(c("x1", "x2")),  # multi-x
+    x = tidyselect::all_of(c("x1", "x2")),  # multi-x
     group = grp,                       # with groups -> Case D
     names_to = "item",
     values_to = "resp",
@@ -635,7 +635,7 @@ testthat::test_that("drop_zero + keep interact reasonably (survey.design)", {
 
   out <- get_freqs(
     svy,
-    x = dplyr::all_of(c("x1", "x2")),
+    x = tidyselect::all_of(c("x1", "x2")),
     names_to = "item",
     values_to = "resp",
     drop_zero = FALSE,

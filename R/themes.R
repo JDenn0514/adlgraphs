@@ -244,7 +244,7 @@ theme_default <- function(
     axis_text_x_labels <- ggplot2::element_text(
       size = ggplot2::rel(0.8),
       colour = "#595b60",
-      margin = margin(t = 0.8 * half_line / 2,
+      margin = ggplot2::margin(t = 0.8 * half_line / 2,
                       b = 0.8 * half_line / 2),
       vjust = 1,
       hjust = 0.5,
@@ -329,7 +329,7 @@ theme_default <- function(
     aspect.ratio                     = NULL,
     axis.title                       = NULL,
     axis.title.x                     = ggplot2::element_text(
-      margin = margin(t = half_line),
+      margin = ggplot2::margin(t = half_line),
       vjust = 1,
     ),
     axis.title.x.top                 = NULL,

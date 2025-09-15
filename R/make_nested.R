@@ -87,7 +87,7 @@ make_nested <- function(data, group, na.rm = TRUE, sep = "_") {
   # using the list of columns, paste them together using do.call and paste
   nest_data$name <- do.call(paste, c(cols, sep = sep))
 
-  if (na.rm) nest_data <- na.omit(nest_data)
+  if (na.rm) nest_data <- stats::na.omit(nest_data)
   
   sort_by(nest_data, nest_data[group_names])
 

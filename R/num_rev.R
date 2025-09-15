@@ -33,7 +33,7 @@ num_rev <- function(x) {
 
   ## reverse the values of x in a new vector "rev_x" ---------
   # get the highest value in x and add 1 to it
-  max_x <- max(na.omit(x)) + 1
+  max_x <- max(stats::na.omit(x)) + 1
   # reverse the value of x by subtracting it from name_vec_max
   # four variables with four response options what was a 1 is equal to a 4 
   # and what was a 2 is equal to 3, etc.

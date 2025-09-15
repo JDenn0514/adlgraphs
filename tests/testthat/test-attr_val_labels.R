@@ -38,7 +38,7 @@ testthat::test_that("check a dataset", {
     colnames(test_data),
     ~ attr_val_labels({{ .x }}, test_data)
   ) %>% 
-    setNames(colnames(test_data)) 
+    stats::setNames(colnames(test_data)) 
 
   testthat::expect_equal(
     attr_val_labels(test_data), exp
