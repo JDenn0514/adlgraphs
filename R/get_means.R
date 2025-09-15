@@ -106,7 +106,6 @@ get_means.default <- function(
   group_names <- if(inherits(data, "grouped_df")) dplyr::group_vars(data) else NULL
   # if group arg is missing set to NULL, else use select_groups to capture it
   group_vars <- if (missing(group)) NULL else select_groups({{ group }}, data)
-  # group_vars <- if (missing(group)) NULL else eval_select_by(rlang::enexpr(group), data)
   # remove the "c" from the group_vars vector if it is there
   group_vars <- group_vars[group_vars != "c"]
   # get the groups
@@ -162,8 +161,8 @@ get_means.default <- function(
       # calculate std.error
       std.error = sd / sqrt(n), 
       # calculate the confidence invtervals
-      conf.low = mean - qt(1 - ((1 - conf_level) / 2), n - 1) * std.error,
-      conf.high = mean + qt(1 - ((1 - conf_level) / 2), n - 1) * std.error,
+      conf.low = mean - stats::qt(1 - ((1 - conf_level) / 2), n - 1) * std.error,
+      conf.high = mean + stats::qt(1 - ((1 - conf_level) / 2), n - 1) * std.error,
       # convert all group variables to a factor
       dplyr::across(
         # run the function over the variables in group_names
