@@ -94,7 +94,7 @@ name. For multi-variable inputs, responses are pivoted to long format using <cod
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>Columns selecting one or more variables to tabulate. You can pass:</p><ul><li><p>A bare column name (e.g., <code>x = q1</code>)</p></li>
 <li><p>A tidyselect expression (e.g., <code>x = dplyr::starts_with("q")</code>)</p></li>
-<li><p>For programmatic selection, use <code>dplyr::all_of(c("q1", "q2"))</code>.</p></li>
+<li><p>For programmatic selection, use <code>tidyselect::all_of(c("q1", "q2"))</code>.</p></li>
 </ul></dd>
 
 
@@ -236,7 +236,7 @@ an error is raised.</p></li>
 <span class="r-in"><span><span class="va">df</span><span class="op">$</span><span class="va">q2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"blue"</span>, <span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"blue"</span>, <span class="cn">NA</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">res_multi</span> <span class="op">&lt;-</span> <span class="fu">get_freqs</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">df</span>,</span></span>
-<span class="r-in"><span>  x <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"q1"</span>, <span class="st">"q2"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  x <span class="op">=</span> <span class="fu">tidyselect</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"q1"</span>, <span class="st">"q2"</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  wt <span class="op">=</span> <span class="va">wts</span>,</span></span>
 <span class="r-in"><span>  names_to <span class="op">=</span> <span class="st">"item"</span>,</span></span>
 <span class="r-in"><span>  values_to <span class="op">=</span> <span class="st">"resp"</span>,</span></span>
@@ -256,7 +256,7 @@ an error is raised.</p></li>
 <span class="r-in"><span><span class="co"># 1) keep as a character vector: retain only "yes" responses across items</span></span></span>
 <span class="r-in"><span><span class="fu">get_freqs</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">df</span>,</span></span>
-<span class="r-in"><span>  x <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"q1"</span>, <span class="st">"q2"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  x <span class="op">=</span> <span class="fu">tidyselect</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"q1"</span>, <span class="st">"q2"</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  wt <span class="op">=</span> <span class="va">wts</span>,</span></span>
 <span class="r-in"><span>  names_to <span class="op">=</span> <span class="st">"item"</span>,</span></span>
 <span class="r-in"><span>  values_to <span class="op">=</span> <span class="st">"resp"</span>,</span></span>
@@ -271,7 +271,7 @@ an error is raised.</p></li>
 <span class="r-in"><span><span class="co"># 2) keep as a function: retain values ending with 'e' (e.g., "blue")</span></span></span>
 <span class="r-in"><span><span class="fu">get_freqs</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">df</span>,</span></span>
-<span class="r-in"><span>  x <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"q1"</span>, <span class="st">"q2"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  x <span class="op">=</span> <span class="fu">tidyselect</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"q1"</span>, <span class="st">"q2"</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  wt <span class="op">=</span> <span class="va">wts</span>,</span></span>
 <span class="r-in"><span>  names_to <span class="op">=</span> <span class="st">"item"</span>,</span></span>
 <span class="r-in"><span>  values_to <span class="op">=</span> <span class="st">"resp"</span>,</span></span>
@@ -287,7 +287,7 @@ an error is raised.</p></li>
 <span class="r-in"><span><span class="co"># Here we keep everything except "no"</span></span></span>
 <span class="r-in"><span><span class="fu">get_freqs</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">df</span>,</span></span>
-<span class="r-in"><span>  x <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"q1"</span>, <span class="st">"q2"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  x <span class="op">=</span> <span class="fu">tidyselect</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"q1"</span>, <span class="st">"q2"</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  wt <span class="op">=</span> <span class="va">wts</span>,</span></span>
 <span class="r-in"><span>  names_to <span class="op">=</span> <span class="st">"item"</span>,</span></span>
 <span class="r-in"><span>  values_to <span class="op">=</span> <span class="st">"resp"</span>,</span></span>
@@ -304,7 +304,7 @@ an error is raised.</p></li>
 <span class="r-in"><span><span class="co"># 4) keep with grouping: filter within groups after aggregation</span></span></span>
 <span class="r-in"><span><span class="fu">get_freqs</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">df</span>,</span></span>
-<span class="r-in"><span>  x <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"q1"</span>, <span class="st">"q2"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  x <span class="op">=</span> <span class="fu">tidyselect</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"q1"</span>, <span class="st">"q2"</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  group <span class="op">=</span> <span class="va">grp</span>,</span></span>
 <span class="r-in"><span>  wt <span class="op">=</span> <span class="va">wts</span>,</span></span>
 <span class="r-in"><span>  names_to <span class="op">=</span> <span class="st">"item"</span>,</span></span>
@@ -323,7 +323,7 @@ an error is raised.</p></li>
 <span class="r-in"><span><span class="co"># 5) keep function returning TRUE (no-op): leaves result unchanged</span></span></span>
 <span class="r-in"><span><span class="fu">get_freqs</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">df</span>,</span></span>
-<span class="r-in"><span>  x <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"q1"</span>, <span class="st">"q2"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  x <span class="op">=</span> <span class="fu">tidyselect</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"q1"</span>, <span class="st">"q2"</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  wt <span class="op">=</span> <span class="va">wts</span>,</span></span>
 <span class="r-in"><span>  names_to <span class="op">=</span> <span class="st">"item"</span>,</span></span>
 <span class="r-in"><span>  values_to <span class="op">=</span> <span class="st">"resp"</span>,</span></span>
@@ -357,7 +357,7 @@ an error is raised.</p></li>
 <span class="r-in"><span><span class="co"># Zero-count levels are not expanded for multi-variable survey inputs.</span></span></span>
 <span class="r-in"><span><span class="fu">get_freqs</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">dsn</span>,</span></span>
-<span class="r-in"><span>  x <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"q1"</span>, <span class="st">"q2"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  x <span class="op">=</span> <span class="fu">tidyselect</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"q1"</span>, <span class="st">"q2"</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  names_to <span class="op">=</span> <span class="st">"item"</span>,</span></span>
 <span class="r-in"><span>  values_to <span class="op">=</span> <span class="st">"resp"</span>,</span></span>
 <span class="r-in"><span>  na.rm <span class="op">=</span> <span class="cn">TRUE</span></span></span>
@@ -373,7 +373,7 @@ an error is raised.</p></li>
 <span class="r-in"><span><span class="co"># Note: keep is also supported for survey multi-variable outputs</span></span></span>
 <span class="r-in"><span><span class="fu">get_freqs</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">dsn</span>,</span></span>
-<span class="r-in"><span>  x <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"q1"</span>, <span class="st">"q2"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  x <span class="op">=</span> <span class="fu">tidyselect</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"q1"</span>, <span class="st">"q2"</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  names_to <span class="op">=</span> <span class="st">"item"</span>,</span></span>
 <span class="r-in"><span>  values_to <span class="op">=</span> <span class="st">"resp"</span>,</span></span>
 <span class="r-in"><span>  keep <span class="op">=</span> <span class="va">resp</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"yes"</span>, <span class="st">"red"</span><span class="op">)</span>,</span></span>
