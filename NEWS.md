@@ -1,3 +1,15 @@
+# adlgraphs 0.4.3
+
+## Created two new functions
+
+#### adl_lollipop_plots
+
+- This function creates lollipop plots similar to how `adl_bar_plots()` creates bar plots.
+
+#### row_sums
+
+- This functions allows you to sum across columns by row using tidyselect.
+
 # adlgraphs 0.4.2
 
 ## Implemented multi-column input for `get_freqs()` and improved error handling with make_factor()

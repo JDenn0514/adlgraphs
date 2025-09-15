@@ -1,171 +1,82 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/404.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/articles/data_transformations.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/articles/how_to_use_adl_bar_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/articles/make_coefficient_plots.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/index.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/adl_bar_plots.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/adl_coef_plots.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/adl_palettes.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/adlgraphs-package.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/attr_levels.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/attr_note.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/attr_question_preface.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/attr_survey_flow.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/attr_transformation.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/attr_val_labels.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/attr_var_label.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/attributes.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/case_match_fct.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/case_when_fct.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/clean_demos.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/codebook.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/dunnett.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/dunnett_pval_fun.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/get_all_freqs.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/get_coefficients.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/get_freq_table.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/get_freqs.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/get_means.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/hc_theme_default.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/make_binary.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/make_df_oxy.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/make_dicho.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/make_factor.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/make_percent.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/make_quarts.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/num_rev.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/pct_conv.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/pivot_longer_values.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/prettytable.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/refactor.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/scale_adl.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/stars_pval.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/stat_density_quant.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/test_data.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/theme_coef.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/theme_default.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/theme_h_bar.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/theme_h_stack.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/theme_v_bar.html</loc>
-  </url>
-  <url>
-    <loc>https://jdenn0514.github.io/adlgraphs/reference/write_word_table.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://jdenn0514.github.io/adlgraphs/404.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/LICENSE-text.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/LICENSE.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/articles/data_transformations.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/articles/how_to_use_adl_bar_plot.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/articles/index.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/articles/make_coefficient_plots.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/authors.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/index.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/news/index.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/adl_bar_plots.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/adl_coef_plots.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/adl_lollipop_plots.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/adl_palettes.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/adlgraphs-package.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/attr_levels.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/attr_note.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/attr_question_preface.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/attr_survey_flow.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/attr_transformation.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/attr_val_labels.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/attr_var_label.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/attributes.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/case_match_fct.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/case_when_fct.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/clean_demos.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/codebook.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/dunnett.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/dunnett_helper.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/dunnett_pval_fun.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/export_bogus.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/export_bot_dupe.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/export_freqs_excel.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/flatten_labelled_vec.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/flip_val.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/funky_freqs.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_all_corr.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_all_freqs.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_bogus.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_bot_dupe.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_coefficients.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_col_names.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_corr.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_diffs.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_freq_table.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_freqs.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_loadings.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_means.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/hc_theme_default.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/index.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/make_binary.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/make_df_oxy.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/make_dicho.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/make_factor.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/make_nested.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/make_percent.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/make_quarts.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/num_rev.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/pct_conv.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/pivot_longer_values.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/prettytable.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/refactor.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/remove_bogus.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/remove_bot_dupe.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/row_means.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/scale_adl.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/select_groups.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/set_question_preface.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/stars_pval.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/stat_density_quant.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/test_data.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/theme_coef.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/theme_default.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/theme_h_bar.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/theme_h_stack.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/theme_v_bar.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/write_word_table.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/wtd_corr.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/wtd_sd.html</loc></url>
 </urlset>
+
