@@ -17,7 +17,7 @@
 #' `text_color = TRUE`, in which case labels inherit the plotted color (or the
 #' primary if unmapped).
 #' 
-#' For more information on how the arguments point_size and linewidth check out
+#' For more information on how the arguments point_size and line_width check out
 #' vignette from the ggplot2 website: 
 #'
 #' @param data A data frame or tibble.
@@ -52,7 +52,7 @@
 #' @param wrap_facet_labels Integer passed to your faceting helpers if you
 #'   facet elsewhere (kept for interface compatibility).
 #' @param point_size Numeric, size of the lollipop head (default `3.5`).
-#' @param linewidth Numeric, thickness of the lollipop stem (default `0.9`).
+#' @param line_width Numeric, thickness of the lollipop stem (default `0.9`).
 #' @param text_color Logical; if `TRUE`, `geom_text()` maps its color aesthetic
 #'   to `color` (or `group` if `color` is `NULL`). If both are `NULL`, text
 #'   uses "#14A2FCFF". If `FALSE` (default), text is drawn with a
@@ -120,7 +120,7 @@ adl_lollipop_plots <- function(
   dodge_reverse = TRUE,
   wrap_facet_labels = 100,
   point_size = 3.5,
-  line_size = 0.9,
+  line_width = 0.9,
   text_color = FALSE,       # NEW: map text color to color/group when TRUE
   ...
 ) {
@@ -207,7 +207,7 @@ adl_lollipop_plots <- function(
       plot <- plot +
         ggplot2::geom_linerange(
           ggplot2::aes(y = {{ y }}, xmin = 0, xmax = {{ x }}),
-          linewidth = line_size,
+          line_width = line_wize,
           color = default_primary,
           position = pos_range,
           orientation = "y"
@@ -225,7 +225,7 @@ adl_lollipop_plots <- function(
       plot <- plot +
         ggplot2::geom_linerange(
           ggplot2::aes(y = {{ y }}, xmin = 0, xmax = {{ x }}, color = {{ color }}),
-          linewidth = line_size,
+          line_width = line_wize,
           position = pos_range,
           orientation = "y"
         ) +
@@ -240,7 +240,7 @@ adl_lollipop_plots <- function(
       plot <- plot +
         ggplot2::geom_linerange(
           ggplot2::aes(y = {{ y }}, xmin = 0, xmax = {{ x }}, color = {{ group }}),
-          linewidth = line_size,
+          line_width = line_wize,
           position = pos_range,
           orientation = "y"
         ) +
@@ -362,7 +362,7 @@ adl_lollipop_plots <- function(
       plot <- plot +
         ggplot2::geom_linerange(
           ggplot2::aes(x = {{ x }}, ymin = 0, ymax = {{ y }}),
-          linewidth = line_size,
+          line_width = line_wize,
           color = default_primary,
           position = pos_range
         ) +
@@ -379,7 +379,7 @@ adl_lollipop_plots <- function(
       plot <- plot +
         ggplot2::geom_linerange(
           ggplot2::aes(x = {{ x }}, ymin = 0, ymax = {{ y }}, color = {{ color }}),
-          linewidth = line_size,
+          line_width = line_wize,
           position = pos_range
         ) +
         ggplot2::geom_point(
@@ -393,7 +393,7 @@ adl_lollipop_plots <- function(
       plot <- plot +
         ggplot2::geom_linerange(
           ggplot2::aes(x = {{ x }}, ymin = 0, ymax = {{ y }}, color = {{ group }}),
-          linewidth = line_size,
+          line_width = line_wize,
           position = pos_range
         ) +
         ggplot2::geom_point(

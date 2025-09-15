@@ -20,7 +20,7 @@ adl_lollipop_plots(
   dodge_reverse = TRUE,
   wrap_facet_labels = 100,
   point_size = 3.5,
-  line_size = 0.9,
+  line_width = 0.9,
   text_color = FALSE,
   ...
 )
@@ -77,14 +77,14 @@ facet elsewhere (kept for interface compatibility).}
 
 \item{point_size}{Numeric, size of the lollipop head (default \code{3.5}).}
 
+\item{line_width}{Numeric, thickness of the lollipop stem (default \code{0.9}).}
+
 \item{text_color}{Logical; if \code{TRUE}, \code{geom_text()} maps its color aesthetic
 to \code{color} (or \code{group} if \code{color} is \code{NULL}). If both are \code{NULL}, text
 uses "#14A2FCFF". If \code{FALSE} (default), text is drawn with a
 fixed color (\verb{#2c2e35}).}
 
 \item{...}{Additional arguments passed to \code{theme_default()}.}
-
-\item{linewidth}{Numeric, thickness of the lollipop stem (default \code{0.9}).}
 }
 \value{
 A \code{ggplot} object.
@@ -106,7 +106,7 @@ When both \code{color} and \code{group} are \code{NULL}, stems and points are dr
 \code{text_color = TRUE}, in which case labels inherit the plotted color (or the
 primary if unmapped).
 
-For more information on how the arguments point_size and linewidth check out
+For more information on how the arguments point_size and line_width check out
 vignette from the ggplot2 website:
 }
 \section{Auto label offset}{
