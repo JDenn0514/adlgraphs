@@ -12,7 +12,7 @@
 #' in the operation.
 #' 
 #' @param cols <[`tidy-select`][dplyr_tidy_select]> The variables you want 
-#'   to use when calculating row means
+#'   to use when calculating row sums
 #' @param label A string specifying the variable label. If not specified, 
 #'   defaults to NULL
 #' @param na.rm Determines if NAs should be removed. Default is TRUE.

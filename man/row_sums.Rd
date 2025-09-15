@@ -8,7 +8,7 @@ row_sums(cols, label = NULL, na.rm = TRUE)
 }
 \arguments{
 \item{cols}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> The variables you want
-to use when calculating row means}
+to use when calculating row sums}
 
 \item{label}{A string specifying the variable label. If not specified,
 defaults to NULL}
