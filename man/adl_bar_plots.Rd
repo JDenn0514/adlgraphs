@@ -30,8 +30,8 @@ adl_bar_plots(
 
 \item{y}{Variable that goes in the y-axis. This is required.}
 
-\item{col_label}{Variable that provides the values to be used as the labels
-in the plot. This is what is used in \code{geom_text} and \code{geom_label}}
+\item{col_label}{Variable that provides the values to be used to label each
+column or stack.}
 
 \item{group}{Explicitly set the overall grouping variable. This is used in
 stacked graphs and dodged graphs. If NULL, the default, no grouping
@@ -53,7 +53,7 @@ and error bars.
 }}
 
 \item{col_text_size}{The size of the text inside/on top of the columns.
-Default is 3.25. Default for web is 12.}
+Default is 3.25.}
 
 \item{distance_from_col}{How far the labels are from the bars in freq plots
 and how far they are from the bottom of the bar in the mean plots.}

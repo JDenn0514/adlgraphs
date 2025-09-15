@@ -25,7 +25,7 @@ get_freqs(
 \itemize{
 \item A bare column name (e.g., \code{x = q1})
 \item A tidyselect expression (e.g., \code{x = dplyr::starts_with("q")})
-\item For programmatic selection, use \code{dplyr::all_of(c("q1", "q2"))}.
+\item For programmatic selection, use \code{tidyselect::all_of(c("q1", "q2"))}.
 }}
 
 \item{group}{Optional columns to group by. Accepts a tidyselect expression. If \code{data}
@@ -157,7 +157,7 @@ get_freqs(df, x = q1, group = grp, wt = wts, na.rm = TRUE)
 df$q2 <- c("red", "red", "blue", "blue", "red", "blue", "blue", NA)
 res_multi <- get_freqs(
   df,
-  x = dplyr::all_of(c("q1", "q2")),
+  x = tidyselect::all_of(c("q1", "q2")),
   wt = wts,
   names_to = "item",
   values_to = "resp",
@@ -170,7 +170,7 @@ res_multi
 # 1) keep as a character vector: retain only "yes" responses across items
 get_freqs(
   df,
-  x = dplyr::all_of(c("q1", "q2")),
+  x = tidyselect::all_of(c("q1", "q2")),
   wt = wts,
   names_to = "item",
   values_to = "resp",
@@ -181,7 +181,7 @@ get_freqs(
 # 2) keep as a function: retain values ending with 'e' (e.g., "blue")
 get_freqs(
   df,
-  x = dplyr::all_of(c("q1", "q2")),
+  x = tidyselect::all_of(c("q1", "q2")),
   wt = wts,
   names_to = "item",
   values_to = "resp",
@@ -193,7 +193,7 @@ get_freqs(
 # Here we keep everything except "no"
 get_freqs(
   df,
-  x = dplyr::all_of(c("q1", "q2")),
+  x = tidyselect::all_of(c("q1", "q2")),
   wt = wts,
   names_to = "item",
   values_to = "resp",
@@ -204,7 +204,7 @@ get_freqs(
 # 4) keep with grouping: filter within groups after aggregation
 get_freqs(
   df,
-  x = dplyr::all_of(c("q1", "q2")),
+  x = tidyselect::all_of(c("q1", "q2")),
   group = grp,
   wt = wts,
   names_to = "item",
@@ -216,7 +216,7 @@ get_freqs(
 # 5) keep function returning TRUE (no-op): leaves result unchanged
 get_freqs(
   df,
-  x = dplyr::all_of(c("q1", "q2")),
+  x = tidyselect::all_of(c("q1", "q2")),
   wt = wts,
   names_to = "item",
   values_to = "resp",
@@ -239,7 +239,7 @@ get_freqs(dsn, x = q1, na.rm = TRUE)
 # Zero-count levels are not expanded for multi-variable survey inputs.
 get_freqs(
   dsn,
-  x = dplyr::all_of(c("q1", "q2")),
+  x = tidyselect::all_of(c("q1", "q2")),
   names_to = "item",
   values_to = "resp",
   na.rm = TRUE
@@ -248,7 +248,7 @@ get_freqs(
 # Note: keep is also supported for survey multi-variable outputs
 get_freqs(
   dsn,
-  x = dplyr::all_of(c("q1", "q2")),
+  x = tidyselect::all_of(c("q1", "q2")),
   names_to = "item",
   values_to = "resp",
   keep = resp \%in\% c("yes", "red"),

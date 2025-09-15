@@ -76,11 +76,6 @@ along each level of whatever variable(s) are/is specified in \code{group} or tha
 the data is grouped by. You can see this in action in the examples section
 below.
 
-A third key difference (\strong{WHICH HAS NOT BEEN IMPLEMENTED YET}) is the
-output. This function outputs a tibble object with a special class that
-enables it to be used with \code{prettytable()}. Furthermore, there are two
-distinct outputs: one with the means and one just the difference in means.
-
 Lastly, this function allows you to add weights to calculate weighted means.
 }
 \examples{
