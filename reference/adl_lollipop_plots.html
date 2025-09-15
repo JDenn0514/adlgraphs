@@ -66,7 +66,7 @@ color to the plotted color or group.</p>
 <span>  dodge_reverse <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  wrap_facet_labels <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  point_size <span class="op">=</span> <span class="fl">3.5</span>,</span>
-<span>  line_size <span class="op">=</span> <span class="fl">0.9</span>,</span>
+<span>  line_width <span class="op">=</span> <span class="fl">0.9</span>,</span>
 <span>  text_color <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -153,6 +153,10 @@ facet elsewhere (kept for interface compatibility).</p></dd>
 <dd><p>Numeric, size of the lollipop head (default <code>3.5</code>).</p></dd>
 
 
+<dt id="arg-line-width">line_width<a class="anchor" aria-label="anchor" href="#arg-line-width"></a></dt>
+<dd><p>Numeric, thickness of the lollipop stem (default <code>0.9</code>).</p></dd>
+
+
 <dt id="arg-text-color">text_color<a class="anchor" aria-label="anchor" href="#arg-text-color"></a></dt>
 <dd><p>Logical; if <code>TRUE</code>, <code>geom_text()</code> maps its color aesthetic
 to <code>color</code> (or <code>group</code> if <code>color</code> is <code>NULL</code>). If both are <code>NULL</code>, text
@@ -162,10 +166,6 @@ fixed color (<code>#2c2e35</code>).</p></dd>
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional arguments passed to <code><a href="theme_default.html">theme_default()</a></code>.</p></dd>
-
-
-<dt id="arg-linewidth">linewidth<a class="anchor" aria-label="anchor" href="#arg-linewidth"></a></dt>
-<dd><p>Numeric, thickness of the lollipop stem (default <code>0.9</code>).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -182,7 +182,7 @@ fixed amount or automatically by a proportion of the rendered axis span
 <code>adl_palettes$primary</code>, and labels default to <code>#2c2e35</code> unless
 <code>text_color = TRUE</code>, in which case labels inherit the plotted color (or the
 primary if unmapped).</p>
-<p>For more information on how the arguments point_size and linewidth check out
+<p>For more information on how the arguments point_size and line_width check out
 vignette from the ggplot2 website:</p>
     </div>
     <div class="section level2">
