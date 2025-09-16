@@ -207,7 +207,7 @@ adl_lollipop_plots <- function(
       plot <- plot +
         ggplot2::geom_linerange(
           ggplot2::aes(y = {{ y }}, xmin = 0, xmax = {{ x }}),
-          line_width = line_wize,
+          line_width = line_width,
           color = default_primary,
           position = pos_range,
           orientation = "y"
@@ -225,7 +225,7 @@ adl_lollipop_plots <- function(
       plot <- plot +
         ggplot2::geom_linerange(
           ggplot2::aes(y = {{ y }}, xmin = 0, xmax = {{ x }}, color = {{ color }}),
-          line_width = line_wize,
+          line_width = line_width,
           position = pos_range,
           orientation = "y"
         ) +
@@ -240,7 +240,7 @@ adl_lollipop_plots <- function(
       plot <- plot +
         ggplot2::geom_linerange(
           ggplot2::aes(y = {{ y }}, xmin = 0, xmax = {{ x }}, color = {{ group }}),
-          line_width = line_wize,
+          line_width = line_width,
           position = pos_range,
           orientation = "y"
         ) +
@@ -362,7 +362,7 @@ adl_lollipop_plots <- function(
       plot <- plot +
         ggplot2::geom_linerange(
           ggplot2::aes(x = {{ x }}, ymin = 0, ymax = {{ y }}),
-          line_width = line_wize,
+          line_width = line_width,
           color = default_primary,
           position = pos_range
         ) +
@@ -379,7 +379,7 @@ adl_lollipop_plots <- function(
       plot <- plot +
         ggplot2::geom_linerange(
           ggplot2::aes(x = {{ x }}, ymin = 0, ymax = {{ y }}, color = {{ color }}),
-          line_width = line_wize,
+          line_width = line_width,
           position = pos_range
         ) +
         ggplot2::geom_point(
@@ -393,7 +393,7 @@ adl_lollipop_plots <- function(
       plot <- plot +
         ggplot2::geom_linerange(
           ggplot2::aes(x = {{ x }}, ymin = 0, ymax = {{ y }}, color = {{ group }}),
-          line_width = line_wize,
+          line_width = line_width,
           position = pos_range
         ) +
         ggplot2::geom_point(
