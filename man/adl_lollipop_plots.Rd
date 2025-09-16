@@ -13,7 +13,7 @@ adl_lollipop_plots(
   color = NULL,
   direction = "vertical",
   col_text_size = 3.25,
-  distance_from_col = 0.25,
+  distance_from_col = "auto",
   auto_offset_prop = 0.03,
   position = NULL,
   dodge_width = 0.8,

@@ -113,7 +113,7 @@ adl_lollipop_plots <- function(
   color = NULL,             # aesthetic mapping
   direction = "vertical",
   col_text_size = 3.25,
-  distance_from_col = 0.25, # numeric or "auto"
+  distance_from_col = "auto", # numeric or "auto"
   auto_offset_prop = 0.03,  # fraction of axis span for "auto"
   position = NULL,          # NULL or "dodge"
   dodge_width = 0.8,
