@@ -24,9 +24,9 @@
 #' @returns A vector with the same size as the common size computed from the
 #'   inputs in `...` and the same type as the common type of the RHS inputs
 #'   in `...`.
-#' 
+#'
 #' @seealso [case_match_fct()]
-#' 
+#'
 #' @examples
 #' # load the dplyr library so we can use `mutate()`
 #' library(dplyr)
@@ -96,10 +96,4 @@ case_when_fct <- function(..., .default = NULL) {
     dplyr::case_when(..., .default = .default),
     levels = levels
   )
-
 }
-
-
-
-
-

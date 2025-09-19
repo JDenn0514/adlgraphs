@@ -10,10 +10,10 @@
 #' @param data A `data.frame` or `tibble` object. This should only be specified
 #'   when `x` is only the name of a column in a `data.frame`.
 #'
-#' @returns If `x` is a variable or vector, a string containing the "transformation" 
+#' @returns If `x` is a variable or vector, a string containing the "transformation"
 #'   attribute, if one is present, is returned. If `x` is a `data.frame` then a
 #'   named vector with the "transformation" attribute from each variable is returned.
-#' 
+#'
 #' @export
 attr_transformation <- function(x, data) {
   UseMethod("attr_transformation")
@@ -46,6 +46,4 @@ attr_transformation.data.frame <- function(x, data = NULL) {
   lapply(cols, string_fun) %>%
     # set the names of the objects in the list
     stats::setNames(cols)
-
 }
-

@@ -44,7 +44,7 @@
 #'  * range - If a numeric variable, shows the range of the values.
 #'
 #' @param data An object of class `data.frame` or `tibble`
-#' 
+#'
 #' @returns A tibble with with the number of rows as columns in `data`
 #'
 #' @examples
@@ -56,9 +56,7 @@
 #'
 #' @export
 
-
 codebook <- function(data) {
-
   data_lab <- deparse(substitute(data))
 
   if (!is.data.frame(data)) {
@@ -68,12 +66,16 @@ codebook <- function(data) {
     ))
   }
 
+  data <- head(data)
+
   # attr the variable names
   names <- names(data)
   # get the number of variables
   len <- length(names)
 
-  if (!len) stop("there are no names to search in that object")
+  if (!len) {
+    stop("there are no names to search in that object")
+  }
 
   # get the variable labels
   labels <- attr_var_label(data)
@@ -100,9 +102,17 @@ codebook <- function(data) {
   # reordering according to pos
   # not forgetting that some variables don't have a label
   if (length(labels)) {
-    res <- dplyr::tibble(pos = pos, variable = names[pos], label = labels[names[pos]])
+    res <- dplyr::tibble(
+      pos = pos,
+      variable = names[pos],
+      label = labels[names[pos]]
+    )
   } else {
-    res <- dplyr::tibble(pos = pos, variable = names[pos], label = NA_character_)
+    res <- dplyr::tibble(
+      pos = pos,
+      variable = names[pos],
+      label = NA_character_
+    )
   }
 
   unique_values <- function(x) {
@@ -138,11 +148,13 @@ codebook <- function(data) {
       missing = unlist(lapply(data, n_missing)), # retrocompatibility
       unique_values = unlist(lapply(data, unique_values)),
       range = lapply(data, generic_range)
-    ) %>% 
-    tidyr::unnest(value_labels, keep_empty = TRUE) %>% 
+    ) %>%
+    tidyr::unnest(value_labels, keep_empty = TRUE) %>%
     tidyr::unnest(question_preface, keep_empty = TRUE)
 
   return(res)
-
 }
 
+n_missing <- function(x) {
+  sum(is.na(x) | is.null(x))
+}

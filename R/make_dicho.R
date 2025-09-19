@@ -123,7 +123,6 @@
 #'
 #' @export
 make_dicho <- function(x, flip_levels = FALSE) {
-
   # get the object's name
   x_name <- deparse(substitute(x))
 
@@ -131,16 +130,12 @@ make_dicho <- function(x, flip_levels = FALSE) {
   variable_label <- attr_var_label(x)
 
   if (is.numeric(x) && !is.null(attr_val_labels(x))) {
-
     # if x is class haven_labelled convert to a factor using haven::as_factor
     x <- make_factor(x)
-
   } else if (is.character(x)) {
-
     # if x is of class character, make it a factor
     # message("`x` is a character vector which may cause ")
     x <- make_factor(x)
-
   } else if (is.factor(x)) {
     # if its a factor just return x
     x
@@ -159,49 +154,57 @@ make_dicho <- function(x, flip_levels = FALSE) {
 
   lvl_x_f2 <- ifelse(
     grepl("\\s", lvl_x),
-    sub( "\\w+\\s", "", lvl_x),
+    sub("\\w+\\s", "", lvl_x),
     lvl_x
-  ) 
-  
+  )
+
   lvl_x_f2 <- unique(capitalize(lvl_x_f2))
 
   # remove the first word if there are multiple words (using base to )
   x <- ifelse(
     grepl("\\s", x),
-    sub( "\\w+\\s", "", x),
+    sub("\\w+\\s", "", x),
     x
-  ) 
+  )
   x <- capitalize(x)
 
   if (flip_levels == TRUE) {
-
     # Get the second level of the new vector
     lab <- unique(lvl_x_f2)[2]
 
     # change the factor levels
-    factor(x, levels = rev(lvl_x_f2)) %>% 
+    factor(x, levels = rev(lvl_x_f2)) %>%
       # add new attributes
       structure(
         # set the transformation attribute
-        transformation = paste0("Converting '", x_name, "' to a dichotomous factor and reordering the factor levels so that '", lab, "' is the reference level"),
+        transformation = paste0(
+          "Converting '",
+          x_name,
+          "' to a dichotomous factor and reordering the factor levels so that '",
+          lab,
+          "' is the reference level"
+        ),
         # add the original variable label
         label = variable_label
       )
-
   } else {
-
     # Get the first levels of the new vector
     lab <- unique(lvl_x_f2)[1]
 
     # add new attributes
-    factor(x, levels = lvl_x_f2) %>% 
+    factor(x, levels = lvl_x_f2) %>%
       structure(
         # indicate that the original variable was converted to a dichotomous factor
-        transformation = paste0("Converting '", x_name, "' to a dichotomous factor with '", lab, "' as the reference level"),
+        transformation = paste0(
+          "Converting '",
+          x_name,
+          "' to a dichotomous factor with '",
+          lab,
+          "' as the reference level"
+        ),
         # add the original variable label
         label = variable_label
       )
-
   }
 }
 
@@ -209,4 +212,3 @@ capitalize <- function(x) {
   substr(x, 1, 1) <- toupper(substr(x, 1, 1))
   x
 }
-

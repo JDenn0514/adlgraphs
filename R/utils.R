@@ -1,4 +1,3 @@
-
 # my own functions --------------------------------------------------------
 
 # this function updates the column names so that they are N or Percent
@@ -6,38 +5,37 @@ fix_pct <- function(x) {
   # extract the columns from the gt data
   columns <- colnames(x[["_data"]])
   # get only the columns with "n_" or "pct_"
-  og_cols <- grep("_n|_pct", columns,  value = TRUE)
+  og_cols <- grep("_n|_pct", columns, value = TRUE)
   # extract only the part of the string with "n_" or "pct_" in it
   new_cols <- unlist(regmatches(og_cols, m = regexec("_n|_pct", og_cols)))
-  
+
   # clean up the names of the columns
-  # replace "n_" with "N" in the 
-  new_cols <- gsub("_n", "N", new_cols) 
+  # replace "n_" with "N" in the
+  new_cols <- gsub("_n", "N", new_cols)
   # replace "pct_" with "Percent", use . as placeholder
   new_cols <- gsub("_pct", "Percent", new_cols)
 
   # set the names of new_names using the original column names
   names(new_cols) <- og_cols
   return(new_cols)
-
 }
 
 # this function sorts the columns in a wide data.frame
 sort_cols <- function(x, group_names, variable_name, og) {
   # keep only the strings starting with "n_" or "pct_"
-  new_cols <- grep("^(n_|pct_)", colnames(x),  value = TRUE)
+  new_cols <- grep("^(n_|pct_)", colnames(x), value = TRUE)
 
   # make a list by splitting each string in new_cols by "_"
   list_strings <- strsplit(new_cols, "_", fixed = TRUE)
-  # use do.call to perform rbind over each element in list_strings 
+  # use do.call to perform rbind over each element in list_strings
   #   and combine all resulting vectors together as a matrix
   mat <- do.call(rbind, list_strings)
   # convert the matrix into a data frame
   data <- data.frame(mat)
 
-  # rename the columns 
+  # rename the columns
   names(data) <- c("pct_n", group_names)
-  
+
   data[group_names] <- character_to_factor(data, og, group_names)
 
   # the sort data by the columns in group_names
@@ -50,7 +48,7 @@ character_to_factor <- function(new, old, cols) {
   # convert character vectors to factors
   lapply(
     # perform the function only over the common data frames
-    cols |> stats::setNames(nm = _), 
+    cols |> stats::setNames(nm = _),
     # write the anonymous function
     \(y) {
       if (!is.null(levels(old[[y]]))) {
@@ -68,7 +66,7 @@ character_to_factor <- function(new, old, cols) {
 # helper function for doing grouped data analysis
 group_analysis_helper <- function(data, cols) {
   # extract the df in the "groups" attribute
-  group_labs <- attr(data, "groups") %>% 
+  group_labs <- attr(data, "groups") %>%
     # remove the .rows column
     dplyr::select(-`.rows`)
   # get the column names, these are the grouping variables
@@ -76,7 +74,6 @@ group_analysis_helper <- function(data, cols) {
   leng_groups <- length(group_labs)
 
   if (!missing(cols)) {
-
     # get a data set with only the grouping variables
     data_groups <- data %>% dplyr::select(group_labs)
 
@@ -84,21 +81,20 @@ group_analysis_helper <- function(data, cols) {
     expr <- rlang::enquo(cols)
     # resume evaluation using eval_select to get the positions of the variables
     pos <- tidyselect::eval_select(expr, data = data)
-    # Use the vector of locations returned by eval_select() to subset 
+    # Use the vector of locations returned by eval_select() to subset
     # and rename the input data.
-    data_cols <- rlang::set_names(data[pos], names(pos)) 
+    data_cols <- rlang::set_names(data[pos], names(pos))
 
     # combine the two
     data <- dplyr::bind_cols(data_groups, data_cols)
   }
 
   # make it a nested data set
-  nest_data <- data %>% 
-    tidyr::nest() %>% 
+  nest_data <- data %>%
+    tidyr::nest() %>%
     tidyr::drop_na(tidyselect::everything())
 
   if (leng_groups > 1) {
-
     for (n in c(1:leng_groups)) {
       if (n == 1) {
         string <- paste('.data[[group_labs[1]]]')
@@ -108,37 +104,31 @@ group_analysis_helper <- function(data, cols) {
       new_string <- paste0("paste0(", string, ")")
     }
 
-    # get the groups 
+    # get the groups
     # we will combine this with the correlations
-    just_groups <- nest_data %>% 
+    just_groups <- nest_data %>%
       # remove the data column so it's just the groups
-      dplyr::select(-data) %>% 
+      dplyr::select(-data) %>%
       # combined the grouping variabels
-      dplyr::mutate(groups_combined = eval(parse(text = new_string))) %>% 
+      dplyr::mutate(groups_combined = eval(parse(text = new_string))) %>%
       # extract it as a vector
       dplyr::pull(groups_combined)
-    
   } else {
-
-    # get the groups 
+    # get the groups
     # we will combine this with the correlations
-    just_groups <- nest_data %>% 
-      dplyr::pull(-data) 
-  
+    just_groups <- nest_data %>%
+      dplyr::pull(-data)
   }
 
   out <- list(nest_data, just_groups, group_labs)
   names(out) <- c("nest_data", "just_groups", "group_labs")
-  
-  return(out)
-  
-}
 
+  return(out)
+}
 
 
 # clean the racial groups
 clean_race <- function(df, x) {
-
   # get the label
   label <- attr(df[[x]], "labels", exact = TRUE)
   # get the value label so we
@@ -172,7 +162,6 @@ clean_race <- function(df, x) {
         .default = 0
       )
     )
-
 }
 
 #' Identify correct font path based on filename
@@ -184,22 +173,22 @@ clean_race <- function(df, x) {
 #' @param path a vector of filepaths
 #'
 #' @noRd
-find_path <- function(filename, paths){
+find_path <- function(filename, paths) {
   result <- grep(paste0("(\\\\|/)", filename, ".[ot]tf$"), paths, value = TRUE)
 
-  if(length(result) >= 1){
+  if (length(result) >= 1) {
     return(result[1])
   } else {
     stop(
       paste0("Font '", filename, "' not found."),
-      call. = FALSE)
+      call. = FALSE
+    )
   }
 }
 
 
 # make the
 accept_string_or_sym <- function(x) {
-
   # use enexpr() to capture the expressions supplied in "group"
   # enexpr returns a naked expression of the argument supplied in "group"
   # this is what allows the input to be either a string or a symbol
@@ -212,17 +201,15 @@ accept_string_or_sym <- function(x) {
   }
 
   return(x)
-
 }
 
 
 #' Select variables from the group variable
 #' @param group `tidy_select` columns to group the data by
 #' @param data The data set that the columns are from (this to make sure they exist)
-#' 
+#'
 #' @keywords internal
 select_groups <- function(group, data) {
-
   group_vars <- as.character(rlang::quo_squash(rlang::enexpr(group)))
   group_vars <- group_vars[group_vars != "c"]
 
@@ -233,14 +220,12 @@ select_groups <- function(group, data) {
       "Column `{group_vars}` is not found in `{data_name}`",
       "i" = "Make sure all variables supplied to {.var group} are present in {.var data}"
     ))
-    
   }
   return(group_vars)
 }
 
 # a low level function for getting variable labels that powers the attr_var_label
 low_var_label <- function(x, data, if_null = NULL) {
-  
   x_name <- rlang::quo_get_expr(rlang::expr({{ x }}))
 
   if (missing(data)) {
@@ -273,7 +258,6 @@ low_var_label <- function(x, data, if_null = NULL) {
 #   group_names
 # }
 
-
 # functions from other packages -------------------------------------------
 
 # from dplyr
@@ -282,7 +266,7 @@ eval_select_by <- function(
   data,
   error_call = rlang::caller_env()
 ) {
-  # this works with 
+  # this works with
   out <- tidyselect::eval_select(
     expr = by,
     data = data,
@@ -292,8 +276,12 @@ eval_select_by <- function(
   names(out)
 }
 
-# from 
-check_factor <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+# from
+check_factor <- function(
+  x,
+  arg = rlang::caller_arg(x),
+  call = rlang::caller_env()
+) {
   if (is.character(x)) {
     factor(x)
   } else if (is.factor(x)) {
@@ -329,14 +317,25 @@ fct_unique <- function(f) {
 label_wrap <- function(width) {
   force(width)
   function(x) {
-    unlist(lapply(strwrap(x, width = width, simplify = FALSE), paste0, collapse = "\n"))
+    unlist(lapply(
+      strwrap(x, width = width, simplify = FALSE),
+      paste0,
+      collapse = "\n"
+    ))
   }
 }
 
 
 # import the gt_add_divider function from gtExtras
-gt_add_divider <- function(gt_object, columns, sides = "right", color = "grey",
-                           style = "solid", weight = gt::px(2), include_labels = TRUE) {
+gt_add_divider <- function(
+  gt_object,
+  columns,
+  sides = "right",
+  color = "grey",
+  style = "solid",
+  weight = gt::px(2),
+  include_labels = TRUE
+) {
   stopifnot("Table must be of class 'gt_tbl'" = "gt_tbl" %in% class(gt_object))
 
   if (isTRUE(include_labels)) {
@@ -369,11 +368,25 @@ gt_add_divider <- function(gt_object, columns, sides = "right", color = "grey",
 
 
 # make single column facets from ggforce
-facet_col <- function(facets, scales = "fixed", space = "fixed",
-                      shrink = TRUE, labeller = "label_value",
-                      drop = TRUE, strip.position = 'top') {
+facet_col <- function(
+  facets,
+  scales = "fixed",
+  space = "fixed",
+  shrink = TRUE,
+  labeller = "label_value",
+  drop = TRUE,
+  strip.position = 'top'
+) {
   space <- match.arg(space, c('free', 'fixed'))
-  facet <- ggplot2::facet_wrap(facets, ncol = 1, scales = scales, shrink = shrink, labeller = labeller, drop = drop, strip.position = strip.position)
+  facet <- ggplot2::facet_wrap(
+    facets,
+    ncol = 1,
+    scales = scales,
+    shrink = shrink,
+    labeller = labeller,
+    drop = drop,
+    strip.position = strip.position
+  )
   params <- facet$params
 
   params$space_free <- space == 'free'
@@ -381,16 +394,43 @@ facet_col <- function(facets, scales = "fixed", space = "fixed",
 }
 
 # from ggforce
-FacetCol <- ggplot2::ggproto('FacetCol', ggplot2::FacetWrap,
-                    draw_panels = function(self, panels, layout, x_scales, y_scales, ranges, coord, data, theme, params) {
-                      combined <- ggplot2::ggproto_parent(FacetWrap, self)$draw_panels(panels, layout, x_scales, y_scales, ranges, coord, data, theme, params)
-                      if (params$space_free) {
-                        heights <- vapply(layout$PANEL, function(i) diff(ranges[[i]]$y.range), numeric(1))
-                        panel_heights <- unit(heights, "null")
-                        combined$heights[ggplot2::panel_rows(combined)$t] <- panel_heights
-                      }
-                      combined
-                    }
+FacetCol <- ggplot2::ggproto(
+  'FacetCol',
+  ggplot2::FacetWrap,
+  draw_panels = function(
+    self,
+    panels,
+    layout,
+    x_scales,
+    y_scales,
+    ranges,
+    coord,
+    data,
+    theme,
+    params
+  ) {
+    combined <- ggplot2::ggproto_parent(FacetWrap, self)$draw_panels(
+      panels,
+      layout,
+      x_scales,
+      y_scales,
+      ranges,
+      coord,
+      data,
+      theme,
+      params
+    )
+    if (params$space_free) {
+      heights <- vapply(
+        layout$PANEL,
+        function(i) diff(ranges[[i]]$y.range),
+        numeric(1)
+      )
+      panel_heights <- ggplot2::unit(heights, "null")
+      combined$heights[ggplot2::panel_rows(combined)$t] <- panel_heights
+    }
+    combined
+  }
 )
 
 
@@ -406,15 +446,8 @@ quantcut <- function(x, q = 4, na.rm = TRUE, ...) {
 
   if (any(dups)) {
     flag <- x %in% unique(quant[dups])
-    retval <- ifelse(flag,
-      paste("[",
-        as.character(x),
-        "]",
-        sep = ""
-      ),
-      NA
-    )
-    
+    retval <- ifelse(flag, paste("[", as.character(x), "]", sep = ""), NA)
+
     uniqs <- unique(quant)
     # move cut points over a bit...
     reposition <- function(cut) {
@@ -427,29 +460,30 @@ quantcut <- function(x, q = 4, na.rm = TRUE, ...) {
     }
 
     newquant <- sapply(uniqs, reposition)
-    
+
     retval[!flag] <- as.character(
       cut(
         x[!flag],
         breaks = newquant,
-        include.lowest = TRUE, ...
+        include.lowest = TRUE,
+        ...
       )
     )
-    
 
     levs <- unique(retval[order(x)]) # ensure factor levels are
     # properly ordered
     retval <- factor(retval, levels = levs)
 
     ## determine open/closed interval ends
-    mkpairs <- function(x) { # make table of lower, upper
+    mkpairs <- function(x) {
+      # make table of lower, upper
       sapply(
         x,
         function(y) if (length(y) == 2) y[c(2, 2)] else y[2:3]
       )
     }
     pairs <- mkpairs(strsplit(levs, "[^0-9+\\.\\-]+"))
-    
+
     rownames(pairs) <- c("lower.bound", "upper.bound")
     colnames(pairs) <- levs
 
@@ -457,21 +491,25 @@ quantcut <- function(x, q = 4, na.rm = TRUE, ...) {
     closed.upper <- rep(TRUE, ncol(pairs)) # default upper is closed
     closed.lower[1] <- TRUE # lowest interval is always closed
 
-    for (i in 2:ncol(pairs)) { # open lower interval if above singlet
+    for (i in 2:ncol(pairs)) {
+      # open lower interval if above singlet
       if (pairs[1, i] == pairs[1, i - 1] && pairs[1, i] == pairs[2, i - 1]) {
         closed.lower[i] <- FALSE
       }
     }
 
-    for (i in 1:(ncol(pairs) - 1)) { # open upper inteval if below singlet
+    for (i in 1:(ncol(pairs) - 1)) {
+      # open upper inteval if below singlet
       if (pairs[2, i] == pairs[1, i + 1] && pairs[2, i] == pairs[2, i + 1]) {
         closed.upper[i] <- FALSE
       }
     }
 
-    levs <- ifelse(pairs[1, ] == pairs[2, ],
+    levs <- ifelse(
+      pairs[1, ] == pairs[2, ],
       pairs[1, ],
-      paste(ifelse(closed.lower, "[", "("),
+      paste(
+        ifelse(closed.lower, "[", "("),
         pairs[1, ],
         ",",
         pairs[2, ],
@@ -480,15 +518,12 @@ quantcut <- function(x, q = 4, na.rm = TRUE, ...) {
       )
     )
     levels(retval) <- levs
-  }
-  else {
+  } else {
     retval <- cut(x, quant, include.lowest = TRUE, ...)
   }
 
   return(retval)
 }
-
-
 
 
 # Check if all data points are inside bounds. If not, warn and remove them.
@@ -529,7 +564,11 @@ reflect_density <- function(dens, bounds, from, to) {
 
   # Estimate linearly with zero tails (crucial to account for infinite bound)
   f_dens <- stats::approxfun(
-    x = dens$x, y = dens$y, method = "linear", yleft = 0, yright = 0
+    x = dens$x,
+    y = dens$y,
+    method = "linear",
+    yleft = 0,
+    yright = 0
   )
 
   # Create a uniform x-grid inside `bounds`
@@ -543,11 +582,6 @@ reflect_density <- function(dens, bounds, from, to) {
   out_y <- f_dens(out_x) + left_reflection + right_reflection
 
   list(x = out_x, y = out_y)
-}
-
-
-n_missing <- function(x) {
-  sum(is.na(x) | is.null(x))
 }
 
 
@@ -585,12 +619,11 @@ replace_with <- function(x, from, to) {
 
 
 # standardize the data using weights
-stdz <- function(x, wt = NULL){
-
+stdz <- function(x, wt = NULL) {
   # Prepare weights
   if (missing(wt)) {
     wt <- rep(1, length(x))
-  } 
+  }
 
   # calculate the weighted n
   n <- sum(wt, na.rm = TRUE)
@@ -601,8 +634,6 @@ stdz <- function(x, wt = NULL){
   # divide x by the weighted sd of x to scale the data
   x <- x_mean / x_sd
   x
-
-
 }
 
 # Courtsey of Artem Sokolov from this Stack Overflow answer
@@ -613,10 +644,12 @@ x_expression <- function(x) {
 
   sc <- sys.calls()
   ASTs <- purrr::map(as.list(sc), getAST) %>%
-    purrr::keep(~identical(.[[1]], quote(`%>%`)))  # Match first element to %>%
+    purrr::keep(~ identical(.[[1]], quote(`%>%`))) # Match first element to %>%
 
-  if( length(ASTs) == 0 ) return(rlang::enexpr(x))        # Not in a pipe
-  dplyr::last( ASTs )[[2]]    # Second element is the left-hand side
+  if (length(ASTs) == 0) {
+    return(rlang::enexpr(x))
+  } # Not in a pipe
+  dplyr::last(ASTs)[[2]] # Second element is the left-hand side
 }
 
 
@@ -625,9 +658,10 @@ x_expression <- function(x) {
 # determines the number of decimal places in a string
 decimal_places <- function(x) {
   if (abs(x - round(x)) > .Machine$double.eps^0.5) {
-      nchar(strsplit(sub('0+$', '', as.character(x)), ".", fixed = TRUE)[[1]][[2]])
+    nchar(strsplit(sub('0+$', '', as.character(x)), ".", fixed = TRUE)[[1]][[
+      2
+    ]])
   } else {
-      return(0)
+    return(0)
   }
 }
-

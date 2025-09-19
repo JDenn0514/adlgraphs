@@ -64,30 +64,33 @@
 #'
 #'
 
-
 adl_coef_plots <- function(
-    data,
-    x = estimate,
-    y = value_label,
-    color = NULL,
-    facet = var_label,
-    facet_order = "original",
-    wrap_facet_labels = 50,
-    wrap_y_labels = 20,
-    x_intercept = 0,
-    point_size = 3.5,
-    line_width = 1,
-    position = NULL,
-    dodge_width = 0.6,
-    dodge_reverse = FALSE,
-    ...
+  data,
+  x = estimate,
+  y = value_label,
+  color = NULL,
+  facet = var_label,
+  facet_order = "original",
+  wrap_facet_labels = 50,
+  wrap_y_labels = 20,
+  x_intercept = 0,
+  point_size = 3.5,
+  line_width = 1,
+  position = NULL,
+  dodge_width = 0.6,
+  dodge_reverse = FALSE,
+  ...
 ) {
-
   plot <- data %>%
-    ggplot2::ggplot(ggplot2::aes(x = {{ x }}, y = {{ y }}, color = {{ color }}))
+    ggplot2::ggplot(
+      ggplot2::aes(
+        x = {{ x }},
+        y = {{ y }},
+        color = {{ color }}
+      )
+    )
 
   if (is.null(position)) {
-
     plot <- plot +
       ggplot2::geom_point(
         size = point_size
@@ -97,17 +100,21 @@ adl_coef_plots <- function(
         linewidth = line_width
       ) +
       theme_coef(...)
-
   } else if (position == "dodge") {
-
     plot <- plot +
       ggplot2::geom_point(
-        position = ggplot2::position_dodge2(width = dodge_width, reverse = dodge_reverse),
+        position = ggplot2::position_dodge2(
+          width = dodge_width,
+          reverse = dodge_reverse
+        ),
         size = point_size
       ) +
       ggplot2::geom_linerange(
         ggplot2::aes(xmin = conf.low, xmax = conf.high),
-        position = ggplot2::position_dodge2(width = dodge_width, reverse = dodge_reverse),
+        position = ggplot2::position_dodge2(
+          width = dodge_width,
+          reverse = dodge_reverse
+        ),
         linewidth = line_width
       ) +
       theme_coef(...)
@@ -132,7 +139,6 @@ adl_coef_plots <- function(
           space = "free",
           labeller = ggplot2::label_wrap_gen(wrap_facet_labels)
         )
-
     } else if (facet_order == "reverse") {
       # if facet_order is "reverse", reverse the order of the facets
 
@@ -143,13 +149,9 @@ adl_coef_plots <- function(
           space = "free",
           labeller = ggplot2::label_wrap_gen(wrap_facet_labels)
         )
-
     } else {
-
       cli::cli_abort('`facet_order` must be either "original" or "reverse"')
-
     }
-
   }
 
   if (is.numeric(x_intercept)) {
@@ -157,12 +159,10 @@ adl_coef_plots <- function(
 
     plot <- plot +
       ggplot2::geom_vline(xintercept = x_intercept)
-
   } else if (is.null(x_intercept)) {
     # if x_intercept is NULL don't add it
 
     plot <- plot
-
   } else {
     # if x_intercept is not numeric
 
@@ -172,18 +172,10 @@ adl_coef_plots <- function(
         x = "You've supplied`x_intercept` as a {.cls {class(x_intercept)}} value"
       )
     )
-
   }
 
   #
   plot <- plot + ggplot2::scale_y_discrete(labels = label_wrap(wrap_y_labels))
 
   return(plot)
-
 }
-
-
-
-
-
-

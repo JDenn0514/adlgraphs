@@ -32,6 +32,3 @@
 #' adl_palettes$grayscale
 #'
 "adl_palettes"
-
-
-

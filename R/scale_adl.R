@@ -52,7 +52,6 @@ scale_adl <- function(
   wrap_legend_labels = NULL,
   ...
 ) {
-
   warning(
     "`n` has been deprecated as the function now automatically detects number of colors needed."
   )
@@ -65,10 +64,9 @@ scale_adl <- function(
     stop('direction must be "original" or "reverse"')
   }
 
-
   # set the legend_title to waiver() if legend_title is missing
   if (is.null(legend_title)) {
-    legend_title <- waiver()
+    legend_title <- ggplot2::waiver()
   } else if (legend_title == "none") {
     legend_title <- NULL
   } else {
@@ -78,7 +76,7 @@ scale_adl <- function(
   # set the labels
   if (is.null(wrap_legend_labels)) {
     # if wrap_legend_labels = NULL then just leave as is
-    wrap_legend_labels <- waiver()
+    wrap_legend_labels <- ggplot2::waiver()
   } else {
     # wrap the legend labels
     wrap_legend_labels <- label_wrap(wrap_legend_labels)
@@ -110,13 +108,11 @@ scale_adl <- function(
 }
 
 
-
 palette_gen <- function(
-  type = "categorical", 
-  palette = "base", 
+  type = "categorical",
+  palette = "base",
   direction = "original"
 ) {
-
   if (palette == "base" && type == "sequential") {
     palette <- "bluescale"
   } else if (palette == "base" && type == "categorical") {
@@ -126,37 +122,28 @@ palette_gen <- function(
   }
 
   function(n) {
-
-    # get the list of colors from the palette 
+    # get the list of colors from the palette
     all_colors <- adl_palettes[[palette]]
     # convert it to a character vector
     all_colors <- as.character(all_colors)
-    
+
     if (palette == "pid3" && n > 3) {
       # if the palette is pid3 and n is greater than 3
 
       # interpolate the colors until needed
       color_list <- grDevices::colorRampPalette(all_colors)(n)
-
     } else if (palette == "bluescale") {
-      # if the palette is bluescale, 
-      
-      # interpolate the colors until needed 
-      color_list <- grDevices::colorRampPalette(all_colors)(n)
+      # if the palette is bluescale,
 
+      # interpolate the colors until needed
+      color_list <- grDevices::colorRampPalette(all_colors)(n)
     } else {
       # for all other colors, just do it from 1 to n
       color_list <- all_colors[1:n]
     }
 
-    # get the list of colors 
+    # get the list of colors
     # color_list <- all_colors[1:n]
     color_list <- if (direction == "original") color_list else rev(color_list)
-    
   }
-
 }
-
-
-
-

@@ -30,14 +30,14 @@
 #' @param flip_values Logical. If `FALSE`, the default, the values are kept the
 #'   same. If `TRUE`, the values associated with 1 and 0 are flipped. See third
 #'   example for more information.
-#' 
+#'
 #' @returns A numeric vector of same length as `x`.
 #'
 #'
 #' @examples
 #' library(dplyr)
 #' library(adlgraphs)
-#' 
+#'
 #' df <- tibble::tribble(
 #'   ~x, ~y, ~z,
 #'   3, 2, 3,
@@ -46,8 +46,8 @@
 #'   1, 1, 4,
 #'   5, 4, 3,
 #'   6, 5, 6
-#' ) 
-#' 
+#' )
+#'
 #' labs <- c(
 #'   "Strongly agree" = 1,
 #'   "Agree" = 2,
@@ -56,11 +56,11 @@
 #'   "Disagree" = 5,
 #'   "Strongly disagree" = 6
 #'  )
-#' 
+#'
 #' attr(df$x, "labels") <- labs
 #' attr(df$y, "labels") <- labs
 #' attr(df$z, "labels") <- labs
-#' 
+#'
 #' # show the data transformation with a haven_labelled vector
 #' binary_df <- dplyr::mutate(df, binary_x = make_binary(x))
 #' # check the updated dataset
@@ -129,7 +129,6 @@
 #'
 #' @export
 make_binary <- function(x, flip_values = FALSE) {
-
   # get the object's name
   x_name <- deparse(substitute(x))
   # make a new object containing the variable label
@@ -143,9 +142,7 @@ make_binary <- function(x, flip_values = FALSE) {
   # get the second factor level
   second_level <- levels(x)[2]
 
-
   if (flip_values == FALSE) {
-
     # create a named vector using the factor labels
     values <- stats::setNames(c(1, 0), c(first_level, second_level))
 
@@ -156,14 +153,19 @@ make_binary <- function(x, flip_values = FALSE) {
       second_level ~ 0
     ) %>%
       structure(
-        transformation = paste0("Converting '", x_name, "' to a binary variable with '", first_level, "' = 1 and '", second_level, "' = 0."),
+        transformation = paste0(
+          "Converting '",
+          x_name,
+          "' to a binary variable with '",
+          first_level,
+          "' = 1 and '",
+          second_level,
+          "' = 0."
+        ),
         label = variable_label,
         labels = values
       )
-
-
   } else if (flip_values == TRUE) {
-
     # create a named vector using the factor labels
     values <- stats::setNames(c(1, 0), c(second_level, first_level))
 
@@ -173,14 +175,22 @@ make_binary <- function(x, flip_values = FALSE) {
       first_level ~ 0
     ) %>%
       structure(
-        transformation = paste0("Converting '", x_name, "' to a binary variable with '", second_level, "' = 1 and '", first_level, "' = 0."),
+        transformation = paste0(
+          "Converting '",
+          x_name,
+          "' to a binary variable with '",
+          second_level,
+          "' = 1 and '",
+          first_level,
+          "' = 0."
+        ),
         label = variable_label,
         labels = values
       )
   }
 
-  if (is.null(attr_var_label(out))) attr(out, "label") <- x_name
+  if (is.null(attr_var_label(out))) {
+    attr(out, "label") <- x_name
+  }
   out
 }
-
-

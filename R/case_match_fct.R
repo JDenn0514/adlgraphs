@@ -21,9 +21,9 @@
 #'   the LHS inputs. If `NULL`, the default, a `NA` will be used.
 #'
 #' @returns  A factor vector with the same size as `.x` and the same type as the
-#'   common type of the RHS inputs and `.default` and levels as defined by the 
+#'   common type of the RHS inputs and `.default` and levels as defined by the
 #'   order of the RHS inputs.
-#' 
+#'
 #' @seealso [case_when_fct()]
 #'
 #' @examples
@@ -71,10 +71,9 @@
 #'     )
 #'   ) %>%
 #'   dplyr::count(new_species)
-#' 
+#'
 #' @export
 case_match_fct <- function(x, ..., .default = NULL) {
-
   # get the object's name
   x_name <- deparse(substitute(x))
 
@@ -102,7 +101,6 @@ case_match_fct <- function(x, ..., .default = NULL) {
     purrr::list_c() %>%
     paste(collapse = "\n")
 
-
   # add .default to the levels
   # this makes sure if you use .default instead of TRUE ~, it will return the
   # proper vector instead of NAs
@@ -111,7 +109,7 @@ case_match_fct <- function(x, ..., .default = NULL) {
   default <- .default
 
   if (is.null(.default)) {
-      # set the vector to a factor and specify the levels
+    # set the vector to a factor and specify the levels
     factor(
       dplyr::case_match(x, ..., .default = .default),
       levels = args_rhs
@@ -119,7 +117,10 @@ case_match_fct <- function(x, ..., .default = NULL) {
       structure(
         label = attr_var_label(x),
         transformation = paste0(
-          "Recoded '", x_name, "' as a factor and set the levels based on their order.\nThe data transformation is as follows:\n", text
+          "Recoded '",
+          x_name,
+          "' as a factor and set the levels based on their order.\nThe data transformation is as follows:\n",
+          text
         )
       )
   } else {
@@ -131,20 +132,14 @@ case_match_fct <- function(x, ..., .default = NULL) {
       structure(
         label = attr_var_label(x),
         transformation = paste0(
-          "Recoded '", x_name, "' as a factor and set the levels based on their order.\nThe data transformation is as follows:\n", text, "\nEverything else has become '", default, "'"
+          "Recoded '",
+          x_name,
+          "' as a factor and set the levels based on their order.\nThe data transformation is as follows:\n",
+          text,
+          "\nEverything else has become '",
+          default,
+          "'"
         )
       )
-
   }
-
 }
-
-
-
-
-
-
-
-
-
-

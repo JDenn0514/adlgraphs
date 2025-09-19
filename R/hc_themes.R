@@ -37,28 +37,26 @@
 #'   disappear.
 #' @param ... Additional arguments passed
 
-
 hc_theme_default <- function(
-    hc,
-    # set the base font size
-    base_size = 16,
-    # set the legend positions
-    legend_position = "right",
-    # determine if the axis labels are shown (controls both axes)
-    axis_text = TRUE,
-    # determine if the x-axis labels are shown, only controls x-axis
-    axis_text_x = TRUE,
-    # determine if the y-axis labels are shown, only controls y-axis
-    axis_text_y = TRUE,
-    # determine if grid lines should be shown (controls major and minor, x and y grid lines)
-    grid = TRUE,
-    # only have x-axis grid lines
-    grid_x_only = FALSE,
-    # only have y-axis grid_lines
-    grid_y_only = FALSE,
-    ...
+  hc,
+  # set the base font size
+  base_size = 16,
+  # set the legend positions
+  legend_position = "right",
+  # determine if the axis labels are shown (controls both axes)
+  axis_text = TRUE,
+  # determine if the x-axis labels are shown, only controls x-axis
+  axis_text_x = TRUE,
+  # determine if the y-axis labels are shown, only controls y-axis
+  axis_text_y = TRUE,
+  # determine if grid lines should be shown (controls major and minor, x and y grid lines)
+  grid = TRUE,
+  # only have x-axis grid lines
+  grid_x_only = FALSE,
+  # only have y-axis grid_lines
+  grid_y_only = FALSE,
+  ...
 ) {
-
   if (legend_position == "top") {
     # if legend_position = "top" then put the legend on top of the plot
     legend_values <- list(
@@ -67,16 +65,14 @@ hc_theme_default <- function(
       align = "center",
       layout = "horizontal"
     )
-  }
-  else if (legend_position == "bottom") {
+  } else if (legend_position == "bottom") {
     legend_values <- list(
       # adjust the vertical alignment of the legend
       verticalAlign = "bottom",
       align = "center",
       layout = "horizontal"
     )
-  }
-  else if (legend_position == "right") {
+  } else if (legend_position == "right") {
     legend_values <- list(
       # adjust the vertical alignment of the legend
       verticalAlign = "middle",
@@ -95,9 +91,7 @@ hc_theme_default <- function(
 
     axis_text_x <- FALSE
     axis_text_y <- FALSE
-
   }
-
 
   # now do the grid lines
   if (isFALSE(grid)) {
@@ -105,32 +99,32 @@ hc_theme_default <- function(
 
     x_gridLineWidth <- 0
     y_gridLineWidth <- 0
-
   } else if (isTRUE(grid) && isTRUE(grid_x_only)) {
     # if grid is set to TRUE and grid_x_only is true then only keep x-axis grid lines
 
     x_gridLineWidth <- 2
     y_gridLineWidth <- 0
-
   } else if (isTRUE(grid) && isTRUE(grid_y_only)) {
     # if grid is set to TRUE and grid_y_only is true then only keep y-axis grid lines
 
     x_gridLineWidth <- 0
     y_gridLineWidth <- 2
-
   } else if (isTRUE(grid) && isFALSE(grid_x_only) && isFALSE(grid_y_only)) {
-
     x_gridLineWidth <- 2
     y_gridLineWidth <- 2
-
   }
-
 
   theme <-
     list(
       colors = c(
-        "#14A2FCFF", "#B0B1B3FF", "#E84C4CFF", "#0A1A50FF",
-        "#FFE500FF", "#69DA78FF", "#60269EFF", "#FFA828FF"
+        "#14A2FCFF",
+        "#B0B1B3FF",
+        "#E84C4CFF",
+        "#0A1A50FF",
+        "#FFE500FF",
+        "#69DA78FF",
+        "#60269EFF",
+        "#FFA828FF"
       ),
       chart = list(
         backgroundColor = "white",

@@ -40,7 +40,7 @@
 #'   This must be set explicitly as it affects the location of the text, labels,
 #'   and error bars.
 #' @param col_text_size The size of the text inside/on top of the columns.
-#'   Default is 3.25. 
+#'   Default is 3.25.
 #' @param distance_from_col How far the labels are from the bars in freq plots
 #'   and how far they are from the bottom of the bar in the mean plots.
 #' @param freq_plot Logical. Determines if this is a frequency plot. If `TRUE`,
@@ -70,23 +70,22 @@
 #'
 
 adl_bar_plots <- function(
-    data,
-    x,
-    y,
-    col_label,
-    group = NULL,
-    fill = NULL,
-    direction = "vertical",
-    col_text_size = 3.25,
-    distance_from_col = 0.25,
-    freq_plot = TRUE,
-    position = NULL,
-    dodge_width = 0.8,
-    dodge_reverse = TRUE,
-    wrap_facet_labels = 100,
-    ...
+  data,
+  x,
+  y,
+  col_label,
+  group = NULL,
+  fill = NULL,
+  direction = "vertical",
+  col_text_size = 3.25,
+  distance_from_col = 0.25,
+  freq_plot = TRUE,
+  position = NULL,
+  dodge_width = 0.8,
+  dodge_reverse = TRUE,
+  wrap_facet_labels = 100,
+  ...
 ) {
-
   # check to see if the user is missing some variables
   if (missing(data)) {
     cli::cli_abort(c(
@@ -112,8 +111,15 @@ adl_bar_plots <- function(
 
   # create the bar plot
   plot <- data %>%
-    ggplot2::ggplot(., ggplot2::aes(x = {{ x }}, y = {{ y }}, group = {{ group }}, fill = {{ fill }}))
-
+    ggplot2::ggplot(
+      .,
+      ggplot2::aes(
+        x = {{ x }},
+        y = {{ y }},
+        group = {{ group }},
+        fill = {{ fill }}
+      )
+    )
 
   if (is.null(position)) {
     # position is NULL
@@ -133,14 +139,16 @@ adl_bar_plots <- function(
               width = 0.8
             ) +
             ggplot2::geom_text(
-              ggplot2::aes(label = {{ col_label }}, x = ({{ x }} + distance_from_col)),
+              ggplot2::aes(
+                label = {{ col_label }},
+                x = ({{ x }} + distance_from_col)
+              ),
               family = adlgraphs_global$font$regular$family,
               size = col_text_size,
               color = "#2c2e35",
               hjust = 0
             ) +
             theme_h_bar(...)
-
         } else {
           # if fill and group are not set to NULL
 
@@ -149,7 +157,10 @@ adl_bar_plots <- function(
               width = 0.8
             ) +
             ggplot2::geom_text(
-              ggplot2::aes(label = {{ col_label }}, x = ({{ x }} + distance_from_col)),
+              ggplot2::aes(
+                label = {{ col_label }},
+                x = ({{ x }} + distance_from_col)
+              ),
               family = adlgraphs_global$font$regular$family,
               size = col_text_size,
               color = "#2c2e35",
@@ -157,8 +168,7 @@ adl_bar_plots <- function(
             ) +
             theme_h_bar(...)
         }
-      }
-      else if (direction == "vertical") {
+      } else if (direction == "vertical") {
         # if the direction is set to vertical
 
         if (is.null(group) && is.null(fill)) {
@@ -170,31 +180,34 @@ adl_bar_plots <- function(
               width = 0.8,
             ) +
             ggplot2::geom_text(
-              ggplot2::aes(label = {{ col_label }}, y = ({{ y }} + distance_from_col)),
+              ggplot2::aes(
+                label = {{ col_label }},
+                y = ({{ y }} + distance_from_col)
+              ),
               family = adlgraphs_global$font$regular$family,
               size = col_text_size,
               color = "#2c2e35",
               vjust = 0
             ) +
             theme_v_bar(...)
-
         } else {
           # if neither group nor fill are NULL
-
 
           plot <- plot +
             ggplot2::geom_col(
               width = 0.8
             ) +
             ggplot2::geom_text(
-              ggplot2::aes(label = {{ col_label }}, y = ({{ y }} + distance_from_col)),
+              ggplot2::aes(
+                label = {{ col_label }},
+                y = ({{ y }} + distance_from_col)
+              ),
               family = adlgraphs_global$font$regular$family,
               size = col_text_size,
               color = "#2c2e35",
               vjust = 0
             ) +
             theme_v_bar(...)
-
         }
       }
     } else if (freq_plot == FALSE) {
@@ -220,10 +233,9 @@ adl_bar_plots <- function(
             hjust = 0,
             fill = "white",
             color = "#2c2e35",
-            label.padding = unit(2.5, "pt")
+            label.padding = ggplot2::unit(2.5, "pt")
           ) +
           theme_h_bar(...)
-
       } else if (direction == "vertical") {
         # if direction is to vertical
 
@@ -244,7 +256,7 @@ adl_bar_plots <- function(
             vjust = 0,
             fill = "white",
             color = "#2c2e35",
-            label.padding = unit(2.5, "pt")
+            label.padding = ggplot2::unit(2.5, "pt")
           ) +
           theme_v_bar(...)
       }
@@ -260,37 +272,53 @@ adl_bar_plots <- function(
         plot <- plot +
           ggplot2::geom_col(
             ggplot2::aes(fill = {{ fill }}),
-            position = ggplot2::position_dodge2(width = dodge_width, reverse = dodge_reverse),
+            position = ggplot2::position_dodge2(
+              width = dodge_width,
+              reverse = dodge_reverse
+            ),
             width = 0.8
           ) +
           ggplot2::geom_text(
-            ggplot2::aes(label = {{ col_label }}, x = ({{ x }} + distance_from_col)),
-            position = ggplot2::position_dodge2(width = dodge_width, reverse = dodge_reverse),
+            ggplot2::aes(
+              label = {{ col_label }},
+              x = ({{ x }} + distance_from_col)
+            ),
+            position = ggplot2::position_dodge2(
+              width = dodge_width,
+              reverse = dodge_reverse
+            ),
             family = adlgraphs_global$font$regular$family,
             size = col_text_size,
             color = "#2c2e35",
             hjust = 0
           ) +
           theme_h_bar(...)
-      }
-      else if (direction == "vertical") {
+      } else if (direction == "vertical") {
         # normal vertical freak plot
         plot <- plot +
           ggplot2::geom_col(
             ggplot2::aes(fill = {{ fill }}),
-            position = ggplot2::position_dodge2(width = dodge_width, reverse = dodge_reverse),
+            position = ggplot2::position_dodge2(
+              width = dodge_width,
+              reverse = dodge_reverse
+            ),
             width = 0.8
           ) +
           ggplot2::geom_text(
-            ggplot2::aes(label = {{ col_label }}, y = ({{ y }} + distance_from_col)),
-            position = ggplot2::position_dodge2(width = dodge_width, reverse = dodge_reverse),
+            ggplot2::aes(
+              label = {{ col_label }},
+              y = ({{ y }} + distance_from_col)
+            ),
+            position = ggplot2::position_dodge2(
+              width = dodge_width,
+              reverse = dodge_reverse
+            ),
             family = adlgraphs_global$font$regular$family,
             size = col_text_size,
             color = "#2c2e35",
             vjust = 0
           ) +
           theme_v_bar(...)
-
       }
     } else if (freq_plot == FALSE) {
       # if freq_plot is set to false
@@ -317,10 +345,9 @@ adl_bar_plots <- function(
             size = col_text_size,
             fill = "white",
             color = "#2c2e35",
-            label.padding = unit(2.5, "pt")
+            label.padding = ggplot2::unit(2.5, "pt")
           ) +
           theme_h_bar(...)
-
       } else {
         # vertical dodged mean plot
         plot <- plot +
@@ -343,15 +370,12 @@ adl_bar_plots <- function(
             size = col_text_size,
             fill = "white",
             color = "#2c2e35",
-            label.padding = unit(2.5, "pt")
+            label.padding = ggplot2::unit(2.5, "pt")
           ) +
           theme_v_bar(...)
       }
-
     }
-
-  }
-  else if (position == "stack") {
+  } else if (position == "stack") {
     # id position is set to "stack
 
     if (direction == "horizontal") {
@@ -367,27 +391,16 @@ adl_bar_plots <- function(
           hjust = 0.5,
           fill = "white",
           color = "#2c2e35",
-          label.padding = unit(2.5, "pt")
+          label.padding = ggplot2::unit(2.5, "pt")
         ) +
-        ggplot2::facet_wrap(vars({{ y }}), ncol = 1, labeller = ggplot2::label_wrap_gen(wrap_facet_labels), scales = "free_y") +
+        ggplot2::facet_wrap(
+          vars({{ y }}),
+          ncol = 1,
+          labeller = ggplot2::label_wrap_gen(wrap_facet_labels),
+          scales = "free_y"
+        ) +
         theme_h_stack(...)
     }
-
   }
   return(plot)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

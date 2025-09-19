@@ -42,12 +42,4 @@ attr_levels.data.frame <- function(x, data = NULL) {
   lapply(cols, string_fun) %>%
     # set the names of the objects in the list
     stats::setNames(cols)
-
-
 }
-
-
-
-
-
-

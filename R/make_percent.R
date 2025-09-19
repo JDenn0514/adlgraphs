@@ -6,7 +6,7 @@
 #' @param scale A scaling factor: `x` will be multiplied by `scale` before
 #'   formatting. This is useful if the underlying data is very small or very
 #'   large. Default is 100.
-#' 
+#'
 #' @returns A character vector of the same length as `x`.
 #'
 #' @examples
@@ -26,7 +26,6 @@
 #'
 #' @export
 make_percent <- function(x, decimals = 2, scale = 100) {
-
   x_name <- deparse(substitute(x))
 
   if (!is.numeric(x)) {
@@ -34,7 +33,6 @@ make_percent <- function(x, decimals = 2, scale = 100) {
       c(
         "`{x_name}` must be a vector of class {.cls numeric}",
         x = "You've supplied a {.cls {class(x)}} vector"
-
       )
     )
   }
@@ -47,16 +45,19 @@ make_percent <- function(x, decimals = 2, scale = 100) {
     new_x <- round(new_x, decimals)
     new_x <- paste0(new_x, "%")
   }
-  
+
   if (!is.null(attributes(x))) {
-    attributes(new_x) <- utils::modifyList(as.list(attributes(new_x)), attributes(x))
+    attributes(new_x) <- utils::modifyList(
+      as.list(attributes(new_x)),
+      attributes(x)
+    )
   }
-  
-  attr(new_x, "transformation") <- paste0("Added a `%` symbol to `", x_name, "`")
+
+  attr(new_x, "transformation") <- paste0(
+    "Added a `%` symbol to `",
+    x_name,
+    "`"
+  )
 
   return(new_x)
 }
-
-
-
-

@@ -16,9 +16,9 @@
 #' `adl_palettes$primary`, and labels default to `#2c2e35` unless
 #' `text_color = TRUE`, in which case labels inherit the plotted color (or the
 #' primary if unmapped).
-#' 
+#'
 #' For more information on how the arguments point_size and line_width check out
-#' vignette from the ggplot2 website: 
+#' vignette from the ggplot2 website:
 #'
 #' @param data A data frame or tibble.
 #' @param x Variable that goes in the x-axis. This is required.
@@ -36,9 +36,9 @@
 #'   This must be set explicitly as it affects the location of the text, labels,
 #'   and lines
 #' @param col_text_size Numeric, text size for labels (default `3.25`).
-#' @param distance_from_col How far the labels are from the points in the 
+#' @param distance_from_col How far the labels are from the points in the
 #'   plot. There are two options:
-#'   1. "auto", this checks the limits of the scales to determine how much 
+#'   1. "auto", this checks the limits of the scales to determine how much
 #'      space to add between the point and the text label (this is the default)
 #'   2. Numeric, a number referring to the size based on the scale
 #' @param auto_offset_prop Numeric scalar (>= 0). Proportion of axis span used
@@ -47,7 +47,7 @@
 #' @param position Either `NULL` (no dodging) or `"dodge"` for grouped layouts.
 #'   `"stack"` is not supported.
 #' @param dodge_width Numeric width passed to `position_dodge2()` (default `0.8`).
-#' @param dodge_reverse Logical, whether to reverse the dodging order (default 
+#' @param dodge_reverse Logical, whether to reverse the dodging order (default
 #'   `TRUE`).
 #' @param wrap_facet_labels Integer passed to your faceting helpers if you
 #'   facet elsewhere (kept for interface compatibility).
@@ -110,21 +110,20 @@ adl_lollipop_plots <- function(
   y,
   col_label,
   group = NULL,
-  color = NULL,             # aesthetic mapping
+  color = NULL, # aesthetic mapping
   direction = "vertical",
   col_text_size = 3.25,
   distance_from_col = "auto", # numeric or "auto"
-  auto_offset_prop = 0.03,  # fraction of axis span for "auto"
-  position = NULL,          # NULL or "dodge"
+  auto_offset_prop = 0.03, # fraction of axis span for "auto"
+  position = NULL, # NULL or "dodge"
   dodge_width = 0.8,
   dodge_reverse = TRUE,
   wrap_facet_labels = 100,
   point_size = 3.5,
   line_width = 0.9,
-  text_color = FALSE,       # NEW: map text color to color/group when TRUE
+  text_color = FALSE, # NEW: map text color to color/group when TRUE
   ...
 ) {
-
   # Argument checks
   if (missing(data)) {
     cli::cli_abort(c(
@@ -155,7 +154,11 @@ adl_lollipop_plots <- function(
     ))
   }
 
-  if (!is.numeric(auto_offset_prop) || length(auto_offset_prop) != 1 || auto_offset_prop < 0) {
+  if (
+    !is.numeric(auto_offset_prop) ||
+      length(auto_offset_prop) != 1 ||
+      auto_offset_prop < 0
+  ) {
     cli::cli_abort(c(
       "{.var auto_offset_prop} must be a single non-negative number.",
       "i" = "Example: {.code auto_offset_prop = 0.02} for 2% of the axis span."
@@ -190,9 +193,18 @@ adl_lollipop_plots <- function(
     pos_points <- "identity"
     pos_text <- "identity"
   } else if (identical(position, "dodge")) {
-    pos_range  <- ggplot2::position_dodge2(width = dodge_width, reverse = dodge_reverse)
-    pos_points <- ggplot2::position_dodge2(width = dodge_width, reverse = dodge_reverse)
-    pos_text   <- ggplot2::position_dodge2(width = dodge_width, reverse = dodge_reverse)
+    pos_range <- ggplot2::position_dodge2(
+      width = dodge_width,
+      reverse = dodge_reverse
+    )
+    pos_points <- ggplot2::position_dodge2(
+      width = dodge_width,
+      reverse = dodge_reverse
+    )
+    pos_text <- ggplot2::position_dodge2(
+      width = dodge_width,
+      reverse = dodge_reverse
+    )
   } else {
     cli::cli_abort(c(
       "Unsupported {.var position} value.",
@@ -218,13 +230,18 @@ adl_lollipop_plots <- function(
           shape = 16,
           stroke = 1,
           color = default_primary,
-          fill  = default_primary,
+          fill = default_primary,
           position = pos_points
         )
     } else if (color_provided) {
       plot <- plot +
         ggplot2::geom_linerange(
-          ggplot2::aes(y = {{ y }}, xmin = 0, xmax = {{ x }}, color = {{ color }}),
+          ggplot2::aes(
+            y = {{ y }},
+            xmin = 0,
+            xmax = {{ x }},
+            color = {{ color }}
+          ),
           linewidth = line_width,
           position = pos_range,
           orientation = "y"
@@ -239,7 +256,12 @@ adl_lollipop_plots <- function(
     } else {
       plot <- plot +
         ggplot2::geom_linerange(
-          ggplot2::aes(y = {{ y }}, xmin = 0, xmax = {{ x }}, color = {{ group }}),
+          ggplot2::aes(
+            y = {{ y }},
+            xmin = 0,
+            xmax = {{ x }},
+            color = {{ group }}
+          ),
           linewidth = line_width,
           position = pos_range,
           orientation = "y"
@@ -254,14 +276,24 @@ adl_lollipop_plots <- function(
     }
 
     # Labels + auto offset
-    tmp_offset <- if (is.character(distance_from_col) && distance_from_col == "auto") 0 else distance_from_col
+    tmp_offset <- if (
+      is.character(distance_from_col) && distance_from_col == "auto"
+    ) {
+      0
+    } else {
+      distance_from_col
+    }
 
     if (isTRUE(text_color)) {
       # Map label color to color/group if available; otherwise primary
       if (color_provided) {
         plot <- plot +
           ggplot2::geom_text(
-            ggplot2::aes(label = {{ col_label }}, x = {{ x }} + tmp_offset, color = {{ color }}),
+            ggplot2::aes(
+              label = {{ col_label }},
+              x = {{ x }} + tmp_offset,
+              color = {{ color }}
+            ),
             family = adlgraphs_global$font$regular$family,
             size = col_text_size,
             hjust = 0,
@@ -270,7 +302,11 @@ adl_lollipop_plots <- function(
       } else if (group_provided) {
         plot <- plot +
           ggplot2::geom_text(
-            ggplot2::aes(label = {{ col_label }}, x = {{ x }} + tmp_offset, color = {{ group }}),
+            ggplot2::aes(
+              label = {{ col_label }},
+              x = {{ x }} + tmp_offset,
+              color = {{ group }}
+            ),
             family = adlgraphs_global$font$regular$family,
             size = col_text_size,
             hjust = 0,
@@ -303,12 +339,23 @@ adl_lollipop_plots <- function(
 
     if (is.character(distance_from_col) && distance_from_col == "auto") {
       built <- ggplot2::ggplot_build(plot)
-      rng <- tryCatch({
-        pp <- built$layout$panel_params[[1]]
-        if (!is.null(pp$x.range)) range(pp$x.range, na.rm = TRUE) else range(pp$x$range, na.rm = TRUE)
-      }, error = function(e) NULL)
+      rng <- tryCatch(
+        {
+          pp <- built$layout$panel_params[[1]]
+          if (!is.null(pp$x.range)) {
+            range(pp$x.range, na.rm = TRUE)
+          } else {
+            range(pp$x$range, na.rm = TRUE)
+          }
+        },
+        error = function(e) NULL
+      )
 
-      auto_off <- if (!is.null(rng) && all(is.finite(rng))) auto_offset_prop * diff(rng) else 0.25
+      auto_off <- if (!is.null(rng) && all(is.finite(rng))) {
+        auto_offset_prop * diff(rng)
+      } else {
+        0.25
+      }
 
       # Replace the last text layer with auto offset
       plot$layers <- plot$layers[-length(plot$layers)]
@@ -317,7 +364,11 @@ adl_lollipop_plots <- function(
         if (color_provided) {
           plot <- plot +
             ggplot2::geom_text(
-              ggplot2::aes(label = {{ col_label }}, x = {{ x }} + auto_off, color = {{ color }}),
+              ggplot2::aes(
+                label = {{ col_label }},
+                x = {{ x }} + auto_off,
+                color = {{ color }}
+              ),
               family = adlgraphs_global$font$regular$family,
               size = col_text_size,
               hjust = 0,
@@ -326,7 +377,11 @@ adl_lollipop_plots <- function(
         } else if (group_provided) {
           plot <- plot +
             ggplot2::geom_text(
-              ggplot2::aes(label = {{ col_label }}, x = {{ x }} + auto_off, color = {{ group }}),
+              ggplot2::aes(
+                label = {{ col_label }},
+                x = {{ x }} + auto_off,
+                color = {{ group }}
+              ),
               family = adlgraphs_global$font$regular$family,
               size = col_text_size,
               hjust = 0,
@@ -355,7 +410,6 @@ adl_lollipop_plots <- function(
           )
       }
     }
-
   } else if (direction == "vertical") {
     # Vertical lollipop: stems along y, categories on x
     if (!color_provided && !group_provided) {
@@ -372,13 +426,18 @@ adl_lollipop_plots <- function(
           shape = 16,
           stroke = 1,
           color = default_primary,
-          fill  = default_primary,
+          fill = default_primary,
           position = pos_points
         )
     } else if (color_provided) {
       plot <- plot +
         ggplot2::geom_linerange(
-          ggplot2::aes(x = {{ x }}, ymin = 0, ymax = {{ y }}, color = {{ color }}),
+          ggplot2::aes(
+            x = {{ x }},
+            ymin = 0,
+            ymax = {{ y }},
+            color = {{ color }}
+          ),
           linewidth = line_width,
           position = pos_range
         ) +
@@ -392,7 +451,12 @@ adl_lollipop_plots <- function(
     } else {
       plot <- plot +
         ggplot2::geom_linerange(
-          ggplot2::aes(x = {{ x }}, ymin = 0, ymax = {{ y }}, color = {{ group }}),
+          ggplot2::aes(
+            x = {{ x }},
+            ymin = 0,
+            ymax = {{ y }},
+            color = {{ group }}
+          ),
           linewidth = line_width,
           position = pos_range
         ) +
@@ -406,13 +470,23 @@ adl_lollipop_plots <- function(
     }
 
     # Labels + auto offset
-    tmp_offset <- if (is.character(distance_from_col) && distance_from_col == "auto") 0 else distance_from_col
+    tmp_offset <- if (
+      is.character(distance_from_col) && distance_from_col == "auto"
+    ) {
+      0
+    } else {
+      distance_from_col
+    }
 
     if (isTRUE(text_color)) {
       if (color_provided) {
         plot <- plot +
           ggplot2::geom_text(
-            ggplot2::aes(label = {{ col_label }}, y = {{ y }} + tmp_offset, color = {{ color }}),
+            ggplot2::aes(
+              label = {{ col_label }},
+              y = {{ y }} + tmp_offset,
+              color = {{ color }}
+            ),
             family = adlgraphs_global$font$regular$family,
             size = col_text_size,
             vjust = 0,
@@ -421,7 +495,11 @@ adl_lollipop_plots <- function(
       } else if (group_provided) {
         plot <- plot +
           ggplot2::geom_text(
-            ggplot2::aes(label = {{ col_label }}, y = {{ y }} + tmp_offset, color = {{ group }}),
+            ggplot2::aes(
+              label = {{ col_label }},
+              y = {{ y }} + tmp_offset,
+              color = {{ group }}
+            ),
             family = adlgraphs_global$font$regular$family,
             size = col_text_size,
             vjust = 0,
@@ -454,12 +532,23 @@ adl_lollipop_plots <- function(
 
     if (is.character(distance_from_col) && distance_from_col == "auto") {
       built <- ggplot2::ggplot_build(plot)
-      rng <- tryCatch({
-        pp <- built$layout$panel_params[[1]]
-        if (!is.null(pp$y.range)) range(pp$y.range, na.rm = TRUE) else range(pp$y$range, na.rm = TRUE)
-      }, error = function(e) NULL)
+      rng <- tryCatch(
+        {
+          pp <- built$layout$panel_params[[1]]
+          if (!is.null(pp$y.range)) {
+            range(pp$y.range, na.rm = TRUE)
+          } else {
+            range(pp$y$range, na.rm = TRUE)
+          }
+        },
+        error = function(e) NULL
+      )
 
-      auto_off <- if (!is.null(rng) && all(is.finite(rng))) auto_offset_prop * diff(rng) else 0.25
+      auto_off <- if (!is.null(rng) && all(is.finite(rng))) {
+        auto_offset_prop * diff(rng)
+      } else {
+        0.25
+      }
 
       # Replace the last text layer with auto offset
       plot$layers <- plot$layers[-length(plot$layers)]
@@ -468,7 +557,11 @@ adl_lollipop_plots <- function(
         if (color_provided) {
           plot <- plot +
             ggplot2::geom_text(
-              ggplot2::aes(label = {{ col_label }}, y = {{ y }} + auto_off, color = {{ color }}),
+              ggplot2::aes(
+                label = {{ col_label }},
+                y = {{ y }} + auto_off,
+                color = {{ color }}
+              ),
               family = adlgraphs_global$font$regular$family,
               size = col_text_size,
               vjust = 0,
@@ -477,7 +570,11 @@ adl_lollipop_plots <- function(
         } else if (group_provided) {
           plot <- plot +
             ggplot2::geom_text(
-              ggplot2::aes(label = {{ col_label }}, y = {{ y }} + auto_off, color = {{ group }}),
+              ggplot2::aes(
+                label = {{ col_label }},
+                y = {{ y }} + auto_off,
+                color = {{ group }}
+              ),
               family = adlgraphs_global$font$regular$family,
               size = col_text_size,
               vjust = 0,
@@ -506,7 +603,6 @@ adl_lollipop_plots <- function(
           )
       }
     }
-
   } else {
     cli::cli_abort(c(
       "Unsupported {.var direction} value.",

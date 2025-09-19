@@ -36,22 +36,21 @@
 #'
 #'   This is useful if you are comparing multiple models with similar variable
 #'   and need to clarify which estimates are associated with which model.
-#' 
+#'
 #' @returns A data.frame summarizing the results of an `lm()` or `glm()` object.
 #'
 #' @export
 get_coefficients <- function(
-    model,
-    conf.level = 0.95,
-    standardize = FALSE,
-    n.sd = 2,
-    exponentiate = FALSE,
-    add_ss = TRUE,
-    add_labels = TRUE,
-    add_n = FALSE,
-    model_name = NULL
+  model,
+  conf.level = 0.95,
+  standardize = FALSE,
+  n.sd = 2,
+  exponentiate = FALSE,
+  add_ss = TRUE,
+  add_labels = TRUE,
+  add_n = FALSE,
+  model_name = NULL
 ) {
-
   # get the model summary
   if (standardize == TRUE) {
     # use jtools::scale_mod to get standardize the data
@@ -65,19 +64,27 @@ get_coefficients <- function(
     # make the rownames a column called "term"
     tibble::as_tibble(rownames = "term")
   # rename the columns
-  colnames(model_results) <- c("term", "estimate", "std.error", "statistic", "p.value")
+  colnames(model_results) <- c(
+    "term",
+    "estimate",
+    "std.error",
+    "statistic",
+    "p.value"
+  )
 
   # add confidence intervals
   model_results <- model_results %>%
     dplyr::mutate(
       # get low confidence intervals
-      conf.low = estimate + (std.error * stats::qt(p = (1 - conf.level) / 2,
-                                            df = stats::df.residual(model))),
+      conf.low = estimate +
+        (std.error *
+          stats::qt(p = (1 - conf.level) / 2, df = stats::df.residual(model))),
       # get high confidence intervals
-      conf.high = estimate - (std.error * stats::qt(p = (1 - conf.level) / 2,
-                                             df = stats::df.residual(model))),
+      conf.high = estimate -
+        (std.error *
+          stats::qt(p = (1 - conf.level) / 2, df = stats::df.residual(model))),
       # round the confidence intervals to the nearest thousandth
-      dplyr::across(tidyselect::where(is.numeric), ~round(.x, 3))
+      dplyr::across(tidyselect::where(is.numeric), ~ round(.x, 3))
     )
 
   # attach the model to the tidy tibble
@@ -93,17 +100,13 @@ get_coefficients <- function(
 
   # add reference rows
   if (add_labels == FALSE) {
-
     # remove the unnecessary columns if we are not adding the labels
     model_results <- model_results %>%
       broom.helpers::tidy_add_reference_rows() %>%
       dplyr::select(-c(var_class:contrasts_type))
-
   } else if (add_labels == TRUE) {
-
     model_results <- model_results %>%
       broom.helpers::tidy_add_reference_rows()
-
   }
 
   # determine if the values should be exponentiated
@@ -119,10 +122,9 @@ get_coefficients <- function(
         ),
         dplyr::across(
           c(estimate, conf.high, conf.low),
-          ~tidyr::replace_na(.x, 1)
+          ~ tidyr::replace_na(.x, 1)
         )
       )
-
   } else if (exponentiate == FALSE) {
     # if exponentiate is FALSE
 
@@ -131,11 +133,9 @@ get_coefficients <- function(
       dplyr::mutate(
         dplyr::across(
           c(estimate, conf.high, conf.low),
-          ~tidyr::replace_na(.x, 0)
+          ~ tidyr::replace_na(.x, 0)
         )
       )
-
-
   }
 
   # should we add statistical signficance
@@ -152,7 +152,6 @@ get_coefficients <- function(
       ) %>%
       # move it after p.value
       dplyr::relocate(ss, .after = p.value)
-
   } else if (add_ss == FALSE) {
     model_results <- model_results
   }
@@ -167,27 +166,21 @@ get_coefficients <- function(
       broom.helpers::tidy_add_term_labels() %>%
       dplyr::select(-c(var_class:contrasts_type)) %>%
       dplyr::rename(value_label = label)
-
   } else if (add_labels == FALSE) {
     # if add_labels is set to FALSE
 
     # don't add any labels
     model_results <- model_results
-
   }
 
   # Determine if number of observations should be added
   if (add_n == TRUE) {
-
     # add the number of observations for each term
     model_results <- model_results %>%
       broom.helpers::tidy_add_n()
-
   } else if (add_n == FALSE) {
-
     # don't add number of observations
     model_results <- model_results
-
   }
 
   if (!is.null(model_name)) {
@@ -196,27 +189,17 @@ get_coefficients <- function(
     model_results <- model_results %>%
       # add a column with the value in model_name
       tibble::add_column(model = model_name)
-
   }
 
   # convert each character column to a factor and reverse it
   # use forcats::as_factor() to set the levels based on their order of appearance
-  model_results %>% dplyr::mutate(
-    dplyr::across(
-      tidyselect::where(is.character),
-      ~forcats::fct_rev(forcats::as_factor(.x))
+  model_results %>%
+    dplyr::mutate(
+      dplyr::across(
+        tidyselect::where(is.character),
+        ~ forcats::fct_rev(forcats::as_factor(.x))
+      )
     )
-  )
 
   #return(model_results)
-
 }
-
-
-
-
-
-
-
-
-

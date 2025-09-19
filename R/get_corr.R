@@ -1,54 +1,54 @@
 #' Calculate weighted correlations
-#' 
-#' This function calculates weighted Pearson correlations between two variables. 
-#' It also allows you to group the data and calculate correlations along each 
-#' level of the grouping variable. If data is not grouped and no group is 
+#'
+#' This function calculates weighted Pearson correlations between two variables.
+#' It also allows you to group the data and calculate correlations along each
+#' level of the grouping variable. If data is not grouped and no group is
 #' specified, then it will return the same output as [wtd_corr()].
 #'
 #' @param data An object of type data.frame or tibble. If piping the data into the
 #'   function, this is not required.
 #' @param x,y Can be either character strings or symbols. Name of two variables
-#'   in the data you want to calculate the correlation between. 
-#' @param group <[`tidy-select`][dplyr_tidy_select]> A selection of columns to 
+#'   in the data you want to calculate the correlation between.
+#' @param group <[`tidy-select`][dplyr_tidy_select]> A selection of columns to
 #'   group the data by in addition to `treats`. This operates very similarly
-#'   to `.by` from dplyr (for more info on that see [?dplyr_by][dplyr_by]). 
+#'   to `.by` from dplyr (for more info on that see [?dplyr_by][dplyr_by]).
 #'   See examples to see how it operates.
-#' @param wt Can be either character strings or symbols. Weights. Add if 
+#' @param wt Can be either character strings or symbols. Weights. Add if
 #'   you have a weighting variable and want to get weighted correlations
 #' @param decimals Number of decimals each number should be rounded to. Default
 #'   is 3.
 #'
-#' @returns A tibble showing correlations (`correlation`), number of observations 
-#'   (`n`), low and high confidence intervals (`conf.low`, `conf.high`), 
+#' @returns A tibble showing correlations (`correlation`), number of observations
+#'   (`n`), low and high confidence intervals (`conf.low`, `conf.high`),
 #'   the p-value (`p_value`), and stars indicating it's statistical significance.
 #'   If data is of class `"grouped_df"` or the `group` argument is specified,
 #'   it will return one row for each unique observation if one group is provided
 #'   and one row per unique combination of observations if multiple groups are used.
-#' 
+#'
 #' @examples
 #' # load the dplyr for piping and grouping
 #' library(dplyr)
-#' 
+#'
 #' # Let's first do a simple correlation where we pipe in the data
 #' test_data %>% get_corr(x = top, y = sdo_sum)
-#' 
+#'
 #' # Repeat but with weights
 #' test_data %>% get_corr(x = top, y = sdo_sum, wt = wts)
-#' 
+#'
 #' # Now let's get the correlatoin among only people with a bachelor's degree
-#' test_data %>% 
-#'   filter(edu_f2 == "At Least a Bachelor's Degree") %>% 
+#' test_data %>%
+#'   filter(edu_f2 == "At Least a Bachelor's Degree") %>%
 #'   get_corr(x = top, y = sdo_sum, wt = wts)
-#' 
+#'
 #' # Now let's get it for each education level. Two ways of doing this:
 #' # The first is to group the data ahead of time
-#' test_data %>% 
-#'   group_by(edu_f) %>% 
+#' test_data %>%
+#'   group_by(edu_f) %>%
 #'   get_corr(x = top, y = sdo_sum, wt = wts)
-#' 
+#'
 #' # The second is to use the group argument
 #' test_data %>% get_corr(x = top, y = sdo_sum, group = edu_f, wt = wts)
-#' 
+#'
 #' @export
 get_corr <- function(
   data,
@@ -58,7 +58,6 @@ get_corr <- function(
   wt = NULL,
   decimals = 3
 ) {
-
   # Prepare weights
   if (missing(wt)) {
     wt <- "wts"
@@ -70,7 +69,11 @@ get_corr <- function(
 
   # Prepare group variables
   # if the data is grouped, use dplyr::group_vars to get them, else set to NULL
-  group_names <- if(inherits(data, "grouped_df")) dplyr::group_vars(data) else NULL
+  group_names <- if (inherits(data, "grouped_df")) {
+    dplyr::group_vars(data)
+  } else {
+    NULL
+  }
   # if group arg is missing set to NULL, else use as.character(substitute()) to capture it
   group_vars <- if (missing(group)) NULL else select_groups({{ group }}, data)
   # remove the "c" from the group_vars vector if it is there
@@ -81,24 +84,34 @@ get_corr <- function(
 
   if (is.null(group_names)) {
     # if group is null just get the normal correlation
-    out <- wtd_corr(data, x = {{ x }}, y = {{ y }}, wt = {{ wt }}, decimals = decimals)
-
+    out <- wtd_corr(
+      data,
+      x = {{ x }},
+      y = {{ y }},
+      wt = {{ wt }},
+      decimals = decimals
+    )
   } else {
-
     # make a nested data frame
     nest_data <- make_nested(data, {{ group_names }})
 
-    # get the groups 
+    # get the groups
     # we will combine this with the correlations
     just_groups <- nest_data[c(group_names)]
 
     # make the correlation dataframe
     corr_df <- purrr::map(
       # we are iterating over the data column
-      nest_data$data, 
+      nest_data$data,
       # use wtd_corr to get the individuals correlations
-      ~wtd_corr(data = .x, x = {{ x }}, y = {{ y }}, wt = {{ wt }}, decimals = decimals) 
-    ) %>% 
+      ~ wtd_corr(
+        data = .x,
+        x = {{ x }},
+        y = {{ y }},
+        wt = {{ wt }},
+        decimals = decimals
+      )
+    ) %>%
       # bind the rows together
       dplyr::bind_rows()
 
@@ -109,11 +122,11 @@ get_corr <- function(
 
     # add the group labels
     # get the variable labels as a named list
-    group_labels <- attr_var_label(data[,group_names])
+    group_labels <- attr_var_label(data[, group_names])
     # for each value in names(group_labels) add the variable label from group_labels
-    for (var in names(group_labels)) attr(out[[var]], "label") <- group_labels[[var]]
-  
-    
+    for (var in names(group_labels)) {
+      attr(out[[var]], "label") <- group_labels[[var]]
+    }
   }
 
   # add an attribute containing the names of the grouping variables
@@ -131,27 +144,25 @@ get_corr <- function(
   attr(out, "class") <- c("adlgraphs_means", class_names)
 
   out
-
 }
 
 
 #' Calculate individual weighted correlations
-#' 
+#'
 #' This is one of the main worker functions behind [get_corr()]. It calculates
 #' weighted correlations and outputs the data as a one row tibble.
-#' 
+#'
 #' @param data An object of type data.frame or tibble. If piping the data into the
 #'   function, this is not required.
 #' @param x,y Can be either character strings or symbols. Name of two variables
-#'   in the data you want to calculate the correlation between. 
-#' @param wt Can be either character strings or symbols. Weights. Add if 
+#'   in the data you want to calculate the correlation between.
+#' @param wt Can be either character strings or symbols. Weights. Add if
 #'   you have a weighting variable and want to get weighted correlations
 #' @param decimals Number of decimals each number should be rounded to. Default
 #'   is 3.
-#' 
+#'
 #' @export
-wtd_corr <- function(data, x, y,  wt, decimals = 3) {
-
+wtd_corr <- function(data, x, y, wt, decimals = 3) {
   x <- rlang::as_name(rlang::ensym(x))
 
   # Check if x is numeric
@@ -187,7 +198,7 @@ wtd_corr <- function(data, x, y,  wt, decimals = 3) {
   # Prepare weights
   if (missing(wt)) {
     wt <- "wts"
-    data[[wt]] <- rep(1, length(data[[x]]))  
+    data[[wt]] <- rep(1, length(data[[x]]))
   } else {
     # ensure that string or symbol are accepted in wt
     wt <- rlang::as_name(rlang::ensym(wt))
@@ -198,16 +209,14 @@ wtd_corr <- function(data, x, y,  wt, decimals = 3) {
         "`{wt}` must be a numeric variable.",
         x = "Supplied variable is {class(data[[wt]])}."
       ))
-
     } else {
       # if it is numeric, replace NAs with 0
       data[[wt]][is.na(data[[wt]])] <- 0
     }
-
   }
 
   data <- data[c(x, y, wt)]
-  data <- data[stats::complete.cases(data),]
+  data <- data[stats::complete.cases(data), ]
 
   # standardize the data
   data[[x]] <- stdz(data[[x]], data[[wt]])
@@ -218,8 +227,8 @@ wtd_corr <- function(data, x, y,  wt, decimals = 3) {
     data = data,
     weights = data[[wt]]
   )
-  
-  coefs <- stats::coef(summary(model))[2,]
+
+  coefs <- stats::coef(summary(model))[2, ]
   coefs <- as.data.frame(t(coefs))
 
   # get the length of x without NAs
@@ -240,17 +249,17 @@ wtd_corr <- function(data, x, y,  wt, decimals = 3) {
 
   coefs$x <- x_name
   if (!is.null(x_lab)) {
-    # if x_lab is not null 
+    # if x_lab is not null
 
     # add labels
     attr(coefs$x, "labels") <- x_name_vec
     # update the class
     class(coefs$x) <- c("haven_labelled", "vctrs_vctr", "character")
   }
-  # set the y column using the 
+  # set the y column using the
   coefs$y <- y_name
   if (!is.null(y_lab)) {
-    # if y_lab is not null 
+    # if y_lab is not null
 
     # add labels
     attr(coefs$y, "labels") <- y_name_vec
@@ -258,10 +267,28 @@ wtd_corr <- function(data, x, y,  wt, decimals = 3) {
     class(coefs$y) <- c("haven_labelled", "vctrs_vctr", "character")
   }
 
-  out <- coefs[c("x", "y", "Estimate", "n", "conf.low", "conf.high", "Pr(>|t|)", "stars")]
-  names(out) <- c("x", "y", "correlation", "n", "conf.low", "conf.high", "p_value", "stars")
+  out <- coefs[c(
+    "x",
+    "y",
+    "Estimate",
+    "n",
+    "conf.low",
+    "conf.high",
+    "Pr(>|t|)",
+    "stars"
+  )]
+  names(out) <- c(
+    "x",
+    "y",
+    "correlation",
+    "n",
+    "conf.low",
+    "conf.high",
+    "p_value",
+    "stars"
+  )
 
-  # round decimals 
+  # round decimals
   round_cols <- c("correlation", "conf.low", "conf.high", "p_value")
 
   out[round_cols] <- lapply(
@@ -278,10 +305,4 @@ wtd_corr <- function(data, x, y,  wt, decimals = 3) {
   class(out) <- c("tbl_df", "tbl", "data.frame")
 
   return(out)
-
 }
-
-
-
-
-

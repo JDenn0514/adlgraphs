@@ -373,7 +373,7 @@ test_data %>%
   ) +
   theme(
     legend.text = element_text(margin = margin(r = 4)),
-    legend.box.spacing = unit(0, "pt")
+    legend.box.spacing =ggplot2::unit(0, "pt")
   ) +
   scale_adl(
     palette = "likert_4",

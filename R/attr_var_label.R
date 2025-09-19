@@ -10,21 +10,21 @@
 #'   when `x` is only the name of a column in a `data.frame`.
 #' @param unlist Logical. If `TRUE`, the default, returns a named vector. If
 #'   `FALSE`, returns a list. This only works when `x` is a `data.frame`
-#' @param if_null String. This determines what to return should there be no 
-#'   variable label. There are three options: 
-#' 
+#' @param if_null String. This determines what to return should there be no
+#'   variable label. There are three options:
+#'
 #'     - `NULL` - This is the default. Will return `NULL`
-#' 
+#'
 #'     - "name" - This returns the variable name
-#' 
+#'
 #'     - "NA" - This returns an `NA` value
 #'
-#' @returns If `x` is a variable or vector, a string containing the "label" 
+#' @returns If `x` is a variable or vector, a string containing the "label"
 #'   attribute, if one is present, is returned. If `x` is a `data.frame` then a
-#'   named vector or list with the "label" attribute from each variable is 
+#'   named vector or list with the "label" attribute from each variable is
 #'   returned.
-#' 
-#' @examples 
+#'
+#' @examples
 #' # load dplyr so we can see how it might work in a typical workflow
 #' library(dplyr)
 #' # check for an individual vector
@@ -33,43 +33,42 @@
 #' attr_var_label(test_data)
 #' # same, but as a list
 #' attr_var_label(test_data, unlist = FALSE)
-#' 
+#'
 #' # now let's do it on a variable without a label
 #' top <- sample(c(1:3), 10, replace = TRUE)
 #' # if no label is present and if_null = "name", it will use the variable name
 #' attr_var_label(top, if_null = "name")
 #' # if it's se to "NA" it will give NA
 #' attr_var_label(top, if_null = "NA")
-#' 
-#' 
+#'
+#'
 #' @export
 attr_var_label <- function(data, x, unlist = TRUE, if_null = NULL) {
   if (missing(x)) {
     if ("data.frame" %in% class(data)) {
       out <- purrr::map(
         names(data),
-        ~low_var_label({{ .x }}, data, if_null = if_null) 
-      ) %>% 
+        ~ low_var_label({{ .x }}, data, if_null = if_null)
+      ) %>%
         stats::setNames(names(data))
-  
+
       if (isTRUE(unlist)) out <- unlist(out)
     } else {
       out <- low_var_label({{ data }}, if_null = if_null)
     }
-  
   } else {
-    # if x is not missing, get a data frame with x 
+    # if x is not missing, get a data frame with x
     # do it this way so you can select multiple variables
     data <- data %>% dplyr::select({{ x }})
     out <- purrr::map(
       names(data),
-      \(x) low_var_label({{ x }}, data, if_null = if_null) 
-    ) %>% 
+      \(x) low_var_label({{ x }}, data, if_null = if_null)
+    ) %>%
       stats::setNames(names(data))
 
     if (isTRUE(unlist)) {
       out <- unlist(out, use.names = TRUE)
-    } 
+    }
   }
 
   out

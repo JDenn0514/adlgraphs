@@ -12,7 +12,7 @@
 #'   if it should be ordered
 #'
 #' @returns A factor variable of the same length as `x`
-#' 
+#'
 #' @examples
 #' # load the dplyr library so we can use `mutate()`
 #' library(dplyr)
@@ -41,7 +41,6 @@
 #' @export
 
 refactor <- function(x, new_levels, ordered = NA) {
-
   # get the argument name
   x_name <- deparse(substitute(x))
 
@@ -70,10 +69,10 @@ refactor <- function(x, new_levels, ordered = NA) {
   # update the attributes in f
   # this function uses the attributes from new_f and keeps the ones in f that
   # are not in new_f
-  attributes(new_x) <- utils::modifyList(as.list(attributes(x)), attributes(new_x))
+  attributes(new_x) <- utils::modifyList(
+    as.list(attributes(x)),
+    attributes(new_x)
+  )
   # return the vector
   new_x
-
 }
-
-

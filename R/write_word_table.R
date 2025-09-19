@@ -8,7 +8,3 @@ write_word_table <- function(x, doc) {
     officer::body_add_par(value = "") %>%
     officer::body_add_par(value = "")
 }
-
-
-
-

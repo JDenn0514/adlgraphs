@@ -8,7 +8,7 @@
 #' @param x A vector of class `haven_labelled` or `numeric`
 #'
 #' @returns A numeric vector of the same length as `x`
-#' 
+#'
 #' @examples
 #'
 #' library(dplyr)
@@ -20,7 +20,6 @@
 #'
 #' @export
 num_rev <- function(x) {
-
   # get the object's name
   x_name <- deparse(substitute(x))
 
@@ -35,21 +34,18 @@ num_rev <- function(x) {
   # get the highest value in x and add 1 to it
   max_x <- max(stats::na.omit(x)) + 1
   # reverse the value of x by subtracting it from name_vec_max
-  # four variables with four response options what was a 1 is equal to a 4 
+  # four variables with four response options what was a 1 is equal to a 4
   # and what was a 2 is equal to 3, etc.
   rev_x <- max_x - x
 
   name_vec <- attr_val_labels(x)
   variable_label <- attr_var_label(x)
-  
+
   if (is.null(name_vec)) {
-    
     x <- rev_x
     attr(x, "label") <- variable_label
     attr(x, "transformation") <- paste0("Reversing '", x_name, "'")
-
   } else {
-
     # check to make sure there are value labels for every value
     # Get sorted labels and unique values
     labs <- sort(as.numeric(name_vec))
@@ -59,7 +55,7 @@ num_rev <- function(x) {
     if (!all(vals %in% labs)) {
       stop("Each value in `x` must have value labels")
     }
-  
+
     ## create a new reversed named vector  "rev_name_vec" ---------
     # get the value labels from the named vector and reverse the order of the vector
     labels <- stats::setNames(names(name_vec), name_vec) %>% rev()
@@ -70,20 +66,16 @@ num_rev <- function(x) {
     x <- rev_x
     attr(x, "labels") <- rev_name_vec
     attr(x, "label") <- variable_label
-    attr(x, "transformation") <- paste0("Reversing '", x_name, "' while maintaining correct value labels")
-
+    attr(x, "transformation") <- paste0(
+      "Reversing '",
+      x_name,
+      "' while maintaining correct value labels"
+    )
   }
 
-  if (is.null(attr_var_label(x))) attr(x, "label") <- x_name
+  if (is.null(attr_var_label(x))) {
+    attr(x, "label") <- x_name
+  }
 
   x
 }
-
-
-
-
-
-
-
-
-

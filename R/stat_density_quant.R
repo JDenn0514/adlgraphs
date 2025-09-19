@@ -108,21 +108,24 @@
 #'   `quantiles` is an integer then the data will be cut into that many equal
 #'   quantiles. If it is a vector of probabilities then the data will cut by them.
 #' @export
-stat_density_quant <- function(mapping = NULL, data = NULL,
-                               geom = geom, position = "stack",
-                               ...,
-                               bw = "sj",
-                               adjust = 1,
-                               kernel = "gaussian",
-                               n = 512,
-                               na.rm = FALSE,
-                               bounds = c(-Inf, Inf),
-                               show.legend = NA,
-                               inherit.aes = TRUE,
-                               quantile_lines = FALSE,
-                               calc_ecdf = FALSE,
-                               quantiles = 4) {
-
+stat_density_quant <- function(
+  mapping = NULL,
+  data = NULL,
+  geom = geom,
+  position = "stack",
+  ...,
+  bw = "sj",
+  adjust = 1,
+  kernel = "gaussian",
+  n = 512,
+  na.rm = FALSE,
+  bounds = c(-Inf, Inf),
+  show.legend = NA,
+  inherit.aes = TRUE,
+  quantile_lines = FALSE,
+  calc_ecdf = FALSE,
+  quantiles = 4
+) {
   ggplot2::layer(
     data = data,
     mapping = mapping,
@@ -147,20 +150,23 @@ stat_density_quant <- function(mapping = NULL, data = NULL,
 }
 
 
-
-
 StatDensityQuant <- ggplot2::ggproto(
   "StatDensityQuant",
   Stat,
   required_aes = "x",
 
-  default_aes = aes(x = ggplot2::after_stat(density), y = ggplot2::after_stat(density), fill = NA, weight = NULL),
+  default_aes = aes(
+    x = ggplot2::after_stat(density),
+    y = ggplot2::after_stat(density),
+    fill = NA,
+    weight = NULL
+  ),
 
   dropped_aes = "weight",
 
   calc_panel_params = function(data, params) {
     if (is.null(params$bandwidth)) {
-      xdata <- stats::na.omit(data.frame(x=data$x, group=data$group))
+      xdata <- stats::na.omit(data.frame(x = data$x, group = data$group))
       xs <- split(xdata$x, xdata$group)
       xs_mask <- vapply(xs, length, numeric(1)) > 1
       bws <- vapply(xs[xs_mask], bw.nrd0, numeric(1))
@@ -171,11 +177,11 @@ StatDensityQuant <- ggplot2::ggproto(
     }
 
     if (is.null(params$from)) {
-      params$from <- min(data$x, na.rm=TRUE) - 3 * params$bandwidth
+      params$from <- min(data$x, na.rm = TRUE) - 3 * params$bandwidth
     }
 
     if (is.null(params$to)) {
-      params$to <- max(data$x, na.rm=TRUE) + 3 * params$bandwidth
+      params$to <- max(data$x, na.rm = TRUE) + 3 * params$bandwidth
     }
 
     data.frame(
@@ -186,14 +192,15 @@ StatDensityQuant <- ggplot2::ggproto(
   },
 
   setup_params = function(self, data, params) {
-
     # determine if there is x
     has_x <- !(is.null(data$x) && is.null(params$x))
     # determine if there is y
     has_y <- !(is.null(data$y) && is.null(params$y))
     # if neither exists give an error
     if (!has_x && !has_y) {
-      cli::cli_abort("{.fn {snake_class(self)}} requires an {.field x} or {.field y} aesthetic.")
+      cli::cli_abort(
+        "{.fn {snake_class(self)}} requires an {.field x} or {.field y} aesthetic."
+      )
     }
 
     # calculate bandwidth, min, and max for each panel separately
@@ -201,9 +208,16 @@ StatDensityQuant <- ggplot2::ggproto(
     pardata <- lapply(panels, self$calc_panel_params, params)
     pardata <- purrr::reduce(pardata, rbind)
 
-    if (length(params$quantiles) > 1 &&
-        (max(params$quantiles, na.rm = TRUE) > 1 || min(params$quantiles, na.rm = TRUE) < 0)) {
-      stop('invalid quantiles used: c(', paste0(params$quantiles, collapse = ','), ') must be within [0, 1] range')
+    if (
+      length(params$quantiles) > 1 &&
+        (max(params$quantiles, na.rm = TRUE) > 1 ||
+          min(params$quantiles, na.rm = TRUE) < 0)
+    ) {
+      stop(
+        'invalid quantiles used: c(',
+        paste0(params$quantiles, collapse = ','),
+        ') must be within [0, 1] range'
+      )
     }
 
     params$bandwidth <- pardata$bandwidth
@@ -212,23 +226,33 @@ StatDensityQuant <- ggplot2::ggproto(
     params
   },
 
-  compute_group = function(data, scales, bw = "sj", adjust = 1, kernel = "gaussian",
-                           n = 512, na.rm = FALSE, bounds = c(-Inf, Inf),
-                           calc_ecdf = FALSE, quantile_lines = FALSE, quantiles = 4
+  compute_group = function(
+    data,
+    scales,
+    bw = "sj",
+    adjust = 1,
+    kernel = "gaussian",
+    n = 512,
+    na.rm = FALSE,
+    bounds = c(-Inf, Inf),
+    calc_ecdf = FALSE,
+    quantile_lines = FALSE,
+    quantiles = 4
   ) {
-
-
     # ignore too small groups
-    if(nrow(data) < 3) return(data.frame())
+    if (nrow(data) < 3) {
+      return(data.frame())
+    }
 
     range <- range(data$x, na.rm = TRUE)
 
     nx <- length(data$x)
 
-
     # when quantile lines are requested, we also calculate ecdf this simplifies
     # things for now; in principle, could disentangle the two
-    if (quantile_lines) calc_ecdf <- TRUE
+    if (quantile_lines) {
+      calc_ecdf <- TRUE
+    }
 
     weights <- rep(1 / nx, nx)
 
@@ -256,7 +280,6 @@ StatDensityQuant <- ggplot2::ggproto(
         from = range[1],
         to = range[2]
       )
-
     } else {
       # if bounds = c(-Inf, Inf)
 
@@ -270,7 +293,6 @@ StatDensityQuant <- ggplot2::ggproto(
         from = range[1],
         to = range[2]
       )
-
     }
 
     # calculate maximum density for scaling
@@ -279,13 +301,11 @@ StatDensityQuant <- ggplot2::ggproto(
     # make interpolating function for density line
     densf <- stats::approxfun(d$x, d$y, rule = 2)
 
-
     # calculate quantiles, needed for both quantile lines and ecdf
-    if ((length(quantiles)==1) && (all(quantiles >= 1))) {
+    if ((length(quantiles) == 1) && (all(quantiles >= 1))) {
       if (quantiles > 1) {
         probs <- seq(0, 1, length.out = quantiles + 1)[2:quantiles]
-      }
-      else {
+      } else {
         probs <- NA
       }
     } else {
@@ -309,12 +329,11 @@ StatDensityQuant <- ggplot2::ggproto(
         datatype = "vline",
         stringsAsFactors = FALSE
       )
-
     }
 
     if (calc_ecdf) {
       n <- length(d$x)
-      ecdf <- c(0, cumsum(d$y[1:(n-1)]*(d$x[2:n]-d$x[1:(n-1)])))
+      ecdf <- c(0, cumsum(d$y[1:(n - 1)] * (d$x[2:n] - d$x[1:(n - 1)])))
       ecdf_fun <- stats::approxfun(d$x, ecdf, rule = 2)
       ntile <- findInterval(d$x, qx, left.open = TRUE) + 1 # if make changes here, make them also below
 
@@ -331,22 +350,21 @@ StatDensityQuant <- ggplot2::ggproto(
         x = d$x,
         density = d$y,
         ndensity = d$y / maxdens,
-        scaled =  d$y / maxdens,
-        count =   d$y * nx,
+        scaled = d$y / maxdens,
+        count = d$y * nx,
         n = nx,
         ecdf = ecdf,
         quantile = ntile,
         datatype = "ridgeline",
         stringsAsFactors = FALSE
       )
-    }
-    else {
+    } else {
       df_density <- data.frame(
         x = d$x,
         density = d$y,
         ndensity = d$y / maxdens,
-        scaled =  d$y / maxdens,
-        count =   d$y * nx,
+        scaled = d$y / maxdens,
+        count = d$y * nx,
         n = nx,
         ecdf = ecdf,
         quantile = ntile,
@@ -363,6 +381,4 @@ StatDensityQuant <- ggplot2::ggproto(
 
     df_final
   }
-
 )
-
