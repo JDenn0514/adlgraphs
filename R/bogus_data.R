@@ -150,7 +150,7 @@ get_bogus <- function(data, duration, cut_off = 0.3) {
   # get the cut off time
   cut_off_time <- stats::median(data[[duration]]) * cut_off
   # add a new variable if they were speedsters
-  bogus$speedsters <- ifelse(bogus[[duration]] > cut_off_time, TRUE, FALSE)
+  bogus$speedsters <- ifelse(bogus[[duration]] > cut_off_time, FALSE, TRUE)
   # return the bad data
   bogus
 }
