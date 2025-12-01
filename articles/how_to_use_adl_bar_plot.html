@@ -146,7 +146,7 @@ value it represents and the % symbol.</p></li>
 <li><p>Lastly, the order of the bars is not reordered by percentage
 since the values of the x-axis already have an inherent order.</p></li>
 </ul>
-<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-2-1.png" width="100%" height="100%"></p>
+<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" width="100%" height="100%"></p>
 <p>Now let’s take a look at two simple vertical mean plots. The plot on
 the left shows the average score on the “American Conspiracy Thinking
 Scale” across educational groups. The American Conspiracy Thinking Scale
@@ -164,8 +164,8 @@ people what the numbers mean. This is ideal for when the y-axis is
 something easy to understand like average number of actions, statements,
 tropes, etc.</p></li>
 </ul>
-<p><img src="how_to_use_adl_bar_plot_files/figure-html/acts_avg%20mean-1.png" width="48%" height="48%" style="float:left; padding:5px"></p>
-<p><img src="how_to_use_adl_bar_plot_files/figure-html/trad_n%20mean-1.png" width="48%" height="48%" style="float:right; padding:5px"></p>
+<p><img src="how_to_use_adl_bar_plot_files/figure-html/acts_avg%20mean-1.png" class="r-plt" width="48%" height="48%" style="float:left; padding:5px"></p>
+<p><img src="how_to_use_adl_bar_plot_files/figure-html/trad_n%20mean-1.png" class="r-plt" width="48%" height="48%" style="float:right; padding:5px"></p>
 <p>Now let’s take a look at a relatively simple horizontal bar plot. The
 same principles laid out previously apply here as well, however, there
 are some differences. For example, take the plot below. Here we are
@@ -193,7 +193,7 @@ breaks try to keep them to three maximum whenever possible.</p></li>
 <li><p>The x-axis is title is added to clarify what it is we are looking
 it.</p></li>
 </ul>
-<p><img src="how_to_use_adl_bar_plot_files/figure-html/education%20agree%20with%20top-1.png" width="100%" height="100%"></p>
+<p><img src="how_to_use_adl_bar_plot_files/figure-html/education%20agree%20with%20top-1.png" class="r-plt" width="100%" height="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="dodged-bar-plots">Dodged bar plots<a class="anchor" aria-label="anchor" href="#dodged-bar-plots"></a>
@@ -222,7 +222,7 @@ of the bars is easy to see.</p></li>
 <span><span class="co">#&gt; Warning in scale_adl(palette = "binary", wrap_legend_labels = 25, legend_title</span></span>
 <span><span class="co">#&gt; = "none"): `n` has been deprecated as the function now automatically detects</span></span>
 <span><span class="co">#&gt; number of colors needed.</span></span></code></pre>
-<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-3-1.png" width="100%" height="100%"></p>
+<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" width="100%" height="100%"></p>
 <p>Occasionally, we also do vertically dodged bar plots. As I mentioned
 above, we’ll use these when the axis labels are not large. For example,
 comparing the percentage of people endorsing different numbers of
@@ -234,7 +234,7 @@ below.</p>
 <pre><code><span><span class="co">#&gt; Warning in scale_adl(palette = "binary", wrap_legend_labels = 20, legend_title</span></span>
 <span><span class="co">#&gt; = "Average Score:"): `n` has been deprecated as the function now automatically</span></span>
 <span><span class="co">#&gt; detects number of colors needed.</span></span></code></pre>
-<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-4-1.png" width="100%" height="100%"></p>
+<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" width="100%" height="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="stacked-frequency-bar-plots">Stacked frequency bar plots<a class="anchor" aria-label="anchor" href="#stacked-frequency-bar-plots"></a>
@@ -263,7 +263,7 @@ to lowest (on the bottom)</p></li>
 <pre><code><span><span class="co">#&gt; Warning in scale_adl(palette = "likert_4", n = 4, wrap_legend_labels = 10, :</span></span>
 <span><span class="co">#&gt; `n` has been deprecated as the function now automatically detects number of</span></span>
 <span><span class="co">#&gt; colors needed.</span></span></code></pre>
-<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-5-1.png" width="100%" height="100%"></p>
+<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" width="100%" height="100%"></p>
 </div>
 </div>
 <div class="section level2">
@@ -382,7 +382,7 @@ outside the bars.</p>
 <span>  <span class="op">)</span> </span>
 <span></span>
 <span><span class="va">plot</span></span></code></pre></div>
-<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-9-1.png" width="100%" height="100%"></p>
+<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" width="100%" height="100%"></p>
 <p>Now we need to add the plot title and axis title using
 <code><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs()</a></code>. We don’t need the y-axis title so set
 <code>y = NULL</code>. We are going to use <code><a href="../reference/attr_var_label.html">attr_var_label()</a></code>
@@ -397,7 +397,7 @@ to get the variable label, so set
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">plot</span> </span></code></pre></div>
-<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-10-1.png" width="100%" height="100%"></p>
+<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" width="100%" height="100%"></p>
 <p>Unfortunately, the x-axis title is too long. Since we are using
 <code><a href="../reference/attr_var_label.html">attr_var_label()</a></code>, we need to use <a href="https://stringr.tidyverse.org/reference/str_wrap.html" class="external-link"><code>stringr::str_wrap()</code></a>
 to wrap the x-axis title. We are setting it to 55 so that the line break
@@ -413,7 +413,7 @@ again, or we can manually set it by adding <code>\n</code> to the title.
 <span>    title <span class="op">=</span> <span class="st">"About 40% of Americans Think an Ideal\nSociety is Hierarchical"</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="va">plot</span></span></code></pre></div>
-<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-11-1.png" width="100%" height="100%"></p>
+<p><img src="how_to_use_adl_bar_plot_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" width="100%" height="100%"></p>
 </div>
 <div class="section level4">
 <h4 id="creating-dodged-bar-plots">Creating dodged bar plots<a class="anchor" aria-label="anchor" href="#creating-dodged-bar-plots"></a>
@@ -447,7 +447,7 @@ again, or we can manually set it by adding <code>\n</code> to the title.
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
