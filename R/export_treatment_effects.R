@@ -1,9 +1,9 @@
 #' Export Treatment Effects to Excel
 #'
 #' Iterates through a list of dependent variables, calculates treatment effects
-#' using `tidysurvey::get_diffs`, and exports the results to a formatted Excel
-#' workbook. It handles statistical testing, conditional formatting (color-
-#' coding significance), and workbook management (appending to existing files).
+#' using `get_diffs`, and exports the results to a formatted Excel workbook. It
+#' handles statistical testing, conditional formatting (color- coding
+#' significance), and workbook management (appending to existing files).
 #'
 #' @param data A data frame containing the survey data.
 #' @param dv_list A character vector of column names representing the dependent
@@ -257,7 +257,7 @@ calculate_and_format_results <- function(
 ) {
   # 1. Run Stats
   if (is.null(group)) {
-    results <- tidysurvey::get_diffs(
+    results <- get_diffs(
       data,
       x = {{ dv }},
       treats = {{ treats }},
@@ -272,7 +272,7 @@ calculate_and_format_results <- function(
     )
     group_cols <- character(0)
   } else {
-    results <- tidysurvey::get_diffs(
+    results <- get_diffs(
       data,
       x = {{ dv }},
       treats = {{ treats }},
