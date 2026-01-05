@@ -1,0 +1,9 @@
+# The target maximum line length
+line_width = 80
+
+# Ensure the formatter handles roxygen comments
+[format]
+# This ensures that even if you have manual alignment,
+# Air will try to respect the line_width for comments.
+indent_style = "space"
+indent_size = 2
