@@ -5,6 +5,7 @@
 
 # for num_rev and test_data
 library(adlgraphs)
+#> Warning: S3 method 'get_diffs.default' was declared in NAMESPACE but not found
 # this is for some other basic data transformations
 library(dplyr)
 ```

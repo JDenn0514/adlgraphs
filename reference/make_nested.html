@@ -96,64 +96,27 @@ argument supersede any grouping variables specified through
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># nest by one variable</span></span></span>
 <span class="r-in"><span><span class="fu">make_nested</span><span class="op">(</span><span class="va">test_data</span>, <span class="va">pid_f3</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 3</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   pid_f3      data               name       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Democrat    <span style="color: #949494;">&lt;tibble [98 × 45]&gt;</span> Democrat   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Independent <span style="color: #949494;">&lt;tibble [57 × 45]&gt;</span> Independent</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Republican  <span style="color: #949494;">&lt;tibble [95 × 45]&gt;</span> Republican </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in UseMethod("make_nested"):</span> no applicable method for 'make_nested' applied to an object of class "c('tbl_df', 'tbl', 'data.frame')"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># nest by multiple variables</span></span></span>
 <span class="r-in"><span><span class="fu">make_nested</span><span class="op">(</span><span class="va">test_data</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pid_f3</span>, <span class="va">edu_f2</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   pid_f3      edu_f2                       data               name              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Democrat    No College Degree            <span style="color: #949494;">&lt;tibble [52 × 44]&gt;</span> Democrat_No Colle…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Democrat    At Least a Bachelor's Degree <span style="color: #949494;">&lt;tibble [46 × 44]&gt;</span> Democrat_At Least…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Independent No College Degree            <span style="color: #949494;">&lt;tibble [40 × 44]&gt;</span> Independent_No Co…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Independent At Least a Bachelor's Degree <span style="color: #949494;">&lt;tibble [17 × 44]&gt;</span> Independent_At Le…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> Republican  No College Degree            <span style="color: #949494;">&lt;tibble [50 × 44]&gt;</span> Republican_No Col…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> Republican  At Least a Bachelor's Degree <span style="color: #949494;">&lt;tibble [45 × 44]&gt;</span> Republican_At Lea…</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in UseMethod("make_nested"):</span> no applicable method for 'make_nested' applied to an object of class "c('tbl_df', 'tbl', 'data.frame')"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># group data to create nested data frame</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">pid_f3</span>, <span class="va">edu_f2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu">make_nested</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   pid_f3      edu_f2                       data               name              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Democrat    No College Degree            <span style="color: #949494;">&lt;tibble [52 × 44]&gt;</span> Democrat_No Colle…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Democrat    At Least a Bachelor's Degree <span style="color: #949494;">&lt;tibble [46 × 44]&gt;</span> Democrat_At Least…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Independent No College Degree            <span style="color: #949494;">&lt;tibble [40 × 44]&gt;</span> Independent_No Co…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Independent At Least a Bachelor's Degree <span style="color: #949494;">&lt;tibble [17 × 44]&gt;</span> Independent_At Le…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> Republican  No College Degree            <span style="color: #949494;">&lt;tibble [50 × 44]&gt;</span> Republican_No Col…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> Republican  At Least a Bachelor's Degree <span style="color: #949494;">&lt;tibble [45 × 44]&gt;</span> Republican_At Lea…</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in UseMethod("make_nested"):</span> no applicable method for 'make_nested' applied to an object of class "c('grouped_df', 'tbl_df', 'tbl', 'data.frame')"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># use group_by and nest_data </span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">pid_f3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu">make_nested</span><span class="op">(</span><span class="va">edu_f2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   pid_f3      edu_f2                       data               name              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Democrat    No College Degree            <span style="color: #949494;">&lt;tibble [52 × 44]&gt;</span> Democrat_No Colle…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Democrat    At Least a Bachelor's Degree <span style="color: #949494;">&lt;tibble [46 × 44]&gt;</span> Democrat_At Least…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Independent No College Degree            <span style="color: #949494;">&lt;tibble [40 × 44]&gt;</span> Independent_No Co…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Independent At Least a Bachelor's Degree <span style="color: #949494;">&lt;tibble [17 × 44]&gt;</span> Independent_At Le…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> Republican  No College Degree            <span style="color: #949494;">&lt;tibble [50 × 44]&gt;</span> Republican_No Col…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> Republican  At Least a Bachelor's Degree <span style="color: #949494;">&lt;tibble [45 × 44]&gt;</span> Republican_At Lea…</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in UseMethod("make_nested"):</span> no applicable method for 'make_nested' applied to an object of class "c('grouped_df', 'tbl_df', 'tbl', 'data.frame')"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># use different sep argument</span></span></span>
 <span class="r-in"><span><span class="fu">make_nested</span><span class="op">(</span><span class="va">test_data</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pid_f3</span>, <span class="va">edu_f2</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">":"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   pid_f3      edu_f2                       data               name              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Democrat    No College Degree            <span style="color: #949494;">&lt;tibble [52 × 44]&gt;</span> Democrat:No Colle…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Democrat    At Least a Bachelor's Degree <span style="color: #949494;">&lt;tibble [46 × 44]&gt;</span> Democrat:At Least…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Independent No College Degree            <span style="color: #949494;">&lt;tibble [40 × 44]&gt;</span> Independent:No Co…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Independent At Least a Bachelor's Degree <span style="color: #949494;">&lt;tibble [17 × 44]&gt;</span> Independent:At Le…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> Republican  No College Degree            <span style="color: #949494;">&lt;tibble [50 × 44]&gt;</span> Republican:No Col…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> Republican  At Least a Bachelor's Degree <span style="color: #949494;">&lt;tibble [45 × 44]&gt;</span> Republican:At Lea…</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in UseMethod("make_nested"):</span> no applicable method for 'make_nested' applied to an object of class "c('tbl_df', 'tbl', 'data.frame')"</span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>

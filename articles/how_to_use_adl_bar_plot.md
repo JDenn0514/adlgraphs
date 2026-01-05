@@ -2,6 +2,7 @@
 
 ``` r
 library(adlgraphs)
+#> Warning: S3 method 'get_diffs.default' was declared in NAMESPACE but not found
 library(dplyr)
 library(ggplot2)
 library(stringr)
