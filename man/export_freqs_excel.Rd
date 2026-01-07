@@ -97,7 +97,7 @@ creates hierarchical headers that make these relationships clear.
 To create multiple sheets in the same Excel file:
 \preformatted{
 # First call creates the file
-export_freqs_excel(data, vars, group = "generation", 
+export_freqs_excel(data, vars, group = "generation",
                    file_name = "analysis.xlsx", sheet = "By Generation")
 
 # Subsequent calls add new sheets
@@ -109,7 +109,7 @@ export_freqs_excel(data, vars, group = c("generation", "gender"),
 \examples{
 \dontrun{
 # Basic frequency table
-export_freqs_excel(survey_data, 
+export_freqs_excel(survey_data,
                    cols = c(political_party, ideology),
                    file_name = "frequencies.xlsx")
 

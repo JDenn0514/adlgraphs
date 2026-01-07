@@ -32,7 +32,7 @@ in the operation.
 # load the dplyr package
 library(dplyr)
 # make a new df with the new column
-new <- test_data \%>\% 
+new <- test_data \%>\%
   mutate(
     sdo_avg_new = row_means(
       # specify the variables involved in the row means

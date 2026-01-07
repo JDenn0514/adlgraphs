@@ -7,71 +7,84 @@
 get_freqs(
   data,
   x,
-  group,
-  wt,
-  names_to = "names",
-  values_to = "values",
-  name_label,
-  keep,
+  group = NULL,
+  wt = NULL,
+  names_to = "name",
+  values_to = "value",
+  name_label = NULL,
+  keep = NULL,
   drop_zero = FALSE,
-  decimals = 3,
+  decimals = 1,
   na.rm = TRUE
 )
 }
 \arguments{
-\item{data}{A data frame/tibble or a \code{survey.design} object.}
+\item{data}{A data frame/tibble, \code{survey.design}, or \code{svyrep.design} object.}
 
-\item{x}{Columns selecting one or more variables to tabulate. You can pass:
+\item{x}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> Columns selecting one or more
+variables. You can pass:
 \itemize{
 \item A bare column name (e.g., \code{x = q1})
-\item A tidyselect expression (e.g., \code{x = dplyr::starts_with("q")})
-\item For programmatic selection, use \code{tidyselect::all_of(c("q1", "q2"))}.
+\item A tidyselect expression (e.g., \code{x = tidyselect::starts_with("q")})
+\item A vector of strings or symbols \code{c("q1", "q2")} or \code{c(q1, q2)}.
+\item An object containing a vector \code{tidyselect::all_of(variables)}.
 }}
 
-\item{group}{Optional columns to group by. Accepts a tidyselect expression. If \code{data}
-is already a \code{grouped_df}, those groups are honored in addition to \code{group}.}
+\item{group}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> A selection of columns
+to group the data. This operates very similarly to \code{.by} from dplyr
+(for more info on that see \link[dplyr:dplyr_by]{?dplyr_by}). It can also be a
+character vector. If using an external character vector it must be
+wrapped in curly brackets (\code{{{}}}).
 
-\item{wt}{Optional weight column (numeric). Ignored for \code{survey.design} inputs, where
-weights come from the design. If omitted for data frames, unit weights are added internally.}
+In addition, grouped data can be piped in via \code{dplyr::group_by()} or
+\code{srvyr::group_by()}. If data is a \code{grouped_df} and \code{group} is provided,
+\code{get_means()} will combine the variable(s) used in either \code{group_by}
+function and the variable(s) supplied in \code{group} to calculate
+frequencies.}
 
-\item{names_to}{Character scalar used only when \code{x} selects multiple variables; names the
-“item” column in the long output. Default is \code{"names"}.}
+\item{wt}{Optional weight column (numeric). Ignored for \code{survey.design}
+or \code{svyrep.design} inputs, where weights come from the design. If omitted
+for data frames, will output unweighted frequencies.}
 
-\item{values_to}{Character scalar used only when \code{x} selects multiple variables; names the
-response column in the long output. Default is \code{"values"}.}
+\item{names_to}{A string specifying the name of the column to create
+to hold the variable names (or labels) when \code{x} selects multiple variables.
+Default is \code{"name"}.}
 
-\item{name_label}{Optional label to attach to the \code{names_to} column in multi-variable outputs
-(e.g., a question preface).}
+\item{values_to}{A string specifying the name of the column to create
+to hold the responses when \code{x} selects multiple variables.
+Default is \code{"value"}.}
+
+\item{name_label}{Optional label to attach to the \code{names_to} column in
+multi-variable outputs (e.g., a question preface). If missing, will check
+the data for a \code{question_preface} attribute.}
 
 \item{keep}{Optional post-aggregation filter applied only to multi-variable outputs:
 \itemize{
 \item character vector: keep only rows where \code{values_to} is in this set
-\item function: predicate on the \code{values_to} vector; returns logical mask (length \code{nrow} or scalar \code{TRUE})
-\item tidy expression: a dplyr-style filter expression evaluated in the result context
+\item function: predicate on the \code{values_to} vector; returns logical mask (length
+\code{nrow} or scalar \code{TRUE})
+\item tidy expression: a dplyr-style filter expression evaluated in the result
+context
 }}
 
 \item{drop_zero}{Logical; whether to drop zero-count rows from the output.
-\itemize{
-\item Default path (data.frame): combined with \code{dplyr::count(.drop = drop_zero)} to control
-inclusion of zero levels.
-\item Survey path (\code{survey.design}):
-\itemize{
-\item Single-variable: zero-count response levels can be included when \code{drop_zero = FALSE}.
-\item Multi-variable: zero-count levels are not materialized at this time; see “Limitations”.
-}
-}}
+If \code{FALSE}, zero-count levels will be included by using \code{tidyr::complete()}.
+Default is \code{FALSE}.}
 
-\item{decimals}{Integer number of decimal places for rounding counts (\code{n}).
-Percent (\code{pct}) is rounded to \code{decimals + 2}.}
+\item{decimals}{Number of decimal places for rounding counts (\code{n}). Percent
+(\code{pct}) is rounded to \code{decimals + 2} so that it contains the right number
+of decimals when multiplying by 100.}
 
-\item{na.rm}{Logical; whether to remove rows with missing values in \code{x} and \code{group} before
-computing frequencies. If removing NAs would leave zero rows, an informative error is raised.}
+\item{na.rm}{Logical; whether to remove rows with missing values in \code{x} and \code{group}
+before computing frequencies. Default is \code{TRUE}.}
 }
 \value{
 A tibble with columns:
 \itemize{
-\item For single-variable inputs: \verb{[x variable]}, \code{n}, \code{pct}, and any grouping columns.
-\item For multi-variable inputs: \verb{[grouping columns if any]}, \verb{[names_to]}, \verb{[values_to]}, \code{n}, \code{pct}.
+\item For single-variable inputs: \verb{[x variable]}, \code{n}, \code{pct}, and any grouping
+columns.
+\item For multi-variable inputs: \verb{[grouping columns if any]}, \verb{[names_to]},
+\verb{[values_to]}, \code{n}, \code{pct}.
 }
 
 The result has class \code{"adlgraphs_freqs"} and common attributes:
@@ -79,181 +92,129 @@ The result has class \code{"adlgraphs_freqs"} and common attributes:
 \item \code{attr(., "dataset")}: the original dataset
 \item \code{attr(., "variable_label")}, \code{attr(., "variable_name")}
 \item For grouped outputs: \code{attr(., "group_names")} and \code{attr(., "group_labels")}
-\item For multi-variable: \code{attr(., "item_names")}, \code{attr(., "item_labels")}, \code{attr(., "x_expr")}
+\item For multi-variable: \code{attr(., "item_names")}, \code{attr(., "item_labels")},
+\code{attr(., "x_expr")}
 }
 }
 \description{
-\code{get_freqs()} computes weighted frequency tables for survey-style data. It supports:
+\code{get_freqs()} computes weighted frequency tables for survey-style data. It
+supports:
 \itemize{
 \item Plain data frames with an optional weight column
-\item \code{survey.design} objects (from the survey/srvyr ecosystem)
+\item \code{survey.design} and \code{svyrep.design} objects (from the survey/srvyr ecosystem)
 \item Single-variable or multi-variable inputs
 \item Optional grouping variables
-\item Optional inclusion/exclusion of zero-count levels (see Limitations for survey multi-variable)
+\item Optional inclusion/exclusion of zero-count levels (see Limitations for
+survey multi-variable)
 }
 
-For single-variable inputs, the response column in the output retains the original variable
-name. For multi-variable inputs, responses are pivoted to long format using \code{names_to} and
-\code{values_to}.
+For single-variable inputs, the response column in the output retains the
+original variable name. For multi-variable inputs, responses are pivoted to
+long format using \code{names_to} and \code{values_to}.
 }
 \details{
-The \code{keep} argument is applied after aggregation in multi-variable outputs to filter rows
-of the result based on the response column (\code{values_to}). It is ignored for single-variable
-calls. Accepted forms:
+The \code{keep} argument is applied after aggregation in multi-variable outputs to filter
+rows of the result based on the response column (\code{values_to}). It is ignored for
+single-variable calls. Accepted forms:
 \itemize{
 \item Character vector: \code{keep = c("yes", "no")}
-\item Function: \verb{keep = \\(v) v \%in\% c("yes", "no")} or any predicate that returns a logical
-vector of length \code{nrow(result)} or a single \code{TRUE} (no filtering). \code{NA} entries are dropped.
-\item Tidy expression: \code{keep = .data[[values_to]] \%in\% c("yes","no")} or simply \code{resp != "skip"}
-when \code{values_to = "resp"}.
+\item Function: \verb{keep = \\(v) v \%in\% c("yes", "no")} or any predicate that returns a
+logical vector of length \code{nrow(result)} or a single \code{TRUE} (no filtering). \code{NA}
+entries are dropped.
+\item Tidy expression: \code{keep = .data[[values_to]] \%in\% c("yes","no")} or simply
+\code{resp != "skip"} when \code{values_to = "resp"}.
 }
 
-Note: For tidy expressions, the expression is evaluated in the context of the result tibble.
+Note: For tidy expressions, the expression is evaluated in the context of the
+result tibble.
 }
 \section{Methods}{
 
 \itemize{
-\item \code{get_freqs.default()}: Operates on data frames/tibbles. If \code{wt} is omitted, unit weights
-are used. Uses \code{dplyr::count()} with \code{.drop = drop_zero}; zero-count levels can be included
-when \code{drop_zero = FALSE} and the variables are factors with unused levels.
+\item \code{get_freqs.default()}: Operates on data frames/tibbles. If \code{wt} is omitted,
+simple unweighted frequencies are reported. Calculation is from \code{dplyr::count()}
+with \code{.drop = drop_zero}; zero-count levels can be included when
+\code{drop_zero = FALSE} and the variables are factors with unused levels.
 \item \code{get_freqs.survey.design()}: Operates on \code{survey.design} objects. Weights are taken from
 the design. Grouping is honored inside low-level survey computations.
-}
-}
-
-\section{Limitations (survey.design with multiple variables)}{
-
-For multi-variable \code{survey.design} inputs (\code{x} selects multiple variables), zero-count response
-levels are not currently expanded. Results include only observed levels per item, regardless of
-\code{drop_zero}. This differs from the default (non-survey) path. For single-variable
-\code{survey.design} inputs, zero-count levels can be included when \code{drop_zero = FALSE}.
-}
-
-\section{Errors and edge cases}{
-
-\itemize{
-\item If \code{x} selects no columns, an error is raised.
-\item If \code{na.rm = TRUE} and removing NAs would leave zero rows for the selected \code{x}/\code{group} variables,
-an error is raised.
-\item If \code{wt} is provided (default path) but the column does not exist or is non-numeric,
-an error is raised.
-\item Survey path includes checks for required variables and emptiness after NA removal.
+\item \code{get_freqs.svyrep.design()}: Operates on \code{svyrep.design} objects.
 }
 }
 
 \examples{
-# Basic example (data frame)
-df <- tibble::tibble(
-  grp = rep(c("A", "B"), each = 4),
-  q1  = c("yes", "no", "yes", NA, "no", "no", "yes", "no"),
-  wts = c(1, 2, 1, 1, 1, 3, 1, 2)
-)
-get_freqs(df, x = q1, wt = wts, na.rm = TRUE)
+# here's a basic unweighted frequency for satisfaction_service
+get_freqs(df, x = satisfaction_service)
 
-# Grouped
-get_freqs(df, x = q1, group = grp, wt = wts, na.rm = TRUE)
+# now check it with weights
+get_freqs(df, x = satisfaction_service, wt = wts)
 
-# Multi-variable (data frame)
-df$q2 <- c("red", "red", "blue", "blue", "red", "blue", "blue", NA)
-res_multi <- get_freqs(
+# now check grouped
+get_freqs(df, x = satisfaction_service, group = grp, wt = wts)
+
+# groups can also be added by using `group_by()` ahead of time
+df |>
+  dplyr::group_by() |>
+  get_freqs(df, x = satisfaction_service, wt = wts)
+
+# Now check with multiple x variables
+get_freqs(
   df,
-  x = tidyselect::all_of(c("q1", "q2")),
+  x = c("x1", "x2"),
+  wt = wts,
+  na.rm = TRUE
+)
+
+# rename the outputs
+get_freqs(
+  df,
+  x = c("x1", "x2"),
   wt = wts,
   names_to = "item",
   values_to = "resp",
   na.rm = TRUE
 )
-res_multi
+
+# now check multiple x variables with a grouping variable
+get_freqs(
+  df,
+  x = c("x1", "x2"),
+  group = "grp",
+  wt = wts,
+  na.rm = TRUE
+)
 
 # ---- keep examples (multi-variable, data frame) ----
 
 # 1) keep as a character vector: retain only "yes" responses across items
 get_freqs(
   df,
-  x = tidyselect::all_of(c("q1", "q2")),
+  x = c("x1", "x2"),
   wt = wts,
-  names_to = "item",
-  values_to = "resp",
   keep = c("yes"),
   na.rm = TRUE
 )
 
-# 2) keep as a function: retain values ending with 'e' (e.g., "blue")
-get_freqs(
-  df,
-  x = tidyselect::all_of(c("q1", "q2")),
-  wt = wts,
-  names_to = "item",
-  values_to = "resp",
-  keep = function(v) grepl("e$", v),
-  na.rm = TRUE
-)
+# Survey design  ------------
+\dontshow{if (requireNamespace("srvyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
+df_svy <- srvyr::as_survey_design(
+   ids = id,
+   strata = strata,
+   weights = "wts",
+   .data = _
+ )
 
-# 3) keep as a tidy expression: drop a specific response level
-# Here we keep everything except "no"
-get_freqs(
-  df,
-  x = tidyselect::all_of(c("q1", "q2")),
-  wt = wts,
-  names_to = "item",
-  values_to = "resp",
-  keep = resp != "no",
-  na.rm = TRUE
-)
+# basic example
+get_freqs(df_svy, x = satisfaction_service)
 
-# 4) keep with grouping: filter within groups after aggregation
-get_freqs(
-  df,
-  x = tidyselect::all_of(c("q1", "q2")),
-  group = grp,
-  wt = wts,
-  names_to = "item",
-  values_to = "resp",
-  keep = .data$resp \%in\% c("yes", "red"),
-  na.rm = TRUE
-)
+# multi-variable example
+get_freqs(df_svy, c(x1, x2))
 
-# 5) keep function returning TRUE (no-op): leaves result unchanged
-get_freqs(
-  df,
-  x = tidyselect::all_of(c("q1", "q2")),
-  wt = wts,
-  names_to = "item",
-  values_to = "resp",
-  keep = function(v) TRUE,
-  na.rm = TRUE
-)
+# grouped example
+get_freqs(df_svy, satisfaction_service, grp)
 
-# Survey design (single variable)
-\dontshow{if (requireNamespace("survey", quietly = TRUE)) withAutoprint(\{ # examplesIf}
-dff <- tibble::tibble(
-  grp = rep(c("A", "B"), each = 4),
-  q1  = c("yes", "no", "yes", NA, "no", "no", "yes", "no"),
-  q2  = c("red", "red", "blue", "blue", "red", "blue", "blue", NA),
-  wts = c(1, 2, 1, 1, 1, 3, 1, 2)
-)
-dsn <- survey::svydesign(ids = ~1, weights = ~wts, data = dff)
-get_freqs(dsn, x = q1, na.rm = TRUE)
+# grouped example with multi-variable
+get_freqs(df_svy, c(x1, x2), grp)
 
-# Survey design (multi-variable) — limitation:
-# Zero-count levels are not expanded for multi-variable survey inputs.
-get_freqs(
-  dsn,
-  x = tidyselect::all_of(c("q1", "q2")),
-  names_to = "item",
-  values_to = "resp",
-  na.rm = TRUE
-)
-
-# Note: keep is also supported for survey multi-variable outputs
-get_freqs(
-  dsn,
-  x = tidyselect::all_of(c("q1", "q2")),
-  names_to = "item",
-  values_to = "resp",
-  keep = resp \%in\% c("yes", "red"),
-  na.rm = TRUE
-)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

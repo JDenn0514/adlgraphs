@@ -2,70 +2,97 @@
 % Please edit documentation in R/make_nested.R
 \name{make_nested}
 \alias{make_nested}
-\title{Create a nested data frame}
+\title{Nest a data frame or survey object by one or more grouping variables}
 \usage{
 make_nested(data, group, na.rm = TRUE, sep = "_")
 }
 \arguments{
-\item{data}{A data frame}
+\item{data}{A data frame or survey design object (\code{survey.design}).}
 
-\item{group}{Columns to nest by; these will remain in the outer data
-frame. If \code{data} is not a grouped data frame, then this must be supplied.
-If supplying multiple must be in a vector. Can be either a string or
-symbol.}
+\item{group}{One or more grouping variables. Can be supplied as bare names
+(unquoted) or a character vector of column names.}
 
-\item{na.rm}{Determines if rows with NA should be kept or dropped. Defaults
-to TRUE.}
+\item{na.rm}{Logical, whether to remove rows with missing values in the
+grouping variables. Defaults to \code{TRUE}.}
 
-\item{sep}{A character string to separate the values. This is the \code{sep}
-argument in \code{paste()}. Check examples to to see it in action.}
+\item{sep}{Character string used to separate levels when composing the
+\code{name} column for each group. Defaults to \code{"_"}.}
+}
+\value{
+A tibble with one row per unique combination of the grouping
+variables. The tibble contains the following columns:
+\itemize{
+\item The grouping variables
+\item \code{data}: a list-column with the subset of data or survey design for each group
+\item \code{name}: a string combining the levels of the grouping variables
+}
 }
 \description{
-This function is very similar to \code{tidyr::nest()}in that it creates a data
-frame where one of the columns is comprised of a list of data frames.
+\code{make_nested()} creates a nested tibble where each row corresponds to a
+unique combination of one or more grouping variables. The resulting tibble
+contains a list-column \code{data} with the subset of the original data for
+that group.
+
+This function has S3 methods for \code{data.frame}, \code{survey.design}, and
+\code{svyrep.design} objects. For more information on how this function
+differs from \code{tidyr::nest()} and how it works for \code{survey.design} and
+\code{svyrep.design} objects, check the details section below.
 }
 \details{
-While similar to \code{tidyr::nest()} there are a few key differences.
+While \code{make_nested()} operates similarly to \code{tidyr::nest()}, there are
+some important differences:
+\itemize{
+\item It is optimized for survey data and preserves weights, strata, and PSU
+information when nesting \code{survey.design} objects and replication
+weights when nesting \code{svyrep.design} objects.
+\item It uses \code{vctrs::vec_split()} for faster grouping.
+\item The output always contains a \code{name} column that concatenates the levels
+of the grouping variables, which is useful for labeling and further
+analysis.
+\item Unlike \code{tidyr::nest()}, you cannot control which columns go into the
+inner list-column; the inner data frames always include all columns
+not used for grouping.
+\item Unlike \code{tidyr::nest()} where \code{.by} supersedes any \code{dplyr::group_by()}
+grouping, \code{make_nested()} combines any existing \code{dplyr::group_by()}
+variables with the supplied \code{group} argument when nesting.
+}
 
-The first is that this function uses the vctrs package under the hood,
-which makes it about twice as fast as \code{tidyr::nest()}.
+When nesting a \code{survey.design} object, each nested group is subsetted and
+converted into a new \code{survey.design} object using \code{srvyr::as_survey_rep}.
+The \code{.data}, \code{ids}, \code{strata}, \code{weights}, \code{fpc}, and \code{nest} arguments are
+specified.
 
-Second, it is more limited in its scope and functionality. Where
-\code{tidyr::nest()} allows you to determine which columns are in the inner
-data frames (the ones in the list column), this function does not.
-Instead, you are only able to specify the variables that remain in the
-outer data frame.
+\strong{Note:} If a nested group contains only one primary sampling unit
+(PSU), \code{svydesign()} cannot compute variance estimates and the function
+will fail for that group. This is most likely to occur with small
+datasets, highly granular grouping variables, or a small number of PSUs
+per stratum. For typical survey datasets with sufficient PSUs, this is
+unlikely to occur.
 
-Third,  this function creates an extra column called "name" that
-concatenates the values from the columns in the outer rows together
-using \code{paste()}.
+When nesting a \code{svyrep.design} object, each nested group is subsetted and
+converted into a new \code{svyrep.design} object using
+\code{srvyr::as_survey_rep()}.
 
-Fourth, unlike in \code{tidyr::nest()} where variables supplied to the \code{.by}
-argument supersede any grouping variables specified through
-\code{dplyr::group_by()}, \code{nest_data()} combines the two to nest the data.
+\strong{Note:} The finite population corrections
+(\code{fpc}) are not carried over when
 }
 \examples{
+# Example with a data frame
+df <- make_basic_df()
+nested_df <- make_nested(df, grp)
 
-library(dplyr)
-# nest by one variable
-make_nested(test_data, pid_f3)
+# Nested by multiple variables
+nested_df2 <- make_nested(df, c(grp, x2))
 
-# nest by multiple variables
-make_nested(test_data, c(pid_f3, edu_f2))
-
-# group data to create nested data frame
-test_data \%>\% 
-  dplyr::group_by(pid_f3, edu_f2) \%>\% 
-  make_nested()
-
-# use group_by and nest_data 
-test_data \%>\% 
-  dplyr::group_by(pid_f3) \%>\% 
-  make_nested(edu_f2)
-
-# use different sep argument
-make_nested(test_data, c(pid_f3, edu_f2), sep = ":")
-  
-
+# Example with a survey.design object
+library(survey)
+design <- svydesign(
+  ids = ~psu,
+  strata = ~strata,
+  weights = ~wts,
+  data = df,
+  fpc = ~fpc_psu
+)
+nested_svy <- make_nested(design, grp)
 
 }

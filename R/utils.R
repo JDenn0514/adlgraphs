@@ -258,6 +258,112 @@ low_var_label <- function(x, data, if_null = NULL) {
 #   group_names
 # }
 
+#' pivot_longer_values main interal helper function
+#'
+#' Takes a data frame, and pivots it long-ways while preserving
+#' label attributes.
+#'
+#' @keywords internal
+pivot_longer_values_core <- function(
+  data,
+  cols,
+  names_to,
+  values_to,
+  name_label,
+  ...
+) {
+  # Capture value labels BEFORE pivot
+  value_labs <- get_common_value_labels(data, cols)
+
+  # Variable labels → names column value labels
+  var_labs <- attr_var_label(data[cols])
+  var_labs <- stats::setNames(names(var_labs), var_labs)
+
+  if (missing(name_label)) {
+    name_label <- attr_question_preface(data[[cols[1]]])
+  }
+
+  # Pivot
+  long_df <- tidyr::pivot_longer(
+    data,
+    cols = tidyselect::all_of(cols),
+    names_to = names_to,
+    values_to = values_to,
+    ...
+  )
+
+  if (!(names_to %in% names(long_df))) {
+    cli::cli_abort("Expected names_to column `{names_to}` not created.")
+  }
+  if (!(values_to %in% names(long_df))) {
+    cli::cli_abort("Expected values_to column `{values_to}` not created.")
+  }
+
+  # Apply names column labels
+  long_df[[names_to]] <- structure(
+    long_df[[names_to]],
+    labels = var_labs,
+    label = name_label
+  )
+
+  # Apply values column labels (only if identical)
+  if (!is.null(value_labs)) {
+    attr(long_df[[values_to]], "labels") <- value_labs
+  }
+
+  long_df
+}
+
+#' @keywords internal
+rebuild_srvyr_design <- function(data, design) {
+  survey_vars <- extract_survey_design(design)
+  do.call(
+    srvyr::as_survey_design,
+    c(list(.data = data), survey_vars)
+  )
+}
+
+#' @keywords internal
+rebuild_srvyr_rep_design <- function(data, design) {
+  rep_vars <- extract_svyrep_design(design)
+  do.call(
+    srvyr::as_survey_rep,
+    c(list(.data = data), rep_vars)
+  )
+}
+
+
+get_common_value_labels <- function(data, cols) {
+  labs <- purrr::map(
+    cols,
+    \(x) attr_val_labels(data[[x]])
+  )
+  if (length(unique(labs)) == 1) {
+    return(labs[[1]])
+  } else {
+    return(NULL)
+  }
+}
+
+assert_nonempty_after_filter <- function(df, vars, context = "data") {
+  vars <- vars[vars %in% names(df)]
+  if (!length(vars)) {
+    return(invisible(TRUE))
+  }
+  keep_rows <- stats::complete.cases(df[, vars, drop = FALSE])
+  if (!any(keep_rows)) {
+    # Compose a readable message with variable names
+    msg <- paste0(
+      "After removing NAs, no rows remain for ",
+      context,
+      ". Variables causing empty result: ",
+      paste(vars, collapse = ", ")
+    )
+    cli::cli_abort(msg)
+  }
+  invisible(TRUE)
+}
+
 # functions from other packages -------------------------------------------
 
 # from dplyr

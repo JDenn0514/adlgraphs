@@ -1,9 +1,9 @@
 .onAttach <- function(...) {
   family <- name <- path <- NULL
 
-  # If font registry already contains roboto core, set use_robotoy == TRUE
-  fonts_present <- systemfonts::registry_fonts() %>%
-    dplyr::filter(family %in% adlgraphs_global$preferred_font) %>%
+  # If font registry already contains roboto core, set use_roboto == TRUE
+  fonts_present <- systemfonts::registry_fonts() |>
+    dplyr::filter(family %in% adlgraphs_global$preferred_font) |>
     nrow() >=
     5
 
@@ -38,22 +38,22 @@
         # register preferred strong font (roboto Semibold), with variants
         systemfonts::register_font(
           name = adlgraphs_global$preferred_font$heavy,
-          plain = find_path("Roboto-Medium", roboto_paths),
-          bold = find_path("Roboto-Black", roboto_paths)
+          plain = find_path("Roboto-600", roboto_paths),
+          bold = find_path("Roboto-900", roboto_paths)
         )
 
         # register preferred regular font (roboto Medium), with variants
         systemfonts::register_font(
           name = adlgraphs_global$preferred_font$regular,
-          plain = find_path("Roboto-Regular", roboto_paths),
-          bold = find_path("Roboto-Black", roboto_paths)
+          plain = find_path("Roboto-regular", roboto_paths),
+          bold = find_path("Roboto-700", roboto_paths)
         )
 
         # register preferred light font (roboto Book), with variants
         systemfonts::register_font(
           name = adlgraphs_global$preferred_font$light,
-          plain = find_path("Roboto-Light", roboto_paths),
-          bold = find_path("Roboto-Bold", roboto_paths)
+          plain = find_path("Roboto-300", roboto_paths),
+          bold = find_path("Roboto-600", roboto_paths)
         )
 
         packageStartupMessage(paste0(

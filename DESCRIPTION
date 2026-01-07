@@ -6,17 +6,17 @@ Authors@R: c(
     person("Jacob", "Dennen", , email = "jdennen@adl.org", role = c("aut", "cre")),
     person("Sarah", "Cueva Egan", , role = "ctb")
     )
-Description: Improve the efficiency and 
-    ease of cleaning, analyzing, and visualizing survey data, so that the 
-    turnaround time between data collection and presentation of analysis and 
-    findings can be minimized. 
+Description: Improve the efficiency and
+    ease of cleaning, analyzing, and visualizing survey data, so that the
+    turnaround time between data collection and presentation of analysis and
+    findings can be minimized.
 License: MIT + file LICENSE
 URL: https://github.com/JDenn0514/adlgraphs,
     https://jdenn0514.github.io/adlgraphs/
 BugReports: https://github.com/JDenn0514/adlgraphs/issues
-Depends: 
+Depends:
     R (>= 4.4)
-Imports: 
+Imports:
     broom.helpers,
     cli,
     data.table,
@@ -51,7 +51,7 @@ Imports:
     withr,
     writexl,
     vctrs
-Suggests: 
+Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
@@ -61,5 +61,5 @@ Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2.9000
+RoxygenNote: 7.3.3
 VignetteBuilder: knitr

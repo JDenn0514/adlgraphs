@@ -46,27 +46,27 @@ new_data <- test_data \%>\% dplyr::select(top:dominate)
 get_all_corr(new_data)
 
 # 2. Using dplyr::select() and pipes
-test_data \%>\% 
-  dplyr::select(c(top:dominate)) \%>\% 
+test_data \%>\%
+  dplyr::select(c(top:dominate)) \%>\%
   get_all_corr()
 
 # 3. Use the `cols` argument
 get_all_corr(test_data, cols = c(top:dominate))
-# or 
+# or
 test_data \%>\% get_all_corr(c(top:dominate))
 
 # To get weighted correlations just specify the `wt` argument
 test_data \%>\% get_all_corr(c(top:dominate), wt = wts)
 
 # You can also calculate grouped correlations. For example, if
-# you were interested in comparing the weighted correlations 
-# among people with a college degree vs those without one, you 
+# you were interested in comparing the weighted correlations
+# among people with a college degree vs those without one, you
 # would do it like this:
-test_data \%>\% 
-  dplyr::group_by(edu_f2) \%>\% 
+test_data \%>\%
+  dplyr::group_by(edu_f2) \%>\%
   get_all_corr(c(top:dominate), wt = wts)
 
-# Another way to calculate grouped correlations is to 
+# Another way to calculate grouped correlations is to
 # specify the group argument inside the function call:
 get_all_corr(test_data, c(top:dominate), edu_f2, wts)
 

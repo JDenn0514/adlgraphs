@@ -49,14 +49,14 @@ test_data \%>\% get_corr(x = top, y = sdo_sum)
 test_data \%>\% get_corr(x = top, y = sdo_sum, wt = wts)
 
 # Now let's get the correlatoin among only people with a bachelor's degree
-test_data \%>\% 
-  filter(edu_f2 == "At Least a Bachelor's Degree") \%>\% 
+test_data \%>\%
+  filter(edu_f2 == "At Least a Bachelor's Degree") \%>\%
   get_corr(x = top, y = sdo_sum, wt = wts)
 
 # Now let's get it for each education level. Two ways of doing this:
 # The first is to group the data ahead of time
-test_data \%>\% 
-  group_by(edu_f) \%>\% 
+test_data \%>\%
+  group_by(edu_f) \%>\%
   get_corr(x = top, y = sdo_sum, wt = wts)
 
 # The second is to use the group argument

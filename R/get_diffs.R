@@ -64,7 +64,7 @@ get_diffs <- function(
   group,
   wt,
   ref_level = NULL,
-  pval_adj = NULL, # NEW ARGUMENT
+  pval_adj = NULL,
   conf_level = 0.95,
   conf_method = c("wald", "profile"),
   show_means = TRUE,
@@ -84,7 +84,7 @@ get_diffs.data.frame <- function(
   group,
   wt,
   ref_level = NULL,
-  pval_adj = NULL, # NEW ARGUMENT
+  pval_adj = NULL,
   conf_level = 0.95,
   conf_method = c("wald", "profile"),
   show_means = TRUE,

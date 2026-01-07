@@ -5,6 +5,8 @@
 \title{Select variables from the group variable}
 \usage{
 select_groups(group, data)
+
+select_groups(group, data)
 }
 \arguments{
 \item{group}{\code{tidy_select} columns to group the data by}
@@ -12,6 +14,8 @@ select_groups(group, data)
 \item{data}{The data set that the columns are from (this to make sure they exist)}
 }
 \description{
+Select variables from the group variable
+
 Select variables from the group variable
 }
 \keyword{internal}
