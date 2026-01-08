@@ -1,8 +1,8 @@
 #' Calculate weighted frequencies
-#' 
+#'
 #' @description
-#' 
-#' `r lifecycle::badge("experimental")`
+#'
+#' `r lifecycle::badge("deprecated")`
 #'
 #' Use this function to calculate simple weighted frequencies.
 #' You can also specify a grouping variable by which you want to calculate the
@@ -18,30 +18,28 @@
 #'   function, this is not required.
 #' @param x Either a character string or symbol. The variable with which want
 #'   to get the frequencies.
-#' @param group <[`tidy-select`][dplyr_tidy_select]> A selection of columns to 
+#' @param group <[`tidy-select`][dplyr_tidy_select]> A selection of columns to
 #'   group the data by in addition to `treats`. This operates very similarly
-#'   to `.by` from dplyr (for more info on that see [?dplyr_by][dplyr_by]). 
+#'   to `.by` from dplyr (for more info on that see [?dplyr_by][dplyr_by]).
 #' @param wt Weights. Add if you have a weighting variable and want to get
 #'   weighted frequencies.
-#' @param drop_zero Logical. Determines if rows with 0 should be removed 
+#' @param drop_zero Logical. Determines if rows with 0 should be removed
 #'   Default is `FALSE`.
 #' @param decimals Number of decimals each number should be rounded to. Default
 #'   is 3.
 #' @param na.rm Logical. Determines if NAs should be kept or removed Default is
 #'   `TRUE`.
-#' 
+#'
 #' @export
 funky_freqs <- function(
-  data, 
-  x, 
-  group, 
-  wt, 
+  data,
+  x,
+  group,
+  wt,
   drop_zero = FALSE,
   decimals = 3,
   na.rm = TRUE
 ) {
-  
-
   # get the object's name
   x_name <- rlang::enexpr(x)
 
@@ -53,7 +51,11 @@ funky_freqs <- function(
 
   # Prepare group variables
   # if the data is grouped, use dplyr::group_vars to get them, else set to NULL
-  group_names <- if(inherits(data, "grouped_df")) dplyr::group_vars(data) else NULL
+  group_names <- if (inherits(data, "grouped_df")) {
+    dplyr::group_vars(data)
+  } else {
+    NULL
+  }
   # if group arg is missing set to NULL, else use as.character(substitute()) to capture it
   group_vars <- if (missing(group)) NULL else select_groups({{ group }}, data)
   # remove the "c" from the group_vars vector if it is there
@@ -65,7 +67,7 @@ funky_freqs <- function(
   # Prepare weights
   if (missing(wt)) {
     wt <- "wts"
-    data[[wt]] <- rep(1, length(data[[x]]))  
+    data[[wt]] <- rep(1, length(data[[x]]))
   } else {
     # ensure that string or symbol are accepted in wt
     wt <- rlang::as_name(rlang::ensym(wt))
@@ -76,19 +78,19 @@ funky_freqs <- function(
         "`{wt}` must be a numeric variable.",
         x = "Supplied variable is {class(data[[wt]])}."
       ))
-
     } else {
       # if it is numeric, replace NAs with 0
       data[[wt]][is.na(data[[wt]])] <- 0
     }
-
   }
   # subset the data with only relevant variables
   # this is so that when we remove NAs we are only doing it over the right variables
   data <- data[c(x, group_names, wt)]
 
   # if na.rm is TRUE remove NAs from all columns in data
-  if (na.rm) data <- data[stats::complete.cases(data),]
+  if (na.rm) {
+    data <- data[stats::complete.cases(data), ]
+  }
 
   # Get the value labels (assumes attr_val_labels function exists)
   value_labels <- attr_val_labels(data[[x]])
@@ -105,45 +107,46 @@ funky_freqs <- function(
   # If the values don't match the labels, don't make into a factor
   if (!all(vals %in% labs)) {
     # convert the group_names to factors before the analysis to preserve NA tags
-    data[,c(group_names)] <- lapply(
-      data[,c(group_names)], 
+    data[, c(group_names)] <- lapply(
+      data[, c(group_names)],
       \(y) make_factor(y, drop_levels = drop_zero, force = TRUE, na.rm = na.rm)
     )
   } else {
     # convert the x and group_names to factors before the analysis to preserve NA tags
-    data[,c(x, group_names)] <- lapply(
-      data[,c(x, group_names)], 
+    data[, c(x, group_names)] <- lapply(
+      data[, c(x, group_names)],
       \(y) make_factor(y, drop_levels = drop_zero, force = TRUE, na.rm = na.rm)
     )
   }
 
   if (!missing(group) && !is.null(group_names)) {
     # if the group arg is not missing, apply grouping based on group_names
-    data <- data %>% 
+    data <- data %>%
       dplyr::group_by(dplyr::across(tidyselect::all_of(group_names)))
-  } 
+  }
 
-  out <- data %>% 
+  out <- data %>%
     # calculate the frequencies
-    dplyr::count(.data[[x]], wt = .data[[wt]], .drop = drop_zero) %>% 
+    dplyr::count(.data[[x]], wt = .data[[wt]], .drop = drop_zero) %>%
     # clean up the data
     dplyr::mutate(
       # use prop.table() to calculate percentage and round()
-      # add 2 to decimals so that when converted to percentage 
+      # add 2 to decimals so that when converted to percentage
       # it has the correct number of decimals
       pct = round(prop.table(n), decimals + 2),
       # round the n to the number of decimals
       n = round(n, decimals)
-    ) 
-  
+    )
+
   if (!is.null(group_names)) {
     # if there are groups add the value labels
 
     # get the variable labels as a named list
-    group_labels <- attr_var_label(data[,group_names])
+    group_labels <- attr_var_label(data[, group_names])
     # for each value in names(group_labels) add the variable label from group_labels
-    for (y in names(group_labels)) attr(out[[y]], "label") <- group_labels[[y]]
-
+    for (y in names(group_labels)) {
+      attr(out[[y]], "label") <- group_labels[[y]]
+    }
   }
 
   if (!is.null(x_label)) {
@@ -151,13 +154,12 @@ funky_freqs <- function(
 
     # add the variable label to x
     attr(out[[x]], "label") <- x_label
-    # add the variable label of x as an attribute called 
+    # add the variable label of x as an attribute called
     # variable_label to the output dataframe
     attr(out, "variable_label") <- x_label
     # add the variable name of x as an attribute called
     # variable_name to the output dataframe
     attr(out, "variable_name") <- x_name
-
   } else {
     # if x does not have a variable label
 
@@ -165,9 +167,8 @@ funky_freqs <- function(
     # variable_label to the output dataframe
     attr(out, "variable_label") <- x_name
     # add the variable name of x as an attribute called
-    # variable_name to the output dataframe    
+    # variable_name to the output dataframe
     attr(out, "variable_name") <- x_name
-
   }
 
   # add an attribute containing the names of the grouping variables
@@ -189,5 +190,4 @@ funky_freqs <- function(
   attr(out, "class") <- c("adlgraphs_freqs", class_names)
 
   out
-  
 }

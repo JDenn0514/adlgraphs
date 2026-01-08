@@ -1,8 +1,8 @@
 #' Calculate weighted standard deviation
 #'
-#' While this is mainly an
-#' internal function, it is available for everyone since I could not find
-#' a function that calculates a weighted standard deviation.
+#' While this is mainly an internal function, it is available for everyone
+#' since I could not find a function that calculates a weighted standard
+#' deviation.
 #'
 #' Thank you to the team at Hmisc for the creation of [Hmisc::wtd.var()].
 #' This function could not have been created without it. I simplified their

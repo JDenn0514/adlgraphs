@@ -142,31 +142,33 @@ the design. Grouping is honored inside low-level survey computations.
 }
 
 \examples{
+
 # here's a basic unweighted frequency for satisfaction_service
-get_freqs(df, x = satisfaction_service)
+get_freqs(basic_df, x = satisfaction_service)
 
 # now check it with weights
-get_freqs(df, x = satisfaction_service, wt = wts)
+get_freqs(basic_df, x = satisfaction_service, wt = wts)
 
 # now check grouped
-get_freqs(df, x = satisfaction_service, group = grp, wt = wts)
+get_freqs(basic_df, x = satisfaction_service, group = grp, wt = wts)
 
 # groups can also be added by using `group_by()` ahead of time
-df |>
-  dplyr::group_by() |>
-  get_freqs(df, x = satisfaction_service, wt = wts)
+basic_df |>
+  dplyr::group_by(grp) |>
+  get_freqs(x = satisfaction_service, wt = wts)
 
 # Now check with multiple x variables
 get_freqs(
-  df,
+  basic_df,
   x = c("x1", "x2"),
   wt = wts,
+  keep = "Yes",
   na.rm = TRUE
 )
 
 # rename the outputs
 get_freqs(
-  df,
+  basic_df,
   x = c("x1", "x2"),
   wt = wts,
   names_to = "item",
@@ -176,44 +178,45 @@ get_freqs(
 
 # now check multiple x variables with a grouping variable
 get_freqs(
-  df,
+  basic_df,
   x = c("x1", "x2"),
   group = "grp",
   wt = wts,
   na.rm = TRUE
 )
 
+
 # ---- keep examples (multi-variable, data frame) ----
 
 # 1) keep as a character vector: retain only "yes" responses across items
 get_freqs(
-  df,
+  basic_df,
   x = c("x1", "x2"),
   wt = wts,
-  keep = c("yes"),
+  keep = c("Yes"),
   na.rm = TRUE
 )
 
 # Survey design  ------------
 \dontshow{if (requireNamespace("srvyr", quietly = TRUE)) withAutoprint(\{ # examplesIf}
-df_svy <- srvyr::as_survey_design(
+basic_df_svy <- srvyr::as_survey_design(
    ids = id,
    strata = strata,
    weights = "wts",
-   .data = _
+   .data = basic_df
  )
 
 # basic example
-get_freqs(df_svy, x = satisfaction_service)
+get_freqs(basic_df_svy, x = satisfaction_service)
 
 # multi-variable example
-get_freqs(df_svy, c(x1, x2))
+get_freqs(basic_df_svy, c(x1, x2))
 
 # grouped example
-get_freqs(df_svy, satisfaction_service, grp)
+get_freqs(basic_df_svy, satisfaction_service, grp)
 
 # grouped example with multi-variable
-get_freqs(df_svy, c(x1, x2), grp)
+get_freqs(basic_df_svy, c(x1, x2), grp)
 
 \dontshow{\}) # examplesIf}
 }

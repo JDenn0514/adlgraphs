@@ -78,7 +78,7 @@ converted into a new \code{svyrep.design} object using
 }
 \examples{
 # Example with a data frame
-df <- make_basic_df()
+df <- basic_df
 nested_df <- make_nested(df, grp)
 
 # Nested by multiple variables
