@@ -107,7 +107,7 @@ means.
 ## Examples
 
 ``` r
-# load dply for the pipe: %>% 
+# load dply for the pipe: %>%
 library(dplyr)
 library(adlgraphs)
 
@@ -122,21 +122,13 @@ dunnett(test_data, "acts_avg", "pid_f3")
 #> 2 Republican  0.175    95   -0.066     0.417   0.191 ""   
 # now let's do the same but have it show the means
 dunnett(test_data, "acts_avg", "pid_f3", show_means = TRUE)
-#> # A tibble: 3 × 9
-#>   pid_f3       mean  diff    sd     n conf.low conf.high p.value stars
-#> * <fct>       <dbl> <dbl> <dbl> <dbl>    <dbl>     <dbl>   <dbl> <chr>
-#> 1 Democrat     2.63 0     0.745    98     2.48      2.78  NA      NA  
-#> 2 Independent  2.90 0.262 0.807    57     2.68      3.11   0.07  "."  
-#> 3 Republican   2.81 0.175 0.711    95     2.66      2.95   0.191 ""   
+#> Warning: Unknown or uninitialised column: `conf.low`.
+#> Error in attr(out$conf.low, "label") <- "Low CI": attempt to set an attribute on NULL
 
 # now do the same as above but make "Independent" the control group
 dunnett(test_data, "acts_avg", "pid_f3", control = "Independent", show_means = TRUE)
-#> # A tibble: 3 × 9
-#>   pid_f3       mean   diff    sd     n conf.low conf.high p.value stars
-#> * <fct>       <dbl>  <dbl> <dbl> <dbl>    <dbl>     <dbl>   <dbl> <chr>
-#> 1 Democrat     2.63  0     0.745    98     2.48      2.78  NA      NA  
-#> 2 Independent  2.90 -0.262 0.807    57     2.68      3.11   0.065 "."  
-#> 3 Republican   2.81 -0.087 0.711    95     2.66      2.95   0.694 ""   
+#> Warning: Unknown or uninitialised column: `conf.low`.
+#> Error in attr(out$conf.low, "label") <- "Low CI": attempt to set an attribute on NULL
 
 # now let's add in education (`edu_f2`) as the `group` variable. This let's us
 # compare education levels within each level of `edu_f2`. Note how the arguments
@@ -150,10 +142,10 @@ dunnett(test_data, acts_avg, pid_f3, edu_f2)
 #> 3 At Least a Bachelor's Deg… Indep… 0.316    17   -0.177     0.809   0.268 ""   
 #> 4 At Least a Bachelor's Deg… Repub… 0.2      45   -0.165     0.564   0.376 ""   
 
-# we can also group by multiple variables. Due to a small n, I'm going to use 
-# `edu_f2` instead of `edu_f`. 
-test_data %>% 
-  dplyr::mutate(values_f2 = make_dicho(values)) %>% 
+# we can also group by multiple variables. Due to a small n, I'm going to use
+# `edu_f2` instead of `edu_f`.
+test_data %>%
+  dplyr::mutate(values_f2 = make_dicho(values)) %>%
   dunnett(acts_avg, treats = pid_f3, group = c(edu_f2, values_f2))
 #> # A tibble: 8 × 9
 #> # Groups:   edu_f2, values_f2 [4]
@@ -169,8 +161,8 @@ test_data %>%
 #> 8 At Least a Bac… False     Repub…  0.586    17    0.133     1.04    0.01  "**" 
 
 # now let's do those previous two calculations but using `dplyr::group_by()`
-test_data %>% 
-  dplyr::group_by(pid_f3) %>% 
+test_data %>%
+  dplyr::group_by(pid_f3) %>%
   dunnett(acts_avg, edu_f)
 #> # A tibble: 9 × 8
 #>   pid_f3      edu_f               diff     n conf.low conf.high p.value stars
@@ -183,12 +175,12 @@ test_data %>%
 #> 6 Democrat    Graduate Degree   -0.379    18   -0.954     0.196   0.269 ""   
 #> 7 Republican  Some College      -0.074    32   -0.57      0.423   0.967 ""   
 #> 8 Republican  Bachelor's Degree -0.204    28   -0.714     0.305   0.639 ""   
-#> 9 Republican  Graduate Degree   -0.443    17   -1.01      0.127   0.16  ""   
+#> 9 Republican  Graduate Degree   -0.443    17   -1.01      0.127   0.159 ""   
 
 # we can also group by multiple
-test_data %>% 
-  dplyr::mutate(values_f2 = make_dicho(values)) %>% 
-  dplyr::group_by(pid_f3, values_f2) %>% 
+test_data %>%
+  dplyr::mutate(values_f2 = make_dicho(values)) %>%
+  dplyr::group_by(pid_f3, values_f2) %>%
   dunnett(acts_avg, edu_f2)
 #> # A tibble: 6 × 9
 #> # Groups:   pid_f3, values_f2 [6]
@@ -204,22 +196,12 @@ test_data %>%
 # If we want to show means and differences, set show_means to TRUE
 # we don't need to set show_diffs to TRUE since that is the default
 dunnett(test_data, acts_avg, edu_f, show_means = TRUE)
-#> # A tibble: 4 × 9
-#>   edu_f                mean   diff    sd     n conf.low conf.high p.value stars
-#> * <fct>               <dbl>  <dbl> <dbl> <dbl>    <dbl>     <dbl>   <dbl> <chr>
-#> 1 High School or Less  2.93  0     0.697    64     2.76      3.10  NA      NA  
-#> 2 Some College         2.82 -0.106 0.742    78     2.66      2.99   0.738 ""   
-#> 3 Bachelor's Degree    2.68 -0.25  0.789    68     2.49      2.87   0.14  ""   
-#> 4 Graduate Degree      2.49 -0.436 0.719    40     2.26      2.72   0.012 "*"  
+#> Warning: Unknown or uninitialised column: `conf.low`.
+#> Error in attr(out$conf.low, "label") <- "Low CI": attempt to set an attribute on NULL
 
 # if we want to show means without differences, set `show_diffs = FALSE`
 dunnett(test_data, acts_avg, edu_f, show_means = TRUE, show_diffs = FALSE)
-#> # A tibble: 4 × 8
-#>   edu_f                mean    sd     n conf.low conf.high p.value stars
-#> * <fct>               <dbl> <dbl> <dbl>    <dbl>     <dbl>   <dbl> <chr>
-#> 1 High School or Less  2.93 0.697    64     2.76      3.10  NA      NA  
-#> 2 Some College         2.82 0.742    78     2.66      2.99   0.738 ""   
-#> 3 Bachelor's Degree    2.68 0.789    68     2.49      2.87   0.14  ""   
-#> 4 Graduate Degree      2.49 0.719    40     2.26      2.72   0.011 "*"  
+#> Warning: Unknown or uninitialised column: `conf.low`.
+#> Error in attr(out$conf.low, "label") <- "Low CI": attempt to set an attribute on NULL
 
 ```

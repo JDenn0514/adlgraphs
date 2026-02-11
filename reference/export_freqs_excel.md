@@ -143,7 +143,7 @@ To create multiple sheets in the same Excel file:
 
 ## See also
 
-[`get_freqs`](https://jdenn0514.github.io/adlgraphs/reference/get_freqs.md)
+[`get_freqs()`](https://jdenn0514.github.io/adlgraphs/reference/get_freqs.md)
 for the underlying frequency calculation function
 
 ## Examples
@@ -151,7 +151,7 @@ for the underlying frequency calculation function
 ``` r
 if (FALSE) { # \dontrun{
 # Basic frequency table
-export_freqs_excel(survey_data, 
+export_freqs_excel(survey_data,
                    cols = c(political_party, ideology),
                    file_name = "frequencies.xlsx")
 

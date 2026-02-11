@@ -22,13 +22,15 @@ get_diffs(
   data,
   x,
   treats,
-  group = NULL,
-  wt = NULL,
-  ref_level,
-  show_means = FALSE,
+  group,
+  wt,
+  ref_level = NULL,
+  pval_adj = NULL,
+  conf_level = 0.95,
+  conf_method = c("wald", "profile"),
+  show_means = TRUE,
   show_pct_change = FALSE,
   decimals = 3,
-  conf.level = 0.95,
   na.rm = TRUE
 )
 ```
@@ -69,6 +71,28 @@ get_diffs(
   A string that specifies the level of the reference group through which
   the others will be tested.
 
+- pval_adj:
+
+  Method for adjusting p-values for multiple comparisons. Passed
+  directly to
+  [`stats::p.adjust`](https://rdrr.io/r/stats/p.adjust.html). Options
+  include "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr",
+  "none". Default is `NULL` (no adjustment).
+
+- conf_level:
+
+  A number between 0 and 1 that signifies the width of the desired
+  confidence interval. Default is 0.95, which corresponds to a 95%
+  confidence interval.
+
+- conf_method:
+
+  Determines whether the confidence intervals are calculated using the
+  profile likelihood or the Wald method. Obviously has two options,
+  "profile" and "wald". Wald is between 3 to 25 times as fast but not as
+  reliable for small sample sizes (n \< 50). For larger sample sizes, (n
+  \> 100), they will be very similar. **The default is Wald.**
+
 - show_means:
 
   Logical. Default is `FALSE` which does not show the mean values for
@@ -85,12 +109,6 @@ get_diffs(
 
   Number of decimals each number should be rounded to. Default is 3.
 
-- conf.level:
-
-  A number between 0 and 1 that signifies the width of the desired
-  confidence interval. Default is 0.95, which corresponds to a 95%
-  confidence interval.
-
 - na.rm:
 
   Logical. Default is `TRUE` which removes NAs prior to calculation.
@@ -102,47 +120,3 @@ class `"grouped_df"`. If data is of class `"grouped_df"` or `group` is
 provided, it will return one row for each unique observation if one
 group is provides and one row per unique combination of observations if
 multiple groups are used.
-
-## Examples
-
-``` r
-# load dplyr for the pipe: %>% 
-library(dplyr)
-library(adlgraphs)
-
-# Check to see if any of the partisan groups are significantly different
-# from the control group (in this case "Democrat") for conspiracy
-# theory belief
-get_diffs(test_data, "acts_avg", "pid_f3")
-#> Error in UseMethod("get_diffs"): no applicable method for 'get_diffs' applied to an object of class "c('tbl_df', 'tbl', 'data.frame')"
-
-# now do the same as above but make "Independent" the control group
-get_diffs(test_data, "acts_avg", "pid_f3", ref_level = "Independent")
-#> Error in UseMethod("get_diffs"): no applicable method for 'get_diffs' applied to an object of class "c('tbl_df', 'tbl', 'data.frame')"
-
-# now let's add in education (`edu_f2`) as the `group` variable. This let's us
-# compare education levels within each level of `edu_f2`. Note how the arguments
-# don't have to be strings
-get_diffs(test_data, acts_avg, pid_f3, edu_f2)
-#> Error in UseMethod("get_diffs"): no applicable method for 'get_diffs' applied to an object of class "c('tbl_df', 'tbl', 'data.frame')"
-
-# we can also group by multiple variables. Due to a small n, I'm going to use 
-# `edu_f2` instead of `edu_f`. 
-test_data %>% 
-  dplyr::mutate(values_f2 = make_dicho(values)) %>% 
-  get_diffs(acts_avg, treats = pid_f3, group = c(edu_f2, values_f2))
-#> Error in UseMethod("get_diffs"): no applicable method for 'get_diffs' applied to an object of class "c('tbl_df', 'tbl', 'data.frame')"
-
-# now let's do those previous two calculations but using `dplyr::group_by()`
-test_data %>% 
-  dplyr::group_by(pid_f3) %>% 
-  get_diffs(acts_avg, edu_f)
-#> Error in UseMethod("get_diffs"): no applicable method for 'get_diffs' applied to an object of class "c('grouped_df', 'tbl_df', 'tbl', 'data.frame')"
-
-# we can also group by multiple variables
-test_data %>% 
-  dplyr::mutate(values_f2 = make_dicho(values)) %>% 
-  dplyr::group_by(pid_f3, values_f2) %>% 
-  get_diffs(acts_avg, edu_f2)
-#> Error in UseMethod("get_diffs"): no applicable method for 'get_diffs' applied to an object of class "c('grouped_df', 'tbl_df', 'tbl', 'data.frame')"
-```

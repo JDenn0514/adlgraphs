@@ -105,7 +105,7 @@ library(dplyr)
 library(psych)
 
 # first lets get our data set
-data <- test_data %>% 
+data <- test_data %>%
   select(top:run)
 
 # now create the fa object
@@ -142,11 +142,11 @@ get_loadings(model, data)
 #> 9 harder     NA           0.069      0.931
 
 # we can do all of this in one step with pipes
-test_data %>% 
+test_data %>%
   # select only the variables we want in the factor analysis
-  select(top:run) %>% 
+  select(top:run) %>%
   # run the factor analysis
-  fa(., nfactors = 1, fm = "pa", rotate = "oblimin") %>% 
+  fa(., nfactors = 1, fm = "pa", rotate = "oblimin") %>%
   # get the loadings
   get_loadings()
 #> # A tibble: 9 × 4
@@ -163,11 +163,11 @@ test_data %>%
 #> 9 harder     NA           0.069      0.931
 
 # Now let's remove the threshold for the loadings and include labels
-test_data %>% 
+test_data %>%
   # select only the variables we want in the factor analysis
-  select(top:run) %>% 
+  select(top:run) %>%
   # run the factor analysis
-  fa(., nfactors = 1, fm = "pa", rotate = "oblimin") %>% 
+  fa(., nfactors = 1, fm = "pa", rotate = "oblimin") %>%
   # specify threshold is 0
   get_loadings(threshold = 0, labels = data)
 #> # A tibble: 9 × 5
@@ -184,9 +184,9 @@ test_data %>%
 #> 9 deserving  "Groups at the bottom are just as de… -0.033       0.001      0.999
 
 # alternatively, we could skip the fa step entirely like so
-test_data %>% 
+test_data %>%
   # select only the variables we want in the factor analysis
-  select(top:run) %>% 
+  select(top:run) %>%
   # specify number of factors, rotation, and factor method
   get_loadings()
 #> # A tibble: 9 × 5
@@ -203,11 +203,11 @@ test_data %>%
 #> 9 harder     "I have a harder time succeeding tha… NA           0.069      0.931
 
 # we can also specify the number of factors, rotation, and factoring method
-test_data %>% 
+test_data %>%
   # select only the variables we want in the factor analysis
-  select(top:run) %>% 
+  select(top:run) %>%
   # specify number of factors, rotation, factor method, and threshold
-  get_loadings(nfactors = 2, rotate = "varimax", fm = "minres", threshold = 0.2) 
+  get_loadings(nfactors = 2, rotate = "varimax", fm = "minres", threshold = 0.2)
 #> # A tibble: 9 × 6
 #>   variables  labels                            MR1    MR2 communality uniqueness
 #>   <chr>      <chr>                           <dbl>  <dbl>       <dbl>      <dbl>
@@ -222,13 +222,13 @@ test_data %>%
 #> 9 deserving  "Groups at the bottom are jus… NA     -0.429       0.187      0.813
 
 # we can also calculate the factor loadings by a grouping variable
-test_data %>% 
+test_data %>%
   # select the grouping variable and the variables to be used in factor analysis
-  select(edu_f2, top:run) %>% 
+  select(edu_f2, top:run) %>%
   # group the data
-  group_by(edu_f2) %>% 
+  group_by(edu_f2) %>%
   # specify number of factors, and the threshold
-  get_loadings(nfactors = 2, threshold = 0.2) 
+  get_loadings(nfactors = 2, threshold = 0.2)
 #> Loading required namespace: GPArotation
 #> # A tibble: 18 × 7
 #>    edu_f2                  variables labels    PA1    PA2 communality uniqueness
@@ -252,22 +252,22 @@ test_data %>%
 #> 17 At Least a Bachelor's … top       "An i… NA      0.557       0.367      0.633
 #> 18 At Least a Bachelor's … harder    "I ha… NA     NA           0.022      0.978
 
-# let's repeat the previous analysis, but use internal arguments to select the 
+# let's repeat the previous analysis, but use internal arguments to select the
 # columns to include in the factor analysis and the grouping variables
-test_data %>% 
+test_data %>%
   # group indicates we want to run the factor analysis across each level in edu_f2
   # nfactors specifies we want two factors
   # threshold sets the cut off for the loadings
   get_loadings(
     # specify the variables to include in the factor analysis
-    cols = c(top:run), 
+    cols = c(top:run),
     # specify the group variable, run separate factor analyses for each level
-    group = edu_f2, 
+    group = edu_f2,
     # specify two factors
-    nfactors = 2, 
+    nfactors = 2,
     # specify the loadings are cut off at |0.2|
     threshold = 0.2
-  ) 
+  )
 #> # A tibble: 18 × 7
 #>    edu_f2                  variables labels    PA1    PA2 communality uniqueness
 #>    <chr>                   <chr>     <chr>   <dbl>  <dbl>       <dbl>      <dbl>

@@ -72,7 +72,7 @@ or
   : Make binary variables
 
 - [`make_nested()`](https://jdenn0514.github.io/adlgraphs/reference/make_nested.md)
-  : Create a nested data frame
+  : Nest a data frame or survey object by one or more grouping variables
 
 - [`num_rev()`](https://jdenn0514.github.io/adlgraphs/reference/num_rev.md)
   : Reverse a numeric function
@@ -98,7 +98,7 @@ These are miscellaneous functions created to help with data analysis.
 - [`get_coefficients()`](https://jdenn0514.github.io/adlgraphs/reference/get_coefficients.md)
   : Create a tidied tibble of regression results
 - [`get_means()`](https://jdenn0514.github.io/adlgraphs/reference/get_means.md)
-  : Calculate means with confidence intervals
+  : Compute survey means with CIs, SD, and N for grouped complex designs
 - [`get_diffs()`](https://jdenn0514.github.io/adlgraphs/reference/get_diffs.md)
   : Calculate difference in means
 - [`get_freqs()`](https://jdenn0514.github.io/adlgraphs/reference/get_freqs.md)
@@ -110,6 +110,8 @@ These are miscellaneous functions created to help with data analysis.
   : Export frequencies for a set of variables to a word doc.
 - [`export_freqs_excel()`](https://jdenn0514.github.io/adlgraphs/reference/export_freqs_excel.md)
   : Export Frequency Tables to Excel with Professional Formatting
+- [`export_treatment_effects()`](https://jdenn0514.github.io/adlgraphs/reference/export_treatment_effects.md)
+  : Export Treatment Effects to Excel
 - [`get_corr()`](https://jdenn0514.github.io/adlgraphs/reference/get_corr.md)
   : Calculate weighted correlations
 - [`get_all_corr()`](https://jdenn0514.github.io/adlgraphs/reference/get_all_corr.md)
@@ -177,8 +179,6 @@ These are miscellaneous functions to help automate some data cleaning
   : Create a data codebook
 - [`dunnett_helper()`](https://jdenn0514.github.io/adlgraphs/reference/dunnett_helper.md)
   : Perform Dunnett's test (mostly internal function)
-- [`funky_freqs()`](https://jdenn0514.github.io/adlgraphs/reference/funky_freqs.md)
-  **\[experimental\]** : Calculate weighted frequencies
 - [`stars_pval()`](https://jdenn0514.github.io/adlgraphs/reference/stars_pval.md)
   : Add stars based on the p-value
 - [`write_word_table()`](https://jdenn0514.github.io/adlgraphs/reference/write_word_table.md)
@@ -190,6 +190,8 @@ These are miscellaneous functions to help automate some data cleaning
 
 - [`test_data`](https://jdenn0514.github.io/adlgraphs/reference/test_data.md)
   : dataset_title,
+- [`basic_df`](https://jdenn0514.github.io/adlgraphs/reference/basic_df.md)
+  : Example Survey Data
 
 ## Deprecated fuctions
 
@@ -199,3 +201,5 @@ These are miscellaneous functions to help automate some data cleaning
   **\[deprecated\]** : Get the bots or duplicates from a data frame
 - [`export_bot_dupe()`](https://jdenn0514.github.io/adlgraphs/reference/export_bot_dupe.md)
   **\[superseded\]** : Export data frame with only bots and duplicates
+- [`funky_freqs()`](https://jdenn0514.github.io/adlgraphs/reference/funky_freqs.md)
+  **\[deprecated\]** : Calculate weighted frequencies

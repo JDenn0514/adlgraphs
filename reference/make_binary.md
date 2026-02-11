@@ -69,7 +69,7 @@ df <- tibble::tribble(
   1, 1, 4,
   5, 4, 3,
   6, 5, 6
-) 
+)
 
 labs <- c(
   "Strongly agree" = 1,

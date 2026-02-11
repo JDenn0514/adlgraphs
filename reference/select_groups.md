@@ -2,9 +2,13 @@
 
 Select variables from the group variable
 
+Select variables from the group variable
+
 ## Usage
 
 ``` r
+select_groups(group, data)
+
 select_groups(group, data)
 ```
 

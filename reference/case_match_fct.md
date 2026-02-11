@@ -105,6 +105,11 @@ starwars %>%
     )
   ) %>%
   dplyr::count(new_species)
+#> Warning: There was 1 warning in `dplyr::mutate()`.
+#> ℹ In argument: `new_species = dplyr::case_match(...)`.
+#> Caused by warning:
+#> ! `case_match()` was deprecated in dplyr 1.2.0.
+#> ℹ Please use `recode_values()` instead.
 #> # A tibble: 4 × 2
 #>   new_species     n
 #>   <chr>       <int>

@@ -13,7 +13,7 @@ specified, then it will return the same output as wtd_corr()."><meta property="o
 
     <a class="navbar-brand me-2" href="../index.html">adlgraphs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,7 +25,6 @@ specified, then it will return the same output as wtd_corr()."><meta property="o
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/data_transformations.html">Data Transformations</a></li>
-    <li><a class="dropdown-item" href="../articles/how_to_use_adl_bar_plot.html">Making bar plots</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/JDenn0514/adlgraphs/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -114,8 +113,8 @@ and one row per unique combination of observations if multiple groups are used.<
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> top<span style="color: #949494;"> [An ideal s…</span> sdo…<span style="color: #949494;"> [Soc…</span>      -<span style="color: #BB0000;">0.721</span>   250   -<span style="color: #BB0000;">0.808</span>    -<span style="color: #BB0000;">0.634</span>       0 ***  </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Now let's get the correlatoin among only people with a bachelor's degree</span></span></span>
-<span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">edu_f2</span> <span class="op">==</span> <span class="st">"At Least a Bachelor's Degree"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">edu_f2</span> <span class="op">==</span> <span class="st">"At Least a Bachelor's Degree"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu">get_corr</span><span class="op">(</span>x <span class="op">=</span> <span class="va">top</span>, y <span class="op">=</span> <span class="va">sdo_sum</span>, wt <span class="op">=</span> <span class="va">wts</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 8</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   x                y          correlation     n conf.low conf.high p_value stars</span>
@@ -124,8 +123,8 @@ and one row per unique combination of observations if multiple groups are used.<
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Now let's get it for each education level. Two ways of doing this:</span></span></span>
 <span class="r-in"><span><span class="co"># The first is to group the data ahead of time</span></span></span>
-<span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">edu_f</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">edu_f</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu">get_corr</span><span class="op">(</span>x <span class="op">=</span> <span class="va">top</span>, y <span class="op">=</span> <span class="va">sdo_sum</span>, wt <span class="op">=</span> <span class="va">wts</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 9</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   edu_f  x         y          correlation     n conf.low conf.high p_value stars</span>

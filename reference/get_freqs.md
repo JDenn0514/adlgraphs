@@ -5,7 +5,8 @@ It supports:
 
 - Plain data frames with an optional weight column
 
-- `survey.design` objects (from the survey/srvyr ecosystem)
+- `survey.design` and `svyrep.design` objects (from the survey/srvyr
+  ecosystem)
 
 - Single-variable or multi-variable inputs
 
@@ -24,14 +25,14 @@ pivoted to long format using `names_to` and `values_to`.
 get_freqs(
   data,
   x,
-  group,
-  wt,
-  names_to = "names",
-  values_to = "values",
-  name_label,
-  keep,
+  group = NULL,
+  wt = NULL,
+  names_to = "name",
+  values_to = "value",
+  name_label = NULL,
+  keep = NULL,
   drop_zero = FALSE,
-  decimals = 3,
+  decimals = 1,
   na.rm = TRUE
 )
 ```
@@ -40,44 +41,61 @@ get_freqs(
 
 - data:
 
-  A data frame/tibble or a `survey.design` object.
+  A data frame/tibble, `survey.design`, or `svyrep.design` object.
 
 - x:
 
-  Columns selecting one or more variables to tabulate. You can pass:
+  \<[`tidy-select`](https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html)\>
+  Columns selecting one or more variables. You can pass:
 
   - A bare column name (e.g., `x = q1`)
 
-  - A tidyselect expression (e.g., `x = dplyr::starts_with("q")`)
+  - A tidyselect expression (e.g., `x = tidyselect::starts_with("q")`)
 
-  - For programmatic selection, use `tidyselect::all_of(c("q1", "q2"))`.
+  - A vector of strings or symbols `c("q1", "q2")` or `c(q1, q2)`.
+
+  - An object containing a vector `tidyselect::all_of(variables)`.
 
 - group:
 
-  Optional columns to group by. Accepts a tidyselect expression. If
-  `data` is already a `grouped_df`, those groups are honored in addition
-  to `group`.
+  \<[`tidy-select`](https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html)\>
+  A selection of columns to group the data. This operates very similarly
+  to `.by` from dplyr (for more info on that see
+  [?dplyr_by](https://dplyr.tidyverse.org/reference/dplyr_by.html)). It
+  can also be a character vector. If using an external character vector
+  it must be wrapped in curly brackets (`{{}}`).
+
+  In addition, grouped data can be piped in via
+  [`dplyr::group_by()`](https://dplyr.tidyverse.org/reference/group_by.html)
+  or
+  [`srvyr::group_by()`](https://dplyr.tidyverse.org/reference/group_by.html).
+  If data is a `grouped_df` and `group` is provided,
+  [`get_means()`](https://jdenn0514.github.io/adlgraphs/reference/get_means.md)
+  will combine the variable(s) used in either `group_by` function and
+  the variable(s) supplied in `group` to calculate frequencies.
 
 - wt:
 
-  Optional weight column (numeric). Ignored for `survey.design` inputs,
-  where weights come from the design. If omitted for data frames, unit
-  weights are added internally.
+  Optional weight column (numeric). Ignored for `survey.design` or
+  `svyrep.design` inputs, where weights come from the design. If omitted
+  for data frames, will output unweighted frequencies.
 
 - names_to:
 
-  Character scalar used only when `x` selects multiple variables; names
-  the “item” column in the long output. Default is `"names"`.
+  A string specifying the name of the column to create to hold the
+  variable names (or labels) when `x` selects multiple variables.
+  Default is `"name"`.
 
 - values_to:
 
-  Character scalar used only when `x` selects multiple variables; names
-  the response column in the long output. Default is `"values"`.
+  A string specifying the name of the column to create to hold the
+  responses when `x` selects multiple variables. Default is `"value"`.
 
 - name_label:
 
   Optional label to attach to the `names_to` column in multi-variable
-  outputs (e.g., a question preface).
+  outputs (e.g., a question preface). If missing, will check the data
+  for a `question_preface` attribute.
 
 - keep:
 
@@ -94,30 +112,21 @@ get_freqs(
 
 - drop_zero:
 
-  Logical; whether to drop zero-count rows from the output.
-
-  - Default path (data.frame): combined with
-    `dplyr::count(.drop = drop_zero)` to control inclusion of zero
-    levels.
-
-  - Survey path (`survey.design`):
-
-    - Single-variable: zero-count response levels can be included when
-      `drop_zero = FALSE`.
-
-    - Multi-variable: zero-count levels are not materialized at this
-      time; see “Limitations”.
+  Logical; whether to drop zero-count rows from the output. If `FALSE`,
+  zero-count levels will be included by using
+  [`tidyr::complete()`](https://tidyr.tidyverse.org/reference/complete.html).
+  Default is `FALSE`.
 
 - decimals:
 
-  Integer number of decimal places for rounding counts (`n`). Percent
-  (`pct`) is rounded to `decimals + 2`.
+  Number of decimal places for rounding counts (`n`). Percent (`pct`) is
+  rounded to `decimals + 2` so that it contains the right number of
+  decimals when multiplying by 100.
 
 - na.rm:
 
   Logical; whether to remove rows with missing values in `x` and `group`
-  before computing frequencies. If removing NAs would leave zero rows,
-  an informative error is raised.
+  before computing frequencies. Default is `TRUE`.
 
 ## Value
 
@@ -162,7 +171,8 @@ of the result tibble.
 ## Methods
 
 - `get_freqs.default()`: Operates on data frames/tibbles. If `wt` is
-  omitted, unit weights are used. Uses
+  omitted, simple unweighted frequencies are reported. Calculation is
+  from
   [`dplyr::count()`](https://dplyr.tidyverse.org/reference/count.html)
   with `.drop = drop_zero`; zero-count levels can be included when
   `drop_zero = FALSE` and the variables are factors with unused levels.
@@ -171,27 +181,7 @@ of the result tibble.
   Weights are taken from the design. Grouping is honored inside
   low-level survey computations.
 
-## Limitations (survey.design with multiple variables)
-
-For multi-variable `survey.design` inputs (`x` selects multiple
-variables), zero-count response levels are not currently expanded.
-Results include only observed levels per item, regardless of
-`drop_zero`. This differs from the default (non-survey) path. For
-single-variable `survey.design` inputs, zero-count levels can be
-included when `drop_zero = FALSE`.
-
-## Errors and edge cases
-
-- If `x` selects no columns, an error is raised.
-
-- If `na.rm = TRUE` and removing NAs would leave zero rows for the
-  selected `x`/`group` variables, an error is raised.
-
-- If `wt` is provided (default path) but the column does not exist or is
-  non-numeric, an error is raised.
-
-- Survey path includes checks for required variables and emptiness after
-  NA removal.
+- `get_freqs.svyrep.design()`: Operates on `svyrep.design` objects.
 
 ## See also
 
@@ -204,179 +194,209 @@ included when `drop_zero = FALSE`.
 ## Examples
 
 ``` r
-# Basic example (data frame)
-df <- tibble::tibble(
-  grp = rep(c("A", "B"), each = 4),
-  q1  = c("yes", "no", "yes", NA, "no", "no", "yes", "no"),
-  wts = c(1, 2, 1, 1, 1, 3, 1, 2)
+# here's a basic unweighted frequency for satisfaction_service
+get_freqs(basic_df, x = satisfaction_service)
+#> # A tibble: 5 × 3
+#>   satisfaction_service     n   pct
+#>   <fct>                <dbl> <dbl>
+#> 1 Very Dissatisfied        0 0    
+#> 2 Dissatisfied             2 0.167
+#> 3 Neutral                  3 0.25 
+#> 4 Satisfied                4 0.333
+#> 5 Very Satisfied           3 0.25 
+
+# now check it with weights
+get_freqs(basic_df, x = satisfaction_service, wt = wts)
+#> # A tibble: 5 × 3
+#>   satisfaction_service     n   pct
+#>   <fct>                <dbl> <dbl>
+#> 1 Very Dissatisfied        0 0    
+#> 2 Dissatisfied             2 0.105
+#> 3 Neutral                  3 0.158
+#> 4 Satisfied                9 0.474
+#> 5 Very Satisfied           5 0.263
+
+# now check grouped
+get_freqs(basic_df, x = satisfaction_service, group = grp, wt = wts)
+#> # A tibble: 15 × 4
+#>    grp   satisfaction_service     n   pct
+#>    <fct> <fct>                <dbl> <dbl>
+#>  1 A     Very Dissatisfied        0 0    
+#>  2 A     Dissatisfied             1 0.2  
+#>  3 A     Neutral                  1 0.2  
+#>  4 A     Satisfied                1 0.2  
+#>  5 A     Very Satisfied           2 0.4  
+#>  6 B     Very Dissatisfied        0 0    
+#>  7 B     Dissatisfied             0 0    
+#>  8 B     Neutral                  1 0.143
+#>  9 B     Satisfied                5 0.714
+#> 10 B     Very Satisfied           1 0.143
+#> 11 C     Very Dissatisfied        0 0    
+#> 12 C     Dissatisfied             1 0.143
+#> 13 C     Neutral                  1 0.143
+#> 14 C     Satisfied                3 0.429
+#> 15 C     Very Satisfied           2 0.286
+
+# groups can also be added by using `group_by()` ahead of time
+basic_df |>
+  dplyr::group_by(grp) |>
+  get_freqs(x = satisfaction_service, wt = wts)
+#> # A tibble: 15 × 4
+#>    grp   satisfaction_service     n   pct
+#>    <fct> <fct>                <dbl> <dbl>
+#>  1 A     Very Dissatisfied        0 0    
+#>  2 A     Dissatisfied             1 0.2  
+#>  3 A     Neutral                  1 0.2  
+#>  4 A     Satisfied                1 0.2  
+#>  5 A     Very Satisfied           2 0.4  
+#>  6 B     Very Dissatisfied        0 0    
+#>  7 B     Dissatisfied             0 0    
+#>  8 B     Neutral                  1 0.143
+#>  9 B     Satisfied                5 0.714
+#> 10 B     Very Satisfied           1 0.143
+#> 11 C     Very Dissatisfied        0 0    
+#> 12 C     Dissatisfied             1 0.143
+#> 13 C     Neutral                  1 0.143
+#> 14 C     Satisfied                3 0.429
+#> 15 C     Very Satisfied           2 0.286
+
+# Now check with multiple x variables
+get_freqs(
+  basic_df,
+  x = c("x1", "x2"),
+  wt = wts,
+  keep = "Yes",
+  na.rm = TRUE
 )
-get_freqs(df, x = q1, wt = wts, na.rm = TRUE)
-#> # A tibble: 2 × 3
-#>   q1        n   pct
-#>   <chr> <dbl> <dbl>
-#> 1 no        8 0.727
-#> 2 yes       3 0.273
+#> # A tibble: 2 × 4
+#>   name     value     n   pct
+#>   <fct>    <fct> <dbl> <dbl>
+#> 1 Q1. Blue Yes       8 0.444
+#> 2 Q2. Red  Yes       7 0.412
 
-# Grouped
-get_freqs(df, x = q1, group = grp, wt = wts, na.rm = TRUE)
-#> # A tibble: 4 × 4
-#>   grp   q1        n   pct
-#>   <fct> <chr> <dbl> <dbl>
-#> 1 A     no        2 0.5  
-#> 2 A     yes       2 0.5  
-#> 3 B     no        6 0.857
-#> 4 B     yes       1 0.143
-
-# Multi-variable (data frame)
-df$q2 <- c("red", "red", "blue", "blue", "red", "blue", "blue", NA)
-res_multi <- get_freqs(
-  df,
-  x = tidyselect::all_of(c("q1", "q2")),
+# rename the outputs
+get_freqs(
+  basic_df,
+  x = c("x1", "x2"),
   wt = wts,
   names_to = "item",
   values_to = "resp",
   na.rm = TRUE
 )
-res_multi
 #> # A tibble: 4 × 4
-#>   item  resp      n   pct
-#>   <fct> <chr> <dbl> <dbl>
-#> 1 q1    no        8 0.727
-#> 2 q1    yes       3 0.273
-#> 3 q2    blue      6 0.6  
-#> 4 q2    red       4 0.4  
+#>   item     resp      n   pct
+#>   <fct>    <fct> <dbl> <dbl>
+#> 1 Q1. Blue Yes       8 0.444
+#> 2 Q1. Blue No       10 0.556
+#> 3 Q2. Red  Yes       7 0.412
+#> 4 Q2. Red  No       10 0.588
+
+# now check multiple x variables with a grouping variable
+get_freqs(
+  basic_df,
+  x = c("x1", "x2"),
+  group = "grp",
+  wt = wts,
+  na.rm = TRUE
+)
+#> # A tibble: 12 × 5
+#>    grp   name     value     n   pct
+#>    <fct> <fct>    <fct> <dbl> <dbl>
+#>  1 A     Q1. Blue Yes       2 0.5  
+#>  2 A     Q1. Blue No        2 0.5  
+#>  3 A     Q2. Red  Yes       3 0.6  
+#>  4 A     Q2. Red  No        2 0.4  
+#>  5 B     Q1. Blue Yes       1 0.143
+#>  6 B     Q1. Blue No        6 0.857
+#>  7 B     Q2. Red  Yes       1 0.2  
+#>  8 B     Q2. Red  No        4 0.8  
+#>  9 C     Q1. Blue Yes       5 0.714
+#> 10 C     Q1. Blue No        2 0.286
+#> 11 C     Q2. Red  Yes       3 0.429
+#> 12 C     Q2. Red  No        4 0.571
+
 
 # ---- keep examples (multi-variable, data frame) ----
 
 # 1) keep as a character vector: retain only "yes" responses across items
 get_freqs(
-  df,
-  x = tidyselect::all_of(c("q1", "q2")),
+  basic_df,
+  x = c("x1", "x2"),
   wt = wts,
-  names_to = "item",
-  values_to = "resp",
-  keep = c("yes"),
-  na.rm = TRUE
-)
-#> # A tibble: 1 × 4
-#>   item  resp      n   pct
-#>   <fct> <chr> <dbl> <dbl>
-#> 1 q1    yes       3 0.273
-
-# 2) keep as a function: retain values ending with 'e' (e.g., "blue")
-get_freqs(
-  df,
-  x = tidyselect::all_of(c("q1", "q2")),
-  wt = wts,
-  names_to = "item",
-  values_to = "resp",
-  keep = function(v) grepl("e$", v),
-  na.rm = TRUE
-)
-#> # A tibble: 1 × 4
-#>   item  resp      n   pct
-#>   <fct> <chr> <dbl> <dbl>
-#> 1 q2    blue      6   0.6
-
-# 3) keep as a tidy expression: drop a specific response level
-# Here we keep everything except "no"
-get_freqs(
-  df,
-  x = tidyselect::all_of(c("q1", "q2")),
-  wt = wts,
-  names_to = "item",
-  values_to = "resp",
-  keep = resp != "no",
-  na.rm = TRUE
-)
-#> # A tibble: 3 × 4
-#>   item  resp      n   pct
-#>   <fct> <chr> <dbl> <dbl>
-#> 1 q1    yes       3 0.273
-#> 2 q2    blue      6 0.6  
-#> 3 q2    red       4 0.4  
-
-# 4) keep with grouping: filter within groups after aggregation
-get_freqs(
-  df,
-  x = tidyselect::all_of(c("q1", "q2")),
-  group = grp,
-  wt = wts,
-  names_to = "item",
-  values_to = "resp",
-  keep = .data$resp %in% c("yes", "red"),
-  na.rm = TRUE
-)
-#> # A tibble: 4 × 5
-#>   grp   item  resp      n   pct
-#>   <fct> <fct> <chr> <dbl> <dbl>
-#> 1 A     q1    yes       2 0.5  
-#> 2 A     q2    red       3 0.6  
-#> 3 B     q1    yes       1 0.143
-#> 4 B     q2    red       1 0.2  
-
-# 5) keep function returning TRUE (no-op): leaves result unchanged
-get_freqs(
-  df,
-  x = tidyselect::all_of(c("q1", "q2")),
-  wt = wts,
-  names_to = "item",
-  values_to = "resp",
-  keep = function(v) TRUE,
-  na.rm = TRUE
-)
-#> # A tibble: 4 × 4
-#>   item  resp      n   pct
-#>   <fct> <chr> <dbl> <dbl>
-#> 1 q1    no        8 0.727
-#> 2 q1    yes       3 0.273
-#> 3 q2    blue      6 0.6  
-#> 4 q2    red       4 0.4  
-
-# Survey design (single variable)
-dff <- tibble::tibble(
-  grp = rep(c("A", "B"), each = 4),
-  q1  = c("yes", "no", "yes", NA, "no", "no", "yes", "no"),
-  q2  = c("red", "red", "blue", "blue", "red", "blue", "blue", NA),
-  wts = c(1, 2, 1, 1, 1, 3, 1, 2)
-)
-dsn <- survey::svydesign(ids = ~1, weights = ~wts, data = dff)
-get_freqs(dsn, x = q1, na.rm = TRUE)
-#> # A tibble: 2 × 3
-#>   q1        n   pct
-#>   <chr> <dbl> <dbl>
-#> 1 no        8 0.727
-#> 2 yes       3 0.273
-
-# Survey design (multi-variable) — limitation:
-# Zero-count levels are not expanded for multi-variable survey inputs.
-get_freqs(
-  dsn,
-  x = tidyselect::all_of(c("q1", "q2")),
-  names_to = "item",
-  values_to = "resp",
-  na.rm = TRUE
-)
-#> # A tibble: 4 × 4
-#>   item  resp      n   pct
-#>   <fct> <chr> <dbl> <dbl>
-#> 1 q1    no        4 0.571
-#> 2 q1    yes       3 0.429
-#> 3 q2    blue      4 0.571
-#> 4 q2    red       3 0.429
-
-# Note: keep is also supported for survey multi-variable outputs
-get_freqs(
-  dsn,
-  x = tidyselect::all_of(c("q1", "q2")),
-  names_to = "item",
-  values_to = "resp",
-  keep = resp %in% c("yes", "red"),
+  keep = c("Yes"),
   na.rm = TRUE
 )
 #> # A tibble: 2 × 4
-#>   item  resp      n   pct
-#>   <fct> <chr> <dbl> <dbl>
-#> 1 q1    yes       3 0.429
-#> 2 q2    red       3 0.429
+#>   name     value     n   pct
+#>   <fct>    <fct> <dbl> <dbl>
+#> 1 Q1. Blue Yes       8 0.444
+#> 2 Q2. Red  Yes       7 0.412
+
+# Survey design  ------------
+basic_df_svy <- srvyr::as_survey_design(
+   ids = id,
+   strata = strata,
+   weights = "wts",
+   .data = basic_df
+ )
+
+# basic example
+get_freqs(basic_df_svy, x = satisfaction_service)
+#> # A tibble: 5 × 3
+#>   satisfaction_service     n   pct
+#>   <fct>                <dbl> <dbl>
+#> 1 Dissatisfied             2 0.105
+#> 2 Neutral                  3 0.158
+#> 3 Satisfied                9 0.474
+#> 4 Very Dissatisfied        0 0    
+#> 5 Very Satisfied           5 0.263
+
+# multi-variable example
+get_freqs(basic_df_svy, c(x1, x2))
+#> # A tibble: 4 × 4
+#>   name     value     n   pct
+#>   <fct>    <fct> <dbl> <dbl>
+#> 1 Q1. Blue Yes       8 0.444
+#> 2 Q1. Blue No       10 0.556
+#> 3 Q2. Red  Yes       7 0.412
+#> 4 Q2. Red  No       10 0.588
+
+# grouped example
+get_freqs(basic_df_svy, satisfaction_service, grp)
+#> # A tibble: 15 × 4
+#>    grp   satisfaction_service     n   pct
+#>    <chr> <fct>                <dbl> <dbl>
+#>  1 A     Dissatisfied             1 0.2  
+#>  2 A     Neutral                  1 0.2  
+#>  3 A     Satisfied                1 0.2  
+#>  4 A     Very Dissatisfied        0 0    
+#>  5 A     Very Satisfied           2 0.4  
+#>  6 B     Dissatisfied             0 0    
+#>  7 B     Neutral                  1 0.143
+#>  8 B     Satisfied                5 0.714
+#>  9 B     Very Dissatisfied        0 0    
+#> 10 B     Very Satisfied           1 0.143
+#> 11 C     Dissatisfied             1 0.143
+#> 12 C     Neutral                  1 0.143
+#> 13 C     Satisfied                3 0.429
+#> 14 C     Very Dissatisfied        0 0    
+#> 15 C     Very Satisfied           2 0.286
+
+# grouped example with multi-variable
+get_freqs(basic_df_svy, c(x1, x2), grp)
+#> # A tibble: 12 × 5
+#>    grp   name     value     n   pct
+#>    <chr> <fct>    <fct> <dbl> <dbl>
+#>  1 A     Q1. Blue Yes       2 0.5  
+#>  2 A     Q1. Blue No        2 0.5  
+#>  3 A     Q2. Red  Yes       3 0.6  
+#>  4 A     Q2. Red  No        2 0.4  
+#>  5 B     Q1. Blue Yes       1 0.143
+#>  6 B     Q1. Blue No        6 0.857
+#>  7 B     Q2. Red  Yes       1 0.2  
+#>  8 B     Q2. Red  No        4 0.8  
+#>  9 C     Q1. Blue Yes       5 0.714
+#> 10 C     Q1. Blue No        2 0.286
+#> 11 C     Q2. Red  Yes       3 0.429
+#> 12 C     Q2. Red  No        4 0.571
 ```

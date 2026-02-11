@@ -3,7 +3,6 @@
 <url><loc>https://jdenn0514.github.io/adlgraphs/LICENSE-text.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/LICENSE.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/articles/data_transformations.html</loc></url>
-<url><loc>https://jdenn0514.github.io/adlgraphs/articles/how_to_use_adl_bar_plot.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/articles/index.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/authors.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/index.html</loc></url>
@@ -20,8 +19,11 @@
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/attr_transformation.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/attr_val_labels.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/attr_var_label.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/basic_df.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/calc_ci.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/case_match_fct.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/case_when_fct.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/clean.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/clean_demos.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/codebook.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/dunnett.html</loc></url>
@@ -29,6 +31,7 @@
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/export_bogus.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/export_bot_dupe.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/export_freqs_excel.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/export_treatment_effects.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/flatten_labelled_vec.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/flip_val.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/funky_freqs.html</loc></url>
@@ -44,6 +47,8 @@
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_freqs.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_loadings.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_means.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_reference_levels.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/get_term_n.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/hc_theme_default.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/index.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/make_binary.html</loc></url>
@@ -52,9 +57,11 @@
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/make_nested.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/make_percent.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/make_quarts.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/model_reorder.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/num_rev.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/pct_conv.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/pivot_longer_values.html</loc></url>
+<url><loc>https://jdenn0514.github.io/adlgraphs/reference/pivot_longer_values_core.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/prettytable.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/refactor.html</loc></url>
 <url><loc>https://jdenn0514.github.io/adlgraphs/reference/remove_bogus.html</loc></url>

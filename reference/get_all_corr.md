@@ -71,8 +71,8 @@ get_all_corr(new_data)
 #> 6 inferior [Some … dom… [No …      -0.138   250   -0.262    -0.015   0.029 *    
 
 # 2. Using dplyr::select() and pipes
-test_data %>% 
-  dplyr::select(c(top:dominate)) %>% 
+test_data %>%
+  dplyr::select(c(top:dominate)) %>%
   get_all_corr()
 #> # A tibble: 6 × 8
 #>   x                y          correlation     n conf.low conf.high p_value stars
@@ -95,7 +95,7 @@ get_all_corr(test_data, cols = c(top:dominate))
 #> 4 dominate [No on… inf… [Som…      -0.138   250   -0.262    -0.015   0.029 *    
 #> 5 top [An ideal s… dom… [No …      -0.147   250   -0.271    -0.023   0.02  *    
 #> 6 inferior [Some … dom… [No …      -0.138   250   -0.262    -0.015   0.029 *    
-# or 
+# or
 test_data %>% get_all_corr(c(top:dominate))
 #> # A tibble: 6 × 8
 #>   x                y          correlation     n conf.low conf.high p_value stars
@@ -120,11 +120,11 @@ test_data %>% get_all_corr(c(top:dominate), wt = wts)
 #> 6 inferior [Some … dom… [No …      -0.143   250   -0.267    -0.019   0.024 *    
 
 # You can also calculate grouped correlations. For example, if
-# you were interested in comparing the weighted correlations 
-# among people with a college degree vs those without one, you 
+# you were interested in comparing the weighted correlations
+# among people with a college degree vs those without one, you
 # would do it like this:
-test_data %>% 
-  dplyr::group_by(edu_f2) %>% 
+test_data %>%
+  dplyr::group_by(edu_f2) %>%
   get_all_corr(c(top:dominate), wt = wts)
 #> # A tibble: 12 × 9
 #>    edu_f2     x          y          correlation     n conf.low conf.high p_value
@@ -143,7 +143,7 @@ test_data %>%
 #> 12 At Least … inf… [Som… dom… [No …      -0.18    108   -0.37      0.009   0.062
 #> # ℹ 1 more variable: stars <chr>
 
-# Another way to calculate grouped correlations is to 
+# Another way to calculate grouped correlations is to
 # specify the group argument inside the function call:
 get_all_corr(test_data, c(top:dominate), edu_f2, wts)
 #> # A tibble: 12 × 9

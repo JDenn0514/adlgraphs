@@ -37,9 +37,9 @@ it.
 
 ``` r
 library(dplyr)
-# get the frequencies of top andupdate 
+# get the frequencies of top andupdate
 test_data %>%
-  get_freqs(top) %>% 
+  get_freqs(top) %>%
   pct_conv()
 #> # A tibble: 4 × 4
 #>   top                   n   pct pct_lab

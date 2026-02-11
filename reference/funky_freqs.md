@@ -1,6 +1,6 @@
 # Calculate weighted frequencies
 
-**\[experimental\]**
+**\[deprecated\]**
 
 Use this function to calculate simple weighted frequencies. You can also
 specify a grouping variable by which you want to calculate the

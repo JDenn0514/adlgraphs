@@ -34,9 +34,9 @@ A numeric vector of the same length as `x`
 blue <- sample(c(1:4), size = 20, replace = TRUE)
 # add value labels
 attr(blue, "labels") <- c(
-  "Strongly agree" = 1, 
-  "Somewhat agree" = 2, 
-  "Somewhat disagree" = 3, 
+  "Strongly agree" = 1,
+  "Somewhat agree" = 2,
+  "Somewhat disagree" = 3,
   "Strongly disagree" = 4
 )
 # add a variable label
@@ -50,11 +50,11 @@ blue_flip <- flip_val(blue, "I dislike the color blue")
 # show the output comapring the two
 str(list(blue = blue, blue_flip = blue_flip))
 #> List of 2
-#>  $ blue     : int+lbl [1:20] 3, 3, 3, 3, 2, 4, 4, 3, 3, 4, 4, 4, 3, 4, 4, 4, 4, 2, 3, 2
+#>  $ blue     : int+lbl [1:20] 2, 4, 4, 3, 3, 4, 4, 4, 3, 4, 4, 4, 4, 2, 3, 2, 2, 4, 4, 1
 #>    ..@ labels: Named num [1:4] 1 2 3 4
 #>    .. ..- attr(*, "names")= chr [1:4] "Strongly agree" "Somewhat agree" "Somewhat disagree" "Strongly disagree"
 #>    ..@ label : chr "I like the color blue"
-#>  $ blue_flip: int+lbl [1:20] 3, 3, 3, 3, 2, 4, 4, 3, 3, 4, 4, 4, 3, 4, 4, 4, 4, 2, 3, 2
+#>  $ blue_flip: int+lbl [1:20] 2, 4, 4, 3, 3, 4, 4, 4, 3, 4, 4, 4, 4, 2, 3, 2, 2, 4, 4, 1
 #>    ..@ labels        : Named num [1:4] 1 2 3 4
 #>    .. ..- attr(*, "names")= chr [1:4] "Strongly disagree" "Somewhat disagree" "Somewhat agree" "Strongly agree"
 #>    ..@ label         : chr "I dislike the color blue"
@@ -62,15 +62,15 @@ str(list(blue = blue, blue_flip = blue_flip))
 
 # can also be used inside of dplyr::mutate()
 library(dplyr)
-  
-new_df <- test_data %>% 
+
+new_df <- test_data %>%
   dplyr::mutate(
     # flip the valence for deserving
     deserving_flip = flip_val(
-      deserving, 
+      deserving,
       "Groups at the bottom are not just as deserving as groups at the top"
     )
-  ) %>% 
+  ) %>%
   # keep only the relevant columns
   dplyr::select(deserving, deserving_flip)
 

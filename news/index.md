@@ -2,6 +2,23 @@
 
 ## adlgraphs 0.4.3
 
+### Enhanced `get_means()` with replicate-weight survey design support
+
+- [`get_means()`](https://jdenn0514.github.io/adlgraphs/reference/get_means.md)
+  now supports `svyrep.design` objects (replicate-weight survey designs)
+  in addition to the existing `survey.design` support
+- Added `get_means.svyrep.design()` method for replicate-weight designs
+- Added `get_means.tbl_svy()` method for better srvyr integration
+- Improved calculation methods: now uses unweighted n and sd with proper
+  weighted mean calculations
+- Added new helper functions: `prep_means_data()`, `svy_means()`,
+  `.grouping_index()`, `.survey_grouped_means()`
+- Created `calc_ci.R` with confidence interval calculation functions for
+  various model types
+- Column names now use underscores (`conf_low`, `conf_high`) for
+  consistency
+- Added `group_labels` attribute to output for better metadata tracking
+
 ### Created two new functions
 
 ##### adl_lollipop_plots

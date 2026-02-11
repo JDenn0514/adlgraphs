@@ -1,7 +1,7 @@
 # `case_when` with factor levels
 
 Recode a variable using the
-[`dplyr::case_when()`](https://dplyr.tidyverse.org/reference/case_when.html)
+[`dplyr::case_when()`](https://dplyr.tidyverse.org/reference/case-and-replace-when.html)
 syntax
 
 ## Usage

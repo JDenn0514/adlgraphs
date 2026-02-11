@@ -74,8 +74,8 @@ test_data %>% get_corr(x = top, y = sdo_sum, wt = wts)
 #> 1 top [An ideal s… sdo… [Soc…      -0.721   250   -0.808    -0.634       0 ***  
 
 # Now let's get the correlatoin among only people with a bachelor's degree
-test_data %>% 
-  filter(edu_f2 == "At Least a Bachelor's Degree") %>% 
+test_data %>%
+  filter(edu_f2 == "At Least a Bachelor's Degree") %>%
   get_corr(x = top, y = sdo_sum, wt = wts)
 #> # A tibble: 1 × 8
 #>   x                y          correlation     n conf.low conf.high p_value stars
@@ -84,8 +84,8 @@ test_data %>%
 
 # Now let's get it for each education level. Two ways of doing this:
 # The first is to group the data ahead of time
-test_data %>% 
-  group_by(edu_f) %>% 
+test_data %>%
+  group_by(edu_f) %>%
   get_corr(x = top, y = sdo_sum, wt = wts)
 #> # A tibble: 4 × 9
 #>   edu_f  x         y          correlation     n conf.low conf.high p_value stars

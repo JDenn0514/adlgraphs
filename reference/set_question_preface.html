@@ -13,7 +13,7 @@ from survey questions that allow for multiple selections (i.e., a
 
     <a class="navbar-brand me-2" href="../index.html">adlgraphs</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,7 +25,6 @@ from survey questions that allow for multiple selections (i.e., a
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/data_transformations.html">Data Transformations</a></li>
-    <li><a class="dropdown-item" href="../articles/how_to_use_adl_bar_plot.html">Making bar plots</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/JDenn0514/adlgraphs/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -94,13 +93,13 @@ a new variable label.</p></dd>
 <span class="r-in"><span>  x_2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>, size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  x_3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>, size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  x_4 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>, size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span> </span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># set the variable labels</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">x_1</span>, <span class="st">"label"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"Which of the following colors do you like? Blue"</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">x_2</span>, <span class="st">"label"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"Which of the following colors do you like? Red"</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">x_3</span>, <span class="st">"label"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"Which of the following colors do you like? Yellow"</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">x_4</span>, <span class="st">"label"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"Which of the following colors do you like? Purple"</span> </span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">x_4</span>, <span class="st">"label"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"Which of the following colors do you like? Purple"</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># set the value labels</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">x_1</span>, <span class="st">"labels"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Blue"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
