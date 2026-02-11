@@ -1,40 +1,88 @@
-#' Calculate means with confidence intervals
+#' Compute survey means with CIs, SD, and N for grouped complex designs
 #'
-#' @description
-#' Use this function to calculate simple weighted means with 95% confidence
-#' intervals or weighted grouped means.
+#' `get_means()` computes design-based means and confidence intervals for a single
+#' numeric variable from complex survey objects, optionally grouped by one or more
+#' variables. It supports `survey.design`, `svyrep.design`, `srvyr::tbl_svy`, and
+#' plain `data.frame` inputs (with a simpler weighted/unweighted implementation).
 #'
-#' The `x`, `group`, and `wt` arguments can either be strings or symbols
-#' (meaning they can have quotes or no quotes). The benefit of this is that it
-#' makes it easy to iterate this function over a list or vector of
-#' variables with other functions like [map()] [purrr::map()] or [walk()]
-#' [purrr::walk()] that are found in the `purrr` package.
+#' @param data A survey object (survey.design, svyrep.design, or srvyr::tbl_svy),
+#'   or a plain data.frame.
+#' @param x The variable with which you wany to get the mean. Variable must be
+#'   numeric but can be input as a string or symbol (e.g., "var" or var).
+#' @param group <[`tidy-select`][dplyr_tidy_select]> A selection of columns
+#'   to group the data. This operates very similarly to `.by` from dplyr
+#'   (for more info on that see [?dplyr_by][dplyr_by]). It can also be a
+#'   character vector. If using an external character vector it must be
+#'   wrapped in curly brackets (`{{}}`).
 #'
-#' @param data An object of type data.frame or tibble. If piping the data into the
-#'   function, this is not required.
-#' @param x Either a character string or symbol. The variable with which you want
-#'   to get the mean.
-#' @param group <[`tidy-select`][dplyr_tidy_select]> A selection of columns to
-#'   group the data by in addition to `treats`. This operates very similarly
-#'   to `.by` from dplyr (for more info on that see [?dplyr_by][dplyr_by]). It can
-#'   also be a character vector, but it can't be an external vector.
-#' @param wt Weights. Add if you have a weighting variable and want to get
-#'   weighted means.
+#'   In addition, grouped data can be piped in via `dplyr::group_by()` or
+#'   `srvyr::group_by()`. If data is a `grouped_df` and `group` is provided,
+#'   `get_means()` will combine the variable(s) used in either `group_by`
+#'   function and the variable(s) supplied in `group` to calculate means.
+#' @param wt Optional weights column name (for data.frame method only). Ignored for
+#'   survey objects, since weights/replicates are stored in the design.
 #' @param decimals Number of decimals to round the results to. Default is 3.
-#' @param na.rm Logical. Determines if NAs should be removed from the grouping
-#'   variables prior to analysis. Default is TRUE.
-#' @param conf_level What should the confidence level be when calculating
-#'   confidence intervals. Defaults to 0.95
+#' @param na.rm Logical; whether to remove rows with missing values in `x` and `group`
+#'   before computing frequencies. Default is `TRUE`.
+#' @param conf_level Determine the confidence level for Wald CIs. Default is 0.95.
+#' @param df Degrees of freedom for t critical values. Defaults to `Inf` (z-based).
+#'   For  designs, you may prefer survey::degf(design); for replicate designs,
+#'   Inf is conventional.
 #'
-#' @returns A tibble with one row if no `group` is provided and `data`
-#'   is not of class `"grouped_df"`. If data is of class `"grouped_df"` or `group`
-#'   is provided, it will return a row for each unique observation or combination
-#'   of observations.
+#' @return A tibble with one row per group (or one row if ungrouped). With the
+#'   following columns:
 #'
+#'   - grouping columns (preserving factor/label semantics for display)
 #'
+#'   - `mean`: design-based mean of x
+#'
+#'   - `sd`: unweighted sample standard deviation within each group
+#'
+#'   - `n`: unweighted row count per group
+#'
+#'   - `conf_low`, `conf_high`: Wald confidence interval bounds
+#'
+#'   The result has class `"adlgraphs_means"` and common attributes:
+#'
+#'   - `attr(., "dataset")`: the original dataset
+#'
+#'   - `attr(., "variable_label")`, `attr(., "variable_name")`
+#'
+#'   - For grouped outputs: `attr(., "group_names")` and `attr(., "group_labels")`
+#'
+#'   - For multi-variable: `attr(., "item_names")`, `attr(., "item_labels")`,
+#'     `attr(., "x_expr")`
+#'
+#' @details
+#' - Survey objects are subset to remove NAs in x and grouping variables before grouping,
+#'   preserving design alignment (ids/strata/weights/replicates).
+#'
+#' - Means and standard errors are computed via survey::svymean(). CIs are Wald intervals
+#'   using either z (df = Inf) or t (finite df) critical values.
+#'
+#' - sd and n are descriptive (unweighted) and are not used in the CI calculations.
+#'
+#' - Group output order follows factor levels for factors, alphabetical for characters,
+#'   and ascending for numerics.
+#'
+#' - Value labels for grouping variables are preserved in the output by factorizing keys
+#'   against original labels; variable-level labels are copied to output columns.
+#'
+#' @section Methods:
+#' - `get_means.survey.design()`: Complex survey designs. For more information visit
+#'   `survey::svydesign()` and `srvyr::as_survey_design()`.
+#'
+#' - `get_means.svyrep.design()`: Replicate-weight survey designs. For more
+#'   information visit `survey::as.svrepdesign()` and `srvyr::as_survey_rep()`
+#'
+#' - `get_means.tbl_svy()``: Unwraps srvyr::tbl_svy and dispatches to the appropriate
+#'   survey method. For more info, visit `srvyr::as_survey_design()` and
+#'   `srvyr::as_survey_rep()`.
+#'
+#' - `get_means.data.frame()`: Non-design summary with optional weights.
 #'
 #' @examples
-#' # load the package
+#' # Setup example data
 #' library(dplyr)
 #'
 #' # Let's calculate the overall average score for trad_n
@@ -71,76 +119,42 @@ get_means <- function(
   wt = NULL,
   decimals = 3,
   na.rm = TRUE,
-  conf_level = 0.95
+  conf_level = 0.95,
+  df = Inf
 ) {
   UseMethod("get_means")
 }
 
 
 #' @export
-get_means.default <- function(
+get_means.data.frame <- function(
   data,
   x,
   group = NULL,
   wt = NULL,
   decimals = 3,
   na.rm = TRUE,
-  conf_level = 0.95
+  conf_level = 0.95,
+  df = Inf # ignored here
 ) {
-  x_name <- rlang::enexpr(x)
+  # Prep the data and get all necessary components
+  prep <- prep_means_data(
+    data = data,
+    x = {{ x }},
+    group = {{ group }},
+    wt = {{ wt }},
+    na.rm = na.rm,
+    is_survey = FALSE
+  )
 
-  # Ensure x is a string
-  x <- rlang::as_name(rlang::ensym(x))
-
-  # Check if x is numeric
-  if (!is.numeric(data[[x]])) {
-    cli::cli_abort(c(
-      "`{x}` must be a numeric variable.",
-      x = "Supplied variable is {class(data[[x]])}."
-    ))
-  }
-
-  # Prepare group variables
-  # if the data is grouped, use dplyr::group_vars to get them, else set to NULL
-  group_names <- if (inherits(data, "grouped_df")) {
-    dplyr::group_vars(data)
-  } else {
-    NULL
-  }
-  # if group arg is missing set to NULL, else use select_groups to capture it
-  group_vars <- if (missing(group)) NULL else select_groups({{ group }}, data)
-  # remove the "c" from the group_vars vector if it is there
-  group_vars <- group_vars[group_vars != "c"]
-  # get the groups
-  group_names <- unique(c(group_names, group_vars))
-
-  # Prepare weights
-  if (missing(wt)) {
-    wt <- "wts"
-    data[[wt]] <- rep(1, length(data[[x]]))
-  } else {
-    # ensure that string or symbol are accepted in wt
-    wt <- rlang::as_name(rlang::ensym(wt))
-
-    if (!is.numeric(data[[wt]])) {
-      # if it is not numeric then return an error
-      cli::cli_abort(c(
-        "`{wt}` must be a numeric variable.",
-        x = "Supplied variable is {class(data[[wt]])}."
-      ))
-    } else {
-      # if it is numeric, replace NAs with 0
-      data[[wt]][is.na(data[[wt]])] <- 0
-    }
-  }
-
-  # get the data
-  data <- data[c(x, group_names, wt)]
-
-  # if na.rm is TRUE remove NAs
-  if (na.rm) {
-    data <- data[stats::complete.cases(data), ]
-  }
+  # Extract components from prep
+  data <- prep$data
+  x <- prep$x
+  x_expr <- prep$x_expr
+  group_names <- prep$group_names
+  wt_name <- prep$wt_name
+  cached_x_label <- prep$cached_x_label
+  cached_group_labels <- prep$cached_group_labels
 
   if (!is.null(group_names)) {
     # if the group arg is not missing, apply grouping based on group_names
@@ -151,90 +165,58 @@ get_means.default <- function(
   # Summarize data
   out <- data %>%
     dplyr::summarise(
-      # calculate the weighted n
-      n = sum(.data[[wt]], na.rm = TRUE),
-      # calculate the mean (weighted sum / n)
-      mean = sum(.data[[x]] * .data[[wt]], na.rm = TRUE) / n,
-      # calculate the weighted sd
-      sd = sqrt(sum(.data[[wt]] * (.data[[x]] - mean)^2, na.rm = TRUE) / n),
+      # calculate the unweighted n
+      n = dplyr::n(),
+      # calculate the weighted mean
+      mean = sum(.data[[x]] * .data[[wt_name]], na.rm = TRUE) / sum(.data[[wt_name]], na.rm = TRUE),
+      # calculate the unweighted sd
+      sd = stats::sd(.data[[x]]),
       # remove the groups
       .groups = "drop"
     ) %>%
     dplyr::mutate(
       # calculate std.error
-      std.error = sd / sqrt(n),
+      se = sd / sqrt(n),
       # calculate the confidence invtervals
-      conf.low = mean -
-        stats::qt(1 - ((1 - conf_level) / 2), n - 1) * std.error,
-      conf.high = mean +
-        stats::qt(1 - ((1 - conf_level) / 2), n - 1) * std.error,
+      conf_low = mean -
+        stats::qt(1 - ((1 - conf_level) / 2), n - 1) * se,
+      conf_high = mean +
+        stats::qt(1 - ((1 - conf_level) / 2), n - 1) * se,
       # convert all group variables to a factor
       dplyr::across(
         # run the function over the variables in group_names
         tidyselect::all_of(group_names),
         # convert to a factor, removing levels, forcing to factor, and keeping NA as NA
-        ~ make_factor(.x, drop_levels = TRUE, force = TRUE, na.rm = TRUE)
+        \(x) make_factor(x, drop_levels = TRUE, force = TRUE, na.rm = TRUE)
       ),
       # round all numeric columns
       dplyr::across(
         tidyselect::where(is.numeric),
-        ~ round(.x, decimals)
+        \(var) round(var, decimals)
       )
     )
 
-  out <- out[c(group_names, "mean", "sd", "n", "conf.low", "conf.high")]
+  out <- out[c(group_names, "mean", "sd", "n", "conf_low", "conf_high")]
 
-  if (!is.null(group_names)) {
-    # if there are groups add the value labels
+  out <- add_mean_attributes(
+    out,
+    x_expr = x_expr,
+    cached_x_label = cached_x_label,
+    group_names = group_names,
+    cached_group_labels = cached_group_labels
+  )
 
-    # get the variable labels as a named list
-    group_labels <- attr_var_label(data[, group_names])
-    # for each value in names(group_labels) add the variable label from group_labels
-    for (y in names(group_labels)) {
-      attr(out[[y]], "label") <- group_labels[[y]]
-    }
-  }
-
-  if (!is.null(attr_var_label(data[[x]]))) {
-    # if there is a variable label in the x variable
-
-    # add the variable label of x as an attribute called
-    # variable_label to the output dataframe
-    attr(out, "variable_label") <- attr_var_label(data[[x]])
-    # add the variable name of x as an attribute called
-    # variable_name to the output dataframe
-    attr(out, "variable_name") <- x
-  } else {
-    # if x does not have a variable label
-
-    # add the variable name of x as an attribute called
-    # variable_label to the output dataframe
-    attr(out, "variable_label") <- x
-    # add the variable name of x as an attribute called
-    # variable_name to the output dataframe
-    attr(out, "variable_name") <- x
-  }
-
-  # add an attribute containing the names of the grouping variables
-  attr(out, "group_names") <- group_names
-
-  # add a variable for the n variable
-  attr(out$n, "label") <- "N"
-  # add a variable label for the mean variable
-  attr(out$mean, "label") <- "Mean"
-  # add a variable label for the mean variable
-  attr(out$sd, "label") <- "SD"
-  # add a variable label for the mean variable
-  attr(out$conf.low, "label") <- "Low CI"
-  # add a variable label for the mean variable
-  attr(out$conf.high, "label") <- "High CI"
-
-  # get the classes of the data.frame
-  class_names <- class(out)
-  # add adlgraphs_freqs to the classes
-  attr(out, "class") <- c("adlgraphs_means", class_names)
+  out <- structure(
+    out,
+    class = c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
+  )
 
   out
+}
+
+#' @export
+get_means.tbl_svy <- function(data, ...) {
+  NextMethod("get_means")
 }
 
 #' @export
@@ -245,305 +227,455 @@ get_means.survey.design <- function(
   wt = NULL, # ignored for survey data
   decimals = 3,
   na.rm = TRUE,
-  conf_level = 0.95
+  conf_level = 0.95,
+  df = Inf
 ) {
-  # Capture the expression of x for later use in attributes
-  x_name <- rlang::enexpr(x)
+  # 1) Start from the design's current variables
+  original_data <- data$variables
 
-  # Convert x to a string name for consistent handling
-  x <- rlang::as_name(rlang::ensym(x))
+  # prep on the current variables to resolve x and group names
+  prep <- prep_means_data(
+    data = original_data,
+    x = {{ x }},
+    group = {{ group }},
+    wt = NULL,
+    na.rm = FALSE, # do NA handling via design subset below
+    is_survey = TRUE
+  )
 
-  # Extract the data frame from the survey design object
+  # Extract components
+  x_name <- prep$x
+  x_expr <- prep$x_expr
+  group_names <- prep$group_names
+  cached_x_label <- prep$cached_x_label
+  cached_group_labels <- prep$cached_group_labels
+
+  # 3) If na.rm, subset the design using a logical mask built on the design's variables
+  if (na.rm) {
+    keep <- !is.na(data$variables[[x_name]])
+    keep[is.na(keep)] <- FALSE
+    # IMPORTANT: subset via the survey method, with a logical mask
+    data <- subset(data, keep)
+
+    # 3b) Drop NAs in grouping variables (if any groups specified)
+    if (!is.null(group_names) && length(group_names) > 0L) {
+      # Build a logical mask that keeps rows where all group vars are non-NA
+      grp_df <- data$variables[group_names]
+      keep_grp <- stats::complete.cases(grp_df)
+      data <- subset(data, keep_grp)
+    }
+  }
+
+  # extract cleaned survey data (after NA removal)
   survey_data <- data$variables
 
-  # Validate that x is numeric (required for mean calculations)
-  if (!is.numeric(survey_data[[x]])) {
+  # build grouping index from the aligned survey_data
+  gi <- .grouping_index(survey_data, group_names)
+
+  # compute grouped means. Inside, we'll subset by logical masks.
+  res <- .survey_grouped_means(
+    design = data,
+    x = x_name,
+    rows_by_group = gi$rows_by_group,
+    conf_level = conf_level,
+    df = df,
+    na.rm = na.rm
+  )
+
+  # ensure attributes from the original data set are in new data
+  for (group in group_names) {
+    attributes(gi$keys[[group]]) <- attributes(original_data[[group]])
+  }
+  # convert gi$keys to factors
+  display_keys <- factorize_multi_groups_only(
+    gi$keys,
+    group_names,
+    drop_zero = TRUE,
+    na.rm = na.rm
+  )
+
+  # Bind keys to results
+  out <- dplyr::bind_cols(display_keys, res) |>
+    # round numeric columns
+    dplyr::mutate(
+      dplyr::across(
+        c(mean, sd, conf_low, conf_high),
+        \(x) round(x, decimals)
+      )
+    )
+
+  # set the column order
+  cols_order <- c(
+    group_names,
+    "mean",
+    "sd",
+    "n",
+    "conf_low",
+    "conf_high"
+  )
+  # identify which columsn from cols_order are in out
+  cols_order <- intersect(cols_order, names(out))
+  # reorder out based on the order of cols_order
+  out <- out[, cols_order, drop = FALSE]
+
+  # 11) Attributes and class
+  out <- add_mean_attributes(
+    out,
+    x_expr = x_expr,
+    cached_x_label = cached_x_label,
+    group_names = group_names,
+    cached_group_labels = cached_group_labels
+  )
+
+  # ensure output is a tibble
+  out <- tibble::as_tibble(out)
+  # add custom class
+  class(out) <- c("adlgraphs_means", class(out))
+  out
+}
+
+#' @export
+get_means.svyrep.design <- function(
+  data,
+  x,
+  group = NULL,
+  wt = NULL, # ignored for survey data
+  decimals = 3,
+  na.rm = TRUE,
+  conf_level = 0.95,
+  df = Inf
+) {
+  # get the data from the survey design
+  original_data <- data$variables
+
+  # 2) Prep on the current variables to resolve x and group names
+  prep <- prep_means_data(
+    data = original_data,
+    x = {{ x }},
+    group = {{ group }},
+    wt = NULL,
+    na.rm = FALSE, # do NA handling via design subset below
+    is_survey = TRUE
+  )
+
+  # Extract components
+  x_name <- prep$x
+  x_expr <- prep$x_expr
+  group_names <- prep$group_names
+  cached_x_label <- prep$cached_x_label
+  cached_group_labels <- prep$cached_group_labels
+
+  # 3) If na.rm, subset the design using a logical mask built on the design's variables
+  if (na.rm) {
+    keep <- !is.na(data$variables[[x_name]])
+    keep[is.na(keep)] <- FALSE
+    # IMPORTANT: subset via the survey method, with a logical mask
+    data <- subset(data, keep)
+
+    # 3b) Drop NAs in grouping variables (if any groups specified)
+    if (!is.null(group_names) && length(group_names) > 0L) {
+      # Build a logical mask that keeps rows where all group vars are non-NA
+      grp_df <- data$variables[group_names]
+      keep_grp <- stats::complete.cases(grp_df)
+      data <- subset(data, keep_grp)
+    }
+  }
+
+  # extract cleaned survey data (after NA removal)
+  survey_data <- data$variables
+
+  # build grouping index from the aligned survey_data
+  gi <- .grouping_index(survey_data, group_names)
+
+  # compute grouped means. Inside, we'll subset by logical masks.
+  res <- .survey_grouped_means(
+    design = data,
+    x = x_name,
+    rows_by_group = gi$rows_by_group,
+    conf_level = conf_level,
+    df = df,
+    na.rm = na.rm
+  )
+
+  # add attributes from the original data set
+  for (x in group_names) {
+    attributes(gi$keys[[x]]) <- attributes(original_data[[x]])
+  }
+  # convert gi$keys to factors
+  display_keys <- factorize_multi_groups_only(
+    gi$keys,
+    group_names,
+    drop_zero = TRUE,
+    na.rm = na.rm
+  )
+
+  # Bind keys to results
+  out <- dplyr::bind_cols(display_keys, res) |>
+    # round numeric columns
+    dplyr::mutate(
+      dplyr::across(
+        tidyselect::where(is.numeric),
+        \(x) round(x, decimals)
+      )
+    )
+
+  # 10) Column order
+  cols_order <- c(
+    group_names,
+    "mean",
+    "sd",
+    "n",
+    "conf_low",
+    "conf_high"
+  )
+  cols_order <- intersect(cols_order, names(out))
+  out <- out[, cols_order, drop = FALSE]
+
+  # 11) Attributes and class
+  out <- add_mean_attributes(
+    out,
+    x_expr = x_expr,
+    cached_x_label = cached_x_label,
+    group_names = group_names,
+    cached_group_labels = cached_group_labels
+  )
+
+  out <- tibble::as_tibble(out)
+  class(out) <- c("adlgraphs_means", class(out))
+  out
+}
+
+# calculation helpers ------------------------------------------------------------
+
+svy_means <- function(
+  data,
+  x,
+  na.rm = TRUE,
+  conf_level = 0.95,
+  df = Inf
+) {
+  form_x <- reformulate(termlabels = x)
+  mean <- survey::svymean(form_x, data, na.rm = na.rm)
+
+  # Calculate CIs
+  out <- calc_ci(mean, conf_level = conf_level, df = df)
+  out
+}
+
+.grouping_index <- function(data, group_names) {
+  if (is.null(group_names) || length(group_names) == 0) {
+    # if no group_names were provided, treat data as one group
+    return(list(
+      # all rows belong to one group; store a single vector
+      rows_by_group = list(seq_len(nrow(data))),
+      # a 1-row tibble to represent key
+      # since there is no group, set .group_id to 1
+      keys = tibble::tibble(.group_id = 1)
+    ))
+  }
+  # Extract the grouping columns from the data in the provided order.
+  # gkeys is a data.frame/tibble containing only the grouping columns.
+  gkeys <- data[group_names]
+  # create group identifier for each row based on combos of gkeys
+  # constructed in the order in which they appar
+  gid <- vctrs::vec_group_id(gkeys)
+  # split row indices into a list by group id
+  split_obj <- vctrs::vec_split(seq_len(nrow(data)), gid)
+  # get the list of indices by group id
+  rows_list <- split_obj$val
+  # make a data.frame with unique groups and their locations
+  # unique groups are in same order as gkeys
+  loc <- vctrs::vec_group_loc(gkeys)
+  # extract the keys
+  keys <- loc$key
+  # set the name of the keys with group_names
+  names(keys) <- group_names
+
+  # Build a multi-column order using base order on each column
+  ord <- do.call(order, c(as.list(keys), list(method = "radix")))
+
+  list(rows_by_group = rows_list[ord], keys = keys[ord, , drop = FALSE])
+}
+
+.survey_grouped_means <- function(
+  design,
+  x,
+  rows_by_group,
+  conf_level = 0.95,
+  df = Inf,
+  na.rm = TRUE
+) {
+  stopifnot(length(x) >= 1L)
+
+  n_tot <- nrow(design$variables)
+
+  est_one_group <- function(rows) {
+    # Convert integer indices to a logical mask of length n
+    if (is.numeric(rows)) {
+      mask <- rep(FALSE, n_tot)
+      idx <- rows[rows >= 1 & rows <= n_tot]
+      if (length(idx) > 0L) mask[idx] <- TRUE
+    } else {
+      # In case rows_by_group was built differently
+      stop("rows must be integer indices")
+    }
+    # subset the data
+    d_sub <- subset(design, mask)
+    # extract subset data
+    d_sub_data <- d_sub$variables
+    # print(d_sub_data)
+    # calculate means
+    out <- svy_means(
+      data = d_sub,
+      x = x,
+      na.rm = na.rm,
+      conf_level = conf_level,
+      df = df
+    )
+
+    # get unweighted n
+    n <- nrow(d_sub_data)
+    # unweighted sd
+    sd <- stats::sd(d_sub_data[[x]], na.rm = na.rm)
+    out$n <- n
+    out$sd <- sd
+    out
+  }
+
+  out_list <- lapply(rows_by_group, est_one_group)
+  dplyr::bind_rows(out_list)
+}
+
+
+# data cleaning and prep -------------------------------------------------
+
+prep_means_data <- function(
+  data,
+  x,
+  group = NULL,
+  wt = NULL,
+  na.rm = TRUE,
+  is_survey = FALSE
+) {
+  # Ensure inputs are symbols or strings
+  x <- rlang::as_name(rlang::ensym(x))
+
+  # Capture the original expression passed to x (for attaching attributes later)
+  x_expr <- rlang::enexpr(x)
+
+  # Resolve group columns from tidyselect, in the order they should appear
+  group_names <- compose_group_names(data, {{ group }})
+
+  # Cache group labels (variable labels) from the pristine data
+  if (length(group_names) > 0) {
+    cached_group_labels <- attr_var_label(data[, group_names], if_null = "name")
+  } else {
+    cached_group_labels <- character(0)
+  }
+
+  # Prepare weights: returns possibly modified data plus the resolved weight column name
+  # Only do this for non-survey data
+  if (!is_survey) {
+    wt_res <- ensure_weight(data, {{ wt }})
+    data <- wt_res$data
+    wt_name <- wt_res$wt_name
+  } else {
+    wt_name <- NULL
+  }
+
+  # Cache the variable label so we can reattach it later
+  cached_x_label <- attr_var_label(data[[x_expr]])
+
+  # Check for numeric x
+  if (!is.numeric(data[[x]])) {
     cli::cli_abort(c(
-      "`{x}` must be a numeric variable.",
-      x = "Supplied variable is {class(survey_data[[x]])}."
+      "{.arg x} must be of class `numeric`",
+      "i" = "`{x_expr}` is of class {class(data[[x]])}"
     ))
   }
 
-  # Prepare group variables by combining existing groups and new group argument
-  # Check if data is already grouped using dplyr
-  group_names <- if (inherits(survey_data, "grouped_df")) {
-    dplyr::group_vars(survey_data)
-  } else {
-    NULL
-  }
-  # Extract group variables from the group argument (custom function)
-  group_vars <- if (missing(group)) {
-    NULL
-  } else {
-    select_groups({{ group }}, survey_data)
-  }
-  # Remove "c" if it appears in group_vars (artifact from select_groups)
-  group_vars <- group_vars[group_vars != "c"]
-  # Combine and deduplicate group variables
-  group_names <- unique(c(group_names, group_vars))
-
-  # EXTRACT VARIABLE LABELS BEFORE ANY DATA MODIFICATIONS
-  # This prevents labels from being lost during type conversions
-  # Get label for the outcome variable (custom function)
-  x_label <- attr_var_label(survey_data[[x]])
-  # Initialize list to store group variable labels
-  group_labels <- list()
-  if (!is.null(group_names)) {
-    # Extract label for each group variable using base R attr()
-    for (group_var in group_names) {
-      group_labels[[group_var]] <- attr(survey_data[[group_var]], "label")
-    }
-  }
-
-  # CONVERT HAVEN LABELLED VARIABLES TO PLAIN R TYPES
-  # This prevents vec_arith errors when survey functions do calculations
-  # Convert outcome variable from haven_labelled to plain numeric
-  survey_data[[x]] <- as.numeric(survey_data[[x]])
-
-  # Convert group variables from haven_labelled to character before factor conversion
-  if (!is.null(group_names)) {
-    for (group_var in group_names) {
-      # Check if variable is haven_labelled and convert to character
-      if (inherits(survey_data[[group_var]], "haven_labelled")) {
-        survey_data[[group_var]] <- as.character(survey_data[[group_var]])
-      }
-    }
-  }
-
-  # Handle missing data removal if requested
+  # Drop NAs if requested
   if (na.rm) {
-    # Identify variables to check for completeness
-    vars_to_check <- c(x, group_names)
-    # Find rows with complete cases across all relevant variables
-    complete_cases <- stats::complete.cases(survey_data[vars_to_check])
-    # Subset the survey design to complete cases only
-    data <- data[complete_cases, ]
-    # Update survey_data reference after subsetting
-    survey_data <- data$variables
-  }
-
-  # Convert group variables to factors for proper grouping
-  if (!is.null(group_names)) {
-    for (group_var in group_names) {
-      # Use custom make_factor function to convert to factor with proper handling
-      survey_data[[group_var]] <- make_factor(
-        survey_data[[group_var]],
-        drop_levels = TRUE, # Remove unused factor levels
-        force = TRUE, # Force conversion to factor
-        na.rm = TRUE # Handle NAs appropriately
-      )
-    }
-  }
-
-  # Update the survey design object with the modified data
-  data$variables <- survey_data
-
-  # Create formula for survey calculations (outcome ~ 1 for means)
-  outcome_formula <- stats::reformulate("1", x)
-
-  # GROUPED ANALYSIS: Calculate means separately for each group combination
-  if (!is.null(group_names)) {
-    # CREATE GROUPING FORMULA FOR SURVEY CALCULATIONS
-    # The survey package needs a formula to specify which variables to group by
-    if (length(group_names) == 1) {
-      # Single grouping variable: create formula like ~gender
-      by_formula <- stats::reformulate(group_names[1])
-    } else {
-      # Multiple grouping variables: create formula like ~gender + education
-      by_formula <- stats::reformulate(group_names)
-    }
-
-    # CALCULATE SURVEY-WEIGHTED MEANS FOR ALL GROUPS AT ONCE
-    # svyby() is the survey package's optimized function for grouped calculations
-    # It automatically handles survey weights, design effects, and creates all group combinations
-    mean_results <- survey::svyby(
-      formula = outcome_formula, # What to calculate (e.g., ~income)
-      by = by_formula, # How to group (e.g., ~gender + education)
-      design = data, # Survey design object with weights/strata
-      FUN = survey::svymean, # Function to apply (survey-weighted mean)
-      na.rm = na.rm # How to handle missing values
+    chk <- unique(c(x, group_names))
+    assert_nonempty_after_filter(data, chk, context = "means default")
+    data <- dplyr::ungroup(data)
+    data <- dplyr::filter(
+      data,
+      stats::complete.cases(dplyr::across(tidyselect::all_of(chk)))
     )
+  }
 
-    # EXTRACT MEANS AND STANDARD ERRORS FROM SURVEY RESULTS
-    # svyby() returns a data frame with group columns plus statistical results
-    means <- mean_results[[x]] # Extract the mean values (column named after our variable)
-    ses <- sqrt(mean_results[["se"]]^2) # Extract standard errors (always in "se" column)
+  # Return a list with all the prepared components
+  list(
+    data = data,
+    x = x,
+    x_expr = x_expr,
+    group_names = group_names,
+    wt_name = wt_name,
+    cached_x_label = cached_x_label,
+    cached_group_labels = cached_group_labels
+  )
+}
 
-    # PREPARE FOR MANUAL STANDARD DEVIATION CALCULATIONS
-    # Unfortunately, svyby() doesn't calculate weighted SDs, so we need to do this manually
-    # But we can still optimize by reducing the number of iterations
-
-    # Extract just the grouping variables from the survey data
-    group_data <- data$variables[group_names]
-
-    # Create a single interaction variable that combines all group levels
-    # This converts multiple grouping variables into one factor with combined levels
-    # Example: gender="Male" + education="College" becomes "Male_College"
-    group_interaction <- interaction(group_data, drop = TRUE, sep = "_")
-
-    # Get all unique combinations that actually exist in the data
-    # This is more efficient than nested loops because we only iterate over existing combinations
-    unique_combinations <- levels(group_interaction)
-
-    # PRE-ALLOCATE VECTORS FOR STANDARD DEVIATIONS AND SAMPLE SIZES
-    # Pre-allocation is faster than growing vectors in a loop
-    sds <- numeric(length(unique_combinations)) # Will store weighted standard deviations
-    ns <- numeric(length(unique_combinations)) # Will store effective sample sizes
-
-    # CALCULATE WEIGHTED STANDARD DEVIATIONS FOR EACH GROUP COMBINATION
-    # This is the only part that still requires a loop, but it's much more efficient
-    # because we're iterating over unique combinations rather than nested group levels
-    for (i in seq_along(unique_combinations)) {
-      # Create logical vector identifying rows belonging to this group combination
-      # This is vectorized and much faster than multiple nested comparisons
-      subset_logical <- group_interaction == unique_combinations[i]
-
-      # Handle missing values in the logical vector
-      subset_logical[is.na(subset_logical)] <- FALSE
-
-      # Only proceed if this group combination has any observations
-      if (any(subset_logical)) {
-        # Subset the survey design to just this group combination
-        subset_design <- data[subset_logical, ]
-
-        # Extract the raw data values for our outcome variable
-        subset_data <- subset_design$variables[[x]]
-
-        # Extract the survey weights for these observations
-        subset_weights <- stats::weights(subset_design, "sampling")
-
-        # CALCULATE WEIGHTED STANDARD DEVIATION MANUALLY
-        # Step 1: Calculate weighted mean (for variance calculation)
-        weighted_mean <- sum(subset_data * subset_weights) / sum(subset_weights)
-
-        # Step 2: Calculate weighted variance
-        # Formula: Σ(weight * (value - weighted_mean)²) / Σ(weights)
-        weighted_var <- sum(subset_weights * (subset_data - weighted_mean)^2) /
-          sum(subset_weights)
-
-        # Step 3: Standard deviation is square root of variance
-        sds[i] <- sqrt(weighted_var)
-
-        # Step 4: Effective sample size is sum of weights
-        ns[i] <- sum(subset_weights)
+# Optionally reattach haven-style attrs from original_vars to display_keys
+copy_attrs <- function(dst_df, src_df, vars) {
+  for (v in vars) {
+    if (v %in% names(dst_df) && v %in% names(src_df)) {
+      lab <- attr_var_label(src_df[[v]])
+      if (!is.null(lab)) {
+        attr(dst_df[[v]], "label") <- lab
       }
-    }
-
-    # CALCULATE CONFIDENCE INTERVALS USING SURVEY-APPROPRIATE METHODS
-    # Survey data requires special handling for confidence intervals due to design effects
-
-    # Get design-based degrees of freedom (accounts for survey design complexity)
-    df <- survey::degf(data)
-
-    # Calculate t-distribution critical value based on confidence level
-    # Uses t-distribution rather than normal because of finite sample sizes
-    t_val <- stats::qt(1 - ((1 - conf_level) / 2), df)
-
-    # Calculate confidence interval bounds
-    # CI = mean ± (t-value × standard error)
-    conf_low <- means - t_val * ses
-    conf_high <- means + t_val * ses
-
-    # CREATE FINAL OUTPUT DATA FRAME
-    # Combine all results into a clean, formatted data frame
-    out <- data.frame(
-      # Include all grouping variable columns from svyby results
-      # This preserves the original group level names and types
-      mean_results[group_names],
-
-      # Add calculated statistics, rounded to specified decimal places
-      mean = round(means, decimals), # Survey-weighted means
-      sd = round(sds, decimals), # Weighted standard deviations
-      n = round(ns, decimals), # Effective sample sizes
-      conf.low = round(conf_low, decimals), # Lower confidence interval bounds
-      conf.high = round(conf_high, decimals), # Upper confidence interval bounds
-
-      # Prevent automatic conversion of character variables to factors
-      stringsAsFactors = FALSE
-    )
-  } else {
-    # UNGROUPED ANALYSIS: Calculate overall means
-
-    # Calculate survey-weighted mean and standard error
-    mean_result <- survey::svymean(
-      outcome_formula,
-      design = data,
-      na.rm = na.rm
-    )
-    mean_val <- as.numeric(mean_result)
-    mean_se <- sqrt(as.numeric(attr(mean_result, "var")))
-
-    # Calculate weighted standard deviation manually
-    raw_data <- data$variables[[x]]
-    raw_weights <- stats::weights(data, "sampling")
-    weighted_mean <- sum(raw_data * raw_weights) / sum(raw_weights)
-    weighted_var <- sum(raw_weights * (raw_data - weighted_mean)^2) /
-      sum(raw_weights)
-    sd_val <- sqrt(weighted_var)
-
-    # Calculate effective sample size
-    n_val <- sum(raw_weights)
-
-    ### Calculate CIs
-    # get survey design based degrees of freedom
-    df <- survey::degf(data)
-    # calculate the t-distribution using the quantile function
-    t_val <- stats::qt(1 - ((1 - conf_level) / 2), df)
-    # determine low CI
-    conf_low <- mean_val - t_val * mean_se
-    # calculate low CIs
-    conf_high <- mean_val + t_val * mean_se
-
-    # Create results data frame
-    out <- data.frame(
-      mean = round(mean_val, decimals),
-      sd = round(sd_val, decimals),
-      n = round(n_val, decimals),
-      conf.low = round(conf_low, decimals),
-      conf.high = round(conf_high, decimals),
-      stringsAsFactors = FALSE
-    )
-  }
-
-  # Reorder columns to match original function's output format
-  col_order <- c(group_names, "mean", "sd", "n", "conf.low", "conf.high")
-  # Only include columns that actually exist in the output
-  col_order <- col_order[col_order %in% names(out)]
-  out <- out[col_order]
-
-  # Add group variable labels using the labels extracted earlier
-  if (!is.null(group_names)) {
-    for (y in names(group_labels)) {
-      # Only add label if it exists and is not null
-      if (!is.null(group_labels[[y]])) {
-        attr(out[[y]], "label") <- group_labels[[y]]
+      lbls <- attr_val_labels(src_df[[v]])
+      if (!is.null(lbls)) {
+        attr(dst_df[[v]], "labels") <- lbls
+      }
+      qp <- attr_question_preface(src_df[[v]])
+      if (!is.null(qp)) {
+        attr(dst_df[[v]], "question_preface") <- qp
       }
     }
   }
+  dst_df
+}
 
-  # Add variable labels and attributes for the outcome variable
-  if (!is.null(x_label)) {
-    # Use the extracted variable label
-    attr(out, "variable_label") <- x_label
-    attr(out, "variable_name") <- x_name
+
+add_mean_attributes <- function(
+  data,
+  x_expr,
+  cached_x_label,
+  group_names,
+  cached_group_labels
+) {
+  # add a variable for the n variable
+  attr(data$n, "label") <- "N"
+  # add a variable label for the mean variable
+  attr(data$mean, "label") <- "Mean"
+  # add a variable label for the mean variable
+  attr(data$sd, "label") <- "SD"
+  # add a variable label for the mean variable
+  attr(data$conf_low, "label") <- "Low CI"
+  # add a variable label for the mean variable
+  attr(data$conf_high, "label") <- "High CI"
+
+  if (length(group_names) > 0) {
+    # if there are groups add the value labels
+
+    # for each value in names(group_labels) add the variable label from group_labels
+    for (y in names(cached_group_labels)) {
+      attr(data[[y]], "label") <- cached_group_labels[[y]]
+    }
+
+    attr(data, "group_names") <- group_names
+    attr(data, "group_labels") <- cached_group_labels
+  }
+
+  if (!is.null(cached_x_label)) {
+    attr(data, "variable_label") <- cached_x_label
+    attr(data, "variable_name") <- x_expr
   } else {
-    # Fallback to variable name if no label exists
-    attr(out, "variable_label") <- x_name
-    attr(out, "variable_name") <- x_name
+    attr(data, "variable_label") <- x_expr
+    attr(data, "variable_name") <- x_expr
   }
 
-  # Add group names as an attribute for downstream functions
-  if (!is.null(group_names)) {
-    attr(out, "group_names") <- group_names
-  }
-
-  ### Add descriptive labels for each output column
-  attr(out$n, "label") <- "N" # Sample size
-  attr(out$mean, "label") <- "Mean" # Mean value
-  attr(out$sd, "label") <- "SD" # Standard deviation
-  attr(out$conf.low, "label") <- "Low CI" # Lower confidence interval
-  attr(out$conf.high, "label") <- "High CI" # Upper confidence interval
-
-  # Add custom class for method dispatch and formatting
-  structure(out, class = c("adlgraphs_means", "tbl_df", "tbl", class(out)))
+  data
 }

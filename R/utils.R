@@ -224,6 +224,111 @@ select_groups <- function(group, data) {
   return(group_vars)
 }
 
+compose_group_names <- function(data, group) {
+  if (inherits(data, "grouped_df")) {
+    base_groups <- dplyr::group_vars(data)
+  } else {
+    base_groups <- character(0)
+  }
+
+  if (missing(group) || rlang::quo_is_missing(rlang::enquo(group))) {
+    extra_groups <- character(0)
+  } else {
+    # Only call select_groups if non-missing
+    extra_groups <- select_groups(
+      {{ group }},
+      if (inherits(data, "survey.design")) data$variables else data
+    )
+    extra_groups <- extra_groups[extra_groups != "c"]
+  }
+
+  unique(c(base_groups, extra_groups))
+}
+
+
+ensure_weight <- function(data, wt) {
+  # Returns list(data = data_with_weight, wt_name = wt_col_name)
+
+  # No wt supplied: create unit weights
+  if (
+    missing(wt) ||
+      # is.null(wt) ||
+      rlang::quo_is_missing(rlang::enquo(wt)) ||
+      rlang::quo_is_null(rlang::enquo(wt))
+  ) {
+    wt_name <- "wts"
+    data[[wt_name]] <- 1
+    return(list(data = data, wt_name = wt_name))
+  }
+
+  wt_expr <- rlang::quo_squash(rlang::enexpr(wt))
+
+  # Determine the column name from the expression
+  if (rlang::is_symbol(wt_expr)) {
+    # wt = wts
+    wt_name <- rlang::as_name(wt_expr)
+  } else if (rlang::is_string(wt_expr)) {
+    # wt = "wts" (string literal in the call)
+    wt_name <- rlang::as_string(wt_expr)
+  } else {
+    # In case wt was already evaluated to a character vector before reaching here
+    wt_val <- rlang::eval_bare(wt_expr, env = rlang::caller_env())
+    if (is.character(wt_val) && length(wt_val) == 1) {
+      wt_name <- wt_val
+    } else {
+      cli::cli_abort(
+        "`wt` must be a column name provided as a symbol (e.g., wt = wts) or a string (e.g., wt = \"wts\")."
+      )
+    }
+  }
+
+  if (!(wt_name %in% names(data))) {
+    cli::cli_abort("Weight column `{wt_name}` not found in `data`.")
+  }
+
+  if (!is.numeric(data[[wt_name]])) {
+    cli::cli_abort(c(
+      "`{wt_name}` must be a numeric variable.",
+      "x" = "Supplied variable is {class(data[[wt_name]])}."
+    ))
+  }
+
+  data[[wt_name]][is.na(data[[wt_name]])] <- 0
+  list(data = data, wt_name = wt_name)
+}
+
+
+assert_nonempty_after_filter <- function(df, vars, context = "data") {
+  vars <- vars[vars %in% names(df)]
+  if (!length(vars)) {
+    return(invisible(TRUE))
+  }
+  keep_rows <- stats::complete.cases(df[, vars, drop = FALSE])
+  if (!any(keep_rows)) {
+    # Compose a readable message with variable names
+    msg <- paste0(
+      "After removing NAs, no rows remain for ",
+      context,
+      ". Variables causing empty result: ",
+      paste(vars, collapse = ", ")
+    )
+    cli::cli_abort(msg)
+  }
+  invisible(TRUE)
+}
+
+
+factorize_multi_groups_only <- function(df, group_names, drop_zero, na.rm) {
+  if (length(group_names)) {
+    df[, group_names] <- lapply(
+      df[, group_names, drop = FALSE],
+      \(y) make_factor(y, drop_levels = drop_zero, force = TRUE, na.rm = na.rm)
+    )
+  }
+  df
+}
+
+
 # a low level function for getting variable labels that powers the attr_var_label
 low_var_label <- function(x, data, if_null = NULL) {
   x_name <- rlang::quo_get_expr(rlang::expr({{ x }}))

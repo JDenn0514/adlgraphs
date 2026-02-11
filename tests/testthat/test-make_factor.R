@@ -1,19 +1,26 @@
-
 # Labelled values ---------------------------------------------------------
 
 #### NUMERIC VECTORS
 testthat::test_that("all labels are preserved if drop_levels is FALSE", {
-  s1 <- haven::labelled(rep(1, 3), c("A" = 1, "B" = 2, "C" = 3), label = "Variable label")
+  s1 <- haven::labelled(
+    rep(1, 3),
+    c("A" = 1, "B" = 2, "C" = 3),
+    label = "Variable label"
+  )
   exp <- factor(rep("A", 3), levels = c("A", "B", "C")) %>%
     structure(
       transformation = "Converted 's1' into a factor based on its value labels",
       label = "Variable label"
     )
-    testthat::expect_equal(make_factor(s1, drop_levels = FALSE), exp)
+  testthat::expect_equal(make_factor(s1, drop_levels = FALSE), exp)
 })
 
 testthat::test_that("Only labels in data are preserved if drop_levels is TRUE", {
-  s1 <- haven::labelled(rep(1, 3), c("A" = 1, "B" = 2, "C" = 3), label = "Variable label")
+  s1 <- haven::labelled(
+    rep(1, 3),
+    c("A" = 1, "B" = 2, "C" = 3),
+    label = "Variable label"
+  )
   exp <- factor(rep("A", 3), levels = c("A")) %>%
     structure(
       transformation = "Converted 's1' into a factor based on its value labels",
@@ -35,7 +42,10 @@ testthat::test_that("all labels are preserved when using a non-haven_labelled nu
 })
 
 testthat::test_that("Convert NAs using labels", {
-  s1 <- haven::labelled(c(0, 1, haven::tagged_na("c")), c("A" = 0, "B" = 1, "C" = haven::tagged_na("c")))
+  s1 <- haven::labelled(
+    c(0, 1, haven::tagged_na("c")),
+    c("A" = 0, "B" = 1, "C" = haven::tagged_na("c"))
+  )
   exp <- factor(c("A", "B", "C"), levels = c("A", "B", "C")) %>%
     structure(
       transformation = "Converted 's1' into a factor based on its value labels",
@@ -45,7 +55,10 @@ testthat::test_that("Convert NAs using labels", {
 })
 
 testthat::test_that("Keep NAs as NAs", {
-  s1 <- haven::labelled(c(0, 1, haven::tagged_na("c")), c("A" = 0, "B" = 1, "C" = haven::tagged_na("c")))
+  s1 <- haven::labelled(
+    c(0, 1, haven::tagged_na("c")),
+    c("A" = 0, "B" = 1, "C" = haven::tagged_na("c"))
+  )
   exp <- factor(c("A", "B", NA), levels = c("A", "B", NA)) %>%
     structure(
       transformation = "Converted 's1' into a factor based on its value labels",
@@ -62,7 +75,7 @@ testthat::test_that("character labelled converts to factor preserves all attribu
       transformation = "Converted 's1' into a factor based on its value labels",
       label = "Gender"
     )
-    testthat::expect_equal(make_factor(s1), exp)
+  testthat::expect_equal(make_factor(s1), exp)
 })
 
 testthat::test_that("character labelled converts to factor and uses name as label attribute", {
@@ -72,13 +85,19 @@ testthat::test_that("character labelled converts to factor and uses name as labe
       transformation = "Converted 's1' into a factor based on its value labels",
       label = "s1"
     )
-    testthat::expect_equal(make_factor(s1), exp)
+  testthat::expect_equal(make_factor(s1), exp)
 })
 
 testthat::test_that("all labels are preserved when using a non-haven_labelled numeric vector and uses name as label attribute", {
   #values <- stats::setNames(c(0, 1), c("A", "B"))
-  s1 <- structure(c("A", "B", "A", "B"), labels = stats::setNames(c("A", "B"), c("Letter A", "Letter B")))
-  exp <- factor(c("Letter A", "Letter B", "Letter A", "Letter B"), levels = c("Letter A", "Letter B")) %>%
+  s1 <- structure(
+    c("A", "B", "A", "B"),
+    labels = stats::setNames(c("A", "B"), c("Letter A", "Letter B"))
+  )
+  exp <- factor(
+    c("Letter A", "Letter B", "Letter A", "Letter B"),
+    levels = c("Letter A", "Letter B")
+  ) %>%
     structure(
       transformation = "Converted 's1' into a factor based on its value labels",
       label = "s1"
@@ -88,8 +107,15 @@ testthat::test_that("all labels are preserved when using a non-haven_labelled nu
 
 testthat::test_that("all labels are preserved when using a non-haven_labelled numeric vector and uses name as label attribute", {
   #values <- stats::setNames(c(0, 1), c("A", "B"))
-  s1 <- structure(c("A", "B", "A", "B"), labels = stats::setNames(c("A", "B"), c("Letter A", "Letter B")), label = "Alphabet")
-  exp <- factor(c("Letter A", "Letter B", "Letter A", "Letter B"), levels = c("Letter A", "Letter B")) %>%
+  s1 <- structure(
+    c("A", "B", "A", "B"),
+    labels = stats::setNames(c("A", "B"), c("Letter A", "Letter B")),
+    label = "Alphabet"
+  )
+  exp <- factor(
+    c("Letter A", "Letter B", "Letter A", "Letter B"),
+    levels = c("Letter A", "Letter B")
+  ) %>%
     structure(
       transformation = "Converted 's1' into a factor based on its value labels",
       label = "Alphabet"
@@ -99,10 +125,13 @@ testthat::test_that("all labels are preserved when using a non-haven_labelled nu
 
 test_that("converts tagged NAs", {
   s1 <- haven::labelled(
-    c(1:2, haven::tagged_na("a")), 
+    c(1:2, haven::tagged_na("a")),
     c("Orange" = 1, "Blue" = 2, "Apple" = haven::tagged_na("a")),
   )
-  exp <- factor(c("Orange", "Blue", "Apple"), levels = c("Orange", "Blue", "Apple")) %>% 
+  exp <- factor(
+    c("Orange", "Blue", "Apple"),
+    levels = c("Orange", "Blue", "Apple")
+  ) %>%
     structure(
       transformation = "Converted 's1' into a factor based on its value labels",
       label = "s1"
@@ -138,7 +167,7 @@ testthat::test_that("should force s1 to a factor", {
   s1 <- c(0, 1, 2)
   testthat::expect_warning(make_factor(s1))
 
-  exp <- as.factor(c(0, 1, 2)) %>% 
+  exp <- as.factor(c(0, 1, 2)) %>%
     structure(
       label = "s1",
       transformation = "Converted 's1' from a numeric vector to a factor"
@@ -147,12 +176,11 @@ testthat::test_that("should force s1 to a factor", {
 })
 
 
-
 testthat::test_that("should force s1 to a factor", {
   s1 <- c(0, 1, 2)
   attr(s1, "label") <- "Label"
 
-  exp <- as.factor(c(0, 1, 2)) %>% 
+  exp <- as.factor(c(0, 1, 2)) %>%
     structure(
       label = "Label",
       transformation = "Converted 's1' from a numeric vector to a factor"
@@ -172,18 +200,17 @@ testthat::test_that("add label attribute to factor without one", {
 })
 
 testthat::test_that("Check a vector from a data set", {
-  x <- c(1, 2, 2, 1) %>% 
+  x <- c(1, 2, 2, 1) %>%
     structure(labels = c("Yes" = 1, "No" = 2))
-  y <- factor(c("Yes", "No", "No", "Yes"), levels = c("Yes", "No")) %>% 
+  y <- factor(c("Yes", "No", "No", "Yes"), levels = c("Yes", "No")) %>%
     structure(
       transformation = "Converted 'df[[\"x\"]]' into a factor based on its value labels",
       label = 'df[[\"x\"]]'
     )
   df <- data.frame(x, y)
-  
+
   testthat::expect_equal(make_factor(df[["x"]], drop_levels = TRUE), df$y)
 })
-
 
 
 # Check errors ----------------------------------------
@@ -235,12 +262,3 @@ testthat::test_that("error when numeric and force is FALSE", {
     regexp = "The vector provided in `s1` does not have value labels\\."
   )
 })
-
-
-
-
-
-
-
-
-

@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_means.R
 \name{get_means}
 \alias{get_means}
-\title{Calculate means with confidence intervals}
+\title{Compute survey means with CIs, SD, and N for grouped complex designs}
 \usage{
 get_means(
   data,
@@ -11,50 +11,95 @@ get_means(
   wt = NULL,
   decimals = 3,
   na.rm = TRUE,
-  conf_level = 0.95
+  conf_level = 0.95,
+  df = Inf
 )
 }
 \arguments{
-\item{data}{An object of type data.frame or tibble. If piping the data into the
-function, this is not required.}
+\item{data}{A survey object (survey.design, svyrep.design, or srvyr::tbl_svy),
+or a plain data.frame.}
 
-\item{x}{Either a character string or symbol. The variable with which you want
-to get the mean.}
+\item{x}{The variable with which you wany to get the mean. Variable must be
+numeric but can be input as a string or symbol (e.g., "var" or var).}
 
-\item{group}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> A selection of columns to
-group the data by in addition to \code{treats}. This operates very similarly
-to \code{.by} from dplyr (for more info on that see \link[dplyr:dplyr_by]{?dplyr_by}). It can
-also be a character vector, but it can't be an external vector.}
+\item{group}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> A selection of columns
+to group the data. This operates very similarly to \code{.by} from dplyr
+(for more info on that see \link[dplyr:dplyr_by]{?dplyr_by}). It can also be a
+character vector. If using an external character vector it must be
+wrapped in curly brackets (\code{{{}}}).
 
-\item{wt}{Weights. Add if you have a weighting variable and want to get
-weighted means.}
+In addition, grouped data can be piped in via \code{dplyr::group_by()} or
+\code{srvyr::group_by()}. If data is a \code{grouped_df} and \code{group} is provided,
+\code{get_means()} will combine the variable(s) used in either \code{group_by}
+function and the variable(s) supplied in \code{group} to calculate means.}
+
+\item{wt}{Optional weights column name (for data.frame method only). Ignored for
+survey objects, since weights/replicates are stored in the design.}
 
 \item{decimals}{Number of decimals to round the results to. Default is 3.}
 
-\item{na.rm}{Logical. Determines if NAs should be removed from the grouping
-variables prior to analysis. Default is TRUE.}
+\item{na.rm}{Logical; whether to remove rows with missing values in \code{x} and \code{group}
+before computing frequencies. Default is \code{TRUE}.}
 
-\item{conf_level}{What should the confidence level be when calculating
-confidence intervals. Defaults to 0.95}
+\item{conf_level}{Determine the confidence level for Wald CIs. Default is 0.95.}
+
+\item{df}{Degrees of freedom for t critical values. Defaults to \code{Inf} (z-based).
+For  designs, you may prefer survey::degf(design); for replicate designs,
+Inf is conventional.}
 }
 \value{
-A tibble with one row if no \code{group} is provided and \code{data}
-is not of class \code{"grouped_df"}. If data is of class \code{"grouped_df"} or \code{group}
-is provided, it will return a row for each unique observation or combination
-of observations.
+A tibble with one row per group (or one row if ungrouped). With the
+following columns:
+\itemize{
+\item grouping columns (preserving factor/label semantics for display)
+\item \code{mean}: design-based mean of x
+\item \code{sd}: unweighted sample standard deviation within each group
+\item \code{n}: unweighted row count per group
+\item \code{conf_low}, \code{conf_high}: Wald confidence interval bounds
+}
+
+The result has class \code{"adlgraphs_means"} and common attributes:
+\itemize{
+\item \code{attr(., "dataset")}: the original dataset
+\item \code{attr(., "variable_label")}, \code{attr(., "variable_name")}
+\item For grouped outputs: \code{attr(., "group_names")} and \code{attr(., "group_labels")}
+\item For multi-variable: \code{attr(., "item_names")}, \code{attr(., "item_labels")},
+\code{attr(., "x_expr")}
+}
 }
 \description{
-Use this function to calculate simple weighted means with 95\% confidence
-intervals or weighted grouped means.
-
-The \code{x}, \code{group}, and \code{wt} arguments can either be strings or symbols
-(meaning they can have quotes or no quotes). The benefit of this is that it
-makes it easy to iterate this function over a list or vector of
-variables with other functions like \code{\link[purrr:map]{purrr::map()}} \code{\link[purrr:map]{purrr::map()}} or \code{\link[purrr:map]{purrr::walk()}}
-\code{\link[purrr:map]{purrr::walk()}} that are found in the \code{purrr} package.
+\code{get_means()} computes design-based means and confidence intervals for a single
+numeric variable from complex survey objects, optionally grouped by one or more
+variables. It supports \code{survey.design}, \code{svyrep.design}, \code{srvyr::tbl_svy}, and
+plain \code{data.frame} inputs (with a simpler weighted/unweighted implementation).
 }
+\details{
+\itemize{
+\item Survey objects are subset to remove NAs in x and grouping variables before grouping,
+preserving design alignment (ids/strata/weights/replicates).
+\item Means and standard errors are computed via survey::svymean(). CIs are Wald intervals
+using either z (df = Inf) or t (finite df) critical values.
+\item sd and n are descriptive (unweighted) and are not used in the CI calculations.
+\item Group output order follows factor levels for factors, alphabetical for characters,
+and ascending for numerics.
+\item Value labels for grouping variables are preserved in the output by factorizing keys
+against original labels; variable-level labels are copied to output columns.
+}
+}
+\section{Methods}{
+
+\itemize{
+\item \code{get_means.survey.design()}: Complex survey designs. For more information visit
+\code{survey::svydesign()} and \code{srvyr::as_survey_design()}.
+\item \code{get_means.svyrep.design()}: Replicate-weight survey designs. For more
+information visit \code{survey::as.svrepdesign()} and \code{srvyr::as_survey_rep()}
+\item \verb{get_means.tbl_svy()``: Unwraps srvyr::tbl_svy and dispatches to the appropriate survey method. For more info, visit }srvyr::as_survey_design()\code{and}srvyr::as_survey_rep()`.
+\item \code{get_means.data.frame()}: Non-design summary with optional weights.
+}
+}
+
 \examples{
-# load the package
+# Setup example data
 library(dplyr)
 
 # Let's calculate the overall average score for trad_n
