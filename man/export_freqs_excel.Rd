@@ -136,5 +136,5 @@ export_freqs_excel(survey_data,
 
 }
 \seealso{
-\code{\link{get_freqs}} for the underlying frequency calculation function
+\code{get_freqs()} for the underlying frequency calculation function
 }

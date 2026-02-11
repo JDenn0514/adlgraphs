@@ -104,7 +104,6 @@ reference:
     - get_col_names
     - codebook
     - dunnett_helper
-    - funky_freqs
     - stars_pval
     - write_word_table
     - wtd_sd
@@ -116,10 +115,4 @@ reference:
     - remove_bot_dupe
     - get_bot_dupe
     - export_bot_dupe
-
-
-
-
-
-
-
+    - funky_freqs

@@ -363,6 +363,112 @@ low_var_label <- function(x, data, if_null = NULL) {
 #   group_names
 # }
 
+#' pivot_longer_values main interal helper function
+#'
+#' Takes a data frame, and pivots it long-ways while preserving
+#' label attributes.
+#'
+#' @keywords internal
+pivot_longer_values_core <- function(
+  data,
+  cols,
+  names_to,
+  values_to,
+  name_label,
+  ...
+) {
+  # Capture value labels BEFORE pivot
+  value_labs <- get_common_value_labels(data, cols)
+
+  # Variable labels → names column value labels
+  var_labs <- attr_var_label(data[cols])
+  var_labs <- stats::setNames(names(var_labs), var_labs)
+
+  if (missing(name_label)) {
+    name_label <- attr_question_preface(data[[cols[1]]])
+  }
+
+  # Pivot
+  long_df <- tidyr::pivot_longer(
+    data,
+    cols = tidyselect::all_of(cols),
+    names_to = names_to,
+    values_to = values_to,
+    ...
+  )
+
+  if (!(names_to %in% names(long_df))) {
+    cli::cli_abort("Expected names_to column `{names_to}` not created.")
+  }
+  if (!(values_to %in% names(long_df))) {
+    cli::cli_abort("Expected values_to column `{values_to}` not created.")
+  }
+
+  # Apply names column labels
+  long_df[[names_to]] <- structure(
+    long_df[[names_to]],
+    labels = var_labs,
+    label = name_label
+  )
+
+  # Apply values column labels (only if identical)
+  if (!is.null(value_labs)) {
+    attr(long_df[[values_to]], "labels") <- value_labs
+  }
+
+  long_df
+}
+
+#' @keywords internal
+rebuild_srvyr_design <- function(data, design) {
+  survey_vars <- extract_survey_design(design)
+  do.call(
+    srvyr::as_survey_design,
+    c(list(.data = data), survey_vars)
+  )
+}
+
+#' @keywords internal
+rebuild_srvyr_rep_design <- function(data, design) {
+  rep_vars <- extract_svyrep_design(design)
+  do.call(
+    srvyr::as_survey_rep,
+    c(list(.data = data), rep_vars)
+  )
+}
+
+
+get_common_value_labels <- function(data, cols) {
+  labs <- purrr::map(
+    cols,
+    \(x) attr_val_labels(data[[x]])
+  )
+  if (length(unique(labs)) == 1) {
+    return(labs[[1]])
+  } else {
+    return(NULL)
+  }
+}
+
+assert_nonempty_after_filter <- function(df, vars, context = "data") {
+  vars <- vars[vars %in% names(df)]
+  if (!length(vars)) {
+    return(invisible(TRUE))
+  }
+  keep_rows <- stats::complete.cases(df[, vars, drop = FALSE])
+  if (!any(keep_rows)) {
+    # Compose a readable message with variable names
+    msg <- paste0(
+      "After removing NAs, no rows remain for ",
+      context,
+      ". Variables causing empty result: ",
+      paste(vars, collapse = ", ")
+    )
+    cli::cli_abort(msg)
+  }
+  invisible(TRUE)
+}
+
 # functions from other packages -------------------------------------------
 
 # from dplyr
@@ -769,4 +875,98 @@ decimal_places <- function(x) {
   } else {
     return(0)
   }
+}
+
+
+#' Select variables from the group variable
+#' @param group `tidy_select` columns to group the data by
+#' @param data The data set that the columns are from (this to make sure they exist)
+#'
+#' @keywords internal
+select_groups <- function(group, data) {
+  group_vars <- as.character(rlang::quo_squash(rlang::enexpr(group)))
+  group_vars <- group_vars[group_vars != "c"]
+
+  if (!all(group_vars %in% colnames(data))) {
+    data_name <- substitute(data)
+    group_vars <- group_vars[c(!group_vars %in% colnames(data))]
+    cli::cli_abort(c(
+      "Column `{group_vars}` is not found in `{data_name}`",
+      "i" = "Make sure all variables supplied to {.var group} are present in {.var data}"
+    ))
+  }
+  return(group_vars)
+}
+
+compose_group_names <- function(data, group) {
+  if (inherits(data, "grouped_df")) {
+    base_groups <- dplyr::group_vars(data)
+  } else {
+    base_groups <- character(0)
+  }
+
+  if (missing(group) || rlang::quo_is_missing(rlang::enquo(group))) {
+    extra_groups <- character(0)
+  } else {
+    # Only call select_groups if non-missing
+    extra_groups <- select_groups(
+      {{ group }},
+      if (inherits(data, "survey.design")) data$variables else data
+    )
+    extra_groups <- extra_groups[extra_groups != "c"]
+  }
+
+  unique(c(base_groups, extra_groups))
+}
+
+
+ensure_weight <- function(data, wt) {
+  # Returns list(data = data_with_weight, wt_name = wt_col_name)
+
+  # No wt supplied: create unit weights
+  if (
+    missing(wt) ||
+      # is.null(wt) ||
+      rlang::quo_is_missing(rlang::enquo(wt)) ||
+      rlang::quo_is_null(rlang::enquo(wt))
+  ) {
+    wt_name <- "wts"
+    data[[wt_name]] <- 1
+    return(list(data = data, wt_name = wt_name))
+  }
+
+  wt_expr <- rlang::quo_squash(rlang::enexpr(wt))
+
+  # Determine the column name from the expression
+  if (rlang::is_symbol(wt_expr)) {
+    # wt = wts
+    wt_name <- rlang::as_name(wt_expr)
+  } else if (rlang::is_string(wt_expr)) {
+    # wt = "wts" (string literal in the call)
+    wt_name <- rlang::as_string(wt_expr)
+  } else {
+    # In case wt was already evaluated to a character vector before reaching here
+    wt_val <- rlang::eval_bare(wt_expr, env = rlang::caller_env())
+    if (is.character(wt_val) && length(wt_val) == 1) {
+      wt_name <- wt_val
+    } else {
+      cli::cli_abort(
+        "`wt` must be a column name provided as a symbol (e.g., wt = wts) or a string (e.g., wt = \"wts\")."
+      )
+    }
+  }
+
+  if (!(wt_name %in% names(data))) {
+    cli::cli_abort("Weight column `{wt_name}` not found in `data`.")
+  }
+
+  if (!is.numeric(data[[wt_name]])) {
+    cli::cli_abort(c(
+      "`{wt_name}` must be a numeric variable.",
+      "x" = "Supplied variable is {class(data[[wt_name]])}."
+    ))
+  }
+
+  data[[wt_name]][is.na(data[[wt_name]])] <- 0
+  list(data = data, wt_name = wt_name)
 }

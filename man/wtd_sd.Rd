@@ -17,9 +17,9 @@ wtd_sd(x, wt = NULL, na.rm = TRUE)
 A number indicating the weighted SD of \code{x}
 }
 \description{
-While this is mainly an
-internal function, it is available for everyone since I could not find
-a function that calculates a weighted standard deviation.
+While this is mainly an internal function, it is available for everyone
+since I could not find a function that calculates a weighted standard
+deviation.
 }
 \details{
 Thank you to the team at Hmisc for the creation of \code{\link[Hmisc:wtd.stats]{Hmisc::wtd.var()}}.

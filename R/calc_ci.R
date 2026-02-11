@@ -8,6 +8,7 @@
 #' @param model The model/data object
 #' @param conf_level The confidence interval, default is 0.95
 #' @param method The method for calculating CIs
+#' @param df Degrees of freedom
 #'
 #' @keywords internal
 calc_ci <- function(
@@ -23,7 +24,8 @@ calc_ci <- function(
 calc_ci.lm <- function(
   model,
   conf_level = 0.95,
-  method = c("wald", "profile")
+  method = c("wald", "profile"),
+  df = Inf
 ) {
   method <- match.arg(method)
   if (method == "profile" || method == "likelihood") {
@@ -44,7 +46,8 @@ calc_ci.lm <- function(
 calc_ci.glm <- function(
   model,
   conf_level = 0.95,
-  method = c("wald", "profile")
+  method = c("wald", "profile"),
+  df = Inf
 ) {
   method <- match.arg(method)
   if (method == "profile") {
@@ -71,7 +74,8 @@ calc_ci.glm <- function(
 calc_ci.svyglm <- function(
   model,
   conf_level = 0.95,
-  method = c("wald", "profile")
+  method = c("wald", "profile"),
+  df = Inf
 ) {
   method <- match.arg(method)
 
@@ -201,7 +205,7 @@ calc_ci.svrepstat <- calc_ci.svystat
 # utility functions ------------------------------------------------------
 
 SE <- function(object, ...) {
-  v <- vcov(object)
+  v <- stats::vcov(object)
   if (!is.matrix(v) || NCOL(v) == 1) sqrt(v) else sqrt(diag(v))
 }
 

@@ -12,6 +12,8 @@ calc_ci(model, conf_level = 0.95, method = c("wald", "profile"), df = Inf)
 \item{conf_level}{The confidence interval, default is 0.95}
 
 \item{method}{The method for calculating CIs}
+
+\item{df}{Degrees of freedom}
 }
 \description{
 This function calculates confidence intervals for \code{lm}, \code{glm},

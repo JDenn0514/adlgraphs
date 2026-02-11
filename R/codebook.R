@@ -66,7 +66,7 @@ codebook <- function(data) {
     ))
   }
 
-  data <- head(data)
+  data <- utils::head(data)
 
   # attr the variable names
   names <- names(data)

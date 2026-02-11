@@ -96,7 +96,7 @@
 #' }
 #'
 #' @seealso
-#' \code{\link{get_freqs}} for the underlying frequency calculation function
+#' `get_freqs()` for the underlying frequency calculation function
 #'
 #' @export
 export_freqs_excel <- function(

@@ -43,14 +43,14 @@
 #' @importFrom srvyr as_survey_design
 #' @importFrom stats approxfun coef complete.cases df.residual lm median
 #'   model.matrix na.omit qt quantile reformulate relevel sd setNames
-#'   symnum weighted.mean weights xtabs
+#'   symnum weighted.mean weights vcov xtabs
 #' @importFrom survey degf svyby svyglm svymean svytable
 #' @importFrom systemfonts register_font
 #' @importFrom tibble as_tibble new_tibble
 #' @importFrom tidyr complete crossing drop_na nest nesting pivot_wider
 #'   pivot_longer separate_wider_delim unnest
 #' @importFrom tidyselect all_of eval_select everything where
-#' @importFrom utils modifyList globalVariables
+#' @importFrom utils modifyList globalVariables head
 #' @importFrom vctrs vec_ptype_abbr vec_rbind vec_cbind vec_split
 #' @importFrom withr with_seed
 #' @importFrom writexl write_xlsx
