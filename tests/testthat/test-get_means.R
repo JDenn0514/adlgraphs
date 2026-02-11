@@ -6,8 +6,8 @@ testthat::test_that("expect outputs to be equal for mean with x, no groups and n
     mean = 4.22,
     sd = 3.872,
     n = 250,
-    conf.low = 3.738,
-    conf.high = 4.702
+    conf_low = 3.738,
+    conf_high = 4.702
   )
 
   # add a variable for the n variable
@@ -17,9 +17,9 @@ testthat::test_that("expect outputs to be equal for mean with x, no groups and n
   # add a variable label for the mean variable
   attr(mean_x$sd, "label") <- "SD"
   # add a variable label for the mean variable
-  attr(mean_x$conf.low, "label") <- "Low CI"
+  attr(mean_x$conf_low, "label") <- "Low CI"
   # add a variable label for the mean variable
-  attr(mean_x$conf.high, "label") <- "High CI"
+  attr(mean_x$conf_high, "label") <- "High CI"
 
   class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
 
@@ -44,8 +44,8 @@ testthat::test_that("expect outputs to be equal for mean with x, no groups and n
     mean = 4.22,
     sd = 3.872,
     n = 250,
-    conf.low = 3.738,
-    conf.high = 4.702
+    conf_low = 3.738,
+    conf_high = 4.702
   )
 
   # add a variable for the n variable
@@ -55,9 +55,9 @@ testthat::test_that("expect outputs to be equal for mean with x, no groups and n
   # add a variable label for the mean variable
   attr(mean_x$sd, "label") <- "SD"
   # add a variable label for the mean variable
-  attr(mean_x$conf.low, "label") <- "Low CI"
+  attr(mean_x$conf_low, "label") <- "Low CI"
   # add a variable label for the mean variable
-  attr(mean_x$conf.high, "label") <- "High CI"
+  attr(mean_x$conf_high, "label") <- "High CI"
 
   class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
 
@@ -84,8 +84,8 @@ testthat::test_that("expect outputs to be equal when ci is 0.9", {
     mean = 3.973,
     sd = 3.757,
     n = 245.115,
-    conf.low = 3.577,
-    conf.high = 4.369
+    conf_low = 3.577,
+    conf_high = 4.369
   )
 
   # add a variable for the n variable
@@ -95,9 +95,9 @@ testthat::test_that("expect outputs to be equal when ci is 0.9", {
   # add a variable label for the mean variable
   attr(mean_x$sd, "label") <- "SD"
   # add a variable label for the mean variable
-  attr(mean_x$conf.low, "label") <- "Low CI"
+  attr(mean_x$conf_low, "label") <- "Low CI"
   # add a variable label for the mean variable
-  attr(mean_x$conf.high, "label") <- "High CI"
+  attr(mean_x$conf_high, "label") <- "High CI"
 
   class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
 
@@ -123,8 +123,8 @@ testthat::test_that("expect outputs to be equal when decimals is 2", {
     mean = 3.97,
     sd = 3.76,
     n = 245.11,
-    conf.low = 3.5,
-    conf.high = 4.45
+    conf_low = 3.5,
+    conf_high = 4.45
   )
 
   # add a variable for the n variable
@@ -134,9 +134,9 @@ testthat::test_that("expect outputs to be equal when decimals is 2", {
   # add a variable label for the mean variable
   attr(mean_x$sd, "label") <- "SD"
   # add a variable label for the mean variable
-  attr(mean_x$conf.low, "label") <- "Low CI"
+  attr(mean_x$conf_low, "label") <- "Low CI"
   # add a variable label for the mean variable
-  attr(mean_x$conf.high, "label") <- "High CI"
+  attr(mean_x$conf_high, "label") <- "High CI"
 
   class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
 
@@ -161,8 +161,8 @@ testthat::test_that("expect outputs to be equal for mean with x, no groups and w
     mean = 3.973,
     sd = 3.757,
     n = 245.115,
-    conf.low = 3.501,
-    conf.high = 4.446
+    conf_low = 3.501,
+    conf_high = 4.446
   )
 
   # add a variable for the n variable
@@ -172,9 +172,9 @@ testthat::test_that("expect outputs to be equal for mean with x, no groups and w
   # add a variable label for the mean variable
   attr(mean_x$sd, "label") <- "SD"
   # add a variable label for the mean variable
-  attr(mean_x$conf.low, "label") <- "Low CI"
+  attr(mean_x$conf_low, "label") <- "Low CI"
   # add a variable label for the mean variable
-  attr(mean_x$conf.high, "label") <- "High CI"
+  attr(mean_x$conf_high, "label") <- "High CI"
 
   class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
 
@@ -212,8 +212,8 @@ testthat::test_that("expect outputs to be equal for mean with x, one group and w
       # calculate std.error
       std.error = sd / sqrt(n),
       # calculate the confidence invtervals
-      conf.low = mean - stats::qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
-      conf.high = mean + stats::qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      conf_low = mean - stats::qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      conf_high = mean + stats::qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
       # convert all group variables to a factor
       dplyr::across(
         # run the function over the variables in group_names
@@ -228,7 +228,7 @@ testthat::test_that("expect outputs to be equal for mean with x, one group and w
       )
     ) %>% 
     # keep only relevant variables and reorder them
-    dplyr::select(c(edu_f2, mean, sd, n, conf.low, conf.high))
+    dplyr::select(c(edu_f2, mean, sd, n, conf_low, conf_high))
 
   # add a variable for the n variable
   attr(mean_x$n, "label") <- "N"
@@ -237,9 +237,9 @@ testthat::test_that("expect outputs to be equal for mean with x, one group and w
   # add a variable label for the mean variable
   attr(mean_x$sd, "label") <- "SD"
   # add a variable label for the mean variable
-  attr(mean_x$conf.low, "label") <- "Low CI"
+  attr(mean_x$conf_low, "label") <- "Low CI"
   # add a variable label for the mean variable
-  attr(mean_x$conf.high, "label") <- "High CI"
+  attr(mean_x$conf_high, "label") <- "High CI"
 
   class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
 
@@ -282,8 +282,8 @@ testthat::test_that("expect outputs to be equal for mean with x, one group with 
       # calculate std.error
       std.error = sd / sqrt(n),
       # calculate the confidence invtervals
-      conf.low = mean - stats::qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
-      conf.high = mean + stats::qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      conf_low = mean - stats::qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      conf_high = mean + stats::qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
       # convert all group variables to a factor
       dplyr::across(
         # run the function over the variables in group_names
@@ -298,7 +298,7 @@ testthat::test_that("expect outputs to be equal for mean with x, one group with 
       )
     )
     # keep only relevant variables and reorder them
-  mean_x <- mean_x[c("pid_f3_NA", "mean", "sd", "n", "conf.low", "conf.high")]
+  mean_x <- mean_x[c("pid_f3_NA", "mean", "sd", "n", "conf_low", "conf_high")]
 
   # add a variable for the n variable
   attr(mean_x$n, "label") <- "N"
@@ -307,9 +307,9 @@ testthat::test_that("expect outputs to be equal for mean with x, one group with 
   # add a variable label for the mean variable
   attr(mean_x$sd, "label") <- "SD"
   # add a variable label for the mean variable
-  attr(mean_x$conf.low, "label") <- "Low CI"
+  attr(mean_x$conf_low, "label") <- "Low CI"
   # add a variable label for the mean variable
-  attr(mean_x$conf.high, "label") <- "High CI"
+  attr(mean_x$conf_high, "label") <- "High CI"
 
   class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
 
@@ -354,8 +354,8 @@ testthat::test_that("expect outputs to be equal for mean with x, two groups and 
       # calculate std.error
       std.error = sd / sqrt(n),
       # calculate the confidence invtervals
-      conf.low = mean - stats::qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
-      conf.high = mean + stats::qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      conf_low = mean - stats::qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
+      conf_high = mean + stats::qt(1 - ((1 - 0.95) / 2), n - 1) * std.error,
       # convert all group variables to a factor
       dplyr::across(
         # run the function over the variables in group_names
@@ -370,7 +370,7 @@ testthat::test_that("expect outputs to be equal for mean with x, two groups and 
       )
     ) %>% 
     # keep only relevant variables and reorder them
-    dplyr::select(c(edu_f2, pid_f3, mean, sd, n, conf.low, conf.high))
+    dplyr::select(c(edu_f2, pid_f3, mean, sd, n, conf_low, conf_high))
 
   # add a variable for the n variable
   attr(mean_x$n, "label") <- "N"
@@ -379,9 +379,9 @@ testthat::test_that("expect outputs to be equal for mean with x, two groups and 
   # add a variable label for the mean variable
   attr(mean_x$sd, "label") <- "SD"
   # add a variable label for the mean variable
-  attr(mean_x$conf.low, "label") <- "Low CI"
+  attr(mean_x$conf_low, "label") <- "Low CI"
   # add a variable label for the mean variable
-  attr(mean_x$conf.high, "label") <- "High CI"
+  attr(mean_x$conf_high, "label") <- "High CI"
 
   class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
 

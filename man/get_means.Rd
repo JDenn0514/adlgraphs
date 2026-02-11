@@ -55,7 +55,7 @@ following columns:
 \item \code{mean}: design-based mean of x
 \item \code{sd}: unweighted sample standard deviation within each group
 \item \code{n}: unweighted row count per group
-\item \code{conf.low}, \code{conf.high}: Wald confidence interval bounds
+\item \code{conf_low}, \code{conf_high}: Wald confidence interval bounds
 }
 
 The result has class \code{"adlgraphs_means"} and common attributes:
