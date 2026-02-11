@@ -74,6 +74,7 @@ reference:
     - get_freq_table
     - get_all_freqs
     - export_freqs_excel
+    - export_treatment_effects
     - get_corr
     - get_all_corr
     - get_loadings
@@ -110,6 +111,7 @@ reference:
 - title: Data
   contents:
     - test_data
+    - basic_df
 - title: Deprecated fuctions
   contents:
     - remove_bot_dupe
