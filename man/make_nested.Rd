@@ -54,18 +54,18 @@ make_nested(test_data, pid_f3)
 make_nested(test_data, c(pid_f3, edu_f2))
 
 # group data to create nested data frame
-test_data \%>\% 
-  dplyr::group_by(pid_f3, edu_f2) \%>\% 
+test_data \%>\%
+  dplyr::group_by(pid_f3, edu_f2) \%>\%
   make_nested()
 
-# use group_by and nest_data 
-test_data \%>\% 
-  dplyr::group_by(pid_f3) \%>\% 
+# use group_by and nest_data
+test_data \%>\%
+  dplyr::group_by(pid_f3) \%>\%
   make_nested(edu_f2)
 
 # use different sep argument
 make_nested(test_data, c(pid_f3, edu_f2), sep = ":")
-  
+
 
 
 }

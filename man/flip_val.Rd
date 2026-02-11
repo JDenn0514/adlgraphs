@@ -27,9 +27,9 @@ exactly what this function does (still needs to be updated).
 blue <- sample(c(1:4), size = 20, replace = TRUE)
 # add value labels
 attr(blue, "labels") <- c(
-  "Strongly agree" = 1, 
-  "Somewhat agree" = 2, 
-  "Somewhat disagree" = 3, 
+  "Strongly agree" = 1,
+  "Somewhat agree" = 2,
+  "Somewhat disagree" = 3,
   "Strongly disagree" = 4
 )
 # add a variable label
@@ -45,15 +45,15 @@ str(list(blue = blue, blue_flip = blue_flip))
 
 # can also be used inside of dplyr::mutate()
 library(dplyr)
-  
-new_df <- test_data \%>\% 
+
+new_df <- test_data \%>\%
   dplyr::mutate(
     # flip the valence for deserving
     deserving_flip = flip_val(
-      deserving, 
+      deserving,
       "Groups at the bottom are not just as deserving as groups at the top"
     )
-  ) \%>\% 
+  ) \%>\%
   # keep only the relevant columns
   dplyr::select(deserving, deserving_flip)
 

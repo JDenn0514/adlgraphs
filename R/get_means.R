@@ -165,11 +165,11 @@ get_means.data.frame <- function(
   # Summarize data
   out <- data %>%
     dplyr::summarise(
-      # calculate the weighted n
+      # calculate the unweighted n
       n = dplyr::n(),
-      # calculate the mean (weighted sum / n)
-      mean = stats::sum(.data[[x]] * .data[[wt_name]], na.rm = TRUE) / n,
-      # calculate the weighted sd
+      # calculate the weighted mean
+      mean = sum(.data[[x]] * .data[[wt_name]], na.rm = TRUE) / sum(.data[[wt_name]], na.rm = TRUE),
+      # calculate the unweighted sd
       sd = stats::sd(.data[[x]]),
       # remove the groups
       .groups = "drop"

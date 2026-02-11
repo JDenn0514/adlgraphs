@@ -79,7 +79,7 @@ there are many comparison groups due to the nature of
 \code{mvtnorm::qmvt()} and high dimensional data.
 }
 \examples{
-# load dplyr for the pipe: \%>\% 
+# load dplyr for the pipe: \%>\%
 library(dplyr)
 library(adlgraphs)
 
@@ -96,21 +96,21 @@ get_diffs(test_data, "acts_avg", "pid_f3", ref_level = "Independent")
 # don't have to be strings
 get_diffs(test_data, acts_avg, pid_f3, edu_f2)
 
-# we can also group by multiple variables. Due to a small n, I'm going to use 
-# `edu_f2` instead of `edu_f`. 
-test_data \%>\% 
-  dplyr::mutate(values_f2 = make_dicho(values)) \%>\% 
+# we can also group by multiple variables. Due to a small n, I'm going to use
+# `edu_f2` instead of `edu_f`.
+test_data \%>\%
+  dplyr::mutate(values_f2 = make_dicho(values)) \%>\%
   get_diffs(acts_avg, treats = pid_f3, group = c(edu_f2, values_f2))
 
 # now let's do those previous two calculations but using `dplyr::group_by()`
-test_data \%>\% 
-  dplyr::group_by(pid_f3) \%>\% 
+test_data \%>\%
+  dplyr::group_by(pid_f3) \%>\%
   get_diffs(acts_avg, edu_f)
 
 # we can also group by multiple variables
-test_data \%>\% 
-  dplyr::mutate(values_f2 = make_dicho(values)) \%>\% 
-  dplyr::group_by(pid_f3, values_f2) \%>\% 
+test_data \%>\%
+  dplyr::mutate(values_f2 = make_dicho(values)) \%>\%
+  dplyr::group_by(pid_f3, values_f2) \%>\%
   get_diffs(acts_avg, edu_f2)
 
 }

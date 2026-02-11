@@ -27,9 +27,9 @@ string of the \code{x} variable but with a "\%" symbol added.
 }
 \examples{
 library(dplyr)
-# get the frequencies of top andupdate 
+# get the frequencies of top andupdate
 test_data \%>\%
-  get_freqs(top) \%>\% 
+  get_freqs(top) \%>\%
   pct_conv()
 
 }

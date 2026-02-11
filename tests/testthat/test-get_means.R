@@ -197,14 +197,14 @@ testthat::test_that("expect outputs to be equal for mean with x, one group and w
 
   # manually calculate the mean
   mean_x <- test_data %>%
-    group_by(edu_f2) %>% 
+    group_by(edu_f2) %>%
     dplyr::summarise(
-      # calculate the weighted n
-      n = sum(wts, na.rm = TRUE), 
-      # calculate the mean (weighted sum / n)
-      mean = sum(trad_n * wts, na.rm = TRUE) / n,
-      # calculate the weighted sd
-      sd = sqrt(sum(wts * (trad_n - mean)^2, na.rm = TRUE) / n),
+      # calculate the unweighted n
+      n = dplyr::n(),
+      # calculate the weighted mean
+      mean = sum(trad_n * wts, na.rm = TRUE) / sum(wts, na.rm = TRUE),
+      # calculate the unweighted sd
+      sd = stats::sd(trad_n),
       # remove the groups
       .groups = "drop"
     ) %>% 
@@ -244,6 +244,7 @@ testthat::test_that("expect outputs to be equal for mean with x, one group and w
   class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
 
   attr(mean_x, "group_names") <- c("edu_f2")
+  attr(mean_x, "group_labels") <- c(edu_f2 = "What is the highest level of school you have completed or the highest degree you have received?")
   attr(mean_x, "variable_label") <- "ADL Index"
   attr(mean_x, "variable_name") <- "trad_n" 
 
@@ -268,14 +269,14 @@ testthat::test_that("expect outputs to be equal for mean with x, one group with 
   
   # manually calculate the mean
   mean_x <- test_data %>%
-    dplyr::group_by(pid_f3_NA) %>% 
+    dplyr::group_by(pid_f3_NA) %>%
     dplyr::summarise(
-      # calculate the weighted n
-      n = sum(wts, na.rm = TRUE), 
-      # calculate the mean (weighted sum / n)
-      mean = sum(trad_n * wts, na.rm = TRUE) / n,
-      # calculate the weighted sd
-      sd = sqrt(sum(wts * (trad_n - mean)^2, na.rm = TRUE) / n),
+      # calculate the unweighted n
+      n = dplyr::n(),
+      # calculate the weighted mean
+      mean = sum(trad_n * wts, na.rm = TRUE) / sum(wts, na.rm = TRUE),
+      # calculate the unweighted sd
+      sd = stats::sd(trad_n),
     ) %>% 
     dplyr::mutate(
       # calculate std.error
@@ -313,6 +314,7 @@ testthat::test_that("expect outputs to be equal for mean with x, one group with 
   class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
 
   attr(mean_x, "group_names") <- c("pid_f3_NA")
+  attr(mean_x, "group_labels") <- c(pid_f3_NA = "pid_f3_NA")
   attr(mean_x, "variable_label") <- "ADL Index"
   attr(mean_x, "variable_name") <- "trad_n" 
 
@@ -337,14 +339,14 @@ testthat::test_that("expect outputs to be equal for mean with x, two groups and 
 
   # manually calculate the mean
   mean_x <- test_data %>%
-    group_by(edu_f2, pid_f3) %>% 
+    group_by(edu_f2, pid_f3) %>%
     dplyr::summarise(
-      # calculate the weighted n
-      n = sum(wts, na.rm = TRUE), 
-      # calculate the mean (weighted sum / n)
-      mean = sum(trad_n * wts, na.rm = TRUE) / n,
-      # calculate the weighted sd
-      sd = sqrt(sum(wts * (trad_n - mean)^2, na.rm = TRUE) / n),
+      # calculate the unweighted n
+      n = dplyr::n(),
+      # calculate the weighted mean
+      mean = sum(trad_n * wts, na.rm = TRUE) / sum(wts, na.rm = TRUE),
+      # calculate the unweighted sd
+      sd = stats::sd(trad_n),
       # remove the groups
       .groups = "drop"
     ) %>% 
@@ -384,6 +386,10 @@ testthat::test_that("expect outputs to be equal for mean with x, two groups and 
   class(mean_x) <- c("adlgraphs_means", "tbl_df", "tbl", "data.frame")
 
   attr(mean_x, "group_names") <- c("edu_f2", "pid_f3")
+  attr(mean_x, "group_labels") <- c(
+    edu_f2 = "What is the highest level of school you have completed or the highest degree you have received?",
+    pid_f3 = "Political Partisanship"
+  )
   attr(mean_x, "variable_label") <- "ADL Index"
   attr(mean_x, "variable_name") <- "trad_n" 
 

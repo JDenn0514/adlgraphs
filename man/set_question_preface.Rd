@@ -39,13 +39,13 @@ df <- data.frame(
   x_2 = sample(c(0, 1), replace = TRUE, size = 10),
   x_3 = sample(c(0, 1), replace = TRUE, size = 10),
   x_4 = sample(c(0, 1), replace = TRUE, size = 10)
-) 
+)
 
 # set the variable labels
 attr(df$x_1, "label") <- "Which of the following colors do you like? Blue"
 attr(df$x_2, "label") <- "Which of the following colors do you like? Red"
 attr(df$x_3, "label") <- "Which of the following colors do you like? Yellow"
-attr(df$x_4, "label") <- "Which of the following colors do you like? Purple" 
+attr(df$x_4, "label") <- "Which of the following colors do you like? Purple"
 
 # set the value labels
 attr(df$x_1, "labels") <- c("Blue" = 1)
