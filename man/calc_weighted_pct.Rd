@@ -40,7 +40,7 @@ attr(survey_data$race, "label") <- "Race/Ethnicity"
 attr(survey_data$job_approval, "label") <- "Job Approval"
 attr(survey_data$right_direction, "label") <- "Country Direction"
 
-# Create crosstabs
+# Create crosstabs with summary string
 create_polling_crosstabs(
   data = survey_data,
   row_vars = c("job_approval", "right_direction"),
@@ -49,7 +49,19 @@ create_polling_crosstabs(
   min_n = 75,
   file_name = "polling_crosstabs.xlsx",
   sheet_name = "January 2026",
-  overwrite_existing_sheet = TRUE
+  overwrite_existing_sheet = TRUE,
+  summary_string = "National Poll - January 2026"
+)
+
+# Or without a summary string (default)
+create_polling_crosstabs(
+  data = survey_data,
+  row_vars = c("job_approval", "right_direction"),
+  subgroup_vars = c("gender", "race"),
+  wt_var = "weight",
+  min_n = 75,
+  file_name = "polling_crosstabs.xlsx",
+  sheet_name = "January 2026"
 )
 }
 Calculate weighted percentage

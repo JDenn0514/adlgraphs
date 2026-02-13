@@ -12,7 +12,8 @@ create_polling_crosstabs(
   min_n = 75,
   file_name,
   sheet_name,
-  overwrite_existing_sheet = TRUE
+  overwrite_existing_sheet = TRUE,
+  summary_string = ""
 )
 }
 \arguments{
@@ -33,6 +34,9 @@ to be included (default: 75)}
 
 \item{overwrite_existing_sheet}{Logical indicating whether to overwrite existing
 sheet with same name (default: TRUE)}
+
+\item{summary_string}{Character string to display in the top-left merged cell
+(default: "")}
 }
 \value{
 Invisibly returns the crosstab data structure; writes Excel file as side effect
@@ -51,7 +55,8 @@ create_polling_crosstabs(
   wt_var = "weight",
   min_n = 75,
   file_name = "crosstabs.xlsx",
-  sheet_name = "Results"
+  sheet_name = "Results",
+  summary_string = "January 2026 National Poll"
 )
 }
 
