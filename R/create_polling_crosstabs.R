@@ -34,25 +34,22 @@
 #' }
 #'
 #' @export
-create_polling_crosstabs <- function(
-  data,
-  row_vars,
-  subgroup_vars,
-  wt_var,
-  min_n = 75,
-  file_name,
-  sheet_name,
-  overwrite_existing_sheet = TRUE,
-  summary_string = ""
-) {
+create_polling_crosstabs <- function(data,
+                                     row_vars,
+                                     subgroup_vars,
+                                     wt_var,
+                                     min_n = 75,
+                                     file_name,
+                                     sheet_name,
+                                     overwrite_existing_sheet = TRUE,
+                                     summary_string = "") {
+  
   # ============================================================================
   # Load Required Packages
   # ============================================================================
   
   if (!require("openxlsx", quietly = TRUE)) {
-    stop(
-      "Package 'openxlsx' is required. Please install it with: install.packages('openxlsx')"
-    )
+    stop("Package 'openxlsx' is required. Please install it with: install.packages('openxlsx')")
   }
   
   # ============================================================================
@@ -70,10 +67,8 @@ create_polling_crosstabs <- function(
   all_vars <- c(row_vars, subgroup_vars, wt_var)
   missing_vars <- setdiff(all_vars, names(data))
   if (length(missing_vars) > 0) {
-    stop(
-      "The following variables are not found in the data: ",
-      paste(missing_vars, collapse = ", ")
-    )
+    stop("The following variables are not found in the data: ", 
+         paste(missing_vars, collapse = ", "))
   }
   
   # Check that weights are numeric
@@ -82,22 +77,13 @@ create_polling_crosstabs <- function(
   }
   
   # ============================================================================
-  # Generate Subgroup Combinations
-  # ============================================================================
-  
-  # Create a data frame with all combinations of subgroups
-  subgroup_combos <- expand.grid(
-    lapply(subgroup_vars, function(var) unique(data[[var]])),
-    stringsAsFactors = FALSE
-  )
-  names(subgroup_combos) <- subgroup_vars
-  
-  # Add an "Overall" column (all respondents)
-  overall_df <- data.frame(Overall = "Overall", stringsAsFactors = FALSE)
-  
-  # ============================================================================
   # Build Column Structure (Subgroups)
   # ============================================================================
+  
+  # Note: We create columns for each value of each subgroup variable separately,
+  # NOT for all combinations of subgroups. This keeps memory usage reasonable.
+  # For example, if you have gender (2 values) and race (4 values), you get
+  # 2 + 4 = 6 columns, not 2 * 4 = 8 combinations.
   
   columns_list <- list()
   
@@ -110,7 +96,7 @@ create_polling_crosstabs <- function(
     unweighted_n = nrow(data)
   )
   
-  # Add each subgroup combination
+  # Add each subgroup variable's values as separate columns
   for (var in subgroup_vars) {
     var_label <- get_var_label(data, var)
     unique_values <- sort(unique(data[[var]][!is.na(data[[var]])]))
@@ -400,9 +386,6 @@ create_polling_crosstabs <- function(
   # Merge Cells (Batch Operations)
   # ============================================================================
   
-  # Collect all merge operations
-  merge_operations <- list()
-  
   # Merge top-left 4 cells (a1:b2) - this will display the summary_string
   mergeCells(wb, sheet = sheet_name, rows = 1:2, cols = 1:2)
   
@@ -519,52 +502,50 @@ create_polling_crosstabs <- function(
 #' )
 #' }
 
-
-
 # ============================================================================
-# Helper Functions
-# ============================================================================
-
-#' Calculate weighted percentage
-#' @param values Vector of values (typically a factor or character)
-#' @param weights Vector of weights corresponding to values
-#' @return Named vector of weighted percentages
-calc_weighted_pct <- function(values, weights) {
-  # Remove NAs
-  valid_idx <- !is.na(values) & !is.na(weights)
-  values <- values[valid_idx]
-  weights <- weights[valid_idx]
+  # Helper Functions
+  # ============================================================================
   
-  if (length(values) == 0) {
-    return(numeric(0))
+  #' Calculate weighted percentage
+  #' @param values Vector of values (typically a factor or character)
+  #' @param weights Vector of weights corresponding to values
+  #' @return Named vector of weighted percentages
+  calc_weighted_pct <- function(values, weights) {
+    # Remove NAs
+    valid_idx <- !is.na(values) & !is.na(weights)
+    values <- values[valid_idx]
+    weights <- weights[valid_idx]
+    
+    if (length(values) == 0) {
+      return(numeric(0))
+    }
+    
+    # Calculate weighted counts
+    unique_vals <- unique(values)
+    weighted_counts <- sapply(unique_vals, function(val) {
+      sum(weights[values == val])
+    })
+    
+    # Convert to percentages
+    total_weight <- sum(weighted_counts)
+    if (total_weight == 0) {
+      return(setNames(rep(0, length(unique_vals)), unique_vals))
+    }
+    
+    weighted_pct <- (weighted_counts / total_weight) * 100
+    names(weighted_pct) <- unique_vals
+    
+    return(weighted_pct)
   }
   
-  # Calculate weighted counts
-  unique_vals <- unique(values)
-  weighted_counts <- sapply(unique_vals, function(val) {
-    sum(weights[values == val])
-  })
-  
-  # Convert to percentages
-  total_weight <- sum(weighted_counts)
-  if (total_weight == 0) {
-    return(setNames(rep(0, length(unique_vals)), unique_vals))
+  #' Get variable label or use variable name if no label exists
+  #' @param data Data frame
+  #' @param var_name Variable name
+  #' @return Variable label or name
+  get_var_label <- function(data, var_name) {
+    label <- attr(data[[var_name]], "label")
+    if (is.null(label) || length(label) == 0 || label == "") {
+      return(var_name)
+    }
+    return(label)
   }
-  
-  weighted_pct <- (weighted_counts / total_weight) * 100
-  names(weighted_pct) <- unique_vals
-  
-  return(weighted_pct)
-}
-
-#' Get variable label or use variable name if no label exists
-#' @param data Data frame
-#' @param var_name Variable name
-#' @return Variable label or name
-get_var_label <- function(data, var_name) {
-  label <- attr(data[[var_name]], "label")
-  if (is.null(label) || length(label) == 0 || label == "") {
-    return(var_name)
-  }
-  return(label)
-}
