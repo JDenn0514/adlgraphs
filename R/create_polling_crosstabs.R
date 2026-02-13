@@ -14,6 +14,8 @@
 #' @param sheet_name Character string specifying the sheet name
 #' @param overwrite_existing_sheet Logical indicating whether to overwrite existing
 #'   sheet with same name (default: TRUE)
+#' @param summary_string Character string to display in the top-left merged cell
+#'   (default: "")
 #'
 #' @return Invisibly returns the crosstab data structure; writes Excel file as side effect
 #'
@@ -26,7 +28,8 @@
 #'   wt_var = "weight",
 #'   min_n = 75,
 #'   file_name = "crosstabs.xlsx",
-#'   sheet_name = "Results"
+#'   sheet_name = "Results",
+#'   summary_string = "January 2026 National Poll"
 #' )
 #' }
 #'
@@ -38,7 +41,8 @@ create_polling_crosstabs <- function(data,
                                      min_n = 75,
                                      file_name,
                                      sheet_name,
-                                     overwrite_existing_sheet = TRUE) {
+                                     overwrite_existing_sheet = TRUE,
+                                     summary_string = "") {
   
   # ============================================================================
   # Load Required Packages
@@ -191,7 +195,8 @@ create_polling_crosstabs <- function(data,
   # Row 2: Subgroup values
   # Row 3: Unweighted n
   
-  header_row1 <- c("", "", rep(NA, num_cols))  # Placeholders for index columns
+  # Use summary_string for the top-left merged cell, or empty if not provided
+  header_row1 <- c(summary_string, "", rep(NA, num_cols))  # First cell contains summary_string
   header_row2 <- c("", "", rep(NA, num_cols))
   header_row3 <- c("", "n (unweighted)", rep(NA, num_cols))
   
@@ -404,7 +409,7 @@ create_polling_crosstabs <- function(data,
   # Merge Cells
   # ============================================================================
   
-  # Merge top-left 4 cells (a1:b2)
+  # Merge top-left 4 cells (a1:b2) - this will display the summary_string
   mergeCells(wb, sheet = sheet_name, rows = 1:2, cols = 1:2)
   
   # Merge cells for subgroup variable labels (header row 1)
@@ -519,7 +524,7 @@ create_polling_crosstabs <- function(data,
 #' attr(survey_data$job_approval, "label") <- "Job Approval"
 #' attr(survey_data$right_direction, "label") <- "Country Direction"
 #'
-#' # Create crosstabs
+#' # Create crosstabs with summary string
 #' create_polling_crosstabs(
 #'   data = survey_data,
 #'   row_vars = c("job_approval", "right_direction"),
@@ -528,55 +533,68 @@ create_polling_crosstabs <- function(data,
 #'   min_n = 75,
 #'   file_name = "polling_crosstabs.xlsx",
 #'   sheet_name = "January 2026",
-#'   overwrite_existing_sheet = TRUE
+#'   overwrite_existing_sheet = TRUE,
+#'   summary_string = "National Poll - January 2026"
+#' )
+#' 
+#' # Or without a summary string (default)
+#' create_polling_crosstabs(
+#'   data = survey_data,
+#'   row_vars = c("job_approval", "right_direction"),
+#'   subgroup_vars = c("gender", "race"),
+#'   wt_var = "weight",
+#'   min_n = 75,
+#'   file_name = "polling_crosstabs.xlsx",
+#'   sheet_name = "January 2026"
 #' )
 #' }
 
-  
-# ============================================================================
-# Helper Functions
-# ============================================================================
 
-#' Calculate weighted percentage
-#' @param values Vector of values (typically a factor or character)
-#' @param weights Vector of weights corresponding to values
-#' @return Named vector of weighted percentages
-calc_weighted_pct <- function(values, weights) {
-  # Remove NAs
-  valid_idx <- !is.na(values) & !is.na(weights)
-  values <- values[valid_idx]
-  weights <- weights[valid_idx]
+  # ============================================================================
+  # Helper Functions
+  # ============================================================================
   
-  if (length(values) == 0) {
-    return(numeric(0))
+  #' Calculate weighted percentage
+  #' @param values Vector of values (typically a factor or character)
+  #' @param weights Vector of weights corresponding to values
+  #' @return Named vector of weighted percentages
+  calc_weighted_pct <- function(values, weights) {
+    # Remove NAs
+    valid_idx <- !is.na(values) & !is.na(weights)
+    values <- values[valid_idx]
+    weights <- weights[valid_idx]
+    
+    if (length(values) == 0) {
+      return(numeric(0))
+    }
+    
+    # Calculate weighted counts
+    unique_vals <- unique(values)
+    weighted_counts <- sapply(unique_vals, function(val) {
+      sum(weights[values == val])
+    })
+    
+    # Convert to percentages
+    total_weight <- sum(weighted_counts)
+    if (total_weight == 0) {
+      return(setNames(rep(0, length(unique_vals)), unique_vals))
+    }
+    
+    weighted_pct <- (weighted_counts / total_weight) * 100
+    names(weighted_pct) <- unique_vals
+    
+    return(weighted_pct)
   }
   
-  # Calculate weighted counts
-  unique_vals <- unique(values)
-  weighted_counts <- sapply(unique_vals, function(val) {
-    sum(weights[values == val])
-  })
-  
-  # Convert to percentages
-  total_weight <- sum(weighted_counts)
-  if (total_weight == 0) {
-    return(setNames(rep(0, length(unique_vals)), unique_vals))
+  #' Get variable label or use variable name if no label exists
+  #' @param data Data frame
+  #' @param var_name Variable name
+  #' @return Variable label or name
+  get_var_label <- function(data, var_name) {
+    label <- attr(data[[var_name]], "label")
+    if (is.null(label) || length(label) == 0 || label == "") {
+      return(var_name)
+    }
+    return(label)
   }
   
-  weighted_pct <- (weighted_counts / total_weight) * 100
-  names(weighted_pct) <- unique_vals
-  
-  return(weighted_pct)
-}
-
-#' Get variable label or use variable name if no label exists
-#' @param data Data frame
-#' @param var_name Variable name
-#' @return Variable label or name
-get_var_label <- function(data, var_name) {
-  label <- attr(data[[var_name]], "label")
-  if (is.null(label) || length(label) == 0 || label == "") {
-    return(var_name)
-  }
-  return(label)
-}
