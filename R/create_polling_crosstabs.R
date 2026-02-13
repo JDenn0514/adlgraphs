@@ -34,22 +34,25 @@
 #' }
 #'
 #' @export
-create_polling_crosstabs <- function(data,
-                                     row_vars,
-                                     subgroup_vars,
-                                     wt_var,
-                                     min_n = 75,
-                                     file_name,
-                                     sheet_name,
-                                     overwrite_existing_sheet = TRUE,
-                                     summary_string = "") {
-  
+create_polling_crosstabs <- function(
+  data,
+  row_vars,
+  subgroup_vars,
+  wt_var,
+  min_n = 75,
+  file_name,
+  sheet_name,
+  overwrite_existing_sheet = TRUE,
+  summary_string = ""
+) {
   # ============================================================================
   # Load Required Packages
   # ============================================================================
   
   if (!require("openxlsx", quietly = TRUE)) {
-    stop("Package 'openxlsx' is required. Please install it with: install.packages('openxlsx')")
+    stop(
+      "Package 'openxlsx' is required. Please install it with: install.packages('openxlsx')"
+    )
   }
   
   # ============================================================================
@@ -67,8 +70,10 @@ create_polling_crosstabs <- function(data,
   all_vars <- c(row_vars, subgroup_vars, wt_var)
   missing_vars <- setdiff(all_vars, names(data))
   if (length(missing_vars) > 0) {
-    stop("The following variables are not found in the data: ", 
-         paste(missing_vars, collapse = ", "))
+    stop(
+      "The following variables are not found in the data: ",
+      paste(missing_vars, collapse = ", ")
+    )
   }
   
   # Check that weights are numeric
