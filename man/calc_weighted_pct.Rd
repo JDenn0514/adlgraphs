@@ -52,17 +52,6 @@ create_polling_crosstabs(
   overwrite_existing_sheet = TRUE,
   summary_string = "National Poll - January 2026"
 )
-
-# Or without a summary string (default)
-create_polling_crosstabs(
-  data = survey_data,
-  row_vars = c("job_approval", "right_direction"),
-  subgroup_vars = c("gender", "race"),
-  wt_var = "weight",
-  min_n = 75,
-  file_name = "polling_crosstabs.xlsx",
-  sheet_name = "January 2026"
-)
 }
 Calculate weighted percentage
 }
