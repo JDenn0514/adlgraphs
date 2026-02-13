@@ -16,7 +16,7 @@ create_polling_crosstabs(
 )
 }
 \arguments{
-\item{data}{Data frame}
+\item{data}{A data frame or survey design object containing survey responses}
 
 \item{row_vars}{Character vector of variable names to display as rows}
 
@@ -33,20 +33,9 @@ to be included (default: 75)}
 
 \item{overwrite_existing_sheet}{Logical indicating whether to overwrite existing
 sheet with same name (default: TRUE)}
-
-\item{values}{Vector of values (typically a factor or character)}
-
-\item{weights}{Vector of weights corresponding to values}
-
-\item{var_name}{Variable name}
 }
 \value{
 Invisibly returns the crosstab data structure; writes Excel file as side effect
-
-Named vector of weighted percentages
-Get variable label or use variable name if no label exists
-
-Variable label or name
 }
 \description{
 This function takes survey data and creates formatted crosstabs showing
