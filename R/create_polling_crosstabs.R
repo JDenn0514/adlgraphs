@@ -73,54 +73,6 @@ create_polling_crosstabs <- function(data,
   }
   
   # ============================================================================
-  # Helper Functions
-  # ============================================================================
-  
-  #' Calculate weighted percentage
-  #' @param values Vector of values (typically a factor or character)
-  #' @param weights Vector of weights corresponding to values
-  #' @return Named vector of weighted percentages
-  calc_weighted_pct <- function(values, weights) {
-    # Remove NAs
-    valid_idx <- !is.na(values) & !is.na(weights)
-    values <- values[valid_idx]
-    weights <- weights[valid_idx]
-    
-    if (length(values) == 0) {
-      return(numeric(0))
-    }
-    
-    # Calculate weighted counts
-    unique_vals <- unique(values)
-    weighted_counts <- sapply(unique_vals, function(val) {
-      sum(weights[values == val])
-    })
-    
-    # Convert to percentages
-    total_weight <- sum(weighted_counts)
-    if (total_weight == 0) {
-      return(setNames(rep(0, length(unique_vals)), unique_vals))
-    }
-    
-    weighted_pct <- (weighted_counts / total_weight) * 100
-    names(weighted_pct) <- unique_vals
-    
-    return(weighted_pct)
-  }
-  
-  #' Get variable label or use variable name if no label exists
-  #' @param data Data frame
-  #' @param var_name Variable name
-  #' @return Variable label or name
-  get_var_label <- function(data, var_name) {
-    label <- attr(data[[var_name]], "label")
-    if (is.null(label) || length(label) == 0 || label == "") {
-      return(var_name)
-    }
-    return(label)
-  }
-  
-  # ============================================================================
   # Generate Subgroup Combinations
   # ============================================================================
   
@@ -579,3 +531,52 @@ create_polling_crosstabs <- function(data,
 #'   overwrite_existing_sheet = TRUE
 #' )
 #' }
+
+  
+# ============================================================================
+# Helper Functions
+# ============================================================================
+
+#' Calculate weighted percentage
+#' @param values Vector of values (typically a factor or character)
+#' @param weights Vector of weights corresponding to values
+#' @return Named vector of weighted percentages
+calc_weighted_pct <- function(values, weights) {
+  # Remove NAs
+  valid_idx <- !is.na(values) & !is.na(weights)
+  values <- values[valid_idx]
+  weights <- weights[valid_idx]
+  
+  if (length(values) == 0) {
+    return(numeric(0))
+  }
+  
+  # Calculate weighted counts
+  unique_vals <- unique(values)
+  weighted_counts <- sapply(unique_vals, function(val) {
+    sum(weights[values == val])
+  })
+  
+  # Convert to percentages
+  total_weight <- sum(weighted_counts)
+  if (total_weight == 0) {
+    return(setNames(rep(0, length(unique_vals)), unique_vals))
+  }
+  
+  weighted_pct <- (weighted_counts / total_weight) * 100
+  names(weighted_pct) <- unique_vals
+  
+  return(weighted_pct)
+}
+
+#' Get variable label or use variable name if no label exists
+#' @param data Data frame
+#' @param var_name Variable name
+#' @return Variable label or name
+get_var_label <- function(data, var_name) {
+  label <- attr(data[[var_name]], "label")
+  if (is.null(label) || length(label) == 0 || label == "") {
+    return(var_name)
+  }
+  return(label)
+}
