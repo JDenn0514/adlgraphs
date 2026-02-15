@@ -39,7 +39,9 @@ sheet with same name (default: TRUE)}
 (default: "")}
 }
 \value{
-Invisibly returns the crosstab data structure; writes Excel file as side effect
+Data frame with columns: subgroup_var, subgroup_var_label, subgroup_val,
+n, row_var, row_var_label, row_val, pct (as decimal), moe (as decimal).
+Sorted by subgroup variables then row variables.
 }
 \description{
 This function takes survey data and creates formatted crosstabs showing
@@ -48,7 +50,7 @@ are exported to an Excel file with proper formatting.
 }
 \examples{
 \dontrun{
-create_polling_crosstabs(
+results <- create_polling_crosstabs(
   data = survey_data,
   row_vars = c("job_approval", "direction"),
   subgroup_vars = c("gender", "race"),

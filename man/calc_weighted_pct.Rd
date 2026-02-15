@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_polling_crosstabs.R
 \name{calc_weighted_pct}
 \alias{calc_weighted_pct}
-\title{Example of how to use the create_polling_crosstabs function}
+\title{Calculate weighted percentage}
 \usage{
 calc_weighted_pct(values, weights)
 }
@@ -15,43 +15,5 @@ calc_weighted_pct(values, weights)
 Named vector of weighted percentages
 }
 \description{
-Example of how to use the create_polling_crosstabs function
-}
-\examples{
-\dontrun{
-# Create sample survey data
-set.seed(123)
-n <- 500
-survey_data <- data.frame(
-  gender = sample(c("Male", "Female"), n, replace = TRUE),
-  race = sample(c("White", "Black", "Hispanic", "Other"), n, 
-                replace = TRUE, prob = c(0.6, 0.15, 0.15, 0.1)),
-  job_approval = sample(c("Strongly approve", "Somewhat approve", 
-                         "Somewhat disapprove", "Strongly disapprove"), 
-                       n, replace = TRUE),
-  right_direction = sample(c("Right direction", "Wrong track"), 
-                          n, replace = TRUE),
-  weight = runif(n, 0.5, 2.0)
-)
-
-# Add variable labels
-attr(survey_data$gender, "label") <- "Gender"
-attr(survey_data$race, "label") <- "Race/Ethnicity"
-attr(survey_data$job_approval, "label") <- "Job Approval"
-attr(survey_data$right_direction, "label") <- "Country Direction"
-
-# Create crosstabs with summary string
-create_polling_crosstabs(
-  data = survey_data,
-  row_vars = c("job_approval", "right_direction"),
-  subgroup_vars = c("gender", "race"),
-  wt_var = "weight",
-  min_n = 75,
-  file_name = "polling_crosstabs.xlsx",
-  sheet_name = "January 2026",
-  overwrite_existing_sheet = TRUE,
-  summary_string = "National Poll - January 2026"
-)
-}
 Calculate weighted percentage
 }
