@@ -46,6 +46,57 @@ get_var_label <- function(data, var_name) {
   return(label)
 }
 
+#' Calculate design effect (DEFF) for weighted data
+#' @param weights Vector of weights
+#' @return Design effect value
+calc_design_effect <- function(weights) {
+  # Remove NAs
+  weights <- weights[!is.na(weights)]
+  
+  if (length(weights) == 0) {
+    return(1)
+  }
+  
+  # DEFF = n * sum(w^2) / (sum(w))^2
+  n <- length(weights)
+  sum_w <- sum(weights)
+  sum_w_sq <- sum(weights^2)
+  
+  deff <- (n * sum_w_sq) / (sum_w^2)
+  
+  return(deff)
+}
+
+#' Calculate margin of error for weighted proportion
+#' @param p Proportion (as percentage, e.g., 30 for 30%)
+#' @param n Unweighted sample size
+#' @param deff Design effect
+#' @return Margin of error (as decimal, e.g., 0.0435 for 4.35 percentage points)
+calc_moe <- function(p, n, deff) {
+  # Convert percentage to proportion
+  p_prop <- p / 100
+  
+  # Handle edge cases
+  if (is.na(p) || is.na(n) || is.na(deff) || n == 0) {
+    return(NA_real_)
+  }
+  
+  # Avoid issues with 0% or 100%
+  if (p_prop <= 0 || p_prop >= 1) {
+    return(0)
+  }
+  
+  # Standard error accounting for design effect
+  # SE = sqrt(DEFF * p * (1-p) / n)
+  se <- sqrt(deff * p_prop * (1 - p_prop) / n)
+  
+  # Margin of error at 95% confidence (1.96 * SE)
+  # Return as decimal (not percentage points)
+  moe <- 1.96 * se
+  
+  return(moe)
+}
+
 
 # ============================================================================
 # Main Function
@@ -70,11 +121,12 @@ get_var_label <- function(data, var_name) {
 #' @param summary_string Character string to display in the top-left merged cell
 #'   (default: "")
 #'
-#' @return Invisibly returns the crosstab data structure; writes Excel file as side effect
+#' @return Data frame with columns: row_var, row_var_label, row_val, subgroup_var,
+#'   subgroup_var_label, subgroup_val, n, pct (as decimal), moe (as decimal)
 #'
 #' @examples
 #' \dontrun{
-#' create_polling_crosstabs(
+#' results <- create_polling_crosstabs(
 #'   data = survey_data,
 #'   row_vars = c("job_approval", "direction"),
 #'   subgroup_vars = c("gender", "race"),
@@ -146,7 +198,8 @@ create_polling_crosstabs <- function(data,
     var_label = "Overall",
     value = "Overall",
     data_subset = data,
-    unweighted_n = nrow(data)
+    unweighted_n = nrow(data),
+    deff = calc_design_effect(data[[wt_var]])
   )
   
   # Add each subgroup variable's values as separate columns
@@ -165,7 +218,8 @@ create_polling_crosstabs <- function(data,
           var_label = var_label,
           value = val,
           data_subset = subset_data,
-          unweighted_n = unweighted_n
+          unweighted_n = unweighted_n,
+          deff = calc_design_effect(subset_data[[wt_var]])
         )
       }
     }
@@ -229,6 +283,38 @@ create_polling_crosstabs <- function(data,
       }
     }
   }
+  
+  # ============================================================================
+  # Build Return Data Frame
+  # ============================================================================
+  
+  # Create long-format data frame with one row per cell
+  results_list <- list()
+  
+  for (i in 1:num_rows) {
+    for (j in 1:num_cols) {
+      pct_percentage <- crosstab_matrix[i, j]  # This is in percentage (0-100)
+      pct_decimal <- pct_percentage / 100  # Convert to decimal (0-1)
+      n <- columns_list[[j]]$unweighted_n
+      deff <- columns_list[[j]]$deff
+      moe <- calc_moe(pct_percentage, n, deff)  # Already returns as decimal
+      
+      results_list[[length(results_list) + 1]] <- data.frame(
+        row_var = rows_list[[i]]$var_name,
+        row_var_label = rows_list[[i]]$var_label,
+        row_val = as.character(rows_list[[i]]$value),
+        subgroup_var = columns_list[[j]]$var_name,
+        subgroup_var_label = columns_list[[j]]$var_label,
+        subgroup_val = as.character(columns_list[[j]]$value),
+        n = n,
+        pct = pct_decimal,
+        moe = moe,
+        stringsAsFactors = FALSE
+      )
+    }
+  }
+  
+  results_df <- do.call(rbind, results_list)
   
   # ============================================================================
   # Build Excel Structure
@@ -512,12 +598,8 @@ create_polling_crosstabs <- function(data,
   
   message("Crosstabs successfully exported to: ", file_name, " (Sheet: ", sheet_name, ")")
   
-  # Return the crosstab structure invisibly
-  invisible(list(
-    columns = columns_list,
-    rows = rows_list,
-    crosstab_matrix = crosstab_matrix
-  ))
+  # Return the results data frame
+  return(results_df)
 }
 
 
@@ -550,8 +632,8 @@ create_polling_crosstabs <- function(data,
 #' attr(survey_data$job_approval, "label") <- "Job Approval"
 #' attr(survey_data$right_direction, "label") <- "Country Direction"
 #'
-#' # Create crosstabs with summary string
-#' create_polling_crosstabs(
+#' # Create crosstabs with summary string and get results data frame
+#' results <- create_polling_crosstabs(
 #'   data = survey_data,
 #'   row_vars = c("job_approval", "right_direction"),
 #'   subgroup_vars = c("gender", "race"),
@@ -562,4 +644,10 @@ create_polling_crosstabs <- function(data,
 #'   overwrite_existing_sheet = TRUE,
 #'   summary_string = "National Poll - January 2026"
 #' )
+#' 
+#' # View results
+#' head(results)
+#' 
+#' # Filter to specific subgroup
+#' results[results$subgroup_var == "gender" & results$subgroup_val == "Male", ]
 #' }
