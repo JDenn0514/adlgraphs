@@ -1,3 +1,56 @@
+# ============================================================================
+# Helper Functions
+# ============================================================================
+
+#' Calculate weighted percentage
+#' @param values Vector of values (typically a factor or character)
+#' @param weights Vector of weights corresponding to values
+#' @return Named vector of weighted percentages
+calc_weighted_pct <- function(values, weights) {
+  # Remove NAs
+  valid_idx <- !is.na(values) & !is.na(weights)
+  values <- values[valid_idx]
+  weights <- weights[valid_idx]
+  
+  if (length(values) == 0) {
+    return(numeric(0))
+  }
+  
+  # Calculate weighted counts
+  unique_vals <- unique(values)
+  weighted_counts <- sapply(unique_vals, function(val) {
+    sum(weights[values == val])
+  })
+  
+  # Convert to percentages
+  total_weight <- sum(weighted_counts)
+  if (total_weight == 0) {
+    return(setNames(rep(0, length(unique_vals)), unique_vals))
+  }
+  
+  weighted_pct <- (weighted_counts / total_weight) * 100
+  names(weighted_pct) <- unique_vals
+  
+  return(weighted_pct)
+}
+
+#' Get variable label or use variable name if no label exists
+#' @param data Data frame
+#' @param var_name Variable name
+#' @return Variable label or name
+get_var_label <- function(data, var_name) {
+  label <- attr(data[[var_name]], "label")
+  if (is.null(label) || length(label) == 0 || label == "") {
+    return(var_name)
+  }
+  return(label)
+}
+
+
+# ============================================================================
+# Main Function
+# ============================================================================
+
 #' Create Polling Crosstabs and Export to Excel
 #'
 #' This function takes survey data and creates formatted crosstabs showing
@@ -198,18 +251,16 @@ create_polling_crosstabs <- function(data,
   }
   
   # Create data rows with index columns
-  # Convert percentages to decimal format for Excel percentage formatting
-  data_rows <- matrix(NA, nrow = num_rows, ncol = num_cols + 2)
+  # Keep the percentage matrix as numeric (don't divide by 100 yet)
+  data_rows_text <- matrix(NA, nrow = num_rows, ncol = 2)
+  data_rows_numeric <- matrix(NA, nrow = num_rows, ncol = num_cols)
   
   for (i in 1:num_rows) {
-    data_rows[i, 1] <- rows_list[[i]]$var_label
-    data_rows[i, 2] <- as.character(rows_list[[i]]$value)
+    data_rows_text[i, 1] <- rows_list[[i]]$var_label
+    data_rows_text[i, 2] <- as.character(rows_list[[i]]$value)
     # Divide by 100 to convert to decimal for Excel percentage format
-    data_rows[i, 3:(num_cols + 2)] <- crosstab_matrix[i, ] / 100
+    data_rows_numeric[i, ] <- crosstab_matrix[i, ] / 100
   }
-  
-  # Combine all rows into a single data frame for batch writing
-  excel_data <- rbind(header_row1, header_row2, header_row3, data_rows)
   
   # ============================================================================
   # Create Excel Workbook and Apply Formatting
@@ -239,13 +290,24 @@ create_polling_crosstabs <- function(data,
   }
   
   # ============================================================================
-  # BATCH WRITE: Write all data at once
+  # BATCH WRITE: Write data in separate operations to preserve types
   # ============================================================================
   
-  # Write the entire excel_data matrix in one operation
-  # This is much more efficient than writing row by row
-  writeData(wb, sheet = sheet_name, x = excel_data, 
+  # Write header rows
+  writeData(wb, sheet = sheet_name, x = t(header_row1), 
             startRow = 1, startCol = 1, colNames = FALSE)
+  writeData(wb, sheet = sheet_name, x = t(header_row2), 
+            startRow = 2, startCol = 1, colNames = FALSE)
+  writeData(wb, sheet = sheet_name, x = t(header_row3), 
+            startRow = 3, startCol = 1, colNames = FALSE)
+  
+  # Write data row text columns (index columns)
+  writeData(wb, sheet = sheet_name, x = data_rows_text, 
+            startRow = 4, startCol = 1, colNames = FALSE)
+  
+  # Write data row numeric columns (percentage data) - keeping numeric type
+  writeData(wb, sheet = sheet_name, x = data_rows_numeric, 
+            startRow = 4, startCol = 3, colNames = FALSE)
   
   # ============================================================================
   # Apply Cell Styling (Batch Operations)
@@ -408,19 +470,19 @@ create_polling_crosstabs <- function(data,
   }
   
   # Merge cells for row variable labels (first index column)
-  current_label <- data_rows[1, 1]
+  current_label <- data_rows_text[1, 1]
   start_row <- 4  # Data starts at row 4
   
   for (i in 1:num_rows) {
     excel_row <- i + 3
-    if (i == num_rows || data_rows[i + 1, 1] != current_label) {
+    if (i == num_rows || data_rows_text[i + 1, 1] != current_label) {
       # Merge from start_row to excel_row
       if (excel_row > start_row) {
         mergeCells(wb, sheet = sheet_name, rows = start_row:excel_row, cols = 1)
       }
       # Update for next group
       if (i < num_rows) {
-        current_label <- data_rows[i + 1, 1]
+        current_label <- data_rows_text[i + 1, 1]
         start_row <- excel_row + 1
       }
     }
@@ -501,51 +563,3 @@ create_polling_crosstabs <- function(data,
 #'   summary_string = "National Poll - January 2026"
 #' )
 #' }
-
-# ============================================================================
-  # Helper Functions
-  # ============================================================================
-  
-  #' Calculate weighted percentage
-  #' @param values Vector of values (typically a factor or character)
-  #' @param weights Vector of weights corresponding to values
-  #' @return Named vector of weighted percentages
-  calc_weighted_pct <- function(values, weights) {
-    # Remove NAs
-    valid_idx <- !is.na(values) & !is.na(weights)
-    values <- values[valid_idx]
-    weights <- weights[valid_idx]
-    
-    if (length(values) == 0) {
-      return(numeric(0))
-    }
-    
-    # Calculate weighted counts
-    unique_vals <- unique(values)
-    weighted_counts <- sapply(unique_vals, function(val) {
-      sum(weights[values == val])
-    })
-    
-    # Convert to percentages
-    total_weight <- sum(weighted_counts)
-    if (total_weight == 0) {
-      return(setNames(rep(0, length(unique_vals)), unique_vals))
-    }
-    
-    weighted_pct <- (weighted_counts / total_weight) * 100
-    names(weighted_pct) <- unique_vals
-    
-    return(weighted_pct)
-  }
-  
-  #' Get variable label or use variable name if no label exists
-  #' @param data Data frame
-  #' @param var_name Variable name
-  #' @return Variable label or name
-  get_var_label <- function(data, var_name) {
-    label <- attr(data[[var_name]], "label")
-    if (is.null(label) || length(label) == 0 || label == "") {
-      return(var_name)
-    }
-    return(label)
-  }
