@@ -11,26 +11,26 @@ calc_weighted_pct <- function(values, weights) {
   valid_idx <- !is.na(values) & !is.na(weights)
   values <- values[valid_idx]
   weights <- weights[valid_idx]
-  
+
   if (length(values) == 0) {
     return(numeric(0))
   }
-  
+
   # Calculate weighted counts
   unique_vals <- unique(values)
   weighted_counts <- sapply(unique_vals, function(val) {
     sum(weights[values == val])
   })
-  
+
   # Convert to percentages
   total_weight <- sum(weighted_counts)
   if (total_weight == 0) {
     return(setNames(rep(0, length(unique_vals)), unique_vals))
   }
-  
+
   weighted_pct <- (weighted_counts / total_weight) * 100
   names(weighted_pct) <- unique_vals
-  
+
   return(weighted_pct)
 }
 
@@ -52,18 +52,18 @@ get_var_label <- function(data, var_name) {
 calc_design_effect <- function(weights) {
   # Remove NAs
   weights <- weights[!is.na(weights)]
-  
+
   if (length(weights) == 0) {
     return(1)
   }
-  
+
   # DEFF = n * sum(w^2) / (sum(w))^2
   n <- length(weights)
   sum_w <- sum(weights)
   sum_w_sq <- sum(weights^2)
-  
+
   deff <- (n * sum_w_sq) / (sum_w^2)
-  
+
   return(deff)
 }
 
@@ -75,25 +75,25 @@ calc_design_effect <- function(weights) {
 calc_moe <- function(p, n, deff) {
   # Convert percentage to proportion
   p_prop <- p / 100
-  
+
   # Handle edge cases
   if (is.na(p) || is.na(n) || is.na(deff) || n == 0) {
     return(NA_real_)
   }
-  
+
   # Avoid issues with 0% or 100%
   if (p_prop <= 0 || p_prop >= 1) {
     return(0)
   }
-  
+
   # Standard error accounting for design effect
   # SE = sqrt(DEFF * p * (1-p) / n)
   se <- sqrt(deff * p_prop * (1 - p_prop) / n)
-  
+
   # Margin of error at 95% confidence (1.96 * SE)
   # Return as decimal (not percentage points)
   moe <- 1.96 * se
-  
+
   return(moe)
 }
 
@@ -140,59 +140,64 @@ calc_moe <- function(p, n, deff) {
 #' }
 #'
 #' @export
-create_polling_crosstabs <- function(data,
-                                     row_vars,
-                                     subgroup_vars,
-                                     wt_var,
-                                     min_n = 75,
-                                     file_name,
-                                     sheet_name,
-                                     overwrite_existing_sheet = TRUE,
-                                     summary_string = "") {
-  
+create_polling_crosstabs <- function(
+  data,
+  row_vars,
+  subgroup_vars,
+  wt_var,
+  min_n = 75,
+  file_name,
+  sheet_name,
+  overwrite_existing_sheet = TRUE,
+  summary_string = ""
+) {
   # ============================================================================
   # Load Required Packages
   # ============================================================================
-  
+
   if (!require("openxlsx", quietly = TRUE)) {
-    stop("Package 'openxlsx' is required. Please install it with: install.packages('openxlsx')")
+    stop(
+      "Package 'openxlsx' is required. Please install it with: install.packages('openxlsx')"
+    )
   }
-  
+
   # ============================================================================
   # Input Validation
   # ============================================================================
-  
+
   # Ensure data is a data frame
   if (inherits(data, "survey.design")) {
     # If survey design object, extract the variables component
     data <- data$variables
   }
   data <- as.data.frame(data)
-  
+
   # Check that all specified variables exist in the data
   all_vars <- c(row_vars, subgroup_vars, wt_var)
   missing_vars <- setdiff(all_vars, names(data))
   if (length(missing_vars) > 0) {
-    stop("The following variables are not found in the data: ", 
-         paste(missing_vars, collapse = ", "))
+    stop(
+      "The following variables are not found in the data: ",
+      paste(missing_vars, collapse = ", ")
+    )
   }
-  
+
   # Check that weights are numeric
   if (!is.numeric(data[[wt_var]])) {
     stop("Weight variable '", wt_var, "' must be numeric")
   }
-  
+
   # ============================================================================
   # Build Column Structure (Subgroups)
   # ============================================================================
-  
+
   # Note: We create columns for each value of each subgroup variable separately,
   # NOT for all combinations of subgroups. This keeps memory usage reasonable.
   # For example, if you have gender (2 values) and race (4 values), you get
   # 2 + 4 = 6 columns, not 2 * 4 = 8 combinations.
-  
+
   columns_list <- list()
-  
+
   # Add Overall column first
   columns_list[[1]] <- list(
     var_name = "Overall",
@@ -202,16 +207,16 @@ create_polling_crosstabs <- function(data,
     unweighted_n = nrow(data),
     deff = calc_design_effect(data[[wt_var]])
   )
-  
+
   # Add each subgroup variable's values as separate columns
   for (var in subgroup_vars) {
     var_label <- get_var_label(data, var)
     unique_values <- sort(unique(data[[var]][!is.na(data[[var]])]))
-    
+
     for (val in unique_values) {
       subset_data <- data[!is.na(data[[var]]) & data[[var]] == val, ]
       unweighted_n <- nrow(subset_data)
-      
+
       # Only include if meets minimum n threshold
       if (unweighted_n >= min_n) {
         columns_list[[length(columns_list) + 1]] <- list(
@@ -225,25 +230,25 @@ create_polling_crosstabs <- function(data,
       }
     }
   }
-  
+
   num_cols <- length(columns_list)
-  
+
   # ============================================================================
   # Build Row Structure (Questions)
   # ============================================================================
-  
+
   rows_list <- list()
-  
+
   for (var in row_vars) {
     var_label <- get_var_label(data, var)
     unique_values <- unique(data[[var]][!is.na(data[[var]])])
-    
+
     # If the variable is a factor, use factor levels for ordering
     if (is.factor(data[[var]])) {
       unique_values <- levels(data[[var]])
       unique_values <- unique_values[unique_values %in% data[[var]]]
     }
-    
+
     for (val in unique_values) {
       rows_list[[length(rows_list) + 1]] <- list(
         var_name = var,
@@ -252,30 +257,30 @@ create_polling_crosstabs <- function(data,
       )
     }
   }
-  
+
   num_rows <- length(rows_list)
-  
+
   # ============================================================================
   # Calculate Weighted Percentages
   # ============================================================================
-  
+
   # Create matrix to hold percentages
   crosstab_matrix <- matrix(NA, nrow = num_rows, ncol = num_cols)
-  
+
   for (i in 1:num_rows) {
     row_var <- rows_list[[i]]$var_name
     row_val <- rows_list[[i]]$value
-    
+
     for (j in 1:num_cols) {
       subset_data <- columns_list[[j]]$data_subset
-      
+
       # Get the values and weights for this subgroup
       values <- subset_data[[row_var]]
       weights <- subset_data[[wt_var]]
-      
+
       # Calculate weighted percentage
       weighted_pcts <- calc_weighted_pct(values, weights)
-      
+
       # Extract the percentage for this specific row value
       if (row_val %in% names(weighted_pcts)) {
         crosstab_matrix[i, j] <- weighted_pcts[row_val]
@@ -284,23 +289,23 @@ create_polling_crosstabs <- function(data,
       }
     }
   }
-  
+
   # ============================================================================
   # Build Return Data Frame
   # ============================================================================
-  
+
   # Create long-format data frame with one row per cell
   # Reordered: subgroup variables first, then row variables
   results_list <- list()
-  
+
   for (j in 1:num_cols) {
     for (i in 1:num_rows) {
-      pct_percentage <- crosstab_matrix[i, j]  # This is in percentage (0-100)
-      pct_decimal <- pct_percentage / 100  # Convert to decimal (0-1)
+      pct_percentage <- crosstab_matrix[i, j] # This is in percentage (0-100)
+      pct_decimal <- pct_percentage / 100 # Convert to decimal (0-1)
       n <- columns_list[[j]]$unweighted_n
       deff <- columns_list[[j]]$deff
-      moe <- calc_moe(pct_percentage, n, deff)  # Already returns as decimal
-      
+      moe <- calc_moe(pct_percentage, n, deff) # Already returns as decimal
+
       results_list[[length(results_list) + 1]] <- data.frame(
         subgroup_var = columns_list[[j]]$var_name,
         subgroup_var_label = columns_list[[j]]$var_label,
@@ -315,69 +320,78 @@ create_polling_crosstabs <- function(data,
       )
     }
   }
-  
+
   results_df <- do.call(rbind, results_list)
-  
+
   # Sort by subgroup variables first, then row variables
-  results_df <- results_df[order(results_df$subgroup_var, 
-                                  results_df$subgroup_var_label,
-                                  results_df$subgroup_val,
-                                  results_df$row_var,
-                                  results_df$row_var_label,
-                                  results_df$row_val), ]
-  
+  results_df <- results_df[
+    order(
+      results_df$subgroup_var,
+      results_df$subgroup_var_label,
+      results_df$subgroup_val,
+      results_df$row_var,
+      results_df$row_var_label,
+      results_df$row_val
+    ),
+  ]
+
   # Reset row names
   rownames(results_df) <- NULL
-  
+
   # ============================================================================
   # Build Excel Structure
   # ============================================================================
-  
+
   # Create header rows
   # Row 1: Subgroup variable labels (will be merged)
   # Row 2: Subgroup values
   # Row 3: Unweighted n
-  
+
   # Use summary_string for the top-left merged cell, or empty if not provided
-  header_row1 <- c(summary_string, "", rep(NA, num_cols))  # First cell contains summary_string
+  header_row1 <- c(summary_string, "", rep(NA, num_cols)) # First cell contains summary_string
   header_row2 <- c("", "", rep(NA, num_cols))
   header_row3 <- c("", "n (unweighted)", rep(NA, num_cols))
-  
+
   for (j in 1:num_cols) {
     header_row1[j + 2] <- columns_list[[j]]$var_label
     header_row2[j + 2] <- as.character(columns_list[[j]]$value)
     header_row3[j + 2] <- columns_list[[j]]$unweighted_n
   }
-  
+
   # Create data rows with index columns
   # Keep the percentage matrix as numeric (don't divide by 100 yet)
   data_rows_text <- matrix(NA, nrow = num_rows, ncol = 2)
   data_rows_numeric <- matrix(NA, nrow = num_rows, ncol = num_cols)
-  
+
   for (i in 1:num_rows) {
     data_rows_text[i, 1] <- rows_list[[i]]$var_label
     data_rows_text[i, 2] <- as.character(rows_list[[i]]$value)
     # Divide by 100 to convert to decimal for Excel percentage format
     data_rows_numeric[i, ] <- crosstab_matrix[i, ] / 100
   }
-  
+
   # ============================================================================
   # Create Excel Workbook and Apply Formatting
   # ============================================================================
-  
+
   # Check if file exists
   if (file.exists(file_name)) {
     # Load existing workbook
     wb <- loadWorkbook(file_name)
-    
+
     # Check if sheet exists
     if (sheet_name %in% names(wb)) {
       if (overwrite_existing_sheet) {
         removeWorksheet(wb, sheet_name)
         addWorksheet(wb, sheet_name)
       } else {
-        stop("Sheet '", sheet_name, "' already exists in '", file_name, 
-             "'. Set overwrite_existing_sheet = TRUE to overwrite.")
+        stop(
+          "Sheet '",
+          sheet_name,
+          "' already exists in '",
+          file_name,
+          "'. Set overwrite_existing_sheet = TRUE to overwrite."
+        )
       }
     } else {
       addWorksheet(wb, sheet_name)
@@ -387,173 +401,312 @@ create_polling_crosstabs <- function(data,
     wb <- createWorkbook()
     addWorksheet(wb, sheet_name)
   }
-  
+
   # ============================================================================
   # BATCH WRITE: Write data in separate operations to preserve types
   # ============================================================================
-  
+
   # Write header rows
-  writeData(wb, sheet = sheet_name, x = t(header_row1), 
-            startRow = 1, startCol = 1, colNames = FALSE)
-  writeData(wb, sheet = sheet_name, x = t(header_row2), 
-            startRow = 2, startCol = 1, colNames = FALSE)
-  writeData(wb, sheet = sheet_name, x = t(header_row3), 
-            startRow = 3, startCol = 1, colNames = FALSE)
-  
+  writeData(
+    wb,
+    sheet = sheet_name,
+    x = t(header_row1),
+    startRow = 1,
+    startCol = 1,
+    colNames = FALSE
+  )
+  writeData(
+    wb,
+    sheet = sheet_name,
+    x = t(header_row2),
+    startRow = 2,
+    startCol = 1,
+    colNames = FALSE
+  )
+  writeData(
+    wb,
+    sheet = sheet_name,
+    x = t(header_row3),
+    startRow = 3,
+    startCol = 1,
+    colNames = FALSE
+  )
+
   # Write data row text columns (index columns)
-  writeData(wb, sheet = sheet_name, x = data_rows_text, 
-            startRow = 4, startCol = 1, colNames = FALSE)
-  
+  writeData(
+    wb,
+    sheet = sheet_name,
+    x = data_rows_text,
+    startRow = 4,
+    startCol = 1,
+    colNames = FALSE
+  )
+
   # Write data row numeric columns (percentage data) - keeping numeric type
-  writeData(wb, sheet = sheet_name, x = data_rows_numeric, 
-            startRow = 4, startCol = 3, colNames = FALSE)
-  
+  writeData(
+    wb,
+    sheet = sheet_name,
+    x = data_rows_numeric,
+    startRow = 4,
+    startCol = 3,
+    colNames = FALSE
+  )
+
   # ============================================================================
   # Apply Cell Styling (Batch Operations)
   # ============================================================================
-  
+
   # Create styles
-  gray_header_style <- createStyle(fgFill = "#D3D3D3", 
-                                   halign = "center", 
-                                   valign = "center",
-                                   textDecoration = "bold",
-                                   wrapText = TRUE)
-  
-  gray_index_style <- createStyle(fgFill = "#D3D3D3", 
-                                  halign = "center", 
-                                  valign = "center",
-                                  textDecoration = "bold",
-                                  wrapText = TRUE)
-  
-  white_header_style <- createStyle(fgFill = "#FFFFFF",
-                                    halign = "center",
-                                    valign = "center",
-                                    textDecoration = "bold",
-                                    wrapText = TRUE)
-  
-  white_data_style <- createStyle(fgFill = "#FFFFFF",
-                                  halign = "center",
-                                  valign = "center")
-  
+  gray_header_style <- createStyle(
+    fgFill = "#D3D3D3",
+    halign = "center",
+    valign = "center",
+    textDecoration = "bold",
+    wrapText = TRUE
+  )
+
+  gray_index_style <- createStyle(
+    fgFill = "#D3D3D3",
+    halign = "center",
+    valign = "center",
+    textDecoration = "bold",
+    wrapText = TRUE
+  )
+
+  white_header_style <- createStyle(
+    fgFill = "#FFFFFF",
+    halign = "center",
+    valign = "center",
+    textDecoration = "bold",
+    wrapText = TRUE
+  )
+
+  white_data_style <- createStyle(
+    fgFill = "#FFFFFF",
+    halign = "center",
+    valign = "center"
+  )
+
   # Percentage style for data cells (whole percentages, no decimal)
-  percentage_style <- createStyle(fgFill = "#FFFFFF",
-                                  halign = "center",
-                                  valign = "center",
-                                  numFmt = "0%")
-  
+  percentage_style <- createStyle(
+    fgFill = "#FFFFFF",
+    halign = "center",
+    valign = "center",
+    numFmt = "0%"
+  )
+
   # Apply styles in batch operations
   # Gray style to top 2 header rows (all columns)
-  addStyle(wb, sheet = sheet_name, style = gray_header_style, 
-           rows = 1:2, cols = 1:(num_cols + 2), gridExpand = TRUE)
-  
+  addStyle(
+    wb,
+    sheet = sheet_name,
+    style = gray_header_style,
+    rows = 1:2,
+    cols = 1:(num_cols + 2),
+    gridExpand = TRUE
+  )
+
   # Gray style to row 3 (n row) for index columns
-  addStyle(wb, sheet = sheet_name, style = gray_header_style,
-           rows = 3, cols = 1:2, gridExpand = TRUE)
-  
+  addStyle(
+    wb,
+    sheet = sheet_name,
+    style = gray_header_style,
+    rows = 3,
+    cols = 1:2,
+    gridExpand = TRUE
+  )
+
   # White style to row 3 (n row) for data columns
-  addStyle(wb, sheet = sheet_name, style = white_data_style,
-           rows = 3, cols = 3:(num_cols + 2), gridExpand = TRUE)
-  
+  addStyle(
+    wb,
+    sheet = sheet_name,
+    style = white_data_style,
+    rows = 3,
+    cols = 3:(num_cols + 2),
+    gridExpand = TRUE
+  )
+
   # Gray style to left 2 index columns (data rows only)
-  addStyle(wb, sheet = sheet_name, style = gray_index_style, 
-           rows = 4:(num_rows + 3), cols = 1:2, gridExpand = TRUE)
-  
+  addStyle(
+    wb,
+    sheet = sheet_name,
+    style = gray_index_style,
+    rows = 4:(num_rows + 3),
+    cols = 1:2,
+    gridExpand = TRUE
+  )
+
   # Percentage style to data cells
-  addStyle(wb, sheet = sheet_name, style = percentage_style,
-           rows = 4:(num_rows + 3), cols = 3:(num_cols + 2), gridExpand = TRUE)
-  
+  addStyle(
+    wb,
+    sheet = sheet_name,
+    style = percentage_style,
+    rows = 4:(num_rows + 3),
+    cols = 3:(num_cols + 2),
+    gridExpand = TRUE
+  )
+
   # ============================================================================
   # Add Borders Between Variable Groups
   # ============================================================================
-  
+
   # Create border styles
   # Solid medium border for different variable labels
-  top_border_solid <- createStyle(border = "top", borderColour = "#000000", borderStyle = "medium")
-  left_border_solid <- createStyle(border = "left", borderColour = "#000000", borderStyle = "medium")
-  
+  top_border_solid <- createStyle(
+    border = "top",
+    borderColour = "#000000",
+    borderStyle = "medium"
+  )
+  left_border_solid <- createStyle(
+    border = "left",
+    borderColour = "#000000",
+    borderStyle = "medium"
+  )
+
   # Dashed thin border for same variable labels (different variables)
-  top_border_dashed <- createStyle(border = "top", borderColour = "#000000", borderStyle = "dashed")
-  left_border_dashed <- createStyle(border = "left", borderColour = "#000000", borderStyle = "dashed")
-  
-  bottom_border_style <- createStyle(border = "bottom", borderColour = "#000000", borderStyle = "medium")
-  right_border_style <- createStyle(border = "right", borderColour = "#000000", borderStyle = "medium")
-  
+  top_border_dashed <- createStyle(
+    border = "top",
+    borderColour = "#000000",
+    borderStyle = "dashed"
+  )
+  left_border_dashed <- createStyle(
+    border = "left",
+    borderColour = "#000000",
+    borderStyle = "dashed"
+  )
+
+  bottom_border_style <- createStyle(
+    border = "bottom",
+    borderColour = "#000000",
+    borderStyle = "medium"
+  )
+  right_border_style <- createStyle(
+    border = "right",
+    borderColour = "#000000",
+    borderStyle = "medium"
+  )
+
   # Collect all border operations to minimize style applications
   # Add horizontal borders between different row variables
   current_var <- rows_list[[1]]$var_name
   current_label <- rows_list[[1]]$var_label
-  
+
   for (i in 2:num_rows) {
     if (rows_list[[i]]$var_name != current_var) {
       # Add border at the top of this row
       excel_row <- i + 3
-      
+
       # Check if the label is the same as the previous variable
       if (rows_list[[i]]$var_label == current_label) {
         # Same label, different variable - use dashed border
-        addStyle(wb, sheet = sheet_name, style = top_border_dashed,
-                 rows = excel_row, cols = 1:(num_cols + 2), 
-                 gridExpand = TRUE, stack = TRUE)
+        addStyle(
+          wb,
+          sheet = sheet_name,
+          style = top_border_dashed,
+          rows = excel_row,
+          cols = 1:(num_cols + 2),
+          gridExpand = TRUE,
+          stack = TRUE
+        )
       } else {
         # Different label - use solid border
-        addStyle(wb, sheet = sheet_name, style = top_border_solid,
-                 rows = excel_row, cols = 1:(num_cols + 2), 
-                 gridExpand = TRUE, stack = TRUE)
+        addStyle(
+          wb,
+          sheet = sheet_name,
+          style = top_border_solid,
+          rows = excel_row,
+          cols = 1:(num_cols + 2),
+          gridExpand = TRUE,
+          stack = TRUE
+        )
       }
-      
+
       current_var <- rows_list[[i]]$var_name
       current_label <- rows_list[[i]]$var_label
     }
   }
-  
+
   # Add vertical borders between different subgroup variables
   current_var <- columns_list[[1]]$var_name
   current_label <- columns_list[[1]]$var_label
-  
+
   for (j in 2:num_cols) {
     if (columns_list[[j]]$var_name != current_var) {
       # Add border to the left of this column
       excel_col <- j + 2
-      
+
       # Check if the label is the same as the previous variable
       if (columns_list[[j]]$var_label == current_label) {
         # Same label, different variable - use dashed border
-        addStyle(wb, sheet = sheet_name, style = left_border_dashed,
-                 rows = 1:(num_rows + 3), cols = excel_col, 
-                 gridExpand = TRUE, stack = TRUE)
+        addStyle(
+          wb,
+          sheet = sheet_name,
+          style = left_border_dashed,
+          rows = 1:(num_rows + 3),
+          cols = excel_col,
+          gridExpand = TRUE,
+          stack = TRUE
+        )
       } else {
         # Different label - use solid border
-        addStyle(wb, sheet = sheet_name, style = left_border_solid,
-                 rows = 1:(num_rows + 3), cols = excel_col, 
-                 gridExpand = TRUE, stack = TRUE)
+        addStyle(
+          wb,
+          sheet = sheet_name,
+          style = left_border_solid,
+          rows = 1:(num_rows + 3),
+          cols = excel_col,
+          gridExpand = TRUE,
+          stack = TRUE
+        )
       }
-      
+
       current_var <- columns_list[[j]]$var_name
       current_label <- columns_list[[j]]$var_label
     }
   }
-  
+
   # Add structural borders in batch
-  addStyle(wb, sheet = sheet_name, style = right_border_style,
-           rows = 1:(num_rows + 3), cols = 2, gridExpand = TRUE, stack = TRUE)
-  
-  addStyle(wb, sheet = sheet_name, style = bottom_border_style,
-           rows = 2, cols = 1:(num_cols + 2), gridExpand = TRUE, stack = TRUE)
-  
-  addStyle(wb, sheet = sheet_name, style = bottom_border_style,
-           rows = 3, cols = 1:(num_cols + 2), gridExpand = TRUE, stack = TRUE)
-  
+  addStyle(
+    wb,
+    sheet = sheet_name,
+    style = right_border_style,
+    rows = 1:(num_rows + 3),
+    cols = 2,
+    gridExpand = TRUE,
+    stack = TRUE
+  )
+
+  addStyle(
+    wb,
+    sheet = sheet_name,
+    style = bottom_border_style,
+    rows = 2,
+    cols = 1:(num_cols + 2),
+    gridExpand = TRUE,
+    stack = TRUE
+  )
+
+  addStyle(
+    wb,
+    sheet = sheet_name,
+    style = bottom_border_style,
+    rows = 3,
+    cols = 1:(num_cols + 2),
+    gridExpand = TRUE,
+    stack = TRUE
+  )
+
   # ============================================================================
   # Merge Cells (Batch Operations)
   # ============================================================================
-  
+
   # Merge top-left 4 cells (a1:b2) - this will display the summary_string
   mergeCells(wb, sheet = sheet_name, rows = 1:2, cols = 1:2)
-  
+
   # Merge cells for subgroup variable labels (header row 1)
   current_label <- header_row1[3]
   start_col <- 3
-  
+
   for (j in 3:(num_cols + 2)) {
     if (j == (num_cols + 2) || header_row1[j + 1] != current_label) {
       # Merge from start_col to j
@@ -567,11 +720,11 @@ create_polling_crosstabs <- function(data,
       }
     }
   }
-  
+
   # Merge cells for row variable labels (first index column)
   current_label <- data_rows_text[1, 1]
-  start_row <- 4  # Data starts at row 4
-  
+  start_row <- 4 # Data starts at row 4
+
   for (i in 1:num_rows) {
     excel_row <- i + 3
     if (i == num_rows || data_rows_text[i + 1, 1] != current_label) {
@@ -586,35 +739,40 @@ create_polling_crosstabs <- function(data,
       }
     }
   }
-  
+
   # ============================================================================
   # Set Column Widths (Batch Operation)
   # ============================================================================
-  
+
   # Set all column widths in one call where possible
   setColWidths(wb, sheet = sheet_name, cols = 1, widths = 50)
   setColWidths(wb, sheet = sheet_name, cols = 2, widths = 40)
   setColWidths(wb, sheet = sheet_name, cols = 3:(num_cols + 2), widths = 20)
-  
+
   # ============================================================================
   # Freeze Panes
   # ============================================================================
-  
+
   # Freeze the top 2 rows and left 2 columns
   freezePane(wb, sheet = sheet_name, firstActiveRow = 3, firstActiveCol = 3)
-  
+
   # ============================================================================
   # Save Workbook
   # ============================================================================
-  
+
   saveWorkbook(wb, file_name, overwrite = TRUE)
-  
-  message("Crosstabs successfully exported to: ", file_name, " (Sheet: ", sheet_name, ")")
-  
+
+  message(
+    "Crosstabs successfully exported to: ",
+    file_name,
+    " (Sheet: ",
+    sheet_name,
+    ")"
+  )
+
   # Return the results data frame
   return(results_df)
 }
-
 
 # ============================================================================
 # Example Usage
@@ -629,12 +787,12 @@ create_polling_crosstabs <- function(data,
 #' n <- 500
 #' survey_data <- data.frame(
 #'   gender = sample(c("Male", "Female"), n, replace = TRUE),
-#'   race = sample(c("White", "Black", "Hispanic", "Other"), n, 
+#'   race = sample(c("White", "Black", "Hispanic", "Other"), n,
 #'                 replace = TRUE, prob = c(0.6, 0.15, 0.15, 0.1)),
-#'   job_approval = sample(c("Strongly approve", "Somewhat approve", 
-#'                          "Somewhat disapprove", "Strongly disapprove"), 
+#'   job_approval = sample(c("Strongly approve", "Somewhat approve",
+#'                          "Somewhat disapprove", "Strongly disapprove"),
 #'                        n, replace = TRUE),
-#'   right_direction = sample(c("Right direction", "Wrong track"), 
+#'   right_direction = sample(c("Right direction", "Wrong track"),
 #'                           n, replace = TRUE),
 #'   weight = runif(n, 0.5, 2.0)
 #' )
@@ -657,10 +815,10 @@ create_polling_crosstabs <- function(data,
 #'   overwrite_existing_sheet = TRUE,
 #'   summary_string = "National Poll - January 2026"
 #' )
-#' 
+#'
 #' # View results
 #' head(results)
-#' 
+#'
 #' # Filter to specific subgroup
 #' results[results$subgroup_var == "gender" & results$subgroup_val == "Male", ]
 #' }
