@@ -41,6 +41,7 @@ sheet with same name (default: TRUE)}
 \value{
 Data frame with columns: subgroup_var, subgroup_var_label, subgroup_val,
 n, row_var, row_var_label, row_val, pct (as decimal), moe (as decimal).
+All categorical columns are factors with levels in the order passed to the function.
 Sorted by subgroup variables then row variables.
 }
 \description{
