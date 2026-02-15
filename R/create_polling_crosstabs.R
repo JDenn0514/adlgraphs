@@ -121,8 +121,9 @@ calc_moe <- function(p, n, deff) {
 #' @param summary_string Character string to display in the top-left merged cell
 #'   (default: "")
 #'
-#' @return Data frame with columns: row_var, row_var_label, row_val, subgroup_var,
-#'   subgroup_var_label, subgroup_val, n, pct (as decimal), moe (as decimal)
+#' @return Data frame with columns: subgroup_var, subgroup_var_label, subgroup_val,
+#'   n, row_var, row_var_label, row_val, pct (as decimal), moe (as decimal).
+#'   Sorted by subgroup variables then row variables.
 #'
 #' @examples
 #' \dontrun{
@@ -289,10 +290,11 @@ create_polling_crosstabs <- function(data,
   # ============================================================================
   
   # Create long-format data frame with one row per cell
+  # Reordered: subgroup variables first, then row variables
   results_list <- list()
   
-  for (i in 1:num_rows) {
-    for (j in 1:num_cols) {
+  for (j in 1:num_cols) {
+    for (i in 1:num_rows) {
       pct_percentage <- crosstab_matrix[i, j]  # This is in percentage (0-100)
       pct_decimal <- pct_percentage / 100  # Convert to decimal (0-1)
       n <- columns_list[[j]]$unweighted_n
@@ -300,13 +302,13 @@ create_polling_crosstabs <- function(data,
       moe <- calc_moe(pct_percentage, n, deff)  # Already returns as decimal
       
       results_list[[length(results_list) + 1]] <- data.frame(
-        row_var = rows_list[[i]]$var_name,
-        row_var_label = rows_list[[i]]$var_label,
-        row_val = as.character(rows_list[[i]]$value),
         subgroup_var = columns_list[[j]]$var_name,
         subgroup_var_label = columns_list[[j]]$var_label,
         subgroup_val = as.character(columns_list[[j]]$value),
         n = n,
+        row_var = rows_list[[i]]$var_name,
+        row_var_label = rows_list[[i]]$var_label,
+        row_val = as.character(rows_list[[i]]$value),
         pct = pct_decimal,
         moe = moe,
         stringsAsFactors = FALSE
@@ -315,6 +317,17 @@ create_polling_crosstabs <- function(data,
   }
   
   results_df <- do.call(rbind, results_list)
+  
+  # Sort by subgroup variables first, then row variables
+  results_df <- results_df[order(results_df$subgroup_var, 
+                                  results_df$subgroup_var_label,
+                                  results_df$subgroup_val,
+                                  results_df$row_var,
+                                  results_df$row_var_label,
+                                  results_df$row_val), ]
+  
+  # Reset row names
+  rownames(results_df) <- NULL
   
   # ============================================================================
   # Build Excel Structure
