@@ -123,6 +123,7 @@ calc_moe <- function(p, n, deff) {
 #'
 #' @return Data frame with columns: subgroup_var, subgroup_var_label, subgroup_val,
 #'   n, row_var, row_var_label, row_val, pct (as decimal), moe (as decimal).
+#'   All categorical columns are factors with levels in the order passed to the function.
 #'   Sorted by subgroup variables then row variables.
 #'
 #' @examples
@@ -291,6 +292,50 @@ create_polling_crosstabs <- function(
   }
 
   # ============================================================================
+  # Build Factor Levels for Ordering
+  # ============================================================================
+
+  # Build factor levels for subgroup variables (Overall first, then in order passed)
+  subgroup_var_levels <- c("Overall", subgroup_vars)
+
+  # Build factor levels for subgroup variable labels
+  subgroup_var_label_levels <- c("Overall")
+  for (var in subgroup_vars) {
+    subgroup_var_label_levels <- c(
+      subgroup_var_label_levels,
+      get_var_label(data, var)
+    )
+  }
+  subgroup_var_label_levels <- unique(subgroup_var_label_levels)
+
+  # Build factor levels for subgroup values (in order they appear in columns_list)
+  subgroup_val_levels <- character(0)
+  for (j in 1:num_cols) {
+    subgroup_val_levels <- c(
+      subgroup_val_levels,
+      as.character(columns_list[[j]]$value)
+    )
+  }
+  subgroup_val_levels <- unique(subgroup_val_levels)
+
+  # Build factor levels for row variables (in order passed)
+  row_var_levels <- row_vars
+
+  # Build factor levels for row variable labels
+  row_var_label_levels <- character(0)
+  for (var in row_vars) {
+    row_var_label_levels <- c(row_var_label_levels, get_var_label(data, var))
+  }
+  row_var_label_levels <- unique(row_var_label_levels)
+
+  # Build factor levels for row values (in order they appear in rows_list)
+  row_val_levels <- character(0)
+  for (i in 1:num_rows) {
+    row_val_levels <- c(row_val_levels, as.character(rows_list[[i]]$value))
+  }
+  row_val_levels <- unique(row_val_levels)
+
+  # ============================================================================
   # Build Return Data Frame
   # ============================================================================
 
@@ -323,14 +368,33 @@ create_polling_crosstabs <- function(
 
   results_df <- do.call(rbind, results_list)
 
+  # Convert to factors with levels in the order they were passed
+  results_df$subgroup_var <- factor(
+    results_df$subgroup_var,
+    levels = subgroup_var_levels
+  )
+  results_df$subgroup_var_label <- factor(
+    results_df$subgroup_var_label,
+    levels = subgroup_var_label_levels
+  )
+  results_df$subgroup_val <- factor(
+    results_df$subgroup_val,
+    levels = subgroup_val_levels
+  )
+  results_df$row_var <- factor(results_df$row_var, levels = row_var_levels)
+  results_df$row_var_label <- factor(
+    results_df$row_var_label,
+    levels = row_var_label_levels
+  )
+  results_df$row_val <- factor(results_df$row_val, levels = row_val_levels)
+
   # Sort by subgroup variables first, then row variables
+  # Now that they're factors, sorting will respect the level order
   results_df <- results_df[
     order(
       results_df$subgroup_var,
-      results_df$subgroup_var_label,
       results_df$subgroup_val,
       results_df$row_var,
-      results_df$row_var_label,
       results_df$row_val
     ),
   ]
@@ -818,6 +882,10 @@ create_polling_crosstabs <- function(
 #'
 #' # View results
 #' head(results)
+#'
+#' # Check factor levels
+#' levels(results$subgroup_var)  # "Overall", "gender", "race"
+#' levels(results$row_var)  # "job_approval", "right_direction"
 #'
 #' # Filter to specific subgroup
 #' results[results$subgroup_var == "gender" & results$subgroup_val == "Male", ]
