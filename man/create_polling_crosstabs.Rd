@@ -23,7 +23,9 @@ create_polling_crosstabs(
 
 \item{subgroup_vars}{Character vector of variable names to use as column subgroups}
 
-\item{wt_var}{Character string specifying the name of the weight variable}
+\item{wt_var}{Character string specifying the name of the weight variable.
+Ignored when \code{data} is a \code{survey.design} or \code{svyrep.design}
+object, in which case weights are taken from the design.}
 
 \item{min_n}{Integer specifying minimum unweighted sample size for a subgroup
 to be included (default: 75)}
@@ -48,6 +50,11 @@ Sorted by subgroup variables then row variables.
 This function takes survey data and creates formatted crosstabs showing
 weighted percentages of row variables across different subgroups. The results
 are exported to an Excel file with proper formatting.
+}
+\details{
+Weighted percentages are calculated via \code{get_freqs()}, which supports
+plain data frames with a weight column as well as \code{survey.design} and
+\code{svyrep.design} objects.
 }
 \examples{
 \dontrun{
