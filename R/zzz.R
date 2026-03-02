@@ -34,35 +34,38 @@
     # correct face cannot be found, `find_path` will error and the try object
     # will fail before `use_roboto` is set to TRUE.
     if (length(roboto_paths) >= 5) {
-      try({
-        # register preferred strong font (roboto Semibold), with variants
-        systemfonts::register_font(
-          name = adlgraphs_global$preferred_font$heavy,
-          plain = find_path("Roboto-600", roboto_paths),
-          bold = find_path("Roboto-900", roboto_paths)
-        )
+      try(
+        {
+          # register preferred strong font (roboto Semibold), with variants
+          systemfonts::register_font(
+            name = adlgraphs_global$preferred_font$heavy,
+            plain = find_path("Roboto-600", roboto_paths),
+            bold = find_path("Roboto-900", roboto_paths)
+          )
 
-        # register preferred regular font (roboto Medium), with variants
-        systemfonts::register_font(
-          name = adlgraphs_global$preferred_font$regular,
-          plain = find_path("Roboto-regular", roboto_paths),
-          bold = find_path("Roboto-700", roboto_paths)
-        )
+          # register preferred regular font (roboto Medium), with variants
+          systemfonts::register_font(
+            name = adlgraphs_global$preferred_font$regular,
+            plain = find_path("Roboto-regular", roboto_paths),
+            bold = find_path("Roboto-700", roboto_paths)
+          )
 
-        # register preferred light font (roboto Book), with variants
-        systemfonts::register_font(
-          name = adlgraphs_global$preferred_font$light,
-          plain = find_path("Roboto-300", roboto_paths),
-          bold = find_path("Roboto-600", roboto_paths)
-        )
+          # register preferred light font (roboto Book), with variants
+          systemfonts::register_font(
+            name = adlgraphs_global$preferred_font$light,
+            plain = find_path("Roboto-300", roboto_paths),
+            bold = find_path("Roboto-600", roboto_paths)
+          )
 
-        packageStartupMessage(paste0(
-          "adlgraphs has registered the following fonts for use in this R session:\n   ",
-          paste(adlgraphs_global$preferred_font, collapse = ", ")
-        ))
+          packageStartupMessage(paste0(
+            "adlgraphs has registered the following fonts for use in this R session:\n   ",
+            paste(adlgraphs_global$preferred_font, collapse = ", ")
+          ))
 
-        assign("use_roboto", TRUE, envir = adlgraphs_global)
-      })
+          assign("use_roboto", TRUE, envir = adlgraphs_global)
+        },
+        silent = TRUE
+      )
     }
   }
   # If roboto is available...
@@ -168,6 +171,9 @@ utils::globalVariables(
     "born_again",
     "jewish",
     "reltrad_f",
+    "se",
+    "conf_low",
+    "conf_high",
     "std.err",
     "t.value",
     "var_label",

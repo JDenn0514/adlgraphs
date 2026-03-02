@@ -319,8 +319,10 @@ dunnett.data.frame <- function(
   # set the variable labels
   attr(out[[treats]], "label") <- attr_var_label(data[[treats]])
   attr(out$n, "label") <- "N"
-  attr(out$conf.low, "label") <- "Low CI"
-  attr(out$conf.high, "label") <- "High CI"
+  if ("conf.low" %in% colnames(out)) {
+    attr(out$conf.low, "label") <- "Low CI"
+    attr(out$conf.high, "label") <- "High CI"
+  }
   attr(out$p.value, "label") <- "P-Value"
 
   attr(out, "variable_label") <- attr_var_label(data[[x]])
@@ -459,8 +461,10 @@ dunnett.grouped_df <- function(
   # set the variable labels
   attr(out[[treats]], "label") <- attr_var_label(data[[treats]])
   attr(out$n, "label") <- "N"
-  attr(out$conf.low, "label") <- "Low CI"
-  attr(out$conf.high, "label") <- "High CI"
+  if ("conf.low" %in% colnames(out)) {
+    attr(out$conf.low, "label") <- "Low CI"
+    attr(out$conf.high, "label") <- "High CI"
+  }
   attr(out$p.value, "label") <- "P-Value"
 
   attr(out, "variable_label") <- attr_var_label(data[[x]])
