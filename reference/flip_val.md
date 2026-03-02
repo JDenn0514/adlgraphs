@@ -50,11 +50,11 @@ blue_flip <- flip_val(blue, "I dislike the color blue")
 # show the output comapring the two
 str(list(blue = blue, blue_flip = blue_flip))
 #> List of 2
-#>  $ blue     : int+lbl [1:20] 2, 4, 4, 3, 3, 4, 4, 4, 3, 4, 4, 4, 4, 2, 3, 2, 2, 4, 4, 1
+#>  $ blue     : int+lbl [1:20] 4, 3, 3, 4, 4, 4, 3, 4, 4, 4, 4, 2, 3, 2, 2, 4, 4, 1, 1, 2
 #>    ..@ labels: Named num [1:4] 1 2 3 4
 #>    .. ..- attr(*, "names")= chr [1:4] "Strongly agree" "Somewhat agree" "Somewhat disagree" "Strongly disagree"
 #>    ..@ label : chr "I like the color blue"
-#>  $ blue_flip: int+lbl [1:20] 2, 4, 4, 3, 3, 4, 4, 4, 3, 4, 4, 4, 4, 2, 3, 2, 2, 4, 4, 1
+#>  $ blue_flip: int+lbl [1:20] 4, 3, 3, 4, 4, 4, 3, 4, 4, 4, 4, 2, 3, 2, 2, 4, 4, 1, 1, 2
 #>    ..@ labels        : Named num [1:4] 1 2 3 4
 #>    .. ..- attr(*, "names")= chr [1:4] "Strongly disagree" "Somewhat disagree" "Somewhat agree" "Strongly agree"
 #>    ..@ label         : chr "I dislike the color blue"

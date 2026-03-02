@@ -210,7 +210,7 @@ dunnett(test_data, acts_avg, edu_f, show_means = TRUE)
 #> 1 High School or Less  2.93  0     0.697    64     2.76      3.10  NA      NA  
 #> 2 Some College         2.82 -0.106 0.742    78     2.66      2.99   0.738 ""   
 #> 3 Bachelor's Degree    2.68 -0.25  0.789    68     2.49      2.87   0.14  ""   
-#> 4 Graduate Degree      2.49 -0.436 0.719    40     2.26      2.72   0.011 "*"  
+#> 4 Graduate Degree      2.49 -0.436 0.719    40     2.26      2.72   0.012 "*"  
 
 # if we want to show means without differences, set `show_diffs = FALSE`
 dunnett(test_data, acts_avg, edu_f, show_means = TRUE, show_diffs = FALSE)
@@ -219,7 +219,7 @@ dunnett(test_data, acts_avg, edu_f, show_means = TRUE, show_diffs = FALSE)
 #> * <fct>               <dbl> <dbl> <dbl>    <dbl>     <dbl>   <dbl> <chr>
 #> 1 High School or Less  2.93 0.697    64     2.76      3.10  NA      NA  
 #> 2 Some College         2.82 0.742    78     2.66      2.99   0.738 ""   
-#> 3 Bachelor's Degree    2.68 0.789    68     2.49      2.87   0.141 ""   
-#> 4 Graduate Degree      2.49 0.719    40     2.26      2.72   0.012 "*"  
+#> 3 Bachelor's Degree    2.68 0.789    68     2.49      2.87   0.14  ""   
+#> 4 Graduate Degree      2.49 0.719    40     2.26      2.72   0.011 "*"  
 
 ```

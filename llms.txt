@@ -164,6 +164,12 @@ These are miscellaneous functions created to help with data analysis.
   : Calculate row sums
 - [`wtd_corr()`](https://jdenn0514.github.io/adlgraphs/reference/wtd_corr.md)
   : Calculate individual weighted correlations
+- [`calc_design_effect()`](https://jdenn0514.github.io/adlgraphs/reference/calc_design_effect.md)
+  : Calculate design effect (DEFF) for weighted data
+- [`calc_moe()`](https://jdenn0514.github.io/adlgraphs/reference/calc_moe.md)
+  : Calculate margin of error for weighted proportion
+- [`create_polling_crosstabs()`](https://jdenn0514.github.io/adlgraphs/reference/create_polling_crosstabs.md)
+  : Create Polling Crosstabs and Export to Excel
 
 ## Attribute helpers
 
