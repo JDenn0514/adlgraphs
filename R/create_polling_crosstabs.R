@@ -5,7 +5,6 @@
 #' Calculate design effect (DEFF) for weighted data
 #' @param weights Vector of weights
 #' @return Design effect value
-#' @keywords internal
 calc_design_effect <- function(weights) {
   # Remove NAs
   weights <- weights[!is.na(weights)]
@@ -29,7 +28,6 @@ calc_design_effect <- function(weights) {
 #' @param n Unweighted sample size
 #' @param deff Design effect
 #' @return Margin of error (as decimal, e.g., 0.0435 for 4.35 percentage points)
-#' @keywords internal
 calc_moe <- function(p, n, deff) {
   # Convert percentage to proportion
   p_prop <- p / 100
