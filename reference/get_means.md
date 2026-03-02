@@ -83,9 +83,9 @@ following columns:
 
 - `mean`: design-based mean of x
 
-- `sd`: unweighted sample standard deviation within each group
+- `sd`: weighted population standard deviation within each group
 
-- `n`: unweighted row count per group
+- `n`: sum of weights within each group (weighted N)
 
 - `conf_low`, `conf_high`: Wald confidence interval bounds
 
@@ -111,8 +111,8 @@ The result has class `"adlgraphs_means"` and common attributes:
   Wald intervals using either z (df = Inf) or t (finite df) critical
   values.
 
-- sd and n are descriptive (unweighted) and are not used in the CI
-  calculations.
+- sd is the weighted population SD and n is the sum of weights. Both are
+  used in the SE and CI calculations.
 
 - Group output order follows factor levels for factors, alphabetical for
   characters, and ascending for numerics.
@@ -150,48 +150,48 @@ get_means(test_data, trad_n)
 #> # A tibble: 1 × 5
 #>    mean    sd     n conf_low conf_high
 #> * <dbl> <dbl> <dbl>    <dbl>     <dbl>
-#> 1  4.22  3.88   250     3.74      4.70
+#> 1  4.22  3.87   250     3.74      4.70
 
 # it also works if x is a string
 get_means(test_data, "trad_n")
 #> # A tibble: 1 × 5
 #>    mean    sd     n conf_low conf_high
 #> * <dbl> <dbl> <dbl>    <dbl>     <dbl>
-#> 1  4.22  3.88   250     3.74      4.70
+#> 1  4.22  3.87   250     3.74      4.70
 
 # Let's do that again but add weights
 get_means(test_data, trad_n, wt = wts)
 #> # A tibble: 1 × 5
 #>    mean    sd     n conf_low conf_high
 #> * <dbl> <dbl> <dbl>    <dbl>     <dbl>
-#> 1  3.97  3.88   250     3.49      4.46
+#> 1  3.97  3.76  245.     3.50      4.45
 
 # the wt argument can also be in quotes like this
 get_means(test_data, "trad_n", wt = "wts")
 #> # A tibble: 1 × 5
 #>    mean    sd     n conf_low conf_high
 #> * <dbl> <dbl> <dbl>    <dbl>     <dbl>
-#> 1  3.97  3.88   250     3.49      4.46
+#> 1  3.97  3.76  245.     3.50      4.45
 
 # Now let's do the average score for different education levels
 get_means(test_data, trad_n, edu_f, wts)
 #> # A tibble: 4 × 6
 #>   edu_f                mean    sd     n conf_low conf_high
 #> * <fct>               <dbl> <dbl> <dbl>    <dbl>     <dbl>
-#> 1 High School or Less  4.14  3.91    64     3.17      5.12
-#> 2 Some College         3.93  4.1     78     3.00      4.85
-#> 3 Bachelor's Degree    4.23  3.82    68     3.31      5.16
-#> 4 Graduate Degree      3.45  3.49    40     2.33      4.56
+#> 1 High School or Less  4.14  3.59  69.8     3.29      5.00
+#> 2 Some College         3.93  3.96  86.3     3.08      4.78
+#> 3 Bachelor's Degree    4.23  3.83  49.7     3.14      5.32
+#> 4 Graduate Degree      3.45  3.41  39.4     2.35      4.55
 
 # it also works with quotes
 get_means(test_data, "trad_n", "edu_f", "wts")
 #> # A tibble: 4 × 6
 #>   edu_f                mean    sd     n conf_low conf_high
 #> * <fct>               <dbl> <dbl> <dbl>    <dbl>     <dbl>
-#> 1 High School or Less  4.14  3.91    64     3.17      5.12
-#> 2 Some College         3.93  4.1     78     3.00      4.85
-#> 3 Bachelor's Degree    4.23  3.82    68     3.31      5.16
-#> 4 Graduate Degree      3.45  3.49    40     2.33      4.56
+#> 1 High School or Less  4.14  3.59  69.8     3.29      5.00
+#> 2 Some College         3.93  3.96  86.3     3.08      4.78
+#> 3 Bachelor's Degree    4.23  3.83  49.7     3.14      5.32
+#> 4 Graduate Degree      3.45  3.41  39.4     2.35      4.55
 
 # you can also pipe in the `data` argument if you want to do some data
 # transformations before you calculate the means. For example, say you want
@@ -203,6 +203,6 @@ test_data %>%
 #> # A tibble: 2 × 6
 #>   top_f2    mean    sd     n conf_low conf_high
 #> * <fct>    <dbl> <dbl> <dbl>    <dbl>     <dbl>
-#> 1 Agree     5.08  3.84   110     4.36      5.81
-#> 2 Disagree  3.05  3.68   140     2.44      3.67
+#> 1 Agree     5.08  3.83  111.     4.36      5.80
+#> 2 Disagree  3.05  3.43  134.     2.46      3.64
 ```
