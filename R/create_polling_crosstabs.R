@@ -158,19 +158,14 @@ create_polling_crosstabs <- function(
   # Build Column Structure (Subgroups)
   # ============================================================================
 
-  # Note: We create columns for each value of each subgroup variable separately,
-  # NOT for all combinations of subgroups. This keeps memory usage reasonable.
-  # For example, if you have gender (2 values) and race (4 values), you get
-  # 2 + 4 = 6 columns, not 2 * 4 = 8 combinations.
-
   columns_list <- base::list()
 
-  # Add Overall column first — subset is the full data (design or data frame)
+  # Add Overall column first
   columns_list[[1]] <- base::list(
     var_name = "Overall",
     var_label = "Overall",
     value = "Overall",
-    data_subset = data, # Keep original object type for get_freqs()
+    data_subset = data,
     unweighted_n = base::nrow(data_df),
     deff = calc_design_effect(
       if (is_survey) data$variables[[wt_var]] else data_df[[wt_var]]
@@ -179,9 +174,16 @@ create_polling_crosstabs <- function(
 
   # Add each subgroup variable's values as separate columns
   for (var in subgroup_vars) {
-    # Use attr_var_label() to get the variable label, falling back to the
-    # variable name if no label is present
-    var_label <- attr_var_label(data_df[[var]], if_null = "name")
+    # Get the variable label as a single scalar string, falling back to the
+    # variable name. force_scalar() guards against labelled vectors returning
+    # a named vector of length > 1 from attr_var_label()
+    raw_label <- attr_var_label(data_df[[var]], if_null = "name")
+    var_label <- if (base::length(raw_label) > 1) {
+      var
+    } else {
+      base::as.character(raw_label[[1]])
+    }
+
     unique_values <- base::sort(base::unique(data_df[[var]][
       !base::is.na(data_df[[var]])
     ]))
@@ -190,9 +192,7 @@ create_polling_crosstabs <- function(
       row_idx <- !base::is.na(data_df[[var]]) & data_df[[var]] == val
       unweighted_n <- base::sum(row_idx)
 
-      # Only include if meets minimum n threshold
       if (unweighted_n >= min_n) {
-        # Subset the original object (preserves survey design if applicable)
         data_subset <- if (is_survey) data[row_idx, ] else data_df[row_idx, ]
 
         wt_vec <- if (is_survey) {
@@ -222,12 +222,16 @@ create_polling_crosstabs <- function(
   rows_list <- base::list()
 
   for (var in row_vars) {
-    # Use attr_var_label() to get the variable label, falling back to the
-    # variable name if no label is present
-    var_label <- attr_var_label(data_df[[var]], if_null = "name")
+    # Same scalar-coercion guard as above
+    raw_label <- attr_var_label(data_df[[var]], if_null = "name")
+    var_label <- if (base::length(raw_label) > 1) {
+      var
+    } else {
+      base::as.character(raw_label[[1]])
+    }
+
     unique_values <- base::unique(data_df[[var]][!base::is.na(data_df[[var]])])
 
-    # If the variable is a factor, use factor levels for ordering
     if (base::is.factor(data_df[[var]])) {
       unique_values <- base::levels(data_df[[var]])
       unique_values <- unique_values[unique_values %in% data_df[[var]]]
@@ -297,20 +301,20 @@ create_polling_crosstabs <- function(
   # Build Factor Levels for Ordering
   # ============================================================================
 
-  # Subgroup variable names: Overall first, then in the order passed
+  # Helper to safely extract a single scalar label from a potentially
+  # multi-length attr_var_label() result
+  safe_label <- function(var) {
+    raw <- attr_var_label(data_df[[var]], if_null = "name")
+    if (base::length(raw) > 1) var else base::as.character(raw[[1]])
+  }
+
   subgroup_var_levels <- c("Overall", subgroup_vars)
 
-  # Subgroup variable labels: Overall first, then in the order passed
   subgroup_var_label_levels <- base::unique(c(
     "Overall",
-    base::vapply(
-      subgroup_vars,
-      function(v) attr_var_label(data_df[[v]], if_null = "name"),
-      character(1)
-    )
+    base::vapply(subgroup_vars, safe_label, character(1))
   ))
 
-  # Subgroup values: in the order they appear in columns_list
   subgroup_val_levels <- base::unique(
     base::vapply(
       columns_list,
@@ -319,19 +323,12 @@ create_polling_crosstabs <- function(
     )
   )
 
-  # Row variable names: in the order passed
   row_var_levels <- row_vars
 
-  # Row variable labels: in the order passed
   row_var_label_levels <- base::unique(
-    base::vapply(
-      row_vars,
-      function(v) attr_var_label(data_df[[v]], if_null = "name"),
-      character(1)
-    )
+    base::vapply(row_vars, safe_label, character(1))
   )
 
-  # Row values: in the order they appear in rows_list
   row_val_levels <- base::unique(
     base::vapply(
       rows_list,
@@ -527,102 +524,125 @@ create_polling_crosstabs <- function(
   # Apply Cell Styling
   # ============================================================================
 
-  gray_header_style <- openxlsx2::create_cell_style(
-    bg_fill = openxlsx2::wb_color("#D3D3D3"),
-    halign = "center",
-    valign = "center",
-    bold = TRUE,
+  # In openxlsx2, fill/font/numfmt are applied directly via wb_add_fill(),
+  # wb_add_font(), and wb_add_numfmt() rather than through create_cell_style().
+
+  gray <- openxlsx2::wb_color(hex = "FFD3D3D3")
+  white <- openxlsx2::wb_color(hex = "FFFFFFFF")
+  black <- openxlsx2::wb_color(hex = "FF000000")
+
+  # ---- Gray fill + bold + center align: top 2 header rows, all columns ----
+  wb <- openxlsx2::wb_add_fill(
+    wb,
+    sheet = sheet_name,
+    dims = openxlsx2::wb_dims(rows = 1:2, cols = 1:(num_cols + 2)),
+    color = gray
+  )
+  wb <- openxlsx2::wb_add_font(
+    wb,
+    sheet = sheet_name,
+    dims = openxlsx2::wb_dims(rows = 1:2, cols = 1:(num_cols + 2)),
+    bold = TRUE
+  )
+  wb <- openxlsx2::wb_add_cell_style(
+    wb,
+    sheet = sheet_name,
+    dims = openxlsx2::wb_dims(rows = 1:2, cols = 1:(num_cols + 2)),
+    horizontal = "center",
+    vertical = "center",
     wrap_text = TRUE
   )
 
-  gray_index_style <- openxlsx2::create_cell_style(
-    bg_fill = openxlsx2::wb_color("#D3D3D3"),
-    halign = "center",
-    valign = "center",
-    bold = TRUE,
+  # ---- Gray fill + bold + center align: n-row index columns (cols 1-2) ----
+  wb <- openxlsx2::wb_add_fill(
+    wb,
+    sheet = sheet_name,
+    dims = openxlsx2::wb_dims(rows = 3, cols = 1:2),
+    color = gray
+  )
+  wb <- openxlsx2::wb_add_font(
+    wb,
+    sheet = sheet_name,
+    dims = openxlsx2::wb_dims(rows = 3, cols = 1:2),
+    bold = TRUE
+  )
+  wb <- openxlsx2::wb_add_cell_style(
+    wb,
+    sheet = sheet_name,
+    dims = openxlsx2::wb_dims(rows = 3, cols = 1:2),
+    horizontal = "center",
+    vertical = "center",
     wrap_text = TRUE
   )
 
-  white_data_style <- openxlsx2::create_cell_style(
-    bg_fill = openxlsx2::wb_color("#FFFFFF"),
-    halign = "center",
-    valign = "center"
+  # ---- White fill + center align: n-row data columns ----
+  wb <- openxlsx2::wb_add_fill(
+    wb,
+    sheet = sheet_name,
+    dims = openxlsx2::wb_dims(rows = 3, cols = 3:(num_cols + 2)),
+    color = white
   )
-
-  percentage_style <- openxlsx2::create_cell_style(
-    bg_fill = openxlsx2::wb_color("#FFFFFF"),
-    halign = "center",
-    valign = "center",
-    num_fmt = "0%"
-  )
-
-  # Gray: top 2 header rows, all columns
   wb <- openxlsx2::wb_add_cell_style(
     wb,
     sheet = sheet_name,
-    style = gray_header_style,
-    dims = openxlsx2::wb_dims(rows = 1:2, cols = 1:(num_cols + 2))
+    dims = openxlsx2::wb_dims(rows = 3, cols = 3:(num_cols + 2)),
+    horizontal = "center",
+    vertical = "center"
   )
 
-  # Gray: n-row index columns only
+  # ---- Gray fill + bold + center align: index columns for all data rows ----
+  wb <- openxlsx2::wb_add_fill(
+    wb,
+    sheet = sheet_name,
+    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 1:2),
+    color = gray
+  )
+  wb <- openxlsx2::wb_add_font(
+    wb,
+    sheet = sheet_name,
+    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 1:2),
+    bold = TRUE
+  )
   wb <- openxlsx2::wb_add_cell_style(
     wb,
     sheet = sheet_name,
-    style = gray_index_style,
-    dims = openxlsx2::wb_dims(rows = 3, cols = 1:2)
+    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 1:2),
+    horizontal = "center",
+    vertical = "center",
+    wrap_text = TRUE
   )
 
-  # White: n-row data columns
+  # ---- White fill + percentage format + center align: data cells ----
+  wb <- openxlsx2::wb_add_fill(
+    wb,
+    sheet = sheet_name,
+    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 3:(num_cols + 2)),
+    color = white
+  )
+  wb <- openxlsx2::wb_add_numfmt(
+    wb,
+    sheet = sheet_name,
+    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 3:(num_cols + 2)),
+    numfmt = "0%"
+  )
   wb <- openxlsx2::wb_add_cell_style(
     wb,
     sheet = sheet_name,
-    style = white_data_style,
-    dims = openxlsx2::wb_dims(rows = 3, cols = 3:(num_cols + 2))
-  )
-
-  # Gray: index columns for all data rows
-  wb <- openxlsx2::wb_add_cell_style(
-    wb,
-    sheet = sheet_name,
-    style = gray_index_style,
-    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 1:2)
-  )
-
-  # Percentage format: data cells
-  wb <- openxlsx2::wb_add_cell_style(
-    wb,
-    sheet = sheet_name,
-    style = percentage_style,
-    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 3:(num_cols + 2))
+    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 3:(num_cols + 2)),
+    horizontal = "center",
+    vertical = "center"
   )
 
   # ============================================================================
   # Add Borders Between Variable Groups
   # ============================================================================
 
-  # Solid medium border — separates groups with different variable labels
-  top_border_solid <- openxlsx2::create_border(
-    top = openxlsx2::wb_border(color = "#000000", style = "medium")
-  )
-  left_border_solid <- openxlsx2::create_border(
-    left = openxlsx2::wb_border(color = "#000000", style = "medium")
-  )
+  # IMPORTANT: update = TRUE merges the new border side onto any existing
+  # border styles on those cells, rather than overwriting all sides.
+  # Without this, applying a top border would clear any left/right borders
+  # that were already applied to the same cells.
 
-  # Dashed thin border — separates groups sharing the same variable label
-  top_border_dashed <- openxlsx2::create_border(
-    top = openxlsx2::wb_border(color = "#000000", style = "dashed")
-  )
-  left_border_dashed <- openxlsx2::create_border(
-    left = openxlsx2::wb_border(color = "#000000", style = "dashed")
-  )
-
-  # Structural borders
-  bottom_border <- openxlsx2::create_border(
-    bottom = openxlsx2::wb_border(color = "#000000", style = "medium")
-  )
-  right_border <- openxlsx2::create_border(
-    right = openxlsx2::wb_border(color = "#000000", style = "medium")
-  )
+  black <- openxlsx2::wb_color(hex = "FF000000")
 
   # Horizontal borders between row variables
   current_var <- rows_list[[1]]$var_name
@@ -631,17 +651,24 @@ create_polling_crosstabs <- function(
   for (i in 2:num_rows) {
     if (rows_list[[i]]$var_name != current_var) {
       excel_row <- i + 3
-      border_to_apply <- if (rows_list[[i]]$var_label == current_label) {
-        top_border_dashed
+      border_style <- if (rows_list[[i]]$var_label == current_label) {
+        "dashed"
       } else {
-        top_border_solid
+        "medium"
       }
+
       wb <- openxlsx2::wb_add_border(
         wb,
         sheet = sheet_name,
-        border = border_to_apply,
-        dims = openxlsx2::wb_dims(rows = excel_row, cols = 1:(num_cols + 2))
+        dims = openxlsx2::wb_dims(rows = excel_row, cols = 1:(num_cols + 2)),
+        top_border = border_style,
+        top_color = black,
+        bottom_border = NULL,
+        left_border = NULL,
+        right_border = NULL,
+        update = TRUE
       )
+
       current_var <- rows_list[[i]]$var_name
       current_label <- rows_list[[i]]$var_label
     }
@@ -654,17 +681,24 @@ create_polling_crosstabs <- function(
   for (j in 2:num_cols) {
     if (columns_list[[j]]$var_name != current_var) {
       excel_col <- j + 2
-      border_to_apply <- if (columns_list[[j]]$var_label == current_label) {
-        left_border_dashed
+      border_style <- if (columns_list[[j]]$var_label == current_label) {
+        "dashed"
       } else {
-        left_border_solid
+        "medium"
       }
+
       wb <- openxlsx2::wb_add_border(
         wb,
         sheet = sheet_name,
-        border = border_to_apply,
-        dims = openxlsx2::wb_dims(rows = 1:(num_rows + 3), cols = excel_col)
+        dims = openxlsx2::wb_dims(rows = 1:(num_rows + 3), cols = excel_col),
+        left_border = border_style,
+        left_color = black,
+        top_border = NULL,
+        bottom_border = NULL,
+        right_border = NULL,
+        update = TRUE
       )
+
       current_var <- columns_list[[j]]$var_name
       current_label <- columns_list[[j]]$var_label
     }
@@ -674,22 +708,39 @@ create_polling_crosstabs <- function(
   wb <- openxlsx2::wb_add_border(
     wb,
     sheet = sheet_name,
-    border = right_border,
-    dims = openxlsx2::wb_dims(rows = 1:(num_rows + 3), cols = 2)
+    dims = openxlsx2::wb_dims(rows = 1:(num_rows + 3), cols = 2),
+    right_border = "medium",
+    right_color = black,
+    top_border = NULL,
+    bottom_border = NULL,
+    left_border = NULL,
+    update = TRUE
   )
 
-  # Bottom border after header rows (row 2) and n-sizes row (row 3), all columns
+  # Bottom border after header rows (row 2), all columns
   wb <- openxlsx2::wb_add_border(
     wb,
     sheet = sheet_name,
-    border = bottom_border,
-    dims = openxlsx2::wb_dims(rows = 2, cols = 1:(num_cols + 2))
+    dims = openxlsx2::wb_dims(rows = 2, cols = 1:(num_cols + 2)),
+    bottom_border = "medium",
+    bottom_color = black,
+    top_border = NULL,
+    left_border = NULL,
+    right_border = NULL,
+    update = TRUE
   )
+
+  # Bottom border after n-sizes row (row 3), all columns
   wb <- openxlsx2::wb_add_border(
     wb,
     sheet = sheet_name,
-    border = bottom_border,
-    dims = openxlsx2::wb_dims(rows = 3, cols = 1:(num_cols + 2))
+    dims = openxlsx2::wb_dims(rows = 3, cols = 1:(num_cols + 2)),
+    bottom_border = "medium",
+    bottom_color = black,
+    top_border = NULL,
+    left_border = NULL,
+    right_border = NULL,
+    update = TRUE
   )
 
   # ============================================================================
