@@ -36,6 +36,11 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.3" id="adlgraphs-043">adlgraphs 0.4.3<a class="anchor" aria-label="anchor" href="#adlgraphs-043"></a></h2>
 <div class="section level3">
+<h3 id="bug-fixes-0-4-3">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-4-3"></a></h3>
+<ul><li>
+<code><a href="../reference/dunnett.html">dunnett()</a></code> no longer errors when <code>show_means = TRUE</code>. The <code>conf.low</code>/<code>conf.high</code> label assignment now guards against the case where means output uses <code>conf_low</code>/<code>conf_high</code> column names.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="enhanced-get_means-with-replicate-weight-survey-design-support-0-4-3">Enhanced <code>get_means()</code> with replicate-weight survey design support<a class="anchor" aria-label="anchor" href="#enhanced-get_means-with-replicate-weight-survey-design-support-0-4-3"></a></h3>
 <ul><li>
 <code><a href="../reference/get_means.html">get_means()</a></code> now supports <code>svyrep.design</code> objects (replicate-weight survey designs) in addition to the existing <code>survey.design</code> support</li>

@@ -2,6 +2,13 @@
 
 ## adlgraphs 0.4.3
 
+### Bug fixes
+
+- [`dunnett()`](https://jdenn0514.github.io/adlgraphs/reference/dunnett.md)
+  no longer errors when `show_means = TRUE`. The `conf.low`/`conf.high`
+  label assignment now guards against the case where means output uses
+  `conf_low`/`conf_high` column names.
+
 ### Enhanced `get_means()` with replicate-weight survey design support
 
 - [`get_means()`](https://jdenn0514.github.io/adlgraphs/reference/get_means.md)
