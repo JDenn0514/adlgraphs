@@ -36,9 +36,9 @@
 #'
 #'   - `mean`: design-based mean of x
 #'
-#'   - `sd`: unweighted sample standard deviation within each group
+#'   - `sd`: weighted population standard deviation within each group
 #'
-#'   - `n`: unweighted row count per group
+#'   - `n`: sum of weights within each group (weighted N)
 #'
 #'   - `conf_low`, `conf_high`: Wald confidence interval bounds
 #'
@@ -60,7 +60,8 @@
 #' - Means and standard errors are computed via survey::svymean(). CIs are Wald intervals
 #'   using either z (df = Inf) or t (finite df) critical values.
 #'
-#' - sd and n are descriptive (unweighted) and are not used in the CI calculations.
+#' - sd is the weighted population SD and n is the sum of weights. Both are used
+#'   in the SE and CI calculations.
 #'
 #' - Group output order follows factor levels for factors, alphabetical for characters,
 #'   and ascending for numerics.
@@ -165,12 +166,14 @@ get_means.data.frame <- function(
   # Summarize data
   out <- data %>%
     dplyr::summarise(
-      # calculate the unweighted n
-      n = dplyr::n(),
+      # calculate the weighted n (sum of weights)
+      n = sum(.data[[wt_name]], na.rm = TRUE),
       # calculate the weighted mean
-      mean = sum(.data[[x]] * .data[[wt_name]], na.rm = TRUE) / sum(.data[[wt_name]], na.rm = TRUE),
-      # calculate the unweighted sd
-      sd = stats::sd(.data[[x]]),
+      mean = sum(.data[[x]] * .data[[wt_name]], na.rm = TRUE) / n,
+      # calculate the weighted population sd
+      sd = sqrt(
+        sum(.data[[wt_name]] * (.data[[x]] - mean)^2, na.rm = TRUE) / n
+      ),
       # remove the groups
       .groups = "drop"
     ) %>%

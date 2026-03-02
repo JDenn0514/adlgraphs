@@ -3,8 +3,11 @@
     Code
       case_match_fct(1)
     Condition
+      Warning:
+      `case_match()` was deprecated in dplyr 1.2.0.
+      i Please use `recode_values()` instead.
       Error in `dplyr::case_match()`:
-      ! At least one condition must be supplied.
+      ! `...` can't be empty.
 
 ---
 

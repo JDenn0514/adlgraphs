@@ -53,8 +53,8 @@ following columns:
 \itemize{
 \item grouping columns (preserving factor/label semantics for display)
 \item \code{mean}: design-based mean of x
-\item \code{sd}: unweighted sample standard deviation within each group
-\item \code{n}: unweighted row count per group
+\item \code{sd}: weighted population standard deviation within each group
+\item \code{n}: sum of weights within each group (weighted N)
 \item \code{conf_low}, \code{conf_high}: Wald confidence interval bounds
 }
 
@@ -79,7 +79,8 @@ plain \code{data.frame} inputs (with a simpler weighted/unweighted implementatio
 preserving design alignment (ids/strata/weights/replicates).
 \item Means and standard errors are computed via survey::svymean(). CIs are Wald intervals
 using either z (df = Inf) or t (finite df) critical values.
-\item sd and n are descriptive (unweighted) and are not used in the CI calculations.
+\item sd is the weighted population SD and n is the sum of weights. Both are used
+in the SE and CI calculations.
 \item Group output order follows factor levels for factors, alphabetical for characters,
 and ascending for numerics.
 \item Value labels for grouping variables are preserved in the output by factorizing keys
