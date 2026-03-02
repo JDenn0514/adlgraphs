@@ -82,6 +82,9 @@ reference:
     - row_means
     - row_sums
     - wtd_corr
+    - calc_design_effect
+    - calc_moe
+    - create_polling_crosstabs
 - title: Attribute helpers
   contents:
     - attr_var_label
