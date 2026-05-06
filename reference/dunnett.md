@@ -107,6 +107,7 @@ means.
 ## Examples
 
 ``` r
+
 # load dply for the pipe: %>%
 library(dplyr)
 library(adlgraphs)
@@ -183,7 +184,7 @@ test_data %>%
 #> 6 Democrat    Graduate Degree   -0.379    18   -0.954     0.196   0.269 ""   
 #> 7 Republican  Some College      -0.074    32   -0.57      0.423   0.967 ""   
 #> 8 Republican  Bachelor's Degree -0.204    28   -0.714     0.305   0.639 ""   
-#> 9 Republican  Graduate Degree   -0.443    17   -1.01      0.127   0.159 ""   
+#> 9 Republican  Graduate Degree   -0.443    17   -1.01      0.127   0.16  ""   
 
 # we can also group by multiple
 test_data %>%
@@ -210,7 +211,7 @@ dunnett(test_data, acts_avg, edu_f, show_means = TRUE)
 #> 1 High School or Less  2.93  0     0.697    64     2.76      3.10  NA      NA  
 #> 2 Some College         2.82 -0.106 0.742    78     2.66      2.99   0.738 ""   
 #> 3 Bachelor's Degree    2.68 -0.25  0.789    68     2.49      2.87   0.14  ""   
-#> 4 Graduate Degree      2.49 -0.436 0.719    40     2.26      2.72   0.012 "*"  
+#> 4 Graduate Degree      2.49 -0.436 0.719    40     2.26      2.72   0.011 "*"  
 
 # if we want to show means without differences, set `show_diffs = FALSE`
 dunnett(test_data, acts_avg, edu_f, show_means = TRUE, show_diffs = FALSE)

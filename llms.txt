@@ -19,6 +19,7 @@ You can install the development version of adlgraphs from
 [GitHub](https://github.com/JDenn0514/adlgraphs) with:
 
 ``` r
+
 # install.packages("pak")
 pak::pak("JDenn0514/adlgraphs")
 ```

@@ -24,6 +24,7 @@ A numeric vector of the same length as `x`
 ## Examples
 
 ``` r
+
 library(dplyr)
 
 test_data %>%

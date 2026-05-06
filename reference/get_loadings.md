@@ -101,6 +101,7 @@ A data.frame showing factor loadings.
 ## Examples
 
 ``` r
+
 library(dplyr)
 library(psych)
 

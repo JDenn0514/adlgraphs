@@ -12,6 +12,7 @@ create_polling_crosstabs(
   row_vars,
   subgroup_vars,
   wt_var,
+  na_rm = TRUE,
   min_n = 75,
   file_name,
   sheet_name,
@@ -39,6 +40,11 @@ create_polling_crosstabs(
   Character string specifying the name of the weight variable. Ignored
   when `data` is a `survey.design` or `svyrep.design` object, in which
   case weights are taken from the design.
+
+- na_rm:
+
+  Logical; whether to remove rows with missing values in x and group
+  before computing frequencies. Default is TRUE.
 
 - min_n:
 
@@ -86,9 +92,10 @@ results <- create_polling_crosstabs(
   subgroup_vars = c("gender", "race"),
   wt_var = "weight",
   min_n = 75,
+  na_rm = TRUE,
   file_name = "crosstabs.xlsx",
   sheet_name = "Results",
-  summary_string = "January 2026 National Poll"
+  summary_string = "January 2026 National Poll",
 )
 } # }
 ```

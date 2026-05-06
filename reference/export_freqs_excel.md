@@ -133,6 +133,7 @@ relationships clear.
 
 To create multiple sheets in the same Excel file:
 
+
     # First call creates the file
     export_freqs_excel(data, vars, group = "generation",
                        file_name = "analysis.xlsx", sheet = "By Generation")

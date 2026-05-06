@@ -1,6 +1,7 @@
 # Data Transformations
 
 ``` r
+
 # load in the libraries
 
 # for num_rev and test_data
@@ -30,6 +31,7 @@ with the statement “I like the color blue” and set it so that a higher
 number means more disagreement.
 
 ``` r
+
 
 # create the vector
 blue <- sample(c(1:4), size = 20, replace = TRUE)
@@ -71,6 +73,7 @@ percentage of people who agree and disagree, but the actual numbers that
 underlie the variable have reversed.
 
 ``` r
+
 # reverse the direction of the scale
 blue_rev <- num_rev(blue)
 # let's compare the two
@@ -103,6 +106,7 @@ Similarly, we can see that the values and variable labels between
 same.
 
 ``` r
+
 blue_flip <- flip_val(blue, "I dislike the color blue")
 str(list(blue = blue, blue_rev = blue_rev, blue_flip = blue_flip))
 #> List of 3

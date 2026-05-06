@@ -194,6 +194,7 @@ of the result tibble.
 ## Examples
 
 ``` r
+
 # here's a basic unweighted frequency for satisfaction_service
 get_freqs(basic_df, x = satisfaction_service)
 #> # A tibble: 5 × 3

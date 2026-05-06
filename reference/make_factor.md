@@ -72,6 +72,7 @@ A factor vector of same length as `x`.
 ## Examples
 
 ``` r
+
 library(adlgraphs)
 library(dplyr)
 

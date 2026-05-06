@@ -300,7 +300,7 @@ attr_var_label(test_data, unlist = FALSE)
 top <- sample(c(1:3), 10, replace = TRUE)
 # if no label is present and if_null = "name", it will use the variable name
 attr_var_label(top, if_null = "name")
-#>  [1] 3 2 1 1 3 2 1 1 3 3
+#>  [1] 1 2 3 1 2 2 3 2 1 1
 # if it's se to "NA" it will give NA
 attr_var_label(top, if_null = "NA")
 #> [1] NA

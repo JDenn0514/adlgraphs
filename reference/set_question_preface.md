@@ -41,6 +41,7 @@ A vector the same type and length of x but with an additional attribute.
 ## Examples
 
 ``` r
+
 library(adlgraphs)
 # create a fake dataset
 df <- data.frame(
