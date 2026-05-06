@@ -110,6 +110,7 @@ create_polling_crosstabs <- function(
   row_vars,
   subgroup_vars,
   wt_var,
+  na_rm = TRUE,
   min_n = 75,
   file_name,
   sheet_name,
