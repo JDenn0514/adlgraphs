@@ -39,6 +39,8 @@ sheet with same name (default: TRUE)}
 
 \item{summary_string}{Character string to display in the top-left merged cell
 (default: "")}
+
+\item{na_rm}{Logical; whether to remove rows with missing values in x and group before computing frequencies. Default is TRUE.}
 }
 \value{
 Data frame with columns: subgroup_var, subgroup_var_label, subgroup_val,
@@ -64,9 +66,10 @@ results <- create_polling_crosstabs(
   subgroup_vars = c("gender", "race"),
   wt_var = "weight",
   min_n = 75,
+  na_rm = TRUE
   file_name = "crosstabs.xlsx",
   sheet_name = "Results",
-  summary_string = "January 2026 National Poll"
+  summary_string = "January 2026 National Poll",
 )
 }
 
