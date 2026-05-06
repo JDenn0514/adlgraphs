@@ -9,6 +9,7 @@ create_polling_crosstabs(
   row_vars,
   subgroup_vars,
   wt_var,
+  na_rm = TRUE,
   min_n = 75,
   file_name,
   sheet_name,
@@ -27,6 +28,8 @@ create_polling_crosstabs(
 Ignored when \code{data} is a \code{survey.design} or \code{svyrep.design}
 object, in which case weights are taken from the design.}
 
+\item{na_rm}{Logical; whether to remove rows with missing values in x and group before computing frequencies. Default is TRUE.}
+
 \item{min_n}{Integer specifying minimum unweighted sample size for a subgroup
 to be included (default: 75)}
 
@@ -39,8 +42,6 @@ sheet with same name (default: TRUE)}
 
 \item{summary_string}{Character string to display in the top-left merged cell
 (default: "")}
-
-\item{na_rm}{Logical; whether to remove rows with missing values in x and group before computing frequencies. Default is TRUE.}
 }
 \value{
 Data frame with columns: subgroup_var, subgroup_var_label, subgroup_val,
@@ -66,7 +67,7 @@ results <- create_polling_crosstabs(
   subgroup_vars = c("gender", "race"),
   wt_var = "weight",
   min_n = 75,
-  na_rm = TRUE
+  na_rm = TRUE,
   file_name = "crosstabs.xlsx",
   sheet_name = "Results",
   summary_string = "January 2026 National Poll",
