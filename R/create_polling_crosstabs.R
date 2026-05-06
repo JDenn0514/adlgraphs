@@ -97,7 +97,7 @@ calc_moe <- function(p, n, deff) {
 #'   subgroup_vars = c("gender", "race"),
 #'   wt_var = "weight",
 #'   min_n = 75,
-#'   na_rm = TRUE
+#'   na_rm = TRUE,
 #'   file_name = "crosstabs.xlsx",
 #'   sheet_name = "Results",
 #'   summary_string = "January 2026 National Poll",
