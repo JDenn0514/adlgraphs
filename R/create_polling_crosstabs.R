@@ -76,6 +76,7 @@ calc_moe <- function(p, n, deff) {
 #'   object, in which case weights are taken from the design.
 #' @param min_n Integer specifying minimum unweighted sample size for a subgroup
 #'   to be included (default: 75)
+#' @param na_rm Logical; whether to remove rows with missing values in x and group before computing frequencies. Default is TRUE.
 #' @param file_name Character string specifying the Excel file path/name
 #' @param sheet_name Character string specifying the sheet name
 #' @param overwrite_existing_sheet Logical indicating whether to overwrite existing
@@ -96,9 +97,10 @@ calc_moe <- function(p, n, deff) {
 #'   subgroup_vars = c("gender", "race"),
 #'   wt_var = "weight",
 #'   min_n = 75,
+#'   na_rm = TRUE,
 #'   file_name = "crosstabs.xlsx",
 #'   sheet_name = "Results",
-#'   summary_string = "January 2026 National Poll"
+#'   summary_string = "January 2026 National Poll",
 #' )
 #' }
 #'
@@ -108,6 +110,7 @@ create_polling_crosstabs <- function(
   row_vars,
   subgroup_vars,
   wt_var,
+  na_rm = TRUE,
   min_n = 75,
   file_name,
   sheet_name,
@@ -267,14 +270,14 @@ create_polling_crosstabs <- function(
         get_freqs(
           data = col_data,
           x = tidyselect::all_of(var),
-          na.rm = TRUE
+          na.rm = na_rm
         )
       } else {
         get_freqs(
           data = col_data,
           x = tidyselect::all_of(var),
           wt = !!rlang::sym(wt_var),
-          na.rm = TRUE
+          na.rm = na_rm
         )
       }
 
