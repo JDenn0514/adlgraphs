@@ -127,6 +127,18 @@ calc_moe_vec <- function(p, n, deff) {
 #'   the last when building a multi-sheet workbook.
 #'
 #' @details
+#' \strong{Items with no base in a subgroup.} A question asked of only some
+#' respondents can have no base at all inside a given column -- for example a
+#' follow-up asked only of one candidate's voters, crossed against a vote-choice
+#' banner, is empty in every other candidate's column. Those cells are left
+#' blank in the Excel output and carry \code{NA} for \code{pct} and \code{moe}
+#' in the returned data frame. Blank therefore means "nobody in this column was
+#' asked this", which is different from \code{0}, which means "asked, and nobody
+#' gave this answer".
+#'
+#' This applies under the default \code{na_rm = TRUE}. With \code{na_rm = FALSE},
+#' missingness is reported as its own category instead.
+#'
 #' \strong{Building a multi-sheet workbook.} By default each call reads
 #' \code{file_name} back off disk with \code{openxlsx2::wb_load()}, adds its
 #' sheet, and writes the whole file out again. That round trip re-parses every
@@ -329,10 +341,36 @@ create_polling_crosstabs <- function(
   # decimal 0-1 in the return data frame and for the percentage cell format)
   crosstab_matrix <- base::matrix(NA, nrow = num_rows, ncol = num_cols)
 
+  # Hoisted out of the column loop: the row variable names do not change, and
+  # rebuilding this per column walks the whole rows_list every time.
+  row_var_names <- base::unique(base::vapply(
+    rows_list,
+    function(r) r$var_name,
+    character(1)
+  ))
+
   for (j in 1:num_cols) {
     col_data <- columns_list[[j]]$data_subset
+    col_data_vars <- if (is_survey) col_data$variables else col_data
 
-    for (var in base::unique(base::sapply(rows_list, `[[`, "var_name"))) {
+    for (var in row_var_names) {
+      # An item can have no base at all inside a subgroup -- a question asked
+      # only of a filtered set of respondents, crossed against a column that
+      # excludes all of them. get_freqs() treats that as an error ("After
+      # removing NAs, no rows remain"), which would abort the whole sheet over
+      # cells that are legitimately empty. Leave them NA instead: the Excel
+      # cell renders blank and the returned frame carries NA for pct and moe.
+      #
+      # This is deliberately narrow. It only fires when EVERY value of the
+      # item is missing in this column, which is a structural empty, and only
+      # under na_rm = TRUE. With na_rm = FALSE, get_freqs() reports missingness
+      # as its own category rather than erroring, so an all-missing item is a
+      # legitimate 100% result and must not be skipped. A row value that is
+      # merely absent from a non-empty item still records 0 below, as before.
+      if (na_rm && base::all(base::is.na(col_data_vars[[var]]))) {
+        next
+      }
+
       # Call get_freqs() for this row variable within this subgroup.
       # For plain data frames, pass wt_var via the wt argument.
       # For survey designs, weights are taken from the design automatically.

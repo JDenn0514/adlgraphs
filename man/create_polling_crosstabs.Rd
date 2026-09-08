@@ -72,6 +72,18 @@ Weighted percentages are calculated via \code{get_freqs()}, which supports
 plain data frames with a weight column as well as \code{survey.design} and
 \code{svyrep.design} objects.
 
+\strong{Items with no base in a subgroup.} A question asked of only some
+respondents can have no base at all inside a given column -- for example a
+follow-up asked only of one candidate's voters, crossed against a vote-choice
+banner, is empty in every other candidate's column. Those cells are left
+blank in the Excel output and carry \code{NA} for \code{pct} and \code{moe}
+in the returned data frame. Blank therefore means "nobody in this column was
+asked this", which is different from \code{0}, which means "asked, and nobody
+gave this answer".
+
+This applies under the default \code{na_rm = TRUE}. With \code{na_rm = FALSE},
+missingness is reported as its own category instead.
+
 \strong{Building a multi-sheet workbook.} By default each call reads
 \code{file_name} back off disk with \code{openxlsx2::wb_load()}, adds its
 sheet, and writes the whole file out again. That round trip re-parses every
