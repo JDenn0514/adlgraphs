@@ -14,7 +14,9 @@ create_polling_crosstabs(
   file_name,
   sheet_name,
   overwrite_existing_sheet = TRUE,
-  summary_string = ""
+  summary_string = "",
+  wb = NULL,
+  save = TRUE
 )
 }
 \arguments{
@@ -42,12 +44,23 @@ sheet with same name (default: TRUE)}
 
 \item{summary_string}{Character string to display in the top-left merged cell
 (default: "")}
+
+\item{wb}{An \code{openxlsx2} \code{wbWorkbook} to add this sheet to, as
+returned by \code{attr(<result>, "wb")} from a previous call. When
+supplied, \code{file_name} is not read from disk. Use this together with
+\code{save = FALSE} to build a multi-sheet workbook in memory; see Details.}
+
+\item{save}{Logical indicating whether to write the workbook to
+\code{file_name} (default: TRUE). Set to \code{FALSE} for every call but
+the last when building a multi-sheet workbook.}
 }
 \value{
 Data frame with columns: subgroup_var, subgroup_var_label, subgroup_val,
 n, row_var, row_var_label, row_val, pct (as decimal), moe (as decimal).
 All categorical columns are factors with levels in the order passed to the function.
-Sorted by subgroup variables then row variables.
+Sorted by subgroup variables then row variables. The workbook the sheet was
+written into is attached as the \code{"wb"} attribute, for passing back in
+via the \code{wb} argument.
 }
 \description{
 This function takes survey data and creates formatted crosstabs showing
@@ -58,6 +71,29 @@ are exported to an Excel file with proper formatting.
 Weighted percentages are calculated via \code{get_freqs()}, which supports
 plain data frames with a weight column as well as \code{survey.design} and
 \code{svyrep.design} objects.
+
+\strong{Building a multi-sheet workbook.} By default each call reads
+\code{file_name} back off disk with \code{openxlsx2::wb_load()}, adds its
+sheet, and writes the whole file out again. That round trip re-parses every
+style record already in the file, so it gets steadily more expensive as
+sheets accumulate -- measured at roughly 9x slower appending one sheet to a
+five-sheet workbook than writing the same sheet to a fresh file. The
+statistics are unaffected; the cost is all Excel serialization.
+
+Pass the workbook along instead, and save once at the end:
+
+\preformatted{
+wb <- NULL
+for (s in sheets) {
+  res <- create_polling_crosstabs(
+    data = d, row_vars = s$rows, subgroup_vars = s$cols,
+    wt_var = "wts", file_name = "out.xlsx", sheet_name = s$name,
+    wb = wb, save = FALSE
+  )
+  wb <- attr(res, "wb")
+}
+openxlsx2::wb_save(wb, "out.xlsx", overwrite = TRUE)
+}
 }
 \examples{
 \dontrun{

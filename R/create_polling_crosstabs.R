@@ -53,6 +53,41 @@ calc_moe <- function(p, n, deff) {
   return(moe)
 }
 
+#' Vectorized margin of error
+#'
+#' Elementwise equivalent of [calc_moe()], used to build the returned long
+#' data frame in one pass. `calc_moe()` branches on `if (is.na(p) || ...)`, so
+#' it only takes scalars and has to be called once per crosstab cell -- tens of
+#' thousands of times on a large sheet.
+#'
+#' The two must agree exactly. The precedence below matches `calc_moe()`:
+#' missing inputs or `n == 0` give `NA`, and that wins over the 0%/100% rule,
+#' which gives 0.
+#'
+#' @param p Vector of proportions (as percentages, e.g. 30 for 30%)
+#' @param n Vector of unweighted sample sizes
+#' @param deff Vector of design effects
+#' @return Vector of margins of error (as decimals)
+#' @noRd
+calc_moe_vec <- function(p, n, deff) {
+  p_prop <- p / 100
+
+  moe <- 1.96 * base::sqrt(deff * p_prop * (1 - p_prop) / n)
+
+  # 0% and 100% carry no sampling error under this formula
+  at_bound <- !base::is.na(p_prop) & (p_prop <= 0 | p_prop >= 1)
+  moe[at_bound] <- 0
+
+  # Missing inputs or an empty base are not estimable, and take precedence
+  not_estimable <- base::is.na(p) |
+    base::is.na(n) |
+    base::is.na(deff) |
+    (!base::is.na(n) & n == 0)
+  moe[not_estimable] <- NA_real_
+
+  moe
+}
+
 
 # ============================================================================
 # Main Function
@@ -83,11 +118,44 @@ calc_moe <- function(p, n, deff) {
 #'   sheet with same name (default: TRUE)
 #' @param summary_string Character string to display in the top-left merged cell
 #'   (default: "")
+#' @param wb An \code{openxlsx2} \code{wbWorkbook} to add this sheet to, as
+#'   returned by \code{attr(<result>, "wb")} from a previous call. When
+#'   supplied, \code{file_name} is not read from disk. Use this together with
+#'   \code{save = FALSE} to build a multi-sheet workbook in memory; see Details.
+#' @param save Logical indicating whether to write the workbook to
+#'   \code{file_name} (default: TRUE). Set to \code{FALSE} for every call but
+#'   the last when building a multi-sheet workbook.
+#'
+#' @details
+#' \strong{Building a multi-sheet workbook.} By default each call reads
+#' \code{file_name} back off disk with \code{openxlsx2::wb_load()}, adds its
+#' sheet, and writes the whole file out again. That round trip re-parses every
+#' style record already in the file, so it gets steadily more expensive as
+#' sheets accumulate -- measured at roughly 9x slower appending one sheet to a
+#' five-sheet workbook than writing the same sheet to a fresh file. The
+#' statistics are unaffected; the cost is all Excel serialization.
+#'
+#' Pass the workbook along instead, and save once at the end:
+#'
+#' \preformatted{
+#' wb <- NULL
+#' for (s in sheets) {
+#'   res <- create_polling_crosstabs(
+#'     data = d, row_vars = s$rows, subgroup_vars = s$cols,
+#'     wt_var = "wts", file_name = "out.xlsx", sheet_name = s$name,
+#'     wb = wb, save = FALSE
+#'   )
+#'   wb <- attr(res, "wb")
+#' }
+#' openxlsx2::wb_save(wb, "out.xlsx", overwrite = TRUE)
+#' }
 #'
 #' @return Data frame with columns: subgroup_var, subgroup_var_label, subgroup_val,
 #'   n, row_var, row_var_label, row_val, pct (as decimal), moe (as decimal).
 #'   All categorical columns are factors with levels in the order passed to the function.
-#'   Sorted by subgroup variables then row variables.
+#'   Sorted by subgroup variables then row variables. The workbook the sheet was
+#'   written into is attached as the \code{"wb"} attribute, for passing back in
+#'   via the \code{wb} argument.
 #'
 #' @examples
 #' \dontrun{
@@ -115,7 +183,9 @@ create_polling_crosstabs <- function(
   file_name,
   sheet_name,
   overwrite_existing_sheet = TRUE,
-  summary_string = ""
+  summary_string = "",
+  wb = NULL,
+  save = TRUE
 ) {
   # ============================================================================
   # Load Required Packages
@@ -346,32 +416,57 @@ create_polling_crosstabs <- function(
 
   # Create long-format data frame with one row per cell in the crosstab matrix.
   # Subgroup columns come first, followed by row variable columns.
-  results_list <- base::list()
+  # Built in one pass. The obvious loop makes a one-row data.frame per cell and
+  # rbind()s them, which on a large sheet means tens of thousands of
+  # data.frame() calls -- pure overhead, since the Excel output is written from
+  # crosstab_matrix and never from this frame.
+  #
+  # Column-major indexing reproduces the loop order exactly (j outer, i inner),
+  # which matters because the order() below is stable and ties keep their
+  # incoming order.
+  col_idx <- base::rep(1:num_cols, each = num_rows)
+  row_idx <- base::rep(1:num_rows, times = num_cols)
 
-  for (j in 1:num_cols) {
-    for (i in 1:num_rows) {
-      pct_percentage <- crosstab_matrix[i, j] # 0-100 scale
-      pct_decimal <- pct_percentage / 100 # 0-1 scale for return df
-      n <- columns_list[[j]]$unweighted_n
-      deff <- columns_list[[j]]$deff
-      moe <- calc_moe(pct_percentage, n, deff)
+  pct_percentage <- crosstab_matrix[base::cbind(row_idx, col_idx)]
 
-      results_list[[base::length(results_list) + 1]] <- base::data.frame(
-        subgroup_var = columns_list[[j]]$var_name,
-        subgroup_var_label = columns_list[[j]]$var_label,
-        subgroup_val = base::as.character(columns_list[[j]]$value),
-        n = n,
-        row_var = rows_list[[i]]$var_name,
-        row_var_label = rows_list[[i]]$var_label,
-        row_val = base::as.character(rows_list[[i]]$value),
-        pct = pct_decimal,
-        moe = moe,
-        stringsAsFactors = FALSE
-      )
-    }
+  col_chr <- function(field) {
+    base::vapply(
+      columns_list,
+      function(col) base::as.character(col[[field]]),
+      character(1)
+    )[col_idx]
+  }
+  row_chr <- function(field) {
+    base::vapply(
+      rows_list,
+      function(r) base::as.character(r[[field]]),
+      character(1)
+    )[row_idx]
   }
 
-  results_df <- base::do.call(base::rbind, results_list)
+  n_vec <- base::vapply(
+    columns_list,
+    function(col) base::as.numeric(col$unweighted_n),
+    numeric(1)
+  )[col_idx]
+  deff_vec <- base::vapply(
+    columns_list,
+    function(col) base::as.numeric(col$deff),
+    numeric(1)
+  )[col_idx]
+
+  results_df <- base::data.frame(
+    subgroup_var = col_chr("var_name"),
+    subgroup_var_label = col_chr("var_label"),
+    subgroup_val = col_chr("value"),
+    n = n_vec,
+    row_var = row_chr("var_name"),
+    row_var_label = row_chr("var_label"),
+    row_val = row_chr("value"),
+    pct = pct_percentage / 100,
+    moe = calc_moe_vec(pct_percentage, n_vec, deff_vec),
+    stringsAsFactors = FALSE
+  )
 
   # Convert to factors with levels in the order they were passed
   results_df$subgroup_var <- base::factor(
@@ -449,7 +544,35 @@ create_polling_crosstabs <- function(
   # Create Excel Workbook
   # ============================================================================
 
-  if (base::file.exists(file_name)) {
+  # A caller-supplied workbook is used as-is. Reading file_name back off disk
+  # here is what makes multi-sheet builds slow, so skip it entirely in that
+  # case -- see the multi-sheet note in Details.
+  if (!base::is.null(wb)) {
+    if (!base::inherits(wb, "wbWorkbook")) {
+      stop(
+        "`wb` must be an openxlsx2 wbWorkbook object, such as ",
+        "attr(<previous result>, \"wb\"), not a ",
+        base::class(wb)[[1]],
+        "."
+      )
+    }
+
+    if (sheet_name %in% openxlsx2::wb_get_sheet_names(wb)) {
+      if (overwrite_existing_sheet) {
+        wb <- openxlsx2::wb_remove_worksheet(wb, sheet = sheet_name)
+        wb <- openxlsx2::wb_add_worksheet(wb, sheet = sheet_name)
+      } else {
+        stop(
+          "Sheet '",
+          sheet_name,
+          "' already exists in the workbook passed as `wb`. ",
+          "Set overwrite_existing_sheet = TRUE to overwrite."
+        )
+      }
+    } else {
+      wb <- openxlsx2::wb_add_worksheet(wb, sheet = sheet_name)
+    }
+  } else if (base::file.exists(file_name)) {
     wb <- openxlsx2::wb_load(file_name)
 
     if (sheet_name %in% openxlsx2::wb_get_sheet_names(wb)) {
@@ -839,15 +962,27 @@ create_polling_crosstabs <- function(
   # Save Workbook
   # ============================================================================
 
-  openxlsx2::wb_save(wb, file = file_name, overwrite = TRUE)
+  if (save) {
+    openxlsx2::wb_save(wb, file = file_name, overwrite = TRUE)
 
-  base::message(
-    "Crosstabs successfully exported to: ",
-    file_name,
-    " (Sheet: ",
-    sheet_name,
-    ")"
-  )
+    base::message(
+      "Crosstabs successfully exported to: ",
+      file_name,
+      " (Sheet: ",
+      sheet_name,
+      ")"
+    )
+  } else {
+    base::message(
+      "Crosstabs added to workbook (Sheet: ",
+      sheet_name,
+      "). Not saved -- pass attr(result, \"wb\") to the next call, ",
+      "then save the workbook when the last sheet is added."
+    )
+  }
+
+  # Attached so a caller can chain sheets without a disk round trip.
+  base::attr(results_df, "wb") <- wb
 
   return(results_df)
 }
