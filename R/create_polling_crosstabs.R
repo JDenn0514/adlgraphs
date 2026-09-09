@@ -808,7 +808,25 @@ create_polling_crosstabs <- function(
 
   black <- openxlsx2::wb_color(hex = "FF000000")
 
-  # Horizontal borders between row variables
+  # Horizontal borders between row variables.
+  #
+  # These two loops are the dominant cost on a large sheet: each
+  # wb_add_border(update = TRUE) reads and rewrites entries in a cellXfs style
+  # table that grows as it goes, so ~130 row calls plus ~20 column calls cost
+  # far more than the number of cells involved would suggest.
+  #
+  # They cannot be collapsed by passing a multi-range dims. wb_dims() will
+  # happily build one ("A5:BF5,A9:BF9"), but wb_add_border() treats its dims as
+  # a single rectangle whose edges take different styles, so a multi-range
+  # either fails with "style length and name do not match" or silently leaves
+  # most of the targeted cells with no border at all. This was tried and
+  # reverted.
+  #
+  # Note for anyone retrying: cell values and style-table counts are NOT
+  # sufficient evidence. The broken version produced identical cell values and
+  # identical cellXfs/border counts while dropping the border on 316 of 931
+  # cells. Resolve each cell through cellXfs to its border definition and
+  # compare that.
   current_var <- rows_list[[1]]$var_name
   current_label <- rows_list[[1]]$var_label
 
