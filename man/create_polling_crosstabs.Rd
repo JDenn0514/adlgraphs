@@ -72,6 +72,24 @@ Weighted percentages are calculated via \code{get_freqs()}, which supports
 plain data frames with a weight column as well as \code{survey.design} and
 \code{svyrep.design} objects.
 
+\strong{Per-question unweighted bases.} Each question is preceded by an
+\code{n (unweighted)} row giving its base in every column. The base in the
+sheet header covers the whole column; a question asked of only part of the
+sample has a smaller one, and a question nobody in a column was asked
+reads \code{0}. Reading the two together says which subset of the sample
+answered a given question -- and explains the blank cells described below,
+which sit under a base of \code{0}.
+
+The row is written once per question, and suppressed where it would only
+repeat the row above. An item's collapse carries the same base as the item
+it collapses, so a collapse that directly follows its parent does not
+repeat it. That is recognised by an identical variable label on the row
+variable above \emph{and} an identical base in every column, so a shared
+label never hides a base that genuinely differs.
+
+These rows appear in the Excel output only. The returned data frame is
+unchanged, and still carries one row per response value per column.
+
 \strong{Items with no base in a subgroup.} A question asked of only some
 respondents can have no base at all inside a given column -- for example a
 follow-up asked only of one candidate's voters, crossed against a vote-choice

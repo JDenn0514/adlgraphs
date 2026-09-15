@@ -127,6 +127,24 @@ calc_moe_vec <- function(p, n, deff) {
 #'   the last when building a multi-sheet workbook.
 #'
 #' @details
+#' \strong{Per-question unweighted bases.} Each question is preceded by an
+#' \code{n (unweighted)} row giving its base in every column. The base in the
+#' sheet header covers the whole column; a question asked of only part of the
+#' sample has a smaller one, and a question nobody in a column was asked
+#' reads \code{0}. Reading the two together says which subset of the sample
+#' answered a given question -- and explains the blank cells described below,
+#' which sit under a base of \code{0}.
+#'
+#' The row is written once per question, and suppressed where it would only
+#' repeat the row above. An item's collapse carries the same base as the item
+#' it collapses, so a collapse that directly follows its parent does not
+#' repeat it. That is recognised by an identical variable label on the row
+#' variable above \emph{and} an identical base in every column, so a shared
+#' label never hides a base that genuinely differs.
+#'
+#' These rows appear in the Excel output only. The returned data frame is
+#' unchanged, and still carries one row per response value per column.
+#'
 #' \strong{Items with no base in a subgroup.} A question asked of only some
 #' respondents can have no base at all inside a given column -- for example a
 #' follow-up asked only of one candidate's voters, crossed against a vote-choice
@@ -349,9 +367,32 @@ create_polling_crosstabs <- function(
     character(1)
   ))
 
+  # Unweighted base for every question in every column, so a reader can see
+  # which subset of the sample each question was actually asked of. The column
+  # header's n covers the whole column; a question asked of a filtered set has
+  # a smaller one, and a question nobody in that column was asked has none.
+  question_n <- base::matrix(
+    0L,
+    nrow = base::length(row_var_names),
+    ncol = num_cols,
+    dimnames = base::list(row_var_names, NULL)
+  )
+
   for (j in 1:num_cols) {
     col_data <- columns_list[[j]]$data_subset
     col_data_vars <- if (is_survey) col_data$variables else col_data
+
+    # Filled in its own pass, before the structural-empty skip below, so a
+    # question nobody in this column was asked still records its 0 rather than
+    # being skipped over. Under na_rm = FALSE missing answers are a reported
+    # category, so they count toward the base.
+    for (var in row_var_names) {
+      question_n[var, j] <- if (na_rm) {
+        base::sum(!base::is.na(col_data_vars[[var]]))
+      } else {
+        base::length(col_data_vars[[var]])
+      }
+    }
 
     for (var in row_var_names) {
       # An item can have no base at all inside a subgroup -- a question asked
@@ -568,14 +609,86 @@ create_polling_crosstabs <- function(
   # Build data rows:
   #   Columns 1-2  - text index columns (variable label, response value)
   #   Columns 3+   - numeric percentage values (decimal, formatted as % in Excel)
-  data_rows_text <- base::matrix(NA, nrow = num_rows, ncol = 2)
-  data_rows_numeric <- base::matrix(NA, nrow = num_rows, ncol = num_cols)
+  # Each question gets an n row above its response rows, except where that
+  # would just repeat the row above. An item's collapse carries the same base
+  # as the item it collapses, so writing it twice adds a row and says nothing.
+  #
+  # A collapse is recognised the same way the row borders already recognise
+  # one -- an identical variable label on the row variable directly above --
+  # and only when the bases genuinely match. Requiring both means a shared
+  # label never hides a base that actually differs.
+  row_var_labels <- base::vapply(
+    row_var_names,
+    function(v) {
+      for (r in rows_list) {
+        if (r$var_name == v) {
+          return(r$var_label)
+        }
+      }
+      v
+    },
+    character(1)
+  )
 
-  for (i in 1:num_rows) {
-    data_rows_text[i, 1] <- rows_list[[i]]$var_label
-    data_rows_text[i, 2] <- base::as.character(rows_list[[i]]$value)
-    # Divide by 100: Excel's "0%" format expects a decimal (0.30 -> "30%")
-    data_rows_numeric[i, ] <- crosstab_matrix[i, ] / 100
+  show_n_row <- base::rep(TRUE, base::length(row_var_names))
+  if (base::length(row_var_names) > 1) {
+    for (k in 2:base::length(row_var_names)) {
+      repeats_label <- row_var_labels[[k]] == row_var_labels[[k - 1]]
+      repeats_base <- base::identical(
+        base::unname(question_n[k, ]),
+        base::unname(question_n[k - 1, ])
+      )
+      show_n_row[[k]] <- !(repeats_label && repeats_base)
+    }
+  }
+
+  # One entry per output row: either a question's n row or one response row.
+  # Built so the sheet can carry rows the percentage matrix does not, while
+  # rows_list and the returned data frame stay exactly as they were.
+  sheet_plan <- base::list()
+
+  for (k in base::seq_along(row_var_names)) {
+    if (show_n_row[[k]]) {
+      sheet_plan[[base::length(sheet_plan) + 1]] <- base::list(
+        var_name = row_var_names[[k]],
+        var_label = row_var_labels[[k]],
+        value = "n (unweighted)",
+        values = question_n[k, ],
+        is_n = TRUE
+      )
+    }
+
+    for (i in 1:num_rows) {
+      if (rows_list[[i]]$var_name != row_var_names[[k]]) {
+        next
+      }
+      sheet_plan[[base::length(sheet_plan) + 1]] <- base::list(
+        var_name = rows_list[[i]]$var_name,
+        var_label = rows_list[[i]]$var_label,
+        value = base::as.character(rows_list[[i]]$value),
+        # Divide by 100: Excel's "0%" format expects a decimal (0.30 -> "30%")
+        values = crosstab_matrix[i, ] / 100,
+        is_n = FALSE
+      )
+    }
+  }
+
+  num_sheet_rows <- base::length(sheet_plan)
+
+  # Sheet rows holding a count rather than a percentage, as Excel row numbers.
+  # They need their own number format, applied after the percentage format
+  # below, or a base of 671 renders as 67100%.
+  n_row_numbers <- base::which(
+    base::vapply(sheet_plan, function(p) p$is_n, logical(1))
+  ) + 3
+
+  data_rows_text <- base::matrix(NA, nrow = num_sheet_rows, ncol = 2)
+  data_rows_numeric <- base::matrix(NA, nrow = num_sheet_rows, ncol = num_cols)
+
+  for (i in 1:num_sheet_rows) {
+    data_rows_text[i, 1] <- sheet_plan[[i]]$var_label
+    data_rows_text[i, 2] <- sheet_plan[[i]]$value
+    data_rows_numeric[i, ] <- sheet_plan[[i]]$values
   }
 
   # ============================================================================
@@ -758,19 +871,19 @@ create_polling_crosstabs <- function(
   wb <- openxlsx2::wb_add_fill(
     wb,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 1:2),
+    dims = openxlsx2::wb_dims(rows = 4:(num_sheet_rows + 3), cols = 1:2),
     color = gray
   )
   wb <- openxlsx2::wb_add_font(
     wb,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 1:2),
+    dims = openxlsx2::wb_dims(rows = 4:(num_sheet_rows + 3), cols = 1:2),
     bold = TRUE
   )
   wb <- openxlsx2::wb_add_cell_style(
     wb,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 1:2),
+    dims = openxlsx2::wb_dims(rows = 4:(num_sheet_rows + 3), cols = 1:2),
     horizontal = "center",
     vertical = "center",
     wrap_text = TRUE
@@ -780,22 +893,48 @@ create_polling_crosstabs <- function(
   wb <- openxlsx2::wb_add_fill(
     wb,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 3:(num_cols + 2)),
+    dims = openxlsx2::wb_dims(
+      rows = 4:(num_sheet_rows + 3),
+      cols = 3:(num_cols + 2)
+    ),
     color = white
   )
   wb <- openxlsx2::wb_add_numfmt(
     wb,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 3:(num_cols + 2)),
+    dims = openxlsx2::wb_dims(
+      rows = 4:(num_sheet_rows + 3),
+      cols = 3:(num_cols + 2)
+    ),
     numfmt = "0%"
   )
   wb <- openxlsx2::wb_add_cell_style(
     wb,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 3:(num_cols + 2)),
+    dims = openxlsx2::wb_dims(
+      rows = 4:(num_sheet_rows + 3),
+      cols = 3:(num_cols + 2)
+    ),
     horizontal = "center",
     vertical = "center"
   )
+
+  # ---- Counts, not percentages: the per-question n rows ----
+  # Applied after the percentage format above so it wins on these rows. One
+  # call over a row vector rather than one per row: wb_add_numfmt() rewrites
+  # entries in a style table that grows as it goes, so per-row calls are the
+  # expensive pattern here.
+  if (base::length(n_row_numbers) > 0) {
+    wb <- openxlsx2::wb_add_numfmt(
+      wb,
+      sheet = sheet_name,
+      dims = openxlsx2::wb_dims(
+        rows = n_row_numbers,
+        cols = 3:(num_cols + 2)
+      ),
+      numfmt = "0"
+    )
+  }
 
   # ============================================================================
   # Add Borders Between Variable Groups
@@ -827,13 +966,16 @@ create_polling_crosstabs <- function(
   # identical cellXfs/border counts while dropping the border on 316 of 931
   # cells. Resolve each cell through cellXfs to its border definition and
   # compare that.
-  current_var <- rows_list[[1]]$var_name
-  current_label <- rows_list[[1]]$var_label
+  # Walks sheet_plan, not rows_list: the sheet carries an n row per question
+  # that the percentage matrix does not, so a rows_list index no longer maps
+  # to an Excel row.
+  current_var <- sheet_plan[[1]]$var_name
+  current_label <- sheet_plan[[1]]$var_label
 
-  for (i in 2:num_rows) {
-    if (rows_list[[i]]$var_name != current_var) {
+  for (i in 2:num_sheet_rows) {
+    if (sheet_plan[[i]]$var_name != current_var) {
       excel_row <- i + 3
-      border_style <- if (rows_list[[i]]$var_label == current_label) {
+      border_style <- if (sheet_plan[[i]]$var_label == current_label) {
         "dashed"
       } else {
         "medium"
@@ -851,8 +993,8 @@ create_polling_crosstabs <- function(
         update = TRUE
       )
 
-      current_var <- rows_list[[i]]$var_name
-      current_label <- rows_list[[i]]$var_label
+      current_var <- sheet_plan[[i]]$var_name
+      current_label <- sheet_plan[[i]]$var_label
     }
   }
 
@@ -872,7 +1014,10 @@ create_polling_crosstabs <- function(
       wb <- openxlsx2::wb_add_border(
         wb,
         sheet = sheet_name,
-        dims = openxlsx2::wb_dims(rows = 1:(num_rows + 3), cols = excel_col),
+        dims = openxlsx2::wb_dims(
+          rows = 1:(num_sheet_rows + 3),
+          cols = excel_col
+        ),
         left_border = border_style,
         left_color = black,
         top_border = NULL,
@@ -890,7 +1035,7 @@ create_polling_crosstabs <- function(
   wb <- openxlsx2::wb_add_border(
     wb,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 1:(num_rows + 3), cols = 2),
+    dims = openxlsx2::wb_dims(rows = 1:(num_sheet_rows + 3), cols = 2),
     right_border = "medium",
     right_color = black,
     top_border = NULL,
@@ -962,9 +1107,9 @@ create_polling_crosstabs <- function(
   current_label <- data_rows_text[1, 1]
   start_row <- 4
 
-  for (i in 1:num_rows) {
+  for (i in 1:num_sheet_rows) {
     excel_row <- i + 3
-    if (i == num_rows || data_rows_text[i + 1, 1] != current_label) {
+    if (i == num_sheet_rows || data_rows_text[i + 1, 1] != current_label) {
       if (excel_row > start_row) {
         wb <- openxlsx2::wb_merge_cells(
           wb,
@@ -972,7 +1117,7 @@ create_polling_crosstabs <- function(
           dims = openxlsx2::wb_dims(rows = start_row:excel_row, cols = 1)
         )
       }
-      if (i < num_rows) {
+      if (i < num_sheet_rows) {
         current_label <- data_rows_text[i + 1, 1]
         start_row <- excel_row + 1
       }
