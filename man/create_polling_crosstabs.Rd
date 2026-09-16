@@ -80,6 +80,10 @@ reads \code{0}. Reading the two together says which subset of the sample
 answered a given question -- and explains the blank cells described below,
 which sit under a base of \code{0}.
 
+The row is closed off underneath with a dashed rule, the same weight as
+the rule between an item and its collapse, so it reads as a header for the
+block rather than as one of its response rows.
+
 The row is written once per question, and suppressed where it would only
 repeat the row above. An item's collapse carries the same base as the item
 it collapses, so a collapse that directly follows its parent does not

@@ -135,6 +135,10 @@ calc_moe_vec <- function(p, n, deff) {
 #' answered a given question -- and explains the blank cells described below,
 #' which sit under a base of \code{0}.
 #'
+#' The row is closed off underneath with a dashed rule, the same weight as
+#' the rule between an item and its collapse, so it reads as a header for the
+#' block rather than as one of its response rows.
+#'
 #' The row is written once per question, and suppressed where it would only
 #' repeat the row above. An item's collapse carries the same base as the item
 #' it collapses, so a collapse that directly follows its parent does not
@@ -969,8 +973,34 @@ create_polling_crosstabs <- function(
   # Walks sheet_plan, not rows_list: the sheet carries an n row per question
   # that the percentage matrix does not, so a rows_list index no longer maps
   # to an Excel row.
+  # A question's n row is closed off underneath with a dashed line, the same
+  # weight as the line between an item and its collapse, so the base reads as
+  # a header for the block rather than as one of its response rows.
+  #
+  # Set as the n row's own bottom edge, in the call that already gives that
+  # row its top edge, rather than as the following row's top edge. The two
+  # draw the same line, but the second way would double the number of
+  # wb_add_border(update = TRUE) calls -- each one rewrites entries in a style
+  # table that grows as it goes, and this loop is the dominant cost on a large
+  # sheet.
   current_var <- sheet_plan[[1]]$var_name
   current_label <- sheet_plan[[1]]$var_label
+
+  # The loop starts at the second row, so the first question's n row would
+  # never be reached.
+  if (sheet_plan[[1]]$is_n) {
+    wb <- openxlsx2::wb_add_border(
+      wb,
+      sheet = sheet_name,
+      dims = openxlsx2::wb_dims(rows = 4, cols = 1:(num_cols + 2)),
+      bottom_border = "dashed",
+      bottom_color = black,
+      top_border = NULL,
+      left_border = NULL,
+      right_border = NULL,
+      update = TRUE
+    )
+  }
 
   for (i in 2:num_sheet_rows) {
     if (sheet_plan[[i]]$var_name != current_var) {
@@ -981,13 +1011,17 @@ create_polling_crosstabs <- function(
         "medium"
       }
 
+      # NULL leaves an edge alone; "dashed" is only passed on an n row.
+      bottom_style <- if (sheet_plan[[i]]$is_n) "dashed" else NULL
+
       wb <- openxlsx2::wb_add_border(
         wb,
         sheet = sheet_name,
         dims = openxlsx2::wb_dims(rows = excel_row, cols = 1:(num_cols + 2)),
         top_border = border_style,
         top_color = black,
-        bottom_border = NULL,
+        bottom_border = bottom_style,
+        bottom_color = black,
         left_border = NULL,
         right_border = NULL,
         update = TRUE
