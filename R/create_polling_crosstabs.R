@@ -53,6 +53,160 @@ calc_moe <- function(p, n, deff) {
   return(moe)
 }
 
+#' Vectorized margin of error
+#'
+#' Elementwise equivalent of [calc_moe()], used to build the returned long
+#' data frame in one pass. `calc_moe()` branches on `if (is.na(p) || ...)`, so
+#' it only takes scalars and has to be called once per crosstab cell -- tens of
+#' thousands of times on a large sheet.
+#'
+#' The two must agree exactly. The precedence below matches `calc_moe()`:
+#' missing inputs or `n == 0` give `NA`, and that wins over the 0%/100% rule,
+#' which gives 0.
+#'
+#' @param p Vector of proportions (as percentages, e.g. 30 for 30%)
+#' @param n Vector of unweighted sample sizes
+#' @param deff Vector of design effects
+#' @return Vector of margins of error (as decimals)
+#' @noRd
+calc_moe_vec <- function(p, n, deff) {
+  p_prop <- p / 100
+
+  moe <- 1.96 * base::sqrt(deff * p_prop * (1 - p_prop) / n)
+
+  # 0% and 100% carry no sampling error under this formula
+  at_bound <- !base::is.na(p_prop) & (p_prop <= 0 | p_prop >= 1)
+  moe[at_bound] <- 0
+
+  # Missing inputs or an empty base are not estimable, and take precedence
+  not_estimable <- base::is.na(p) |
+    base::is.na(n) |
+    base::is.na(deff) |
+    (!base::is.na(n) & n == 0)
+  moe[not_estimable] <- NA_real_
+
+  moe
+}
+
+#' Format time elapsed since a start time as m:ss
+#' @param start_time A POSIXct time, e.g. from Sys.time()
+#' @return Character string such as "3:07"
+format_elapsed <- function(start_time) {
+  secs <- base::floor(base::as.numeric(
+    base::difftime(base::Sys.time(), start_time, units = "secs")
+  ))
+  base::sprintf("%d:%02d", secs %/% 60, secs %% 60)
+}
+
+#' Weighted percentages for one item within one banner column
+#'
+#' The numbers `get_freqs(data, x, wt = wt, na.rm = TRUE)` returns for a plain
+#' data frame, computed without dplyr. A large banner calls this once per row
+#' variable per column -- nearly 7,000 times for 177 items by 39 columns --
+#' and the dplyr grouping inside get_freqs() was most of the build time.
+#'
+#' Each step mirrors get_freqs() on the same vector: missing weights count as
+#' 0 (ensure_weight()), the item goes through the same make_factor() call,
+#' missing answers are dropped, weights are summed per level with base sum()
+#' (which is what dplyr::summarise() calls, so the sums agree to the last
+#' bit), levels nobody chose get 0 (tidyr::complete()), and n is rounded to
+#' one decimal before pct is taken and rounded to three.
+#'
+#' @param x The item, already subset to the banner column
+#' @param w The weights, subset the same way
+#' @return Named vector of proportions (0-1), one per factor level
+#' @noRd
+weighted_pct <- function(x, w) {
+  w[base::is.na(w)] <- 0
+  x <- make_factor(x, drop_levels = FALSE, force = TRUE, na.rm = TRUE)
+
+  keep <- !base::is.na(x)
+  if (!base::any(keep)) {
+    cli::cli_abort("After removing NAs, no rows remain.")
+  }
+
+  n <- base::vapply(
+    base::split(w[keep], x[keep]),
+    base::sum,
+    base::numeric(1)
+  )
+  n <- base::round(n, 1)
+  base::round(n / base::sum(n), 3)
+}
+
+#' Cell references for a block of rows and columns
+#'
+#' @param rows Integer vector of Excel row numbers
+#' @param cols Integer vector of Excel column numbers
+#' @return Character vector such as c("A4", "B4", "C4")
+#' @noRd
+sheet_cells <- function(rows, cols) {
+  base::as.vector(base::outer(
+    rows,
+    cols,
+    function(r, c) base::paste0(openxlsx2::int2col(c), r)
+  ))
+}
+
+#' Add border edges to cells, one wb_add_border() call per distinct style
+#'
+#' Draws the same borders as `wb_add_border(wb, sheet, dims, ...)` with
+#' `update = TRUE`, where every edge outside the block's outline is left
+#' unset (no inner grid). Under those arguments wb_add_border() merges the
+#' same edges into every cell it touches, so a cell's result depends only on
+#' the style it started with.
+#'
+#' That makes it safe to style one cell per starting style and copy its new
+#' style id to the rest. Calling wb_add_border() on the whole block instead
+#' adds a border and a cellXfs entry per cell, and each addition re-parses
+#' the full style table, which is what made large sheets slow.
+#'
+#' @param wb An openxlsx2 wbWorkbook
+#' @param cache An environment holding results across calls, keyed by
+#'   starting style and border arguments
+#' @param sheet Sheet name
+#' @param cells Character vector of cell references, from sheet_cells()
+#' @param ... Border arguments passed on to wb_add_border(), including
+#'   `update = TRUE`
+#' @return The workbook
+#' @noRd
+add_border_by_style <- function(wb, cache, sheet, cells, ...) {
+  border_args <- base::list(...)
+  args_key <- base::paste(base::deparse(border_args), collapse = "")
+
+  current <- openxlsx2::wb_get_cell_style(wb, sheet = sheet, dims = cells)
+  current <- current[cells]
+
+  for (style in base::unique(current)) {
+    targets <- cells[current == style]
+    key <- base::paste(style, args_key, sep = "|")
+
+    if (base::is.null(cache[[key]])) {
+      wb <- base::do.call(
+        openxlsx2::wb_add_border,
+        c(base::list(wb, sheet = sheet, dims = targets[[1]]), border_args)
+      )
+      cache[[key]] <- openxlsx2::wb_get_cell_style(
+        wb,
+        sheet = sheet,
+        dims = targets[[1]]
+      )[[1]]
+      targets <- targets[-1]
+    }
+
+    if (base::length(targets) > 0) {
+      wb <- openxlsx2::wb_set_cell_style(
+        wb,
+        sheet = sheet,
+        dims = targets,
+        style = cache[[key]]
+      )
+    }
+  }
+
+  wb
+}
+
 
 # ============================================================================
 # Main Function
@@ -66,7 +220,10 @@ calc_moe <- function(p, n, deff) {
 #'
 #' Weighted percentages are calculated via \code{get_freqs()}, which supports
 #' plain data frames with a weight column as well as \code{survey.design} and
-#' \code{svyrep.design} objects.
+#' \code{svyrep.design} objects. For a plain data frame under the default
+#' \code{na_rm = TRUE} they are computed directly, without dplyr, giving the
+#' same numbers \code{get_freqs()} would; on a large banner the per-cell dplyr
+#' overhead was most of the build time.
 #'
 #' @param data A data frame or survey design object containing survey responses
 #' @param row_vars Character vector of variable names to display as rows
@@ -83,11 +240,82 @@ calc_moe <- function(p, n, deff) {
 #'   sheet with same name (default: TRUE)
 #' @param summary_string Character string to display in the top-left merged cell
 #'   (default: "")
+#' @param wb An \code{openxlsx2} \code{wbWorkbook} to add this sheet to, as
+#'   returned by \code{attr(<result>, "wb")} from a previous call. When
+#'   supplied, \code{file_name} is not read from disk. Use this together with
+#'   \code{save = FALSE} to build a multi-sheet workbook in memory; see Details.
+#' @param save Logical indicating whether to write the workbook to
+#'   \code{file_name} (default: TRUE). Set to \code{FALSE} for every call but
+#'   the last when building a multi-sheet workbook.
+#' @param progress Logical; whether to print progress messages while the
+#'   crosstabs are built (one line per banner column, then the formatting and
+#'   save steps), each with the time elapsed so far. Messages go to stderr and
+#'   can also be silenced with \code{suppressMessages()}. Default is TRUE.
+#'
+#' @details
+#' \strong{Per-question unweighted bases.} Each question is preceded by an
+#' \code{n (unweighted)} row giving its base in every column. The base in the
+#' sheet header covers the whole column; a question asked of only part of the
+#' sample has a smaller one, and a question nobody in a column was asked
+#' reads \code{0}. Reading the two together says which subset of the sample
+#' answered a given question -- and explains the blank cells described below,
+#' which sit under a base of \code{0}.
+#'
+#' The row is closed off underneath with a dashed rule, the same weight as
+#' the rule between an item and its collapse, so it reads as a header for the
+#' block rather than as one of its response rows.
+#'
+#' The row is written once per question, and suppressed where it would only
+#' repeat the row above. An item's collapse carries the same base as the item
+#' it collapses, so a collapse that directly follows its parent does not
+#' repeat it. That is recognised by an identical variable label on the row
+#' variable above \emph{and} an identical base in every column, so a shared
+#' label never hides a base that genuinely differs.
+#'
+#' These rows appear in the Excel output only. The returned data frame is
+#' unchanged, and still carries one row per response value per column.
+#'
+#' \strong{Items with no base in a subgroup.} A question asked of only some
+#' respondents can have no base at all inside a given column -- for example a
+#' follow-up asked only of one candidate's voters, crossed against a vote-choice
+#' banner, is empty in every other candidate's column. Those cells are left
+#' blank in the Excel output and carry \code{NA} for \code{pct} and \code{moe}
+#' in the returned data frame. Blank therefore means "nobody in this column was
+#' asked this", which is different from \code{0}, which means "asked, and nobody
+#' gave this answer".
+#'
+#' This applies under the default \code{na_rm = TRUE}. With \code{na_rm = FALSE},
+#' missingness is reported as its own category instead.
+#'
+#' \strong{Building a multi-sheet workbook.} By default each call reads
+#' \code{file_name} back off disk with \code{openxlsx2::wb_load()}, adds its
+#' sheet, and writes the whole file out again. That round trip re-parses every
+#' style record already in the file, so it gets steadily more expensive as
+#' sheets accumulate -- measured at roughly 9x slower appending one sheet to a
+#' five-sheet workbook than writing the same sheet to a fresh file. The
+#' statistics are unaffected; the cost is all Excel serialization.
+#'
+#' Pass the workbook along instead, and save once at the end:
+#'
+#' \preformatted{
+#' wb <- NULL
+#' for (s in sheets) {
+#'   res <- create_polling_crosstabs(
+#'     data = d, row_vars = s$rows, subgroup_vars = s$cols,
+#'     wt_var = "wts", file_name = "out.xlsx", sheet_name = s$name,
+#'     wb = wb, save = FALSE
+#'   )
+#'   wb <- attr(res, "wb")
+#' }
+#' openxlsx2::wb_save(wb, "out.xlsx", overwrite = TRUE)
+#' }
 #'
 #' @return Data frame with columns: subgroup_var, subgroup_var_label, subgroup_val,
 #'   n, row_var, row_var_label, row_val, pct (as decimal), moe (as decimal).
 #'   All categorical columns are factors with levels in the order passed to the function.
-#'   Sorted by subgroup variables then row variables.
+#'   Sorted by subgroup variables then row variables. The workbook the sheet was
+#'   written into is attached as the \code{"wb"} attribute, for passing back in
+#'   via the \code{wb} argument.
 #'
 #' @examples
 #' \dontrun{
@@ -115,7 +343,10 @@ create_polling_crosstabs <- function(
   file_name,
   sheet_name,
   overwrite_existing_sheet = TRUE,
-  summary_string = ""
+  summary_string = "",
+  wb = NULL,
+  save = TRUE,
+  progress = TRUE
 ) {
   # ============================================================================
   # Load Required Packages
@@ -259,10 +490,106 @@ create_polling_crosstabs <- function(
   # decimal 0-1 in the return data frame and for the percentage cell format)
   crosstab_matrix <- base::matrix(NA, nrow = num_rows, ncol = num_cols)
 
+  # Hoisted out of the column loop: the row variable names do not change, and
+  # rebuilding this per column walks the whole rows_list every time.
+  row_var_names <- base::unique(base::vapply(
+    rows_list,
+    function(r) r$var_name,
+    character(1)
+  ))
+
+  # Unweighted base for every question in every column, so a reader can see
+  # which subset of the sample each question was actually asked of. The column
+  # header's n covers the whole column; a question asked of a filtered set has
+  # a smaller one, and a question nobody in that column was asked has none.
+  question_n <- base::matrix(
+    0L,
+    nrow = base::length(row_var_names),
+    ncol = num_cols,
+    dimnames = base::list(row_var_names, NULL)
+  )
+
+  # Each row variable's positions in rows_list, and every row's value as a
+  # string, so filling a question's cells does not walk all of rows_list.
+  rows_by_var <- base::split(
+    base::seq_len(num_rows),
+    base::factor(
+      base::vapply(rows_list, function(r) r$var_name, character(1)),
+      levels = row_var_names
+    )
+  )
+  row_values <- base::vapply(
+    rows_list,
+    function(r) base::as.character(r$value),
+    character(1)
+  )
+
+  fast_freqs <- !is_survey && na_rm
+
+  start_time <- base::Sys.time()
+
   for (j in 1:num_cols) {
     col_data <- columns_list[[j]]$data_subset
+    col_data_vars <- if (is_survey) col_data$variables else col_data
 
-    for (var in base::unique(base::sapply(rows_list, `[[`, "var_name"))) {
+    if (progress) {
+      col_desc <- if (j == 1) {
+        "Overall"
+      } else {
+        base::paste0(
+          columns_list[[j]]$var_name,
+          " = ",
+          base::as.character(columns_list[[j]]$value)
+        )
+      }
+      elapsed <- format_elapsed(start_time)
+      cli::cli_inform(
+        "Crosstabs: column {j} of {num_cols} ({col_desc}), {elapsed} elapsed"
+      )
+    }
+
+    # Filled in its own pass, before the structural-empty skip below, so a
+    # question nobody in this column was asked still records its 0 rather than
+    # being skipped over. Under na_rm = FALSE missing answers are a reported
+    # category, so they count toward the base.
+    for (var in row_var_names) {
+      question_n[var, j] <- if (na_rm) {
+        base::sum(!base::is.na(col_data_vars[[var]]))
+      } else {
+        base::length(col_data_vars[[var]])
+      }
+    }
+
+    for (var in row_var_names) {
+      # An item can have no base at all inside a subgroup -- a question asked
+      # only of a filtered set of respondents, crossed against a column that
+      # excludes all of them. get_freqs() treats that as an error ("After
+      # removing NAs, no rows remain"), which would abort the whole sheet over
+      # cells that are legitimately empty. Leave them NA instead: the Excel
+      # cell renders blank and the returned frame carries NA for pct and moe.
+      #
+      # This is deliberately narrow. It only fires when EVERY value of the
+      # item is missing in this column, which is a structural empty, and only
+      # under na_rm = TRUE. With na_rm = FALSE, get_freqs() reports missingness
+      # as its own category rather than erroring, so an all-missing item is a
+      # legitimate 100% result and must not be skipped. A row value that is
+      # merely absent from a non-empty item still records 0 below, as before.
+      if (na_rm && base::all(base::is.na(col_data_vars[[var]]))) {
+        next
+      }
+
+      # Plain data frames under na_rm = TRUE take the fast path, which gives
+      # the same numbers as get_freqs() without its per-call dplyr overhead.
+      # See weighted_pct() for why the two agree.
+      if (fast_freqs) {
+        pct <- weighted_pct(col_data_vars[[var]], col_data_vars[[wt_var]])
+        i_var <- rows_by_var[[var]]
+        cell <- pct[row_values[i_var]]
+        cell[base::is.na(cell)] <- 0
+        crosstab_matrix[i_var, j] <- base::unname(cell) * 100
+        next
+      }
+
       # Call get_freqs() for this row variable within this subgroup.
       # For plain data frames, pass wt_var via the wt argument.
       # For survey designs, weights are taken from the design automatically.
@@ -283,12 +610,8 @@ create_polling_crosstabs <- function(
 
       # get_freqs() returns a tibble with columns [var], n, pct
       # pct is already a decimal proportion (0-1); convert to 0-100 for the matrix
-      for (i in 1:num_rows) {
-        if (rows_list[[i]]$var_name != var) {
-          next
-        }
-
-        row_val <- base::as.character(rows_list[[i]]$value)
+      for (i in rows_by_var[[var]]) {
+        row_val <- row_values[[i]]
         freq_row <- freqs[base::as.character(freqs[[var]]) == row_val, ]
 
         crosstab_matrix[i, j] <- if (base::nrow(freq_row) > 0) {
@@ -344,34 +667,64 @@ create_polling_crosstabs <- function(
   # Build Return Data Frame
   # ============================================================================
 
-  # Create long-format data frame with one row per cell in the crosstab matrix.
-  # Subgroup columns come first, followed by row variable columns.
-  results_list <- base::list()
-
-  for (j in 1:num_cols) {
-    for (i in 1:num_rows) {
-      pct_percentage <- crosstab_matrix[i, j] # 0-100 scale
-      pct_decimal <- pct_percentage / 100 # 0-1 scale for return df
-      n <- columns_list[[j]]$unweighted_n
-      deff <- columns_list[[j]]$deff
-      moe <- calc_moe(pct_percentage, n, deff)
-
-      results_list[[base::length(results_list) + 1]] <- base::data.frame(
-        subgroup_var = columns_list[[j]]$var_name,
-        subgroup_var_label = columns_list[[j]]$var_label,
-        subgroup_val = base::as.character(columns_list[[j]]$value),
-        n = n,
-        row_var = rows_list[[i]]$var_name,
-        row_var_label = rows_list[[i]]$var_label,
-        row_val = base::as.character(rows_list[[i]]$value),
-        pct = pct_decimal,
-        moe = moe,
-        stringsAsFactors = FALSE
-      )
-    }
+  if (progress) {
+    elapsed <- format_elapsed(start_time)
+    cli::cli_inform("Crosstabs: building results table, {elapsed} elapsed")
   }
 
-  results_df <- base::do.call(base::rbind, results_list)
+  # Create long-format data frame with one row per cell in the crosstab matrix.
+  # Subgroup columns come first, followed by row variable columns.
+  # Built in one pass. The obvious loop makes a one-row data.frame per cell and
+  # rbind()s them, which on a large sheet means tens of thousands of
+  # data.frame() calls -- pure overhead, since the Excel output is written from
+  # crosstab_matrix and never from this frame.
+  #
+  # Column-major indexing reproduces the loop order exactly (j outer, i inner),
+  # which matters because the order() below is stable and ties keep their
+  # incoming order.
+  col_idx <- base::rep(1:num_cols, each = num_rows)
+  row_idx <- base::rep(1:num_rows, times = num_cols)
+
+  pct_percentage <- crosstab_matrix[base::cbind(row_idx, col_idx)]
+
+  col_chr <- function(field) {
+    base::vapply(
+      columns_list,
+      function(col) base::as.character(col[[field]]),
+      character(1)
+    )[col_idx]
+  }
+  row_chr <- function(field) {
+    base::vapply(
+      rows_list,
+      function(r) base::as.character(r[[field]]),
+      character(1)
+    )[row_idx]
+  }
+
+  n_vec <- base::vapply(
+    columns_list,
+    function(col) base::as.numeric(col$unweighted_n),
+    numeric(1)
+  )[col_idx]
+  deff_vec <- base::vapply(
+    columns_list,
+    function(col) base::as.numeric(col$deff),
+    numeric(1)
+  )[col_idx]
+
+  results_df <- base::data.frame(
+    subgroup_var = col_chr("var_name"),
+    subgroup_var_label = col_chr("var_label"),
+    subgroup_val = col_chr("value"),
+    n = n_vec,
+    row_var = row_chr("var_name"),
+    row_var_label = row_chr("var_label"),
+    row_val = row_chr("value"),
+    pct = pct_percentage / 100,
+    moe = calc_moe_vec(pct_percentage, n_vec, deff_vec),
+    stringsAsFactors = FALSE
+  )
 
   # Convert to factors with levels in the order they were passed
   results_df$subgroup_var <- base::factor(
@@ -435,21 +788,127 @@ create_polling_crosstabs <- function(
   # Build data rows:
   #   Columns 1-2  - text index columns (variable label, response value)
   #   Columns 3+   - numeric percentage values (decimal, formatted as % in Excel)
-  data_rows_text <- base::matrix(NA, nrow = num_rows, ncol = 2)
-  data_rows_numeric <- base::matrix(NA, nrow = num_rows, ncol = num_cols)
+  # Each question gets an n row above its response rows, except where that
+  # would just repeat the row above. An item's collapse carries the same base
+  # as the item it collapses, so writing it twice adds a row and says nothing.
+  #
+  # A collapse is recognised the same way the row borders already recognise
+  # one -- an identical variable label on the row variable directly above --
+  # and only when the bases genuinely match. Requiring both means a shared
+  # label never hides a base that actually differs.
+  row_var_labels <- base::vapply(
+    row_var_names,
+    function(v) {
+      for (r in rows_list) {
+        if (r$var_name == v) {
+          return(r$var_label)
+        }
+      }
+      v
+    },
+    character(1)
+  )
 
-  for (i in 1:num_rows) {
-    data_rows_text[i, 1] <- rows_list[[i]]$var_label
-    data_rows_text[i, 2] <- base::as.character(rows_list[[i]]$value)
-    # Divide by 100: Excel's "0%" format expects a decimal (0.30 -> "30%")
-    data_rows_numeric[i, ] <- crosstab_matrix[i, ] / 100
+  show_n_row <- base::rep(TRUE, base::length(row_var_names))
+  if (base::length(row_var_names) > 1) {
+    for (k in 2:base::length(row_var_names)) {
+      repeats_label <- row_var_labels[[k]] == row_var_labels[[k - 1]]
+      repeats_base <- base::identical(
+        base::unname(question_n[k, ]),
+        base::unname(question_n[k - 1, ])
+      )
+      show_n_row[[k]] <- !(repeats_label && repeats_base)
+    }
+  }
+
+  # One entry per output row: either a question's n row or one response row.
+  # Built so the sheet can carry rows the percentage matrix does not, while
+  # rows_list and the returned data frame stay exactly as they were.
+  sheet_plan <- base::list()
+
+  for (k in base::seq_along(row_var_names)) {
+    if (show_n_row[[k]]) {
+      sheet_plan[[base::length(sheet_plan) + 1]] <- base::list(
+        var_name = row_var_names[[k]],
+        var_label = row_var_labels[[k]],
+        value = "n (unweighted)",
+        values = question_n[k, ],
+        is_n = TRUE
+      )
+    }
+
+    for (i in 1:num_rows) {
+      if (rows_list[[i]]$var_name != row_var_names[[k]]) {
+        next
+      }
+      sheet_plan[[base::length(sheet_plan) + 1]] <- base::list(
+        var_name = rows_list[[i]]$var_name,
+        var_label = rows_list[[i]]$var_label,
+        value = base::as.character(rows_list[[i]]$value),
+        # Divide by 100: Excel's "0%" format expects a decimal (0.30 -> "30%")
+        values = crosstab_matrix[i, ] / 100,
+        is_n = FALSE
+      )
+    }
+  }
+
+  num_sheet_rows <- base::length(sheet_plan)
+
+  # Sheet rows holding a count rather than a percentage, as Excel row numbers.
+  # They need their own number format, applied after the percentage format
+  # below, or a base of 671 renders as 67100%.
+  n_row_numbers <- base::which(
+    base::vapply(sheet_plan, function(p) p$is_n, logical(1))
+  ) +
+    3
+
+  data_rows_text <- base::matrix(NA, nrow = num_sheet_rows, ncol = 2)
+  data_rows_numeric <- base::matrix(NA, nrow = num_sheet_rows, ncol = num_cols)
+
+  for (i in 1:num_sheet_rows) {
+    data_rows_text[i, 1] <- sheet_plan[[i]]$var_label
+    data_rows_text[i, 2] <- sheet_plan[[i]]$value
+    data_rows_numeric[i, ] <- sheet_plan[[i]]$values
   }
 
   # ============================================================================
   # Create Excel Workbook
   # ============================================================================
 
-  if (base::file.exists(file_name)) {
+  if (progress) {
+    elapsed <- format_elapsed(start_time)
+    cli::cli_inform("Crosstabs: formatting workbook, {elapsed} elapsed")
+  }
+
+  # A caller-supplied workbook is used as-is. Reading file_name back off disk
+  # here is what makes multi-sheet builds slow, so skip it entirely in that
+  # case -- see the multi-sheet note in Details.
+  if (!base::is.null(wb)) {
+    if (!base::inherits(wb, "wbWorkbook")) {
+      stop(
+        "`wb` must be an openxlsx2 wbWorkbook object, such as ",
+        "attr(<previous result>, \"wb\"), not a ",
+        base::class(wb)[[1]],
+        "."
+      )
+    }
+
+    if (sheet_name %in% openxlsx2::wb_get_sheet_names(wb)) {
+      if (overwrite_existing_sheet) {
+        wb <- openxlsx2::wb_remove_worksheet(wb, sheet = sheet_name)
+        wb <- openxlsx2::wb_add_worksheet(wb, sheet = sheet_name)
+      } else {
+        stop(
+          "Sheet '",
+          sheet_name,
+          "' already exists in the workbook passed as `wb`. ",
+          "Set overwrite_existing_sheet = TRUE to overwrite."
+        )
+      }
+    } else {
+      wb <- openxlsx2::wb_add_worksheet(wb, sheet = sheet_name)
+    }
+  } else if (base::file.exists(file_name)) {
     wb <- openxlsx2::wb_load(file_name)
 
     if (sheet_name %in% openxlsx2::wb_get_sheet_names(wb)) {
@@ -597,19 +1056,19 @@ create_polling_crosstabs <- function(
   wb <- openxlsx2::wb_add_fill(
     wb,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 1:2),
+    dims = openxlsx2::wb_dims(rows = 4:(num_sheet_rows + 3), cols = 1:2),
     color = gray
   )
   wb <- openxlsx2::wb_add_font(
     wb,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 1:2),
+    dims = openxlsx2::wb_dims(rows = 4:(num_sheet_rows + 3), cols = 1:2),
     bold = TRUE
   )
   wb <- openxlsx2::wb_add_cell_style(
     wb,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 1:2),
+    dims = openxlsx2::wb_dims(rows = 4:(num_sheet_rows + 3), cols = 1:2),
     horizontal = "center",
     vertical = "center",
     wrap_text = TRUE
@@ -619,22 +1078,48 @@ create_polling_crosstabs <- function(
   wb <- openxlsx2::wb_add_fill(
     wb,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 3:(num_cols + 2)),
+    dims = openxlsx2::wb_dims(
+      rows = 4:(num_sheet_rows + 3),
+      cols = 3:(num_cols + 2)
+    ),
     color = white
   )
   wb <- openxlsx2::wb_add_numfmt(
     wb,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 3:(num_cols + 2)),
+    dims = openxlsx2::wb_dims(
+      rows = 4:(num_sheet_rows + 3),
+      cols = 3:(num_cols + 2)
+    ),
     numfmt = "0%"
   )
   wb <- openxlsx2::wb_add_cell_style(
     wb,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 4:(num_rows + 3), cols = 3:(num_cols + 2)),
+    dims = openxlsx2::wb_dims(
+      rows = 4:(num_sheet_rows + 3),
+      cols = 3:(num_cols + 2)
+    ),
     horizontal = "center",
     vertical = "center"
   )
+
+  # ---- Counts, not percentages: the per-question n rows ----
+  # Applied after the percentage format above so it wins on these rows. One
+  # call over a row vector rather than one per row: wb_add_numfmt() rewrites
+  # entries in a style table that grows as it goes, so per-row calls are the
+  # expensive pattern here.
+  if (base::length(n_row_numbers) > 0) {
+    wb <- openxlsx2::wb_add_numfmt(
+      wb,
+      sheet = sheet_name,
+      dims = openxlsx2::wb_dims(
+        rows = n_row_numbers,
+        cols = 3:(num_cols + 2)
+      ),
+      numfmt = "0"
+    )
+  }
 
   # ============================================================================
   # Add Borders Between Variable Groups
@@ -647,33 +1132,93 @@ create_polling_crosstabs <- function(
 
   black <- openxlsx2::wb_color(hex = "FF000000")
 
-  # Horizontal borders between row variables
-  current_var <- rows_list[[1]]$var_name
-  current_label <- rows_list[[1]]$var_label
+  # Every border below goes through add_border_by_style() rather than straight
+  # to wb_add_border(). Called directly, wb_add_border(update = TRUE) adds a
+  # new border and a new cellXfs entry for every cell it touches, and each
+  # addition re-parses the whole style table -- so the ~180 row calls and ~12
+  # full-height column calls on a large banner grew quadratically and were
+  # most of the build time. add_border_by_style() runs wb_add_border() once
+  # per distinct starting style and copies the result to the other cells with
+  # that style, which draws the same borders. border_cache carries those
+  # results from one call to the next, since most rows repeat a handful of
+  # patterns.
+  border_cache <- base::new.env()
 
-  for (i in 2:num_rows) {
-    if (rows_list[[i]]$var_name != current_var) {
+  # Horizontal borders between row variables.
+  #
+  # The edges of one call cannot be passed as a multi-range dims. wb_dims() will
+  # happily build one ("A5:BF5,A9:BF9"), but wb_add_border() treats its dims as
+  # a single rectangle whose edges take different styles, so a multi-range
+  # either fails with "style length and name do not match" or silently leaves
+  # most of the targeted cells with no border at all. This was tried and
+  # reverted.
+  #
+  # Note for anyone retrying: cell values and style-table counts are NOT
+  # sufficient evidence. The broken version produced identical cell values and
+  # identical cellXfs/border counts while dropping the border on 316 of 931
+  # cells. Resolve each cell through cellXfs to its border definition and
+  # compare that.
+  # Walks sheet_plan, not rows_list: the sheet carries an n row per question
+  # that the percentage matrix does not, so a rows_list index no longer maps
+  # to an Excel row.
+  # A question's n row is closed off underneath with a dashed line, the same
+  # weight as the line between an item and its collapse, so the base reads as
+  # a header for the block rather than as one of its response rows.
+  #
+  # Set as the n row's own bottom edge, in the call that already gives that
+  # row its top edge, rather than as the following row's top edge. The two
+  # draw the same line, but the second way would double the number of
+  # wb_add_border(update = TRUE) calls -- each one rewrites entries in a style
+  # table that grows as it goes, and this loop is the dominant cost on a large
+  # sheet.
+  current_var <- sheet_plan[[1]]$var_name
+  current_label <- sheet_plan[[1]]$var_label
+
+  # The loop starts at the second row, so the first question's n row would
+  # never be reached.
+  if (sheet_plan[[1]]$is_n) {
+    wb <- add_border_by_style(
+      wb,
+      cache = border_cache,
+      sheet = sheet_name,
+      cells = sheet_cells(rows = 4, cols = 1:(num_cols + 2)),
+      bottom_border = "dashed",
+      bottom_color = black,
+      top_border = NULL,
+      left_border = NULL,
+      right_border = NULL,
+      update = TRUE
+    )
+  }
+
+  for (i in 2:num_sheet_rows) {
+    if (sheet_plan[[i]]$var_name != current_var) {
       excel_row <- i + 3
-      border_style <- if (rows_list[[i]]$var_label == current_label) {
+      border_style <- if (sheet_plan[[i]]$var_label == current_label) {
         "dashed"
       } else {
         "medium"
       }
 
-      wb <- openxlsx2::wb_add_border(
+      # NULL leaves an edge alone; "dashed" is only passed on an n row.
+      bottom_style <- if (sheet_plan[[i]]$is_n) "dashed" else NULL
+
+      wb <- add_border_by_style(
         wb,
+        cache = border_cache,
         sheet = sheet_name,
-        dims = openxlsx2::wb_dims(rows = excel_row, cols = 1:(num_cols + 2)),
+        cells = sheet_cells(rows = excel_row, cols = 1:(num_cols + 2)),
         top_border = border_style,
         top_color = black,
-        bottom_border = NULL,
+        bottom_border = bottom_style,
+        bottom_color = black,
         left_border = NULL,
         right_border = NULL,
         update = TRUE
       )
 
-      current_var <- rows_list[[i]]$var_name
-      current_label <- rows_list[[i]]$var_label
+      current_var <- sheet_plan[[i]]$var_name
+      current_label <- sheet_plan[[i]]$var_label
     }
   }
 
@@ -690,10 +1235,14 @@ create_polling_crosstabs <- function(
         "medium"
       }
 
-      wb <- openxlsx2::wb_add_border(
+      wb <- add_border_by_style(
         wb,
+        cache = border_cache,
         sheet = sheet_name,
-        dims = openxlsx2::wb_dims(rows = 1:(num_rows + 3), cols = excel_col),
+        cells = sheet_cells(
+          rows = 1:(num_sheet_rows + 3),
+          cols = excel_col
+        ),
         left_border = border_style,
         left_color = black,
         top_border = NULL,
@@ -708,10 +1257,11 @@ create_polling_crosstabs <- function(
   }
 
   # Right border after index columns (col 2), all rows
-  wb <- openxlsx2::wb_add_border(
+  wb <- add_border_by_style(
     wb,
+    cache = border_cache,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 1:(num_rows + 3), cols = 2),
+    cells = sheet_cells(rows = 1:(num_sheet_rows + 3), cols = 2),
     right_border = "medium",
     right_color = black,
     top_border = NULL,
@@ -721,10 +1271,11 @@ create_polling_crosstabs <- function(
   )
 
   # Bottom border after header rows (row 2), all columns
-  wb <- openxlsx2::wb_add_border(
+  wb <- add_border_by_style(
     wb,
+    cache = border_cache,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 2, cols = 1:(num_cols + 2)),
+    cells = sheet_cells(rows = 2, cols = 1:(num_cols + 2)),
     bottom_border = "medium",
     bottom_color = black,
     top_border = NULL,
@@ -734,10 +1285,11 @@ create_polling_crosstabs <- function(
   )
 
   # Bottom border after n-sizes row (row 3), all columns
-  wb <- openxlsx2::wb_add_border(
+  wb <- add_border_by_style(
     wb,
+    cache = border_cache,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 3, cols = 1:(num_cols + 2)),
+    cells = sheet_cells(rows = 3, cols = 1:(num_cols + 2)),
     bottom_border = "medium",
     bottom_color = black,
     top_border = NULL,
@@ -783,9 +1335,9 @@ create_polling_crosstabs <- function(
   current_label <- data_rows_text[1, 1]
   start_row <- 4
 
-  for (i in 1:num_rows) {
+  for (i in 1:num_sheet_rows) {
     excel_row <- i + 3
-    if (i == num_rows || data_rows_text[i + 1, 1] != current_label) {
+    if (i == num_sheet_rows || data_rows_text[i + 1, 1] != current_label) {
       if (excel_row > start_row) {
         wb <- openxlsx2::wb_merge_cells(
           wb,
@@ -793,7 +1345,7 @@ create_polling_crosstabs <- function(
           dims = openxlsx2::wb_dims(rows = start_row:excel_row, cols = 1)
         )
       }
-      if (i < num_rows) {
+      if (i < num_sheet_rows) {
         current_label <- data_rows_text[i + 1, 1]
         start_row <- excel_row + 1
       }
@@ -839,15 +1391,32 @@ create_polling_crosstabs <- function(
   # Save Workbook
   # ============================================================================
 
-  openxlsx2::wb_save(wb, file = file_name, overwrite = TRUE)
+  if (save) {
+    if (progress) {
+      elapsed <- format_elapsed(start_time)
+      cli::cli_inform("Crosstabs: saving workbook, {elapsed} elapsed")
+    }
 
-  base::message(
-    "Crosstabs successfully exported to: ",
-    file_name,
-    " (Sheet: ",
-    sheet_name,
-    ")"
-  )
+    openxlsx2::wb_save(wb, file = file_name, overwrite = TRUE)
+
+    base::message(
+      "Crosstabs successfully exported to: ",
+      file_name,
+      " (Sheet: ",
+      sheet_name,
+      ")"
+    )
+  } else {
+    base::message(
+      "Crosstabs added to workbook (Sheet: ",
+      sheet_name,
+      "). Not saved -- pass attr(result, \"wb\") to the next call, ",
+      "then save the workbook when the last sheet is added."
+    )
+  }
+
+  # Attached so a caller can chain sheets without a disk round trip.
+  base::attr(results_df, "wb") <- wb
 
   return(results_df)
 }

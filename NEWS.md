@@ -1,3 +1,8 @@
+# adlgraphs (development version)
+
+- `create_polling_crosstabs()` now prints progress as it builds: one line per banner column (e.g. "Crosstabs: column 12 of 39 (party = Dem), 3:41 elapsed"), then the results-table, formatting and save steps. Set the new `progress` argument to `FALSE` (or wrap the call in `suppressMessages()`) to turn it off. The workbook and returned data are unchanged.
+- `create_polling_crosstabs()` is much faster on large banners: the P143 Public Affairs sheet (177 row variables by 37 columns) now builds in about 20 seconds instead of 20 to 50 minutes. For plain data frames with `na_rm = TRUE`, percentages are computed directly rather than through one `get_freqs()` call per cell, and borders are drawn once per distinct cell style instead of once per cell. Every number and every cell's formatting is unchanged; the saved file is smaller because it no longer carries thousands of duplicate style entries.
+
 # adlgraphs 0.4.3
 
 ## Bug fixes
