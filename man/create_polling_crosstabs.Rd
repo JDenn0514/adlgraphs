@@ -14,7 +14,8 @@ create_polling_crosstabs(
   file_name,
   sheet_name,
   overwrite_existing_sheet = TRUE,
-  summary_string = ""
+  summary_string = "",
+  progress = TRUE
 )
 }
 \arguments{
@@ -42,6 +43,11 @@ sheet with same name (default: TRUE)}
 
 \item{summary_string}{Character string to display in the top-left merged cell
 (default: "")}
+
+\item{progress}{Logical; whether to print progress messages while the
+crosstabs are built (one line per banner column, then the formatting and
+save steps), each with the time elapsed so far. Messages go to stderr and
+can also be silenced with \code{suppressMessages()}. Default is TRUE.}
 }
 \value{
 Data frame with columns: subgroup_var, subgroup_var_label, subgroup_val,

@@ -53,6 +53,16 @@ calc_moe <- function(p, n, deff) {
   return(moe)
 }
 
+#' Format time elapsed since a start time as m:ss
+#' @param start_time A POSIXct time, e.g. from Sys.time()
+#' @return Character string such as "3:07"
+format_elapsed <- function(start_time) {
+  secs <- base::floor(base::as.numeric(
+    base::difftime(base::Sys.time(), start_time, units = "secs")
+  ))
+  base::sprintf("%d:%02d", secs %/% 60, secs %% 60)
+}
+
 
 # ============================================================================
 # Main Function
@@ -83,6 +93,10 @@ calc_moe <- function(p, n, deff) {
 #'   sheet with same name (default: TRUE)
 #' @param summary_string Character string to display in the top-left merged cell
 #'   (default: "")
+#' @param progress Logical; whether to print progress messages while the
+#'   crosstabs are built (one line per banner column, then the formatting and
+#'   save steps), each with the time elapsed so far. Messages go to stderr and
+#'   can also be silenced with \code{suppressMessages()}. Default is TRUE.
 #'
 #' @return Data frame with columns: subgroup_var, subgroup_var_label, subgroup_val,
 #'   n, row_var, row_var_label, row_val, pct (as decimal), moe (as decimal).
@@ -115,7 +129,8 @@ create_polling_crosstabs <- function(
   file_name,
   sheet_name,
   overwrite_existing_sheet = TRUE,
-  summary_string = ""
+  summary_string = "",
+  progress = TRUE
 ) {
   # ============================================================================
   # Load Required Packages
@@ -259,8 +274,26 @@ create_polling_crosstabs <- function(
   # decimal 0-1 in the return data frame and for the percentage cell format)
   crosstab_matrix <- base::matrix(NA, nrow = num_rows, ncol = num_cols)
 
+  start_time <- base::Sys.time()
+
   for (j in 1:num_cols) {
     col_data <- columns_list[[j]]$data_subset
+
+    if (progress) {
+      col_desc <- if (j == 1) {
+        "Overall"
+      } else {
+        base::paste0(
+          columns_list[[j]]$var_name,
+          " = ",
+          base::as.character(columns_list[[j]]$value)
+        )
+      }
+      elapsed <- format_elapsed(start_time)
+      cli::cli_inform(
+        "Crosstabs: column {j} of {num_cols} ({col_desc}), {elapsed} elapsed"
+      )
+    }
 
     for (var in base::unique(base::sapply(rows_list, `[[`, "var_name"))) {
       # Call get_freqs() for this row variable within this subgroup.
@@ -343,6 +376,11 @@ create_polling_crosstabs <- function(
   # ============================================================================
   # Build Return Data Frame
   # ============================================================================
+
+  if (progress) {
+    elapsed <- format_elapsed(start_time)
+    cli::cli_inform("Crosstabs: building results table, {elapsed} elapsed")
+  }
 
   # Create long-format data frame with one row per cell in the crosstab matrix.
   # Subgroup columns come first, followed by row variable columns.
@@ -448,6 +486,11 @@ create_polling_crosstabs <- function(
   # ============================================================================
   # Create Excel Workbook
   # ============================================================================
+
+  if (progress) {
+    elapsed <- format_elapsed(start_time)
+    cli::cli_inform("Crosstabs: formatting workbook, {elapsed} elapsed")
+  }
 
   if (base::file.exists(file_name)) {
     wb <- openxlsx2::wb_load(file_name)
@@ -838,6 +881,11 @@ create_polling_crosstabs <- function(
   # ============================================================================
   # Save Workbook
   # ============================================================================
+
+  if (progress) {
+    elapsed <- format_elapsed(start_time)
+    cli::cli_inform("Crosstabs: saving workbook, {elapsed} elapsed")
+  }
 
   openxlsx2::wb_save(wb, file = file_name, overwrite = TRUE)
 
