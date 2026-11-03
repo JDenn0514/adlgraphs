@@ -859,7 +859,8 @@ create_polling_crosstabs <- function(
   # below, or a base of 671 renders as 67100%.
   n_row_numbers <- base::which(
     base::vapply(sheet_plan, function(p) p$is_n, logical(1))
-  ) + 3
+  ) +
+    3
 
   data_rows_text <- base::matrix(NA, nrow = num_sheet_rows, ncol = 2)
   data_rows_numeric <- base::matrix(NA, nrow = num_sheet_rows, ncol = num_cols)
