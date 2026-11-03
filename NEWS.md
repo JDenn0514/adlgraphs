@@ -1,3 +1,7 @@
+# adlgraphs (development version)
+
+- `create_polling_crosstabs()` now prints progress as it builds: one line per banner column (e.g. "Crosstabs: column 12 of 39 (party = Dem), 3:41 elapsed"), then the results-table, formatting and save steps. Set the new `progress` argument to `FALSE` (or wrap the call in `suppressMessages()`) to turn it off. The workbook and returned data are unchanged.
+
 # adlgraphs 0.4.3
 
 ## Bug fixes

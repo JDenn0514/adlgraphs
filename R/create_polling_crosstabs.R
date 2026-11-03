@@ -88,6 +88,16 @@ calc_moe_vec <- function(p, n, deff) {
   moe
 }
 
+#' Format time elapsed since a start time as m:ss
+#' @param start_time A POSIXct time, e.g. from Sys.time()
+#' @return Character string such as "3:07"
+format_elapsed <- function(start_time) {
+  secs <- base::floor(base::as.numeric(
+    base::difftime(base::Sys.time(), start_time, units = "secs")
+  ))
+  base::sprintf("%d:%02d", secs %/% 60, secs %% 60)
+}
+
 
 # ============================================================================
 # Main Function
@@ -125,6 +135,10 @@ calc_moe_vec <- function(p, n, deff) {
 #' @param save Logical indicating whether to write the workbook to
 #'   \code{file_name} (default: TRUE). Set to \code{FALSE} for every call but
 #'   the last when building a multi-sheet workbook.
+#' @param progress Logical; whether to print progress messages while the
+#'   crosstabs are built (one line per banner column, then the formatting and
+#'   save steps), each with the time elapsed so far. Messages go to stderr and
+#'   can also be silenced with \code{suppressMessages()}. Default is TRUE.
 #'
 #' @details
 #' \strong{Per-question unweighted bases.} Each question is preceded by an
@@ -219,7 +233,8 @@ create_polling_crosstabs <- function(
   overwrite_existing_sheet = TRUE,
   summary_string = "",
   wb = NULL,
-  save = TRUE
+  save = TRUE,
+  progress = TRUE
 ) {
   # ============================================================================
   # Load Required Packages
@@ -382,9 +397,27 @@ create_polling_crosstabs <- function(
     dimnames = base::list(row_var_names, NULL)
   )
 
+  start_time <- base::Sys.time()
+
   for (j in 1:num_cols) {
     col_data <- columns_list[[j]]$data_subset
     col_data_vars <- if (is_survey) col_data$variables else col_data
+
+    if (progress) {
+      col_desc <- if (j == 1) {
+        "Overall"
+      } else {
+        base::paste0(
+          columns_list[[j]]$var_name,
+          " = ",
+          base::as.character(columns_list[[j]]$value)
+        )
+      }
+      elapsed <- format_elapsed(start_time)
+      cli::cli_inform(
+        "Crosstabs: column {j} of {num_cols} ({col_desc}), {elapsed} elapsed"
+      )
+    }
 
     # Filled in its own pass, before the structural-empty skip below, so a
     # question nobody in this column was asked still records its 0 rather than
@@ -496,6 +529,11 @@ create_polling_crosstabs <- function(
   # ============================================================================
   # Build Return Data Frame
   # ============================================================================
+
+  if (progress) {
+    elapsed <- format_elapsed(start_time)
+    cli::cli_inform("Crosstabs: building results table, {elapsed} elapsed")
+  }
 
   # Create long-format data frame with one row per cell in the crosstab matrix.
   # Subgroup columns come first, followed by row variable columns.
@@ -698,6 +736,11 @@ create_polling_crosstabs <- function(
   # ============================================================================
   # Create Excel Workbook
   # ============================================================================
+
+  if (progress) {
+    elapsed <- format_elapsed(start_time)
+    cli::cli_inform("Crosstabs: formatting workbook, {elapsed} elapsed")
+  }
 
   # A caller-supplied workbook is used as-is. Reading file_name back off disk
   # here is what makes multi-sheet builds slow, so skip it entirely in that
@@ -1198,6 +1241,11 @@ create_polling_crosstabs <- function(
   # ============================================================================
 
   if (save) {
+    if (progress) {
+      elapsed <- format_elapsed(start_time)
+      cli::cli_inform("Crosstabs: saving workbook, {elapsed} elapsed")
+    }
+
     openxlsx2::wb_save(wb, file = file_name, overwrite = TRUE)
 
     base::message(

@@ -16,7 +16,8 @@ create_polling_crosstabs(
   overwrite_existing_sheet = TRUE,
   summary_string = "",
   wb = NULL,
-  save = TRUE
+  save = TRUE,
+  progress = TRUE
 )
 }
 \arguments{
@@ -53,6 +54,11 @@ supplied, \code{file_name} is not read from disk. Use this together with
 \item{save}{Logical indicating whether to write the workbook to
 \code{file_name} (default: TRUE). Set to \code{FALSE} for every call but
 the last when building a multi-sheet workbook.}
+
+\item{progress}{Logical; whether to print progress messages while the
+crosstabs are built (one line per banner column, then the formatting and
+save steps), each with the time elapsed so far. Messages go to stderr and
+can also be silenced with \code{suppressMessages()}. Default is TRUE.}
 }
 \value{
 Data frame with columns: subgroup_var, subgroup_var_label, subgroup_val,
