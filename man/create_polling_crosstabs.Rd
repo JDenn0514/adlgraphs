@@ -76,7 +76,10 @@ are exported to an Excel file with proper formatting.
 \details{
 Weighted percentages are calculated via \code{get_freqs()}, which supports
 plain data frames with a weight column as well as \code{survey.design} and
-\code{svyrep.design} objects.
+\code{svyrep.design} objects. For a plain data frame under the default
+\code{na_rm = TRUE} they are computed directly, without dplyr, giving the
+same numbers \code{get_freqs()} would; on a large banner the per-cell dplyr
+overhead was most of the build time.
 
 \strong{Per-question unweighted bases.} Each question is preceded by an
 \code{n (unweighted)} row giving its base in every column. The base in the

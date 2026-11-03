@@ -76,3 +76,38 @@ test_that("progress does not change the returned data or the workbook", {
     wb_off$worksheets[[1]]$mergeCells
   )
 })
+
+test_that("weighted_pct() gives the same numbers as get_freqs()", {
+  set.seed(42)
+  n <- 400
+  df <- data.frame(
+    chr = sample(c("Yes", "No", NA), n, replace = TRUE),
+    fct = factor(
+      sample(c("Low", "Mid", NA), n, replace = TRUE),
+      levels = c("Low", "Mid", "High") # "High" is never chosen
+    ),
+    num = sample(c(1, 2, 3, NA), n, replace = TRUE),
+    lab = haven::labelled(
+      sample(c(1, 2, NA), n, replace = TRUE),
+      labels = c(Agree = 1, Disagree = 2, Unsure = 3)
+    ),
+    wts = stats::runif(n, 0.2, 3)
+  )
+  df$wts[c(3, 17, 250)] <- NA
+
+  # Subsets as in banner columns, including one that drops rows
+  for (rows in list(seq_len(n), which(df$wts > 1))) {
+    sub <- df[rows, ]
+    for (var in c("chr", "fct", "num", "lab")) {
+      fast <- suppressWarnings(weighted_pct(sub[[var]], sub$wts))
+      ref <- suppressWarnings(
+        get_freqs(sub, x = tidyselect::all_of(var), wt = wts)
+      )
+      # as.numeric() drops the "Percent" label get_freqs() attaches
+      expect_identical(
+        fast,
+        stats::setNames(as.numeric(ref$pct), as.character(ref[[var]]))
+      )
+    }
+  }
+})

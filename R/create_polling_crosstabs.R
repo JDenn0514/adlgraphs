@@ -98,6 +98,42 @@ format_elapsed <- function(start_time) {
   base::sprintf("%d:%02d", secs %/% 60, secs %% 60)
 }
 
+#' Weighted percentages for one item within one banner column
+#'
+#' The numbers `get_freqs(data, x, wt = wt, na.rm = TRUE)` returns for a plain
+#' data frame, computed without dplyr. A large banner calls this once per row
+#' variable per column -- nearly 7,000 times for 177 items by 39 columns --
+#' and the dplyr grouping inside get_freqs() was most of the build time.
+#'
+#' Each step mirrors get_freqs() on the same vector: missing weights count as
+#' 0 (ensure_weight()), the item goes through the same make_factor() call,
+#' missing answers are dropped, weights are summed per level with base sum()
+#' (which is what dplyr::summarise() calls, so the sums agree to the last
+#' bit), levels nobody chose get 0 (tidyr::complete()), and n is rounded to
+#' one decimal before pct is taken and rounded to three.
+#'
+#' @param x The item, already subset to the banner column
+#' @param w The weights, subset the same way
+#' @return Named vector of proportions (0-1), one per factor level
+#' @noRd
+weighted_pct <- function(x, w) {
+  w[base::is.na(w)] <- 0
+  x <- make_factor(x, drop_levels = FALSE, force = TRUE, na.rm = TRUE)
+
+  keep <- !base::is.na(x)
+  if (!base::any(keep)) {
+    cli::cli_abort("After removing NAs, no rows remain.")
+  }
+
+  n <- base::vapply(
+    base::split(w[keep], x[keep]),
+    base::sum,
+    base::numeric(1)
+  )
+  n <- base::round(n, 1)
+  base::round(n / base::sum(n), 3)
+}
+
 
 # ============================================================================
 # Main Function
@@ -111,7 +147,10 @@ format_elapsed <- function(start_time) {
 #'
 #' Weighted percentages are calculated via \code{get_freqs()}, which supports
 #' plain data frames with a weight column as well as \code{survey.design} and
-#' \code{svyrep.design} objects.
+#' \code{svyrep.design} objects. For a plain data frame under the default
+#' \code{na_rm = TRUE} they are computed directly, without dplyr, giving the
+#' same numbers \code{get_freqs()} would; on a large banner the per-cell dplyr
+#' overhead was most of the build time.
 #'
 #' @param data A data frame or survey design object containing survey responses
 #' @param row_vars Character vector of variable names to display as rows
@@ -397,6 +436,23 @@ create_polling_crosstabs <- function(
     dimnames = base::list(row_var_names, NULL)
   )
 
+  # Each row variable's positions in rows_list, and every row's value as a
+  # string, so filling a question's cells does not walk all of rows_list.
+  rows_by_var <- base::split(
+    base::seq_len(num_rows),
+    base::factor(
+      base::vapply(rows_list, function(r) r$var_name, character(1)),
+      levels = row_var_names
+    )
+  )
+  row_values <- base::vapply(
+    rows_list,
+    function(r) base::as.character(r$value),
+    character(1)
+  )
+
+  fast_freqs <- !is_survey && na_rm
+
   start_time <- base::Sys.time()
 
   for (j in 1:num_cols) {
@@ -449,6 +505,18 @@ create_polling_crosstabs <- function(
         next
       }
 
+      # Plain data frames under na_rm = TRUE take the fast path, which gives
+      # the same numbers as get_freqs() without its per-call dplyr overhead.
+      # See weighted_pct() for why the two agree.
+      if (fast_freqs) {
+        pct <- weighted_pct(col_data_vars[[var]], col_data_vars[[wt_var]])
+        i_var <- rows_by_var[[var]]
+        cell <- pct[row_values[i_var]]
+        cell[base::is.na(cell)] <- 0
+        crosstab_matrix[i_var, j] <- base::unname(cell) * 100
+        next
+      }
+
       # Call get_freqs() for this row variable within this subgroup.
       # For plain data frames, pass wt_var via the wt argument.
       # For survey designs, weights are taken from the design automatically.
@@ -469,12 +537,8 @@ create_polling_crosstabs <- function(
 
       # get_freqs() returns a tibble with columns [var], n, pct
       # pct is already a decimal proportion (0-1); convert to 0-100 for the matrix
-      for (i in 1:num_rows) {
-        if (rows_list[[i]]$var_name != var) {
-          next
-        }
-
-        row_val <- base::as.character(rows_list[[i]]$value)
+      for (i in rows_by_var[[var]]) {
+        row_val <- row_values[[i]]
         freq_row <- freqs[base::as.character(freqs[[var]]) == row_val, ]
 
         crosstab_matrix[i, j] <- if (base::nrow(freq_row) > 0) {
