@@ -111,3 +111,90 @@ test_that("weighted_pct() gives the same numbers as get_freqs()", {
     }
   }
 })
+
+test_that("add_border_by_style() draws the same borders as wb_add_border()", {
+  black <- openxlsx2::wb_color(hex = "FF000000")
+  base_wb <- function() {
+    wb <- openxlsx2::wb_workbook()
+    wb <- openxlsx2::wb_add_worksheet(wb, "s")
+    wb <- openxlsx2::wb_add_data(wb, "s", matrix(1:40, 5), col_names = FALSE)
+    wb <- openxlsx2::wb_add_fill(
+      wb,
+      "s",
+      dims = "A1:B5",
+      color = openxlsx2::wb_color(hex = "FFD3D3D3")
+    )
+    wb <- openxlsx2::wb_add_numfmt(wb, "s", dims = "C1:H5", numfmt = "0%")
+    openxlsx2::wb_add_border(
+      wb,
+      "s",
+      dims = "D1:D5",
+      left_border = "medium",
+      left_color = black,
+      top_border = NULL,
+      bottom_border = NULL,
+      right_border = NULL,
+      update = TRUE
+    )
+  }
+
+  # Resolve each cell to its xf with the border id swapped for the border
+  # itself, so the two workbooks compare by what they draw, not by ids
+  resolved <- function(wb) {
+    ids <- openxlsx2::wb_get_cell_style(wb, "s", dims = "A1:H5")
+    xfs <- wb$styles_mgr$styles$cellXfs[as.integer(ids) + 1]
+    border_ids <- as.integer(sub('.*borderId="([0-9]+)".*', "\\1", xfs))
+    stopifnot(!anyNA(border_ids))
+    paste(
+      sub('borderId="[0-9]+"', "", xfs),
+      wb$styles_mgr$styles$borders[border_ids + 1]
+    )
+  }
+
+  steps <- list(
+    list(rows = 2, cols = 1:8, top_border = "medium", bottom_border = NULL),
+    list(rows = 4, cols = 1:8, top_border = "dashed", bottom_border = "dashed"),
+    list(rows = 1:5, cols = 2, top_border = NULL, bottom_border = NULL)
+  )
+
+  direct <- base_wb()
+  cached <- base_wb()
+  cache <- new.env()
+  for (s in steps) {
+    args <- list(
+      top_border = s$top_border,
+      top_color = black,
+      bottom_border = s$bottom_border,
+      bottom_color = black,
+      left_border = NULL,
+      right_border = if (identical(s$cols, 2)) "medium" else NULL,
+      right_color = black,
+      update = TRUE
+    )
+    direct <- do.call(
+      openxlsx2::wb_add_border,
+      c(
+        list(direct, sheet = "s", dims = openxlsx2::wb_dims(s$rows, s$cols)),
+        args
+      )
+    )
+    cached <- do.call(
+      add_border_by_style,
+      c(
+        list(
+          cached,
+          cache = cache,
+          sheet = "s",
+          cells = sheet_cells(s$rows, s$cols)
+        ),
+        args
+      )
+    )
+  }
+
+  expect_identical(resolved(cached), resolved(direct))
+  expect_lt(
+    length(cached$styles_mgr$styles$cellXfs),
+    length(direct$styles_mgr$styles$cellXfs)
+  )
+})

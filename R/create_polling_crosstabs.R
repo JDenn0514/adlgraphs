@@ -134,6 +134,79 @@ weighted_pct <- function(x, w) {
   base::round(n / base::sum(n), 3)
 }
 
+#' Cell references for a block of rows and columns
+#'
+#' @param rows Integer vector of Excel row numbers
+#' @param cols Integer vector of Excel column numbers
+#' @return Character vector such as c("A4", "B4", "C4")
+#' @noRd
+sheet_cells <- function(rows, cols) {
+  base::as.vector(base::outer(
+    rows,
+    cols,
+    function(r, c) base::paste0(openxlsx2::int2col(c), r)
+  ))
+}
+
+#' Add border edges to cells, one wb_add_border() call per distinct style
+#'
+#' Draws the same borders as `wb_add_border(wb, sheet, dims, ...)` with
+#' `update = TRUE`, where every edge outside the block's outline is left
+#' unset (no inner grid). Under those arguments wb_add_border() merges the
+#' same edges into every cell it touches, so a cell's result depends only on
+#' the style it started with.
+#'
+#' That makes it safe to style one cell per starting style and copy its new
+#' style id to the rest. Calling wb_add_border() on the whole block instead
+#' adds a border and a cellXfs entry per cell, and each addition re-parses
+#' the full style table, which is what made large sheets slow.
+#'
+#' @param wb An openxlsx2 wbWorkbook
+#' @param cache An environment holding results across calls, keyed by
+#'   starting style and border arguments
+#' @param sheet Sheet name
+#' @param cells Character vector of cell references, from sheet_cells()
+#' @param ... Border arguments passed on to wb_add_border(), including
+#'   `update = TRUE`
+#' @return The workbook
+#' @noRd
+add_border_by_style <- function(wb, cache, sheet, cells, ...) {
+  border_args <- base::list(...)
+  args_key <- base::paste(base::deparse(border_args), collapse = "")
+
+  current <- openxlsx2::wb_get_cell_style(wb, sheet = sheet, dims = cells)
+  current <- current[cells]
+
+  for (style in base::unique(current)) {
+    targets <- cells[current == style]
+    key <- base::paste(style, args_key, sep = "|")
+
+    if (base::is.null(cache[[key]])) {
+      wb <- base::do.call(
+        openxlsx2::wb_add_border,
+        c(base::list(wb, sheet = sheet, dims = targets[[1]]), border_args)
+      )
+      cache[[key]] <- openxlsx2::wb_get_cell_style(
+        wb,
+        sheet = sheet,
+        dims = targets[[1]]
+      )[[1]]
+      targets <- targets[-1]
+    }
+
+    if (base::length(targets) > 0) {
+      wb <- openxlsx2::wb_set_cell_style(
+        wb,
+        sheet = sheet,
+        dims = targets,
+        style = cache[[key]]
+      )
+    }
+  }
+
+  wb
+}
+
 
 # ============================================================================
 # Main Function
@@ -1058,14 +1131,21 @@ create_polling_crosstabs <- function(
 
   black <- openxlsx2::wb_color(hex = "FF000000")
 
+  # Every border below goes through add_border_by_style() rather than straight
+  # to wb_add_border(). Called directly, wb_add_border(update = TRUE) adds a
+  # new border and a new cellXfs entry for every cell it touches, and each
+  # addition re-parses the whole style table -- so the ~180 row calls and ~12
+  # full-height column calls on a large banner grew quadratically and were
+  # most of the build time. add_border_by_style() runs wb_add_border() once
+  # per distinct starting style and copies the result to the other cells with
+  # that style, which draws the same borders. border_cache carries those
+  # results from one call to the next, since most rows repeat a handful of
+  # patterns.
+  border_cache <- base::new.env()
+
   # Horizontal borders between row variables.
   #
-  # These two loops are the dominant cost on a large sheet: each
-  # wb_add_border(update = TRUE) reads and rewrites entries in a cellXfs style
-  # table that grows as it goes, so ~130 row calls plus ~20 column calls cost
-  # far more than the number of cells involved would suggest.
-  #
-  # They cannot be collapsed by passing a multi-range dims. wb_dims() will
+  # The edges of one call cannot be passed as a multi-range dims. wb_dims() will
   # happily build one ("A5:BF5,A9:BF9"), but wb_add_border() treats its dims as
   # a single rectangle whose edges take different styles, so a multi-range
   # either fails with "style length and name do not match" or silently leaves
@@ -1096,10 +1176,11 @@ create_polling_crosstabs <- function(
   # The loop starts at the second row, so the first question's n row would
   # never be reached.
   if (sheet_plan[[1]]$is_n) {
-    wb <- openxlsx2::wb_add_border(
+    wb <- add_border_by_style(
       wb,
+      cache = border_cache,
       sheet = sheet_name,
-      dims = openxlsx2::wb_dims(rows = 4, cols = 1:(num_cols + 2)),
+      cells = sheet_cells(rows = 4, cols = 1:(num_cols + 2)),
       bottom_border = "dashed",
       bottom_color = black,
       top_border = NULL,
@@ -1121,10 +1202,11 @@ create_polling_crosstabs <- function(
       # NULL leaves an edge alone; "dashed" is only passed on an n row.
       bottom_style <- if (sheet_plan[[i]]$is_n) "dashed" else NULL
 
-      wb <- openxlsx2::wb_add_border(
+      wb <- add_border_by_style(
         wb,
+        cache = border_cache,
         sheet = sheet_name,
-        dims = openxlsx2::wb_dims(rows = excel_row, cols = 1:(num_cols + 2)),
+        cells = sheet_cells(rows = excel_row, cols = 1:(num_cols + 2)),
         top_border = border_style,
         top_color = black,
         bottom_border = bottom_style,
@@ -1152,10 +1234,11 @@ create_polling_crosstabs <- function(
         "medium"
       }
 
-      wb <- openxlsx2::wb_add_border(
+      wb <- add_border_by_style(
         wb,
+        cache = border_cache,
         sheet = sheet_name,
-        dims = openxlsx2::wb_dims(
+        cells = sheet_cells(
           rows = 1:(num_sheet_rows + 3),
           cols = excel_col
         ),
@@ -1173,10 +1256,11 @@ create_polling_crosstabs <- function(
   }
 
   # Right border after index columns (col 2), all rows
-  wb <- openxlsx2::wb_add_border(
+  wb <- add_border_by_style(
     wb,
+    cache = border_cache,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 1:(num_sheet_rows + 3), cols = 2),
+    cells = sheet_cells(rows = 1:(num_sheet_rows + 3), cols = 2),
     right_border = "medium",
     right_color = black,
     top_border = NULL,
@@ -1186,10 +1270,11 @@ create_polling_crosstabs <- function(
   )
 
   # Bottom border after header rows (row 2), all columns
-  wb <- openxlsx2::wb_add_border(
+  wb <- add_border_by_style(
     wb,
+    cache = border_cache,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 2, cols = 1:(num_cols + 2)),
+    cells = sheet_cells(rows = 2, cols = 1:(num_cols + 2)),
     bottom_border = "medium",
     bottom_color = black,
     top_border = NULL,
@@ -1199,10 +1284,11 @@ create_polling_crosstabs <- function(
   )
 
   # Bottom border after n-sizes row (row 3), all columns
-  wb <- openxlsx2::wb_add_border(
+  wb <- add_border_by_style(
     wb,
+    cache = border_cache,
     sheet = sheet_name,
-    dims = openxlsx2::wb_dims(rows = 3, cols = 1:(num_cols + 2)),
+    cells = sheet_cells(rows = 3, cols = 1:(num_cols + 2)),
     bottom_border = "medium",
     bottom_color = black,
     top_border = NULL,
